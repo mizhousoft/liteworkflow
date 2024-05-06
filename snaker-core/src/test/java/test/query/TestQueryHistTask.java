@@ -25,12 +25,12 @@ import org.snaker.engine.test.TestSnakerBase;
  * @author yuqs
  * @since 1.0
  */
-public class TestQueryHistTask extends TestSnakerBase {
+public class TestQueryHistTask extends TestSnakerBase
+{
 	@Test
-	public void test() {
-		System.out.println(queryService.getHistoryTasks(new Page<HistoryTask>(), 
-				new QueryFilter().setOperator("admin")));
-		System.out.println(queryService.getHistoryWorkItems(new Page<WorkItem>(), 
-				new QueryFilter().setOperator("admin")));
+	public void test()
+	{
+		System.out.println(queryService.getHistoryTasks(new Page<HistoryTask>(), new QueryFilter().setOperator("admin")));
+		System.out.println(queryService.getHistoryWorkItems(new Page<WorkItem>(), new QueryFilter().setOperator("admin")));
 	}
 }

@@ -29,27 +29,30 @@ import org.snaker.engine.test.TestSnakerBase;
 /**
  * 测试子流程的fork-join流程
  * start->subprocess1----->end
- *    |___subprocess2_______|
+ * |___subprocess2_______|
+ * 
  * @author yuqs
  * @since 1.0
  */
-public class TestSubProcess2 extends TestSnakerBase {
+public class TestSubProcess2 extends TestSnakerBase
+{
 	@Before
-	public void before() {
-		engine.process().deploy(StreamHelper
-				.getStreamFromClasspath("test/subprocess/child.snaker"));
-		processId = engine.process().deploy(StreamHelper
-						.getStreamFromClasspath("test/subprocess/subprocess2.snaker"));
+	public void before()
+	{
+		engine.process().deploy(StreamHelper.getStreamFromClasspath("test/subprocess/child.snaker"));
+		processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/subprocess/subprocess2.snaker"));
 	}
-	
+
 	@Test
-	public void test() {
+	public void test()
+	{
 		Map<String, Object> args = new HashMap<String, Object>();
-		args.put("task1.operator", new String[]{"1"});
+		args.put("task1.operator", new String[] { "1" });
 		Order order = engine.startInstanceById(processId, "2", args);
 		System.out.println(order);
 		List<Task> tasks = engine.query().getActiveTasks(new QueryFilter().setOrderId(order.getId()));
-		for(Task task : tasks) {
+		for (Task task : tasks)
+		{
 			engine.executeTask(task.getId(), "1", args);
 		}
 	}

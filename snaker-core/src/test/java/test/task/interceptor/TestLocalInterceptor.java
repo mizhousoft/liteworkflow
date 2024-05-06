@@ -28,19 +28,22 @@ import org.snaker.engine.test.TestSnakerBase;
  * @author yuqs
  * @since 1.0
  */
-public class TestLocalInterceptor extends TestSnakerBase {
+public class TestLocalInterceptor extends TestSnakerBase
+{
 	@Before
-	public void before() {
-		processId = engine.process().deploy(
-				StreamHelper.getStreamFromClasspath("test/task/interceptor/process.snaker"));
+	public void before()
+	{
+		processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/task/interceptor/process.snaker"));
 	}
-	
+
 	@Test
-	public void test() {
+	public void test()
+	{
 		Order order = engine.startInstanceById(processId, "2");
 		System.out.println("order=" + order);
 		List<Task> tasks = queryService.getActiveTasks(new QueryFilter().setOrderId(order.getId()));
-		for(Task task : tasks) {
+		for (Task task : tasks)
+		{
 			engine.executeTask(task.getId(), "1");
 		}
 	}

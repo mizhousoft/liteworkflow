@@ -41,96 +41,114 @@ import java.util.Map.Entry;
 
 /**
  * mybatis操作帮助类
+ * 
  * @author yuqs
  * @since 1.0
  */
-public abstract class MybatisHelper {
+public abstract class MybatisHelper
+{
 	private static final Logger log = LoggerFactory.getLogger(MybatisHelper.class);
+
 	private static final String SCAN_PACKAGE = "org.snaker.engine.entity";
+
 	private static SqlSessionFactory sqlSessionFactory = null;
-	private static final String[] resources = new String[] {
-		"mapper/process.xml",
-		"mapper/order.xml",
-		"mapper/task.xml",
-		"mapper/task-actor.xml",
-		"mapper/hist-order.xml",
-		"mapper/hist-task.xml",
-		"mapper/hist-task-actor.xml",
-		"mapper/query.xml",
-		"mapper/hist-query.xml"
-	};
-	
+
+	private static final String[] resources = new String[] { "mapper/process.xml", "mapper/order.xml", "mapper/task.xml",
+	        "mapper/task-actor.xml", "mapper/hist-order.xml", "mapper/hist-task.xml", "mapper/hist-task-actor.xml", "mapper/query.xml",
+	        "mapper/hist-query.xml" };
+
 	/**
 	 * 在没有任何sqlSessionFactory注入的情况下，默认使用mybatis.cfg.xml配置初始化
 	 */
-	public static void initialize() {
+	public static void initialize()
+	{
 		InputStream in;
-		try {
+		try
+		{
 			in = Resources.getResourceAsStream("mybatis.cfg.xml");
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(in, ConfigHelper.getProperties());
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			e.printStackTrace();
 		}
 	}
 
 	/**
 	 * 使用DataSource初始化SqlSessionFactory
+	 * 
 	 * @param ds 数据源
 	 */
-	public static void initialize(DataSource ds) {
+	public static void initialize(DataSource ds)
+	{
 		TransactionFactory transactionFactory = new MybatisTransactionFactory();
 		Environment environment = new Environment("snaker", transactionFactory, ds);
 		Configuration configuration = new Configuration(environment);
-        configuration.getTypeAliasRegistry().registerAliases(SCAN_PACKAGE, Object.class);
-        if (log.isInfoEnabled()) {
-        	Map<String, Class<?>> typeAliases = configuration.getTypeAliasRegistry().getTypeAliases();
-        	for(Entry<String, Class<?>> entry : typeAliases.entrySet()) {
-            	log.info("Scanned class:[name=" + entry.getKey() + ",class=" + entry.getValue().getName() + "]");
-        	}
-        }
-		try {
-			for(String resource : resources) {
+		configuration.getTypeAliasRegistry().registerAliases(SCAN_PACKAGE, Object.class);
+		if (log.isInfoEnabled())
+		{
+			Map<String, Class<?>> typeAliases = configuration.getTypeAliasRegistry().getTypeAliases();
+			for (Entry<String, Class<?>> entry : typeAliases.entrySet())
+			{
+				log.info("Scanned class:[name=" + entry.getKey() + ",class=" + entry.getValue().getName() + "]");
+			}
+		}
+		try
+		{
+			for (String resource : resources)
+			{
 				InputStream in = Resources.getResourceAsStream(resource);
 				XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(in, configuration, resource, configuration.getSqlFragments());
 				xmlMapperBuilder.parse();
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
-		} finally {
+		}
+		finally
+		{
 			ErrorContext.instance().reset();
 		}
 		sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 	}
-	
-	public static Connection getConnection() throws SQLException {
-		if(sqlSessionFactory == null) {
-    		log.debug("don't found available sqlSessionFactory");
-    		sqlSessionFactory = getSqlSessionFactory();
-    	}
-    	DataSource dataSource = sqlSessionFactory.
-    			getConfiguration().
-    			getEnvironment().
-    			getDataSource();
-    	return JdbcHelper.getConnection(dataSource);
+
+	public static Connection getConnection() throws SQLException
+	{
+		if (sqlSessionFactory == null)
+		{
+			log.debug("don't found available sqlSessionFactory");
+			sqlSessionFactory = getSqlSessionFactory();
+		}
+		DataSource dataSource = sqlSessionFactory.getConfiguration().getEnvironment().getDataSource();
+		return JdbcHelper.getConnection(dataSource);
 	}
-	
-	public static SqlSession getSession(SqlSessionFactory sqlSessionFactory) {
-		SqlSession session = (SqlSession)TransactionObjectHolder.get();
-		if(session != null) return session;
-    	if(sqlSessionFactory != null) {
-	    	return sqlSessionFactory.openSession();
-    	}
+
+	public static SqlSession getSession(SqlSessionFactory sqlSessionFactory)
+	{
+		SqlSession session = (SqlSession) TransactionObjectHolder.get();
+		if (session != null)
+			return session;
+		if (sqlSessionFactory != null)
+		{
+			return sqlSessionFactory.openSession();
+		}
 		return getSqlSessionFactory().openSession();
 	}
 
 	/**
 	 * 返回SqlSessionFactory
+	 * 
 	 * @return SqlSessionFactory
 	 */
-	public static SqlSessionFactory getSqlSessionFactory() {
-		if(sqlSessionFactory == null) {
-			synchronized (MybatisHelper.class) {
-				if(sqlSessionFactory == null) {
+	public static SqlSessionFactory getSqlSessionFactory()
+	{
+		if (sqlSessionFactory == null)
+		{
+			synchronized (MybatisHelper.class)
+			{
+				if (sqlSessionFactory == null)
+				{
 					initialize();
 				}
 			}

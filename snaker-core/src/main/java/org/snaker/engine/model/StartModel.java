@@ -21,10 +21,12 @@ import org.snaker.engine.core.Execution;
 
 /**
  * 开始节点定义start元素
+ * 
  * @author yuqs
  * @since 1.0
  */
-public class StartModel extends NodeModel {
+public class StartModel extends NodeModel
+{
 	/**
 	 * 
 	 */
@@ -33,11 +35,13 @@ public class StartModel extends NodeModel {
 	/**
 	 * 开始节点无输入变迁
 	 */
-	public List<TransitionModel> getInputs() {
+	public List<TransitionModel> getInputs()
+	{
 		return Collections.emptyList();
 	}
 
-	protected void exec(Execution execution) {
+	protected void exec(Execution execution)
+	{
 		runOutTransition(execution);
 	}
 }

@@ -25,22 +25,25 @@ import org.snaker.engine.test.TestSnakerBase;
 
 /**
  * 测试决策分支流程2：使用transition的expr属性决定后置路线
+ * 
  * @author yuqs
  * @since 1.0
  */
-public class TestDecision3 extends TestSnakerBase {
+public class TestDecision3 extends TestSnakerBase
+{
 	@Before
-	public void before() {
-		processId = engine.process().deploy(StreamHelper
-						.getStreamFromClasspath("test/decision/handler/process.snaker"));
+	public void before()
+	{
+		processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/decision/handler/process.snaker"));
 	}
-	
+
 	@Test
-	public void test() {
+	public void test()
+	{
 		Map<String, Object> args = new HashMap<String, Object>();
-		args.put("task1.operator", new String[]{"1"});
-		args.put("task2.operator", new String[]{"1"});
-		args.put("task3.operator", new String[]{"1"});
+		args.put("task1.operator", new String[] { "1" });
+		args.put("task2.operator", new String[] { "1" });
+		args.put("task3.operator", new String[] { "1" });
 		args.put("content", "toTask3");
 		Order order = engine.startInstanceById(processId, "2", args);
 		System.out.println(order);

@@ -34,39 +34,47 @@ import java.util.Map;
 
 /**
  * 测试模型操作
+ * 
  * @author yuqs
  * @since 2.0
  */
-public class TestModel extends TestSnakerBase {
-    @Override
-    protected SnakerEngine getEngine() {
-        return  new Configuration().initProperties("snaker1.properties").buildSnakerEngine();
-    }
+public class TestModel extends TestSnakerBase
+{
+	@Override
+	protected SnakerEngine getEngine()
+	{
+		return new Configuration().initProperties("snaker1.properties").buildSnakerEngine();
+	}
 
-    @Before
-    public void before() {
-        processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
-    }
+	@Before
+	public void before()
+	{
+		processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
+	}
 
-    @Test
-    public void test() {
-        Map<String, Object> args = new HashMap<String, Object>();
-        args.put("task1.operator", new String[]{"1"});
-        Order order = engine.startInstanceByName("simple", null, "2", args);
-        System.out.println("order=" + order);
-        List<Task> tasks = queryService.getActiveTasks(new QueryFilter().setOrderId(order.getId()));
-        for(Task task : tasks) {
-            TaskModel model = engine.task().getTaskModel(task.getId());
-            System.out.println(model.getName());
-            List<TaskModel> models = model.getNextModels(TaskModel.class);
-            for(TaskModel tm : models) {
-                System.out.println(tm.getName());
-            }
-        }
-        List<TaskModel> models = engine.process().getProcessById(processId).getModel().getModels(TaskModel.class);
-            for(TaskModel tm : models) {
-                System.out.println(tm.getName());
-            }
-    }
+	@Test
+	public void test()
+	{
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("task1.operator", new String[] { "1" });
+		Order order = engine.startInstanceByName("simple", null, "2", args);
+		System.out.println("order=" + order);
+		List<Task> tasks = queryService.getActiveTasks(new QueryFilter().setOrderId(order.getId()));
+		for (Task task : tasks)
+		{
+			TaskModel model = engine.task().getTaskModel(task.getId());
+			System.out.println(model.getName());
+			List<TaskModel> models = model.getNextModels(TaskModel.class);
+			for (TaskModel tm : models)
+			{
+				System.out.println(tm.getName());
+			}
+		}
+		List<TaskModel> models = engine.process().getProcessById(processId).getModel().getModels(TaskModel.class);
+		for (TaskModel tm : models)
+		{
+			System.out.println(tm.getName());
+		}
+	}
 
 }

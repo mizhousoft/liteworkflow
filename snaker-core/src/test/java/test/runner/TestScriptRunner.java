@@ -25,18 +25,24 @@ import java.sql.Connection;
 
 /**
  * 测试ScriptRunner工具
+ * 
  * @author yuqs
  * @since 2.0
  */
-public class TestScriptRunner {
-    @Test
-    public void test() {
-        try {
-            Connection conn = JdbcHelper.getConnection(null);
-            ScriptRunner runner = new ScriptRunner(conn, true);
-            runner.runScript("db/schema-mysql.sql");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+public class TestScriptRunner
+{
+	@Test
+	public void test()
+	{
+		try
+		{
+			Connection conn = JdbcHelper.getConnection(null);
+			ScriptRunner runner = new ScriptRunner(conn, true);
+			runner.runScript("db/schema-mysql.sql");
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 }

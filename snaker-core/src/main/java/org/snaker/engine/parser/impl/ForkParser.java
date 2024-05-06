@@ -20,14 +20,17 @@ import org.snaker.engine.parser.AbstractNodeParser;
 
 /**
  * 分支节点解析类
+ * 
  * @author yuqs
  * @since 1.0
  */
-public class ForkParser extends AbstractNodeParser {
+public class ForkParser extends AbstractNodeParser
+{
 	/**
 	 * 产生ForkModel模型对象
 	 */
-	protected NodeModel newModel() {
+	protected NodeModel newModel()
+	{
 		return new ForkModel();
 	}
 }

@@ -30,20 +30,24 @@ import org.snaker.engine.test.TestSnakerBase;
  * @author yuqs
  * @since 1.0
  */
-public class TestGenerator extends TestSnakerBase {
+public class TestGenerator extends TestSnakerBase
+{
 	@Before
-	public void before() {
+	public void before()
+	{
 		processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/generator/process.snaker"));
 	}
-	
+
 	@Test
-	public void test() {
+	public void test()
+	{
 		Map<String, Object> args = new HashMap<String, Object>();
-		args.put("task1.operator", new String[]{"1"});
+		args.put("task1.operator", new String[] { "1" });
 		Order order = engine.startInstanceById(processId, "2", args);
 		System.out.println("order=" + order);
 		List<Task> tasks = queryService.getActiveTasks(new QueryFilter().setOrderId(order.getId()));
-		for(Task task : tasks) {
+		for (Task task : tasks)
+		{
 			engine.executeTask(task.getId(), "1");
 		}
 	}

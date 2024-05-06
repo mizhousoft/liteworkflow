@@ -23,13 +23,18 @@ import org.snaker.engine.impl.GeneralAccessStrategy;
  * @author yuqs
  * @since 1.0
  */
-public class CustomAccessStrategy extends GeneralAccessStrategy {
+public class CustomAccessStrategy extends GeneralAccessStrategy
+{
 	@Override
-	protected List<String> ensureGroup(String operator) {
+	protected List<String> ensureGroup(String operator)
+	{
 		List<String> groups = new ArrayList<String>();
-		if(operator.equals("test")) {
+		if (operator.equals("test"))
+		{
 			groups.add("test");
-		} else {
+		}
+		else
+		{
 			groups.add("role1");
 		}
 		return groups;

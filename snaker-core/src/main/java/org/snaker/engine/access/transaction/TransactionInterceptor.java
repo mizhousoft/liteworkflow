@@ -30,16 +30,20 @@ import net.sf.cglib.proxy.MethodProxy;
 
 /**
  * 事务拦截器，用于产生业务逻辑类的代理类
+ * 
  * @author yuqs
  * @since 1.0
  */
-public abstract class TransactionInterceptor implements MethodInterceptor {
+public abstract class TransactionInterceptor implements MethodInterceptor
+{
 	private static final Logger log = LoggerFactory.getLogger(TransactionInterceptor.class);
+
 	/**
 	 * 需要拦截的事务方法集合
 	 */
 	private static final List<String> txMethods = new ArrayList<String>();
-	static {
+	static
+	{
 		txMethods.add("start*");
 		txMethods.add("execute*");
 		txMethods.add("finish*");
@@ -61,45 +65,57 @@ public abstract class TransactionInterceptor implements MethodInterceptor {
 		txMethods.add("cascade*");
 		txMethods.add("get*");
 	}
-	
+
 	/**
 	 * 使用Cglib产生业务类的代理
+	 * 
 	 * @param clazz
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T getProxy(Class<T> clazz) {
-		return (T)Enhancer.create(clazz, this);
+	public <T> T getProxy(Class<T> clazz)
+	{
+		return (T) Enhancer.create(clazz, this);
 	}
-	
+
 	/**
 	 * 方法执行的拦截器，拦截条件为：
 	 * 1、数据库访问类是DBTransaction的实现类
 	 * 2、方法名称匹配初始化的事务方法列表
 	 */
-	public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+	public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable
+	{
 		Object result = null;
 		TransactionStatus status = null;
-		if(isMatch(method.getName())) {
-			if(log.isDebugEnabled()) {
-				log.debug("intercept method is[name="  + method.getName() + "]");
+		if (isMatch(method.getName()))
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("intercept method is[name=" + method.getName() + "]");
 			}
-			try {
+			try
+			{
 				status = getTransaction();
 				AssertHelper.notNull(status);
-				//调用具体无事务支持的业务逻辑
+				// 调用具体无事务支持的业务逻辑
 				result = proxy.invokeSuper(obj, args);
-				//如果整个执行过程无异常抛出，则提交TransactionStatus持有的transaction对象
-				if(status.isNewTransaction()) {
+				// 如果整个执行过程无异常抛出，则提交TransactionStatus持有的transaction对象
+				if (status.isNewTransaction())
+				{
 					commit(status);
 				}
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				rollback(status);
 				throw new SnakerException(e);
 			}
-		} else {
-			if(log.isDebugEnabled()) {
-				log.debug("****don't intercept method is[name="  + method.getName() + "]");
+		}
+		else
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("****don't intercept method is[name=" + method.getName() + "]");
 			}
 			result = proxy.invokeSuper(obj, args);
 		}
@@ -108,38 +124,46 @@ public abstract class TransactionInterceptor implements MethodInterceptor {
 
 	/**
 	 * 根据方法名称，匹配所有初始化的需要事务拦截的方法
+	 * 
 	 * @param methodName
 	 * @return
 	 */
-	private boolean isMatch(String methodName) {
-		for(String pattern : txMethods) {
-			if(StringHelper.simpleMatch(pattern, methodName)) {
+	private boolean isMatch(String methodName)
+	{
+		for (String pattern : txMethods)
+		{
+			if (StringHelper.simpleMatch(pattern, methodName))
+			{
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 初始化事务拦截器，设置访问对象
+	 * 
 	 * @param accessObject
 	 */
 	public abstract void initialize(Object accessObject);
-	
+
 	/**
 	 * 返回当前事务状态
+	 * 
 	 * @return
 	 */
 	protected abstract TransactionStatus getTransaction();
-	
+
 	/**
 	 * 提交当前事务状态
+	 * 
 	 * @param status
 	 */
 	protected abstract void commit(TransactionStatus status);
-	
+
 	/**
 	 * 回滚当前事务状态
+	 * 
 	 * @param status
 	 */
 	protected abstract void rollback(TransactionStatus status);

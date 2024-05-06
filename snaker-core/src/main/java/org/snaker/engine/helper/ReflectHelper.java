@@ -23,26 +23,36 @@ import org.snaker.engine.SnakerException;
 
 /**
  * 反射帮助类
+ * 
  * @author yuqs
  * @since 1.0
  */
-public class ReflectHelper {
+public class ReflectHelper
+{
 	/**
 	 * 利用反射获取指定对象的指定属性
+	 * 
 	 * @param obj 目标对象
 	 * @param fieldName 目标属性
 	 * @return 目标属性的值
 	 */
-	public static Object getFieldValue(Object obj, String fieldName) {
+	public static Object getFieldValue(Object obj, String fieldName)
+	{
 		Object result = null;
 		Field field = getField(obj, fieldName);
-		if (field != null) {
+		if (field != null)
+		{
 			field.setAccessible(true);
-			try {
+			try
+			{
 				result = field.get(obj);
-			} catch (IllegalArgumentException e) {
+			}
+			catch (IllegalArgumentException e)
+			{
 				e.printStackTrace();
-			} catch (IllegalAccessException e) {
+			}
+			catch (IllegalAccessException e)
+			{
 				e.printStackTrace();
 			}
 		}
@@ -51,19 +61,24 @@ public class ReflectHelper {
 
 	/**
 	 * 利用反射获取指定对象里面的指定属性
+	 * 
 	 * @param obj 目标对象
 	 * @param fieldName 目标属性
 	 * @return 目标字段
 	 */
-	private static Field getField(Object obj, String fieldName) {
+	private static Field getField(Object obj, String fieldName)
+	{
 		Field field = null;
-		for (Class<?> clazz = obj.getClass(); clazz != Object.class; clazz = clazz
-				.getSuperclass()) {
-			try {
+		for (Class<?> clazz = obj.getClass(); clazz != Object.class; clazz = clazz.getSuperclass())
+		{
+			try
+			{
 				field = clazz.getDeclaredField(fieldName);
 				break;
-			} catch (NoSuchFieldException e) {
-				//ignore exception
+			}
+			catch (NoSuchFieldException e)
+			{
+				// ignore exception
 			}
 		}
 		return field;
@@ -71,69 +86,89 @@ public class ReflectHelper {
 
 	/**
 	 * 利用反射设置指定对象的指定属性为指定的值
+	 * 
 	 * @param obj 目标对象
 	 * @param fieldName 目标属性
 	 * @param fieldValue 目标值
 	 */
-	public static void setFieldValue(Object obj, String fieldName,
-			Object fieldValue) {
+	public static void setFieldValue(Object obj, String fieldName, Object fieldValue)
+	{
 		Field field = getField(obj, fieldName);
-		if (field != null) {
-			try {
+		if (field != null)
+		{
+			try
+			{
 				field.setAccessible(true);
 				field.set(obj, fieldValue);
-			} catch (IllegalArgumentException e) {
+			}
+			catch (IllegalArgumentException e)
+			{
 				e.printStackTrace();
-			} catch (IllegalAccessException e) {
+			}
+			catch (IllegalAccessException e)
+			{
 				e.printStackTrace();
 			}
 		}
 	}
-	
+
 	/**
 	 * 根据指定的对象、方法、参数反射调用，并返回调用结果
+	 * 
 	 * @param method 方法
 	 * @param target 对象
 	 * @param args 参数数组
 	 * @return 方法调用的返回数据
 	 */
-	public static Object invoke(Method method, Object target, Object[] args) {
-		if (method == null) {
+	public static Object invoke(Method method, Object target, Object[] args)
+	{
+		if (method == null)
+		{
 			throw new SnakerException("方法不能为空");
 		}
-		try {
-			if (!method.isAccessible()) {
+		try
+		{
+			if (!method.isAccessible())
+			{
 				method.setAccessible(true);
 			}
 			return method.invoke(target, args);
-		} catch (InvocationTargetException e) {
+		}
+		catch (InvocationTargetException e)
+		{
 			Throwable targetException = e.getTargetException();
-			throw new SnakerException("不能调用 '" + method.getName() + "' with "
-					+ Arrays.toString(args) + " on " + target + ": "
-					+ targetException.getMessage(), targetException);
-		} catch (Exception e) {
-			throw new SnakerException("不能调用 '" + method.getName() + "' with "
-					+ Arrays.toString(args) + " on " + target + ": "
-					+ e.getMessage(), e);
+			throw new SnakerException(
+			        "不能调用 '" + method.getName() + "' with " + Arrays.toString(args) + " on " + target + ": " + targetException.getMessage(),
+			        targetException);
+		}
+		catch (Exception e)
+		{
+			throw new SnakerException(
+			        "不能调用 '" + method.getName() + "' with " + Arrays.toString(args) + " on " + target + ": " + e.getMessage(), e);
 		}
 	}
-	
+
 	/**
 	 * 根据class类型、methodName方法名称，返回Method对象。
 	 * 注意：这里不检查参数类型，所以自定义的java类应该避免使用重载方法
+	 * 
 	 * @param clazz
 	 * @param methodName
 	 * @return
 	 */
-	public static Method findMethod(Class<?> clazz, String methodName) {
+	public static Method findMethod(Class<?> clazz, String methodName)
+	{
 		Method[] candidates = clazz.getDeclaredMethods();
-		for (int i = 0; i < candidates.length; i++) {
+		for (int i = 0; i < candidates.length; i++)
+		{
 			Method candidate = candidates[i];
-			if (candidate.getName().equals(methodName)) {
+			if (candidate.getName().equals(methodName))
+			{
 				return candidate;
 			}
 		}
-		if (clazz.getSuperclass() != null) {
+		if (clazz.getSuperclass() != null)
+		{
 			return findMethod(clazz.getSuperclass(), methodName);
 		}
 		return null;

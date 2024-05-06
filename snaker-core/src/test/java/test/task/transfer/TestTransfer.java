@@ -25,21 +25,25 @@ import org.snaker.engine.helper.StreamHelper;
 import org.snaker.engine.test.TestSnakerBase;
 
 /**
-* @author yuqs
-* @since 1.0
-*/
-public class TestTransfer extends TestSnakerBase {
+ * @author yuqs
+ * @since 1.0
+ */
+public class TestTransfer extends TestSnakerBase
+{
 	@Before
-	public void before() {
+	public void before()
+	{
 		processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/task/transfer/process.snaker"));
 	}
-	
+
 	@Test
-	public void test() {
+	public void test()
+	{
 		Order order = engine.startInstanceByName("transfer", 0);
 		System.out.println("order=" + order);
 		List<Task> tasks = queryService.getActiveTasks(new QueryFilter().setOrderId(order.getId()));
-		for(Task task : tasks) {
+		for (Task task : tasks)
+		{
 			engine.task().createNewTask(task.getId(), 0, "test");
 			engine.task().complete(task.getId());
 		}

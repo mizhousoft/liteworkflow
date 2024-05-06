@@ -27,16 +27,19 @@ import org.snaker.engine.test.TestSnakerBase;
 /**
  * @author yuqs
  */
-public class TestField extends TestSnakerBase {
-    @Before
-    public void before() {
-        processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/task/field/process.snaker"));
-    }
+public class TestField extends TestSnakerBase
+{
+	@Before
+	public void before()
+	{
+		processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/task/field/process.snaker"));
+	}
 
-    @Test
-    public void test() {
-        ProcessModel model = engine.process().getProcessById(processId).getModel();
-        TaskModel taskModel = (TaskModel)model.getNode("task1");
-        System.out.println(taskModel.getFields());
-    }
+	@Test
+	public void test()
+	{
+		ProcessModel model = engine.process().getProcessById(processId).getModel();
+		TaskModel taskModel = (TaskModel) model.getNode("task1");
+		System.out.println(taskModel.getFields());
+	}
 }

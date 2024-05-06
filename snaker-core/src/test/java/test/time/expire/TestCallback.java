@@ -25,9 +25,12 @@ import org.snaker.engine.scheduling.JobCallback;
  * @author yuqs
  * @since 1.0
  */
-public class TestCallback implements JobCallback {
+public class TestCallback implements JobCallback
+{
 	private static final Logger log = LoggerFactory.getLogger(TestCallback.class);
-	public void callback(String taskId, List<Task> newTasks) {
+
+	public void callback(String taskId, List<Task> newTasks)
+	{
 		log.info("callback taskId=" + taskId);
 		log.info("newTasks=" + newTasks);
 	}

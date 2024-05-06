@@ -25,39 +25,50 @@ import java.sql.SQLException;
 
 /**
  * mybatis方式的数据库访问
+ * 
  * @author yuqs
  * @since 1.0
  */
-public class MybatisAccess extends JdbcAccess {
+public class MybatisAccess extends JdbcAccess
+{
 	/**
 	 * mybatis的sqlSessionFactory
 	 */
 	private SqlSessionFactory sqlSessionFactory;
+
 	/**
 	 * setter
+	 * 
 	 * @param sqlSessionFactory
 	 */
-	public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory) {
+	public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory)
+	{
 		this.sqlSessionFactory = sqlSessionFactory;
 	}
-	
-	public void initialize(Object accessObject) {
-		if(accessObject == null) return;
-		if(accessObject instanceof SqlSessionFactory) {
-			this.sqlSessionFactory = (SqlSessionFactory)accessObject;
+
+	public void initialize(Object accessObject)
+	{
+		if (accessObject == null)
+			return;
+		if (accessObject instanceof SqlSessionFactory)
+		{
+			this.sqlSessionFactory = (SqlSessionFactory) accessObject;
 			setDataSource(this.sqlSessionFactory.getConfiguration().getEnvironment().getDataSource());
 		}
 	}
-	
-	private SqlSession getSession() {
+
+	private SqlSession getSession()
+	{
 		return MybatisHelper.getSession(sqlSessionFactory);
 	}
 
-	public boolean isORM() {
+	public boolean isORM()
+	{
 		return false;
 	}
 
-	protected Connection getConnection() throws SQLException {
+	protected Connection getConnection() throws SQLException
+	{
 		return getSession().getConnection();
 	}
 }

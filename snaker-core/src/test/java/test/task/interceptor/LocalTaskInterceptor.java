@@ -24,20 +24,26 @@ import org.snaker.engine.entity.Task;
  * @author yuqs
  * @since 1.0
  */
-public class LocalTaskInterceptor implements SnakerInterceptor {
+public class LocalTaskInterceptor implements SnakerInterceptor
+{
 	private static final Logger log = LoggerFactory.getLogger(LocalTaskInterceptor.class);
-	
-	public void intercept(Execution execution) {
-		if(log.isInfoEnabled()) {
+
+	public void intercept(Execution execution)
+	{
+		if (log.isInfoEnabled())
+		{
 			log.info("LocalTaskInterceptor start...");
-			for(Task task : execution.getTasks()) {
+			for (Task task : execution.getTasks())
+			{
 				StringBuffer buffer = new StringBuffer(100);
 				buffer.append("创建任务[标识=").append(task.getId());
 				buffer.append(",名称=").append(task.getDisplayName());
 				buffer.append(",创建时间=").append(task.getCreateTime());
 				buffer.append(",参与者={");
-				if(task.getActorIds() != null) {
-					for(String actor : task.getActorIds()) {
+				if (task.getActorIds() != null)
+				{
+					for (String actor : task.getActorIds())
+					{
 						buffer.append(actor).append(";");
 					}
 				}
