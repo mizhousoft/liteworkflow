@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<description>SnakerEngine配置 </description>
+	<bean class="org.snaker.engine.spring.SpringSnakerEngine">
+		<property name="processService" ref="processService"/>
+		<property name="orderService" ref="orderService"/>
+		<property name="taskService" ref="taskService"/>
+		<property name="queryService" ref="queryService"/>
+		<property name="managerService" ref="managerService"/>
+	</bean>
+
+	<bean id="processService" class="org.snaker.engine.core.ProcessService">
+		<property name="cacheManager" ref="cacheManager"/>
+		<property name="processEntityService" ref="processEntityService" />
+		<property name="historyOrderEntityService" ref="historyOrderEntityService" />
+	</bean>
+	<bean id="orderService" class="org.snaker.engine.core.OrderService">
+		<property name="orderEntityService" ref="orderEntityService" />
+		<property name="ccOrderEntityService" ref="ccOrderEntityService" />
+		<property name="historyOrderEntityService" ref="historyOrderEntityService" />
+		<property name="taskEntityService" ref="taskEntityService" />
+		<property name="historyTaskEntityService" ref="historyTaskEntityService" />
+	</bean>
+	<bean id="taskService" class="org.snaker.engine.core.TaskService">
+		<property name="taskEntityService" ref="taskEntityService" />
+		<property name="taskActorEntityService" ref="taskActorEntityService" />
+		<property name="historyTaskEntityService" ref="historyTaskEntityService" />
+		<property name="orderEntityService" ref="orderEntityService" />
+	</bean>
+	<bean id="managerService" class="org.snaker.engine.core.ManagerService">
+		<property name="surrogateEntityService" ref="surrogateEntityService" />
+	</bean>
+	<bean id="queryService" class="org.snaker.engine.core.QueryService">
+		<property name="taskEntityService" ref="taskEntityService" />
+		<property name="historyTaskEntityService" ref="historyTaskEntityService" />
+		<property name="orderEntityService" ref="orderEntityService" />
+		<property name="historyOrderEntityService" ref="historyOrderEntityService" />
+		<property name="taskActorEntityService" ref="taskActorEntityService" />
+		<property name="historyTaskActorEntityService" ref="historyTaskActorEntityService" />
+		<property name="ccOrderEntityService" ref="ccOrderEntityService" />
+		<property name="workItemEntityService" ref="workItemEntityService" />
+	</bean>
+	
+	<bean id="cacheManager" class="org.snaker.engine.cache.memory.MemoryCacheManager"/>
+</beans>

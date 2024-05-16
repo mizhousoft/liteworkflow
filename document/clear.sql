@@ -1,0 +1,12 @@
+delete from `wf_task_actor`;
+delete FROM snaker3.wf_task;
+delete from `wf_cc_order`;
+delete from `wf_hist_task_actor`;
+delete from `wf_hist_task`;
+delete from `wf_surrogate`;
+delete from `wf_hist_order` where parent_Id is not null;
+delete from `wf_hist_order` ;
+delete FROM snaker3.wf_order where parent_Id is not null;
+delete FROM snaker3.wf_order ;
+delete from wf_process;
+delete from `wf_process`;

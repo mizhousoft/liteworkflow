@@ -1,15 +1,8 @@
-# Maven #
-target/
-
-# IDEA #
-.idea/
-*.iml
-
-# Eclipse #
-.settings/
-.classpath
+.settings
 .project
-
-# Log #
-logs/
-*.log
+target
+.classpath
+pkg
+/.metadata/
+.factorypath
+.springBeans

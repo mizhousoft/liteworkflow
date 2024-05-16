@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.snaker.engine.mapper.TaskMapper">
+	
+	<resultMap type="org.snaker.engine.entity.Task" id="TaskMap">
+		<id property="id" column="id" />
+		<result property="orderId" column="order_Id" />
+		<result property="taskName" column="task_Name" />
+		<result property="displayName" column="display_Name" />
+		<result property="taskType" column="task_Type" />
+		<result property="performType" column="perform_Type" />
+		<result property="operator" column="operator" />
+		<result property="createTime" column="create_Time" />
+		<result property="finishTime" column="finish_Time" />
+		<result property="expireTime" column="expire_Time" />
+		<result property="actionUrl" column="action_Url" />
+		<result property="parentTaskId" column="parent_Task_Id" />
+		<result property="variable" column="variable" />
+		<result property="version" column="version" />
+	</resultMap>
+	
+	<insert id="save">
+		insert into wf_task (id, order_Id, task_Name, display_Name, task_Type, perform_Type, operator, create_Time,
+		finish_Time, expire_Time, action_Url, parent_Task_Id, variable, version)
+		values (#{id}, #{orderId}, #{taskName}, #{displayName}, #{taskType}, #{performType}, #{operator}, #{createTime}, 
+		#{finishTime}, #{expireTime}, #{actionUrl}, #{parentTaskId}, #{variable}, #{version})
+	</insert>
+	
+	<update id="update">
+        update wf_task 
+        set finish_Time= #{finishTime}, 
+        operator= #{operator}, 
+        variable= #{variable}, 
+        expire_Time= #{expireTime}, 
+        action_Url= #{actionUrl}, 
+        version = version + 1 
+        where id = #{id} and version = #{version}
+	</update>
+	
+	<delete id="delete">
+		delete from wf_task where id = #{id}
+	</delete>
+		
+	<select id="getTask" parameterType="java.util.Map" resultMap="TaskMap">
+		select id, order_Id, task_Name, display_Name, task_Type, perform_Type, operator, create_Time, finish_Time,
+		expire_Time, action_Url, parent_Task_Id, variable, version
+		from wf_task
+		where id = #{taskId}
+	</select>
+		
+	<select id="getNextActiveTasks" parameterType="java.util.Map" resultMap="TaskMap">
+		select id, order_Id, task_Name, display_Name, task_Type, perform_Type, operator, create_Time, finish_Time,
+		expire_Time, action_Url, parent_Task_Id, variable, version
+		from wf_task
+		where parent_Task_Id = #{parentTaskId}
+	</select>
+		
+	<select id="getNextActiveTaskList" parameterType="java.util.Map" resultMap="TaskMap">
+		select id, order_Id, task_Name, display_Name, task_Type, perform_Type, operator, create_Time, finish_Time,
+		expire_Time, action_Url, parent_Task_Id, variable, version
+		from wf_task
+		where parent_task_id in ( select ht.id from wf_hist_task ht where ht.order_id = #{orderId} and ht.task_name = #{taskName} and ht.parent_task_id = #{parentTaskId} )
+	</select>
+	
+	<select id="countTotal" resultType="Long">
+		select count(id) from wf_task 
+		<if test="request.operators != null and request.operators.length != 0">
+			left join wf_task_actor ta on ta.task_id = id
+		</if>		
+		<where>
+			<if test="request.orderId != null">
+                order_Id = #{request.orderId}
+       		</if>
+       		<if test="request.excludedIds != null and request.excludedIds.length != 0">
+                and id not in
+                <foreach collection="request.excludedIds" item="excludedId" index="index" open="(" close=")" separator=",">
+                    #{excludedId}
+                </foreach>
+            </if>
+       		<if test="request.operators != null and request.operators.length != 0">
+                and ta.actor_Id in
+                <foreach collection="request.operators" item="operator" index="index" open="(" close=")" separator=",">
+                    #{operator}
+                </foreach>
+            </if>
+            <if test="request.names != null and request.names.length != 0">
+                and task_Name in
+                <foreach collection="request.names" item="name" index="index" open="(" close=")" separator=",">
+                    #{name}
+                </foreach>
+            </if>
+            <if test="request.createTimeStart != null">
+                and create_Time &gt;= #{request.createTimeStart}
+       		</if>
+            <if test="request.createTimeEnd != null">
+                and create_Time &lt;= #{request.createTimeEnd}
+       		</if>
+		</where>
+	</select>
+	
+	<select id="findPageData" parameterType="java.util.Map" resultMap="TaskMap">
+		select id, order_Id, task_Name, display_Name, task_Type, perform_Type, operator, create_Time, finish_Time,
+		expire_Time, action_Url, parent_Task_Id, variable, version 
+		from wf_task 
+		<if test="request.operators != null and request.operators.length != 0">
+			left join wf_task_actor ta on ta.task_id = id
+		</if>		
+		<where>
+			<if test="request.orderId != null">
+                order_Id = #{request.orderId}
+       		</if>
+       		<if test="request.excludedIds != null and request.excludedIds.length != 0">
+                and id not in
+                <foreach collection="request.excludedIds" item="excludedId" index="index" open="(" close=")" separator=",">
+                    #{excludedId}
+                </foreach>
+            </if>
+       		<if test="request.operators != null and request.operators.length != 0">
+                and ta.actor_Id in
+                <foreach collection="request.operators" item="operator" index="index" open="(" close=")" separator=",">
+                    #{operator}
+                </foreach>
+            </if>
+            <if test="request.names != null and request.names.length != 0">
+                and task_Name in
+                <foreach collection="request.names" item="name" index="index" open="(" close=")" separator=",">
+                    #{name}
+                </foreach>
+            </if>
+            <if test="request.createTimeStart != null">
+                and create_Time &gt;= #{request.createTimeStart}
+       		</if>
+            <if test="request.createTimeEnd != null">
+                and create_Time &lt;= #{request.createTimeEnd}
+       		</if>
+		</where>
+		order by #{request.orderBy} #{request.order}
+		limit #{rowOffset}, #{request.pageSize}
+	</select>
+	
+</mapper>

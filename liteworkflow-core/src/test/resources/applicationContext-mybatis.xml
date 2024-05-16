@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="databaseIdProvider" class="org.apache.ibatis.mapping.VendorDatabaseIdProvider">
+		<property name="properties">
+		    <props>
+		      	<prop key="MySQL">mysql</prop>
+		    </props>
+	  	</property>
+	</bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	  	<property name="dataSource" ref="dataSource" />
+	  	<property name="mapperLocations" value="classpath*:org/snaker/engine/mapper/*.xml" />
+	  	<property name="databaseIdProvider" ref="databaseIdProvider"/>
+	</bean>
+	
+	<bean id="taskMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	  	<property name="mapperInterface" value="org.snaker.engine.mapper.TaskMapper" />
+	  	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="taskActorMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	  	<property name="mapperInterface" value="org.snaker.engine.mapper.TaskActorMapper" />
+	  	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="historyTaskMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	  	<property name="mapperInterface" value="org.snaker.engine.mapper.HistoryTaskMapper" />
+	  	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="historyTaskActorMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	  	<property name="mapperInterface" value="org.snaker.engine.mapper.HistoryTaskActorMapper" />
+	  	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="processMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	  	<property name="mapperInterface" value="org.snaker.engine.mapper.ProcessMapper" />
+	  	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="orderMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	  	<property name="mapperInterface" value="org.snaker.engine.mapper.OrderMapper" />
+	  	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="historyOrderMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	  	<property name="mapperInterface" value="org.snaker.engine.mapper.HistoryOrderMapper" />
+	  	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="ccOrderMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	  	<property name="mapperInterface" value="org.snaker.engine.mapper.CCOrderMapper" />
+	  	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="workItemMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	  	<property name="mapperInterface" value="org.snaker.engine.mapper.WorkItemMapper" />
+	  	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="historyTaskEntityService" class="org.snaker.engine.service.impl.HistoryTaskEntityServiceImpl">
+	  	<property name="historyTaskMapper" ref="historyTaskMapper" />
+		<property name="historyTaskActorEntityService" ref="historyTaskActorEntityService" />
+	</bean>
+		
+	<bean id="surrogateMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	  	<property name="mapperInterface" value="org.snaker.engine.mapper.SurrogateMapper" />
+	  	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="taskActorEntityService" class="org.snaker.engine.service.impl.TaskActorEntityServiceImpl">
+	  	<property name="taskActorMapper" ref="taskActorMapper" />
+	</bean>
+	
+	<bean id="processEntityService" class="org.snaker.engine.service.impl.ProcessEntityServiceImpl">
+	  	<property name="processMapper" ref="processMapper" />
+	</bean>
+	
+	<bean id="orderEntityService" class="org.snaker.engine.service.impl.OrderEntityServiceImpl">
+	  	<property name="orderMapper" ref="orderMapper" />
+	  	<property name="historyOrderEntityService" ref="historyOrderEntityService" />
+	</bean>
+	
+	<bean id="taskEntityService" class="org.snaker.engine.service.impl.TaskEntityServiceImpl">
+	  	<property name="taskMapper" ref="taskMapper" />
+	</bean>
+	
+	<bean id="historyOrderEntityService" class="org.snaker.engine.service.impl.HistoryOrderEntityServiceImpl">
+	  	<property name="historyOrderMapper" ref="historyOrderMapper" />
+	</bean>
+	
+	<bean id="historyTaskActorEntityService" class="org.snaker.engine.service.impl.HistoryTaskActorEntityServiceImpl">
+	  	<property name="historyTaskActorMapper" ref="historyTaskActorMapper" />
+	</bean>
+	
+	<bean id="ccOrderEntityService" class="org.snaker.engine.service.impl.CCOrderEntityServiceImpl">
+	  	<property name="ccOrderMapper" ref="ccOrderMapper" />
+	</bean>
+	
+	<bean id="surrogateEntityService" class="org.snaker.engine.service.impl.SurrogateEntityServiceImpl">
+	  	<property name="surrogateMapper" ref="surrogateMapper" />
+	</bean>
+	
+	<bean id="workItemEntityService" class="org.snaker.engine.service.impl.WorkItemEntityServiceImpl">
+	  	<property name="workItemMapper" ref="workItemMapper" />
+	</bean>
+	
+</beans>
