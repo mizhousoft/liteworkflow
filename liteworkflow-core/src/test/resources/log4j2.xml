@@ -14,7 +14,7 @@
 			<appender-ref ref="Console" />
 		</root>
 		
-		<Logger name="org.snaker.engine" level="debug" additivity="false">
+		<Logger name="com.liteworkflow.engine" level="debug" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
 		

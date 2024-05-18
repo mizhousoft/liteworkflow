@@ -2,9 +2,10 @@ package test.query;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.snaker.engine.SnakerEngine;
-import org.snaker.engine.request.TaskPageRequest;
-import org.snaker.engine.request.WorkItemPageRequest;
+
+import com.liteworkflow.engine.SnakerEngine;
+import com.liteworkflow.engine.request.TaskPageRequest;
+import com.liteworkflow.engine.request.WorkItemPageRequest;
 
 import test.TestSpring;
 

@@ -1,8 +1,8 @@
 package test.task.assignmenthandler;
 
-import org.snaker.engine.Assignment;
-import org.snaker.engine.core.Execution;
-import org.snaker.engine.model.TaskModel;
+import com.liteworkflow.engine.Assignment;
+import com.liteworkflow.engine.core.Execution;
+import com.liteworkflow.engine.model.TaskModel;
 
 /**
  * @author yuqs

@@ -1,7 +1,7 @@
 package test.generator;
 
-import org.snaker.engine.NoGenerator;
-import org.snaker.engine.model.ProcessModel;
+import com.liteworkflow.engine.NoGenerator;
+import com.liteworkflow.engine.model.ProcessModel;
 
 /**
  * @author yuqs

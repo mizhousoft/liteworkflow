@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <config>
-	<bean class="org.snaker.engine.impl.LogInterceptor"/>
-	<bean class="org.snaker.engine.spring.SpelExpression"/>
-	<bean class="org.snaker.engine.impl.SurrogateInterceptor"/>
+	<bean class="com.liteworkflow.engine.impl.LogInterceptor"/>
+	<bean class="com.liteworkflow.engine.spring.SpelExpression"/>
+	<bean class="com.liteworkflow.engine.impl.SurrogateInterceptor"/>
 </config>

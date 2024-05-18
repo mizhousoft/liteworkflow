@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liteworkflow.engine.mapper.ProcessMapper">
+	
+	<resultMap type="com.liteworkflow.engine.entity.Process" id="ProcessMap">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="displayName" column="display_Name" />
+		<result property="type" column="type" />
+		<result property="instanceUrl" column="instance_Url" />
+		<result property="state" column="state" />
+		<result property="version" column="version" />
+		<result property="createTime" column="create_Time" />
+		<result property="creator" column="creator" />
+		<result property="bytes" column="content" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+	</resultMap>
+	
+	<insert id="save">
+		insert into wf_process (id, name, display_Name, type, instance_Url, state, content, version, create_Time, creator)
+		values (#{id}, #{name}, #{displayName}, #{type}, #{instanceUrl}, #{state}, #{bytes, typeHandler=org.apache.ibatis.type.BlobTypeHandler}, #{version}, #{createTime}, #{creator})
+	</insert>
+	
+	<update id="update">
+        update wf_process 
+        set name= #{name}, 
+        display_Name = #{displayName},
+        state = #{state},
+        instance_Url = #{instanceUrl},
+        create_Time = #{createTime},
+        creator = #{creator} 
+        where id = #{id} 
+	</update>
+	
+	<update id="updateProcessType">
+        update wf_process 
+        set type = #{type}
+        where id = #{id} 
+	</update>
+	
+	<delete id="delete">
+		delete from wf_process where id = #{id}
+	</delete>
+	
+	<select id="getProcess" parameterType="java.util.Map" resultMap="ProcessMap">
+		select id, name, display_Name, type, instance_Url, state, content, version, create_Time, creator 
+		from wf_process 
+		where id = #{id}
+	</select>
+	
+	<select id="getLatestProcessVersion" parameterType="java.util.Map" resultType="Integer">
+		select max(version) from wf_process 
+		where name = #{name}
+	</select>
+	
+	<select id="countTotal" resultType="Long">
+		select count(id) from wf_process
+		<where>
+			<if test="request.names != null and request.names.length != 0">
+                name in
+                <foreach collection="request.names" item="name" index="index" open="(" close=")" separator=",">
+                    #{name}
+                </foreach>
+            </if>
+            <if test="request.version != null">
+                and version = #{request.version}
+       		</if>
+            <if test="request.state != null">
+                and state = #{request.state}
+       		</if>
+       		<if test="request.displayName != null">
+				<bind name="pattern" value="'%' + request.displayName + '%'" />
+				and display_Name like #{pattern} 
+			</if>
+            <if test="request.processType != null">
+                and type = #{request.processType}
+       		</if>
+       		<if test="request.operators != null and request.operators.length != 0">
+                and creator in
+                <foreach collection="request.operators" item="operator" index="index" open="(" close=")" separator=",">
+                    #{operator}
+                </foreach>
+            </if>
+		</where>
+	</select>
+	
+	<select id="findPageData" parameterType="java.util.Map" resultMap="ProcessMap">
+		select id, name, display_Name, type, instance_Url, state, content, version, create_Time, creator 
+		from wf_process 
+		<where>
+			<if test="request.names != null and request.names.length != 0">
+                name in
+                <foreach collection="request.names" item="name" index="index" open="(" close=")" separator=",">
+                    #{name}
+                </foreach>
+            </if>
+            <if test="request.version != null">
+                and version = #{request.version}
+       		</if>
+            <if test="request.state != null">
+                and state = #{request.state}
+       		</if>
+       		<if test="request.displayName != null">
+				<bind name="pattern" value="'%' + request.displayName + '%'" />
+				and display_Name like #{pattern} 
+			</if>
+            <if test="request.processType != null">
+                and type = #{request.processType}
+       		</if>
+       		<if test="request.operators != null and request.operators.length != 0">
+                and creator in
+                <foreach collection="request.operators" item="operator" index="index" open="(" close=")" separator=",">
+                    #{operator}
+                </foreach>
+            </if>
+		</where>
+		order by #{request.orderBy} #{request.order}
+		limit #{rowOffset}, #{request.pageSize}
+	</select>
+	
+</mapper>
