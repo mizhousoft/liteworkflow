@@ -12,28 +12,28 @@
 		<property name="managerService" ref="managerService"/>
 	</bean>
 
-	<bean id="processService" class="org.snaker.engine.core.ProcessService">
+	<bean id="processService" class="org.snaker.engine.core.ProcessServiceImpl">
 		<property name="cacheManager" ref="cacheManager"/>
 		<property name="processEntityService" ref="processEntityService" />
 		<property name="historyOrderEntityService" ref="historyOrderEntityService" />
 	</bean>
-	<bean id="orderService" class="org.snaker.engine.core.OrderService">
+	<bean id="orderService" class="org.snaker.engine.core.OrderServiceImpl">
 		<property name="orderEntityService" ref="orderEntityService" />
 		<property name="ccOrderEntityService" ref="ccOrderEntityService" />
 		<property name="historyOrderEntityService" ref="historyOrderEntityService" />
 		<property name="taskEntityService" ref="taskEntityService" />
 		<property name="historyTaskEntityService" ref="historyTaskEntityService" />
 	</bean>
-	<bean id="taskService" class="org.snaker.engine.core.TaskService">
+	<bean id="taskService" class="org.snaker.engine.core.TaskServiceImpl">
 		<property name="taskEntityService" ref="taskEntityService" />
 		<property name="taskActorEntityService" ref="taskActorEntityService" />
 		<property name="historyTaskEntityService" ref="historyTaskEntityService" />
 		<property name="orderEntityService" ref="orderEntityService" />
 	</bean>
-	<bean id="managerService" class="org.snaker.engine.core.ManagerService">
+	<bean id="managerService" class="org.snaker.engine.core.ManagerServiceImpl">
 		<property name="surrogateEntityService" ref="surrogateEntityService" />
 	</bean>
-	<bean id="queryService" class="org.snaker.engine.core.QueryService">
+	<bean id="queryService" class="org.snaker.engine.core.QueryServiceImpl">
 		<property name="taskEntityService" ref="taskEntityService" />
 		<property name="historyTaskEntityService" ref="historyTaskEntityService" />
 		<property name="orderEntityService" ref="orderEntityService" />

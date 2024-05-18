@@ -1,24 +1,11 @@
-/* Copyright 2013-2015 www.snakerflow.com.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.snaker.engine.core;
 
 import java.util.List;
 import java.util.Map;
 
 import org.snaker.engine.Completion;
-import org.snaker.engine.IOrderService;
+import org.snaker.engine.Constants;
+import org.snaker.engine.OrderService;
 import org.snaker.engine.SnakerEngine;
 import org.snaker.engine.entity.CCOrder;
 import org.snaker.engine.entity.HistoryOrder;
@@ -43,7 +30,7 @@ import org.snaker.engine.service.TaskEntityService;
  * @author yuqs
  * @since 1.0
  */
-public class OrderService extends AccessService implements IOrderService
+public class OrderServiceImpl extends AccessService implements OrderService
 {
 	private OrderEntityService orderEntityService;
 
@@ -58,7 +45,7 @@ public class OrderService extends AccessService implements IOrderService
 	/**
 	 * 创建活动实例
 	 * 
-	 * @see org.snaker.engine.core.OrderService#createOrder(Process, String, Map, String, String)
+	 * @see org.snaker.engine.core.OrderServiceImpl#createOrder(Process, String, Map, String, String)
 	 */
 	public Order createOrder(Process process, String operator, Map<String, Object> args)
 	{
@@ -129,7 +116,7 @@ public class OrderService extends AccessService implements IOrderService
 			ccorder.setOrderId(orderId);
 			ccorder.setActorId(actorId);
 			ccorder.setCreator(creator);
-			ccorder.setStatus(STATE_ACTIVE);
+			ccorder.setStatus(Constants.STATE_ACTIVE);
 			ccorder.setCreateTime(DateHelper.getTime());
 			ccOrderEntityService.save(ccorder);
 		}
@@ -152,7 +139,7 @@ public class OrderService extends AccessService implements IOrderService
 		AssertHelper.notNull(ccorders);
 		for (CCOrder ccorder : ccorders)
 		{
-			ccorder.setStatus(STATE_FINISH);
+			ccorder.setStatus(Constants.STATE_FINISH);
 			ccorder.setFinishTime(DateHelper.getTime());
 			ccOrderEntityService.update(ccorder);
 		}
@@ -178,7 +165,7 @@ public class OrderService extends AccessService implements IOrderService
 	{
 		Order order = orderEntityService.getOrder(orderId);
 		HistoryOrder history = historyOrderEntityService.getHistOrder(orderId);
-		history.setOrderState(STATE_FINISH);
+		history.setOrderState(Constants.STATE_FINISH);
 		history.setEndTime(DateHelper.getTime());
 
 		historyOrderEntityService.update(history);
@@ -193,7 +180,7 @@ public class OrderService extends AccessService implements IOrderService
 	/**
 	 * 强制中止流程实例
 	 * 
-	 * @see org.snaker.engine.core.OrderService#terminate(String, String)
+	 * @see org.snaker.engine.core.OrderServiceImpl#terminate(String, String)
 	 */
 	public void terminate(String orderId)
 	{
@@ -213,7 +200,7 @@ public class OrderService extends AccessService implements IOrderService
 		}
 		Order order = orderEntityService.getOrder(orderId);
 		HistoryOrder history = new HistoryOrder(order);
-		history.setOrderState(STATE_TERMINATION);
+		history.setOrderState(Constants.STATE_TERMINATION);
 		history.setEndTime(DateHelper.getTime());
 
 		historyOrderEntityService.update(history);
@@ -236,7 +223,7 @@ public class OrderService extends AccessService implements IOrderService
 		HistoryOrder historyOrder = historyOrderEntityService.getHistOrder(orderId);
 		Order order = historyOrder.undo();
 		orderEntityService.saveOrder(order);
-		historyOrder.setOrderState(STATE_ACTIVE);
+		historyOrder.setOrderState(Constants.STATE_ACTIVE);
 		historyOrderEntityService.update(historyOrder);
 
 		SnakerEngine engine = ServiceContext.getEngine();

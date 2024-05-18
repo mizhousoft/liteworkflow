@@ -1,22 +1,8 @@
-/* Copyright 2013-2015 www.snakerflow.com.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.snaker.engine.handlers.impl;
 
 import java.util.List;
 
-import org.snaker.engine.IQueryService;
+import org.snaker.engine.QueryService;
 import org.snaker.engine.core.Execution;
 import org.snaker.engine.entity.Order;
 import org.snaker.engine.entity.Task;
@@ -42,7 +28,7 @@ public abstract class AbstractMergeHandler implements IHandler
 		 * 查询当前流程实例的无法参与合并的node列表
 		 * 若所有中间node都完成，则设置为已合并状态，告诉model可继续执行join的输出变迁
 		 */
-		IQueryService queryService = execution.getEngine().query();
+		QueryService queryService = execution.getEngine().query();
 		Order order = execution.getOrder();
 		ProcessModel model = execution.getModel();
 		String[] activeNodes = findActiveNodes();

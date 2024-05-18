@@ -2,8 +2,8 @@ package test;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.snaker.engine.IProcessService;
-import org.snaker.engine.IQueryService;
+import org.snaker.engine.ProcessService;
+import org.snaker.engine.QueryService;
 import org.snaker.engine.SnakerEngine;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -21,9 +21,9 @@ public class TestSpring extends AbstractJUnit4SpringContextTests
 
 	protected SnakerEngine engine;
 
-	protected IProcessService processService;
+	protected ProcessService processService;
 
-	protected IQueryService queryService;
+	protected QueryService queryService;
 
 	@Test
 	public void test()

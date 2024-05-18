@@ -1,17 +1,3 @@
-/* Copyright 2013-2015 www.snakerflow.com.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.snaker.engine.core;
 
 import java.util.Collections;
@@ -21,11 +7,11 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.snaker.engine.IManagerService;
-import org.snaker.engine.IOrderService;
-import org.snaker.engine.IProcessService;
-import org.snaker.engine.IQueryService;
-import org.snaker.engine.ITaskService;
+import org.snaker.engine.ManagerService;
+import org.snaker.engine.OrderService;
+import org.snaker.engine.ProcessService;
+import org.snaker.engine.QueryService;
+import org.snaker.engine.TaskService;
 import org.snaker.engine.SnakerEngine;
 import org.snaker.engine.cache.CacheManager;
 import org.snaker.engine.cache.CacheManagerAware;
@@ -61,27 +47,27 @@ public class SnakerEngineImpl implements SnakerEngine
 	/**
 	 * 流程定义业务类
 	 */
-	protected IProcessService processService;
+	protected ProcessService processService;
 
 	/**
 	 * 流程实例业务类
 	 */
-	protected IOrderService orderService;
+	protected OrderService orderService;
 
 	/**
 	 * 任务业务类
 	 */
-	protected ITaskService taskService;
+	protected TaskService taskService;
 
 	/**
 	 * 查询业务类
 	 */
-	protected IQueryService queryService;
+	protected QueryService queryService;
 
 	/**
 	 * 管理业务类
 	 */
-	protected IManagerService managerService;
+	protected ManagerService managerService;
 
 	/**
 	 * 根据serviceContext上下文，查找processService、orderService、taskService服务
@@ -89,11 +75,11 @@ public class SnakerEngineImpl implements SnakerEngine
 	public SnakerEngine configure(Configuration config)
 	{
 		this.configuration = config;
-		processService = ServiceContext.find(IProcessService.class);
-		queryService = ServiceContext.find(IQueryService.class);
-		orderService = ServiceContext.find(IOrderService.class);
-		taskService = ServiceContext.find(ITaskService.class);
-		managerService = ServiceContext.find(IManagerService.class);
+		processService = ServiceContext.find(ProcessService.class);
+		queryService = ServiceContext.find(QueryService.class);
+		orderService = ServiceContext.find(OrderService.class);
+		taskService = ServiceContext.find(TaskService.class);
+		managerService = ServiceContext.find(ManagerService.class);
 
 		CacheManager cacheManager = ServiceContext.find(CacheManager.class);
 		if (cacheManager == null)
@@ -112,7 +98,7 @@ public class SnakerEngineImpl implements SnakerEngine
 	/**
 	 * 获取流程定义服务
 	 */
-	public IProcessService process()
+	public ProcessService process()
 	{
 		AssertHelper.notNull(processService);
 		return processService;
@@ -121,7 +107,7 @@ public class SnakerEngineImpl implements SnakerEngine
 	/**
 	 * 获取查询服务
 	 */
-	public IQueryService query()
+	public QueryService query()
 	{
 		AssertHelper.notNull(queryService);
 		return queryService;
@@ -132,7 +118,7 @@ public class SnakerEngineImpl implements SnakerEngine
 	 * 
 	 * @since 1.2.2
 	 */
-	public IOrderService order()
+	public OrderService order()
 	{
 		AssertHelper.notNull(orderService);
 		return orderService;
@@ -143,7 +129,7 @@ public class SnakerEngineImpl implements SnakerEngine
 	 * 
 	 * @since 1.2.2
 	 */
-	public ITaskService task()
+	public TaskService task()
 	{
 		AssertHelper.notNull(taskService);
 		return taskService;
@@ -154,7 +140,7 @@ public class SnakerEngineImpl implements SnakerEngine
 	 * 
 	 * @since 1.4
 	 */
-	public IManagerService manager()
+	public ManagerService manager()
 	{
 		AssertHelper.notNull(managerService);
 		return managerService;
@@ -409,27 +395,27 @@ public class SnakerEngineImpl implements SnakerEngine
 		return execution;
 	}
 
-	public void setProcessService(IProcessService processService)
+	public void setProcessService(ProcessService processService)
 	{
 		this.processService = processService;
 	}
 
-	public void setOrderService(IOrderService orderService)
+	public void setOrderService(OrderService orderService)
 	{
 		this.orderService = orderService;
 	}
 
-	public void setTaskService(ITaskService taskService)
+	public void setTaskService(TaskService taskService)
 	{
 		this.taskService = taskService;
 	}
 
-	public void setQueryService(IQueryService queryService)
+	public void setQueryService(QueryService queryService)
 	{
 		this.queryService = queryService;
 	}
 
-	public void setManagerService(IManagerService managerService)
+	public void setManagerService(ManagerService managerService)
 	{
 		this.managerService = managerService;
 	}

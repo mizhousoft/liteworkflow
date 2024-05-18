@@ -1,17 +1,3 @@
-/* Copyright 2013-2015 www.snakerflow.com.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.snaker.engine.core;
 
 import java.io.InputStream;
@@ -19,7 +5,8 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.snaker.engine.IProcessService;
+import org.snaker.engine.Constants;
+import org.snaker.engine.ProcessService;
 import org.snaker.engine.SnakerException;
 import org.snaker.engine.cache.Cache;
 import org.snaker.engine.cache.CacheManager;
@@ -45,9 +32,9 @@ import com.mizhousoft.commons.data.domain.Page;
  * @author yuqs
  * @since 1.0
  */
-public class ProcessService extends AccessService implements IProcessService, CacheManagerAware
+public class ProcessServiceImpl extends AccessService implements ProcessService, CacheManagerAware
 {
-	private static final Logger log = LoggerFactory.getLogger(ProcessService.class);
+	private static final Logger log = LoggerFactory.getLogger(ProcessServiceImpl.class);
 
 	private static final String DEFAULT_SEPARATOR = ".";
 
@@ -237,7 +224,7 @@ public class ProcessService extends AccessService implements IProcessService, Ca
 			{
 				entity.setVersion(version + 1);
 			}
-			entity.setState(STATE_ACTIVE);
+			entity.setState(Constants.STATE_ACTIVE);
 			entity.setModel(model);
 			entity.setBytes(bytes);
 			entity.setCreateTime(DateHelper.getTime());
@@ -296,7 +283,7 @@ public class ProcessService extends AccessService implements IProcessService, Ca
 	public void undeploy(String id)
 	{
 		Process entity = processEntityService.getProcess(id);
-		entity.setState(STATE_FINISH);
+		entity.setState(Constants.STATE_FINISH);
 		processEntityService.update(entity);
 		cache(entity);
 	}

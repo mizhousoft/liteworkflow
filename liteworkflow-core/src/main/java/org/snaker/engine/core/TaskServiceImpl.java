@@ -1,17 +1,3 @@
-/* Copyright 2013-2015 www.snakerflow.com.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.snaker.engine.core;
 
 import java.util.ArrayList;
@@ -23,7 +9,8 @@ import java.util.Map;
 import org.snaker.engine.Assignment;
 import org.snaker.engine.AssignmentHandler;
 import org.snaker.engine.Completion;
-import org.snaker.engine.ITaskService;
+import org.snaker.engine.Constants;
+import org.snaker.engine.TaskService;
 import org.snaker.engine.SnakerEngine;
 import org.snaker.engine.SnakerException;
 import org.snaker.engine.TaskAccessStrategy;
@@ -54,7 +41,7 @@ import org.snaker.engine.service.TaskEntityService;
  * @author yuqs
  * @since 1.0
  */
-public class TaskService extends AccessService implements ITaskService
+public class TaskServiceImpl extends AccessService implements TaskService
 {
 	private static final String START = "start";
 
@@ -102,7 +89,7 @@ public class TaskService extends AccessService implements ITaskService
 		}
 		HistoryTask history = new HistoryTask(task);
 		history.setFinishTime(DateHelper.getTime());
-		history.setTaskState(STATE_FINISH);
+		history.setTaskState(Constants.STATE_FINISH);
 		history.setOperator(operator);
 		if (history.getActorIds() == null)
 		{
@@ -155,7 +142,7 @@ public class TaskService extends AccessService implements ITaskService
 		historyTask.setFinishTime(currentTime);
 		historyTask.setDisplayName(model.getDisplayName());
 		historyTask.setTaskName(model.getName());
-		historyTask.setTaskState(STATE_FINISH);
+		historyTask.setTaskState(Constants.STATE_FINISH);
 		historyTask.setTaskType(TaskType.Record.ordinal());
 		historyTask.setParentTaskId(execution.getTask() == null ? START : execution.getTask().getId());
 		historyTask.setVariable(JsonHelper.toJson(execution.getArgs()));

@@ -1,22 +1,9 @@
-/* Copyright 2013-2015 www.snakerflow.com.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.snaker.engine.core;
 
 import java.util.List;
 
-import org.snaker.engine.IManagerService;
+import org.snaker.engine.Constants;
+import org.snaker.engine.ManagerService;
 import org.snaker.engine.entity.Surrogate;
 import org.snaker.engine.helper.AssertHelper;
 import org.snaker.engine.helper.DateHelper;
@@ -30,14 +17,14 @@ import org.snaker.engine.service.SurrogateEntityService;
  * @author yuqs
  * @since 1.4
  */
-public class ManagerService extends AccessService implements IManagerService
+public class ManagerServiceImpl extends AccessService implements ManagerService
 {
 	private SurrogateEntityService surrogateEntityService;
 
 	public void saveOrUpdate(Surrogate surrogate)
 	{
 		AssertHelper.notNull(surrogate);
-		surrogate.setState(STATE_ACTIVE);
+		surrogate.setState(Constants.STATE_ACTIVE);
 		if (StringHelper.isEmpty(surrogate.getId()))
 		{
 			surrogate.setId(StringHelper.getPrimaryKey());
