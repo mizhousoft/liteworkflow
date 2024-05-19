@@ -2,7 +2,7 @@ package com.liteworkflow.engine.scheduling;
 
 import java.util.List;
 
-import com.liteworkflow.engine.entity.Task;
+import com.liteworkflow.task.entity.Task;
 
 /**
  * 任务job执行后的回调类

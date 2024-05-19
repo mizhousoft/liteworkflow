@@ -1,7 +1,7 @@
 package com.liteworkflow.engine;
 
-import com.liteworkflow.engine.entity.HistoryOrder;
-import com.liteworkflow.engine.entity.HistoryTask;
+import com.liteworkflow.order.entity.HistoryOrder;
+import com.liteworkflow.task.entity.HistoryTask;
 
 /**
  * 任务、实例完成时触发动作的接口

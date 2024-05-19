@@ -4,12 +4,12 @@ import java.util.List;
 
 import com.liteworkflow.engine.Constants;
 import com.liteworkflow.engine.ManagerService;
-import com.liteworkflow.engine.entity.Surrogate;
 import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.helper.DateHelper;
 import com.liteworkflow.engine.helper.StringHelper;
-import com.liteworkflow.engine.request.SurrogateFindRequest;
-import com.liteworkflow.engine.service.SurrogateEntityService;
+import com.liteworkflow.task.entity.Surrogate;
+import com.liteworkflow.task.request.SurrogateFindRequest;
+import com.liteworkflow.task.service.SurrogateEntityService;
 
 /**
  * 管理服务类

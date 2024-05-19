@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.liteworkflow.engine.Completion;
-import com.liteworkflow.engine.entity.HistoryOrder;
-import com.liteworkflow.engine.entity.HistoryTask;
+import com.liteworkflow.order.entity.HistoryOrder;
+import com.liteworkflow.task.entity.HistoryTask;
 
 /**
  * 默认的任务、实例完成时触发的动作

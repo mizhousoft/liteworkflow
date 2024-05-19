@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
-import com.liteworkflow.engine.entity.Task;
+import com.liteworkflow.task.entity.Task;
 
 /**
  * job实体，用于传递给具体的调度框架

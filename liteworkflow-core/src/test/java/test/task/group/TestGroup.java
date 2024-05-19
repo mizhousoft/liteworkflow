@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.SnakerEngine;
 import com.liteworkflow.engine.SnakerException;
-import com.liteworkflow.engine.entity.Order;
-import com.liteworkflow.engine.entity.Task;
 import com.liteworkflow.engine.helper.StreamHelper;
+import com.liteworkflow.order.entity.Order;
+import com.liteworkflow.task.entity.Task;
 
 import test.TestSpring;
 

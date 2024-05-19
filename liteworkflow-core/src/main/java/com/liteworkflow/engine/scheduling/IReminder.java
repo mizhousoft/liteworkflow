@@ -2,8 +2,8 @@ package com.liteworkflow.engine.scheduling;
 
 import java.util.Map;
 
-import com.liteworkflow.engine.entity.Process;
 import com.liteworkflow.engine.model.NodeModel;
+import com.liteworkflow.process.entity.Process;
 
 /**
  * 提醒接口

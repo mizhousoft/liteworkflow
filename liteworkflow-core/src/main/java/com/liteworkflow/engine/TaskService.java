@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.liteworkflow.engine.core.Execution;
-import com.liteworkflow.engine.entity.HistoryTask;
-import com.liteworkflow.engine.entity.Task;
 import com.liteworkflow.engine.model.CustomModel;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.TaskModel;
+import com.liteworkflow.task.entity.HistoryTask;
+import com.liteworkflow.task.entity.Task;
 
 /**
  * 任务业务类，包括以下服务：

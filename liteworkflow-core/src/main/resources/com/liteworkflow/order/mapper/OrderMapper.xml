@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liteworkflow.order.mapper.OrderMapper">
+	
+	<resultMap type="com.liteworkflow.order.entity.Order" id="OrderMap">
+		<id property="id" column="id" />
+		<result property="parentId" column="parent_Id" />
+		<result property="processId" column="process_Id" />
+		<result property="orderState" column="order_State" />
+		<result property="creator" column="creator" />
+		<result property="createTime" column="create_Time" />
+		<result property="expireTime" column="expire_Time" />
+		<result property="lastUpdateTime" column="last_Update_Time" />
+		<result property="lastUpdator" column="last_Updator" />
+		<result property="priority" column="priority" />
+		<result property="parentNodeName" column="parent_Node_Name" />
+		<result property="orderNo" column="order_No" />
+		<result property="variable" column="variable" />
+		<result property="version" column="version" />
+	</resultMap>
+	
+	<insert id="save">
+		insert into wf_order (id, process_Id, creator, create_Time, parent_Id, parent_Node_Name, expire_Time,
+		last_Update_Time, last_Updator, order_No, variable, version)
+		values (#{id}, #{processId}, #{creator}, #{createTime}, #{parentId}, #{parentNodeName}, #{expireTime}, 
+		#{lastUpdateTime}, #{lastUpdator}, #{orderNo}, #{variable}, #{version})
+	</insert>
+	
+	<update id="update">
+        update wf_order 
+        set last_Updator = #{lastUpdator},  
+        last_Update_Time = #{lastUpdateTime},  
+        variable = #{variable},  
+        expire_Time = #{expireTime}, 
+        version = version + 1 
+        where id = #{id} and version = #{version} 
+	</update>
+	
+	<update id="updateOrderVariable">
+        update wf_process 
+        set type = #{type}
+        where id = #{id} 
+	</update>
+		
+	<delete id="delete">
+		delete from wf_order where id = #{id}
+	</delete>
+		
+	<select id="getOrder" parameterType="java.util.Map" resultMap="OrderMap">
+		select o.id, o.process_Id, o.creator, o.create_Time, o.parent_Id, o.parent_Node_Name, o.expire_Time,
+		o.last_Update_Time, o.last_Updator, o.priority, o.order_No, o.variable, o.version 
+		from wf_order o 
+		where id = #{orderId}
+	</select>
+
+	<select id="countTotal" resultType="Long">
+		select count(o.id) from wf_order o left join wf_process p on p.id = o.process_id
+		<where>
+       		<if test="request.operators != null and request.operators.length != 0">
+                o.creator in
+                <foreach collection="request.operators" item="operator" index="index" open="(" close=")" separator=",">
+                    #{operator}
+                </foreach>
+            </if>
+            <if test="request.names != null and request.names.length != 0">
+                and p.name in
+                <foreach collection="request.names" item="name" index="index" open="(" close=")" separator=",">
+                    #{name}
+                </foreach>
+            </if>
+            <if test="request.processId != null">
+                and o.process_Id = #{request.processId}
+       		</if>
+            <if test="request.displayName != null">
+				<bind name="pattern" value="'%' + request.displayName + '%'" />
+				and p.display_Name like #{pattern} 
+			</if>
+			<if test="request.processType != null">
+                and p.type = #{request.processType}
+       		</if>
+			<if test="request.parentId != null">
+                and o.parent_Id = #{request.parentId}
+       		</if>
+       		<if test="request.excludedIds != null and request.excludedIds.length != 0">
+                and o.id not in
+                <foreach collection="request.excludedIds" item="excludedId" index="index" open="(" close=")" separator=",">
+                    #{excludedId}
+                </foreach>
+            </if>
+            <if test="request.createTimeStart != null">
+                and o.create_Time &gt;= #{request.createTimeStart}
+       		</if>
+            <if test="request.createTimeEnd != null">
+                and o.create_Time &lt;= #{request.createTimeEnd}
+       		</if>
+       		<if test="request.orderNo != null">
+                and o.order_No = #{request.orderNo}
+       		</if>
+		</where>
+	</select>
+	
+	<select id="findPageData" parameterType="java.util.Map" resultMap="OrderMap">
+		select o.id, o.process_Id, o.creator, o.create_Time, o.parent_Id, o.parent_Node_Name, o.expire_Time,
+		o.last_Update_Time, o.last_Updator, o.priority, o.order_No, o.variable, o.version 
+		from wf_order o left join wf_process p on p.id = o.process_id
+		<where>
+       		<if test="request.operators != null and request.operators.length != 0">
+                o.creator in
+                <foreach collection="request.operators" item="operator" index="index" open="(" close=")" separator=",">
+                    #{operator}
+                </foreach>
+            </if>
+            <if test="request.names != null and request.names.length != 0">
+                and p.name in
+                <foreach collection="request.names" item="name" index="index" open="(" close=")" separator=",">
+                    #{name}
+                </foreach>
+            </if>
+            <if test="request.processId != null">
+                and o.process_Id = #{request.processId}
+       		</if>
+            <if test="request.displayName != null">
+				<bind name="pattern" value="'%' + request.displayName + '%'" />
+				and p.display_Name like #{pattern} 
+			</if>
+			<if test="request.processType != null">
+                and p.type = #{request.processType}
+       		</if>
+			<if test="request.parentId != null">
+                and o.parent_Id = #{request.parentId}
+       		</if>
+       		<if test="request.excludedIds != null and request.excludedIds.length != 0">
+                and o.id not in
+                <foreach collection="request.excludedIds" item="excludedId" index="index" open="(" close=")" separator=",">
+                    #{excludedId}
+                </foreach>
+            </if>
+            <if test="request.createTimeStart != null">
+                and o.create_Time &gt;= #{request.createTimeStart}
+       		</if>
+            <if test="request.createTimeEnd != null">
+                and o.create_Time &lt;= #{request.createTimeEnd}
+       		</if>
+       		<if test="request.orderNo != null">
+                and o.order_No = #{request.orderNo}
+       		</if>
+		</where>
+		order by #{request.orderBy} #{request.order}
+		limit #{rowOffset}, #{request.pageSize}
+	</select>
+	
+</mapper>

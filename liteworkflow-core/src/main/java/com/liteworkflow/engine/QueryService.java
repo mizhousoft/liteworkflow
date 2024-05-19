@@ -2,16 +2,16 @@ package com.liteworkflow.engine;
 
 import java.util.List;
 
-import com.liteworkflow.engine.entity.HistoryOrder;
-import com.liteworkflow.engine.entity.HistoryTask;
-import com.liteworkflow.engine.entity.Order;
-import com.liteworkflow.engine.entity.Task;
-import com.liteworkflow.engine.entity.WorkItem;
-import com.liteworkflow.engine.request.CCOrderPageRequest;
-import com.liteworkflow.engine.request.HistoryOrderPageRequest;
-import com.liteworkflow.engine.request.OrderPageRequest;
-import com.liteworkflow.engine.request.TaskPageRequest;
-import com.liteworkflow.engine.request.WorkItemPageRequest;
+import com.liteworkflow.order.entity.HistoryOrder;
+import com.liteworkflow.order.entity.Order;
+import com.liteworkflow.order.request.CCOrderPageRequest;
+import com.liteworkflow.order.request.HistoryOrderPageRequest;
+import com.liteworkflow.order.request.OrderPageRequest;
+import com.liteworkflow.task.entity.HistoryTask;
+import com.liteworkflow.task.entity.Task;
+import com.liteworkflow.task.request.TaskPageRequest;
+import com.liteworkflow.workitem.entity.WorkItem;
+import com.liteworkflow.workitem.request.WorkItemPageRequest;
 
 /**
  * 流程相关的查询服务

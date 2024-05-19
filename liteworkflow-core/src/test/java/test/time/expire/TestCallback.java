@@ -5,8 +5,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.liteworkflow.engine.entity.Task;
 import com.liteworkflow.engine.scheduling.JobCallback;
+import com.liteworkflow.task.entity.Task;
 
 /**
  * @author yuqs

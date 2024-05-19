@@ -5,13 +5,13 @@ import java.util.List;
 import com.liteworkflow.engine.SnakerEngine;
 import com.liteworkflow.engine.SnakerException;
 import com.liteworkflow.engine.core.Execution;
-import com.liteworkflow.engine.entity.Order;
-import com.liteworkflow.engine.entity.Process;
-import com.liteworkflow.engine.entity.Task;
 import com.liteworkflow.engine.handlers.IHandler;
 import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.SubProcessModel;
+import com.liteworkflow.order.entity.Order;
+import com.liteworkflow.process.entity.Process;
+import com.liteworkflow.task.entity.Task;
 
 /**
  * 结束流程实例的处理器

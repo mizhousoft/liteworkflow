@@ -10,11 +10,11 @@ import org.slf4j.LoggerFactory;
 import com.liteworkflow.engine.SnakerInterceptor;
 import com.liteworkflow.engine.core.Execution;
 import com.liteworkflow.engine.core.ServiceContext;
-import com.liteworkflow.engine.entity.Task;
 import com.liteworkflow.engine.model.TaskModel;
 import com.liteworkflow.engine.scheduling.IScheduler;
 import com.liteworkflow.engine.scheduling.JobEntity;
 import com.liteworkflow.engine.scheduling.JobEntity.JobType;
+import com.liteworkflow.task.entity.Task;
 
 /**
  * 时限控制拦截器

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liteworkflow.task.mapper.HistoryTaskMapper">
+	
+	<resultMap type="com.liteworkflow.task.entity.HistoryTask" id="HistoryTaskMap">
+		<id property="id" column="id" />
+		<result property="orderId" column="order_Id" />
+		<result property="taskName" column="task_Name" />
+		<result property="displayName" column="display_Name" />
+		<result property="taskType" column="task_Type" />
+		<result property="performType" column="perform_Type" />
+		<result property="taskState" column="task_State" />
+		<result property="operator" column="operator" />
+		<result property="createTime" column="create_Time" />
+		<result property="finishTime" column="finish_Time" />
+		<result property="expireTime" column="expire_Time" />
+		<result property="actionUrl" column="action_Url" />
+		<result property="parentTaskId" column="parent_Task_Id" />
+		<result property="variable" column="variable" />
+	</resultMap>
+	
+	<insert id="save">
+		insert into wf_hist_task (id, order_Id, task_Name, display_Name, task_Type, perform_Type, task_State,
+		operator, create_Time, finish_Time, expire_Time, action_Url, parent_Task_Id, variable) 
+		values(#{id}, #{orderId}, #{taskName}, #{displayName}, #{taskType}, #{performType}, #{taskState}, 
+		#{operator}, #{createTime}, #{finishTime}, #{expireTime}, #{actionUrl}, #{parentTaskId}, #{variable})
+	</insert>
+		
+	<delete id="delete">
+		delete from wf_hist_task where id = #{id}
+	</delete>
+	
+	<select id="getHistTask" parameterType="java.util.Map" resultMap="HistoryTaskMap">
+		select id, order_Id, task_Name, display_Name, task_Type, perform_Type, task_State, operator, create_Time,
+		finish_Time, expire_Time, action_Url, parent_Task_Id, variable 
+		from wf_hist_task
+		where id = #{taskId}
+	</select>
+	
+	<select id="findList" parameterType="java.util.Map" resultMap="HistoryTaskMap">
+		select id, order_Id, task_Name, display_Name, task_Type, perform_Type, task_State, operator, create_Time,
+		finish_Time, expire_Time, action_Url, parent_Task_Id, variable 
+		from wf_hist_task
+		<if test="operators != null and operators.length != 0">
+			left join wf_hist_task_actor ta on ta.task_id = id
+		</if>		
+		<where>
+			<if test="orderId != null">
+                order_Id = #{orderId}
+       		</if>
+       		<if test="operators != null and operators.length != 0">
+                and ta.actor_Id in
+                <foreach collection="operators" item="operator" index="index" open="(" close=")" separator=",">
+                    #{operator}
+                </foreach>
+            </if>
+            <if test="names != null and names.length != 0">
+                and task_Name in
+                <foreach collection="names" item="name" index="index" open="(" close=")" separator=",">
+                    #{name}
+                </foreach>
+            </if>
+            <if test="createTimeStart != null">
+                and create_Time &gt;= #{createTimeStart}
+       		</if>
+            <if test="createTimeEnd != null">
+                and create_Time &lt;= #{createTimeEnd}
+       		</if>
+		</where>
+		order by #{orderBy} #{order}
+	</select>
+	
+</mapper>

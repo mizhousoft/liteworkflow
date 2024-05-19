@@ -3,8 +3,8 @@ package com.liteworkflow.engine;
 import java.io.InputStream;
 import java.util.List;
 
-import com.liteworkflow.engine.entity.Process;
-import com.liteworkflow.engine.request.ProcessPageRequest;
+import com.liteworkflow.process.entity.Process;
+import com.liteworkflow.process.request.ProcessPageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**

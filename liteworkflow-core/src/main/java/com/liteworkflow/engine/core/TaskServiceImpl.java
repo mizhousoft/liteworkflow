@@ -14,11 +14,6 @@ import com.liteworkflow.engine.SnakerEngine;
 import com.liteworkflow.engine.SnakerException;
 import com.liteworkflow.engine.TaskAccessStrategy;
 import com.liteworkflow.engine.TaskService;
-import com.liteworkflow.engine.entity.HistoryTask;
-import com.liteworkflow.engine.entity.Order;
-import com.liteworkflow.engine.entity.Process;
-import com.liteworkflow.engine.entity.Task;
-import com.liteworkflow.engine.entity.TaskActor;
 import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.helper.DateHelper;
 import com.liteworkflow.engine.helper.JsonHelper;
@@ -30,10 +25,15 @@ import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.TaskModel;
 import com.liteworkflow.engine.model.TaskModel.PerformType;
 import com.liteworkflow.engine.model.TaskModel.TaskType;
-import com.liteworkflow.engine.service.HistoryTaskEntityService;
-import com.liteworkflow.engine.service.OrderEntityService;
-import com.liteworkflow.engine.service.TaskActorEntityService;
-import com.liteworkflow.engine.service.TaskEntityService;
+import com.liteworkflow.order.entity.Order;
+import com.liteworkflow.order.service.OrderEntityService;
+import com.liteworkflow.process.entity.Process;
+import com.liteworkflow.task.entity.HistoryTask;
+import com.liteworkflow.task.entity.Task;
+import com.liteworkflow.task.entity.TaskActor;
+import com.liteworkflow.task.service.HistoryTaskEntityService;
+import com.liteworkflow.task.service.TaskActorEntityService;
+import com.liteworkflow.task.service.TaskEntityService;
 
 /**
  * 任务执行业务类

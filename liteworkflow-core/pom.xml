@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>com.mizhousoft.commons</groupId>
 			<artifactId>mizhousoft-commons</artifactId>
-			<version>2.0.0-SNAPSHOT</version>
+			<version>${commons.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>

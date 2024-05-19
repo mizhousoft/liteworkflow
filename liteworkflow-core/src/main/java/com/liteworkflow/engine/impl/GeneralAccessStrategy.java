@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.liteworkflow.engine.TaskAccessStrategy;
-import com.liteworkflow.engine.entity.TaskActor;
+import com.liteworkflow.task.entity.TaskActor;
 
 /**
  * 基于用户或组（角色、部门等）的访问策略类

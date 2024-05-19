@@ -4,8 +4,8 @@ import com.liteworkflow.engine.SnakerEngine;
 import com.liteworkflow.engine.SnakerInterceptor;
 import com.liteworkflow.engine.TaskService;
 import com.liteworkflow.engine.core.Execution;
-import com.liteworkflow.engine.entity.Task;
 import com.liteworkflow.engine.helper.StringHelper;
+import com.liteworkflow.task.entity.Task;
 
 /**
  * 委托代理拦截器

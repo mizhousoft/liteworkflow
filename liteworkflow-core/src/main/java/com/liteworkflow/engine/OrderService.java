@@ -2,8 +2,8 @@ package com.liteworkflow.engine;
 
 import java.util.Map;
 
-import com.liteworkflow.engine.entity.Order;
-import com.liteworkflow.engine.entity.Process;
+import com.liteworkflow.order.entity.Order;
+import com.liteworkflow.process.entity.Process;
 
 /**
  * 流程实例业务类

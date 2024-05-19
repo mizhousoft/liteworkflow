@@ -7,10 +7,10 @@ import java.util.Map;
 
 import com.liteworkflow.engine.SnakerEngine;
 import com.liteworkflow.engine.SnakerException;
-import com.liteworkflow.engine.entity.Order;
-import com.liteworkflow.engine.entity.Process;
-import com.liteworkflow.engine.entity.Task;
 import com.liteworkflow.engine.model.ProcessModel;
+import com.liteworkflow.order.entity.Order;
+import com.liteworkflow.process.entity.Process;
+import com.liteworkflow.task.entity.Task;
 
 /**
  * 流程执行过程中所传递的执行对象，其中包含流程定义、流程模型、流程实例对象、执行参数、返回的任务列表

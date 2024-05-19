@@ -7,8 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.SnakerEngine;
-import com.liteworkflow.engine.entity.Process;
 import com.liteworkflow.engine.helper.StreamHelper;
+import com.liteworkflow.process.entity.Process;
 
 import test.TestSpring;
 

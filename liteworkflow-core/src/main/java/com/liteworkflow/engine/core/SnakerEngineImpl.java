@@ -18,9 +18,6 @@ import com.liteworkflow.engine.cache.CacheManager;
 import com.liteworkflow.engine.cache.CacheManagerAware;
 import com.liteworkflow.engine.cache.memory.MemoryCacheManager;
 import com.liteworkflow.engine.cfg.Configuration;
-import com.liteworkflow.engine.entity.Order;
-import com.liteworkflow.engine.entity.Process;
-import com.liteworkflow.engine.entity.Task;
 import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.helper.DateHelper;
 import com.liteworkflow.engine.helper.StringHelper;
@@ -29,6 +26,9 @@ import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.StartModel;
 import com.liteworkflow.engine.model.TaskModel;
 import com.liteworkflow.engine.model.TransitionModel;
+import com.liteworkflow.order.entity.Order;
+import com.liteworkflow.process.entity.Process;
+import com.liteworkflow.task.entity.Task;
 
 /**
  * 基本的流程引擎实现类

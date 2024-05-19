@@ -17,8 +17,14 @@
 	<name>liteworkflow-parent</name>
 	<description>Lite Workflow is lite and free workflow.</description>
 
+	<properties>
+		<commons.version>2.0.0-SNAPSHOT</commons.version>
+		<liteworkflow.version>1.0.0-SNAPSHOT</liteworkflow.version>
+	</properties>
+
 	<modules>
 		<module>liteworkflow-core</module>
+		<module>liteworkflow-spring-boot-starter</module>
 	</modules>
 
 </project>

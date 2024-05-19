@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.liteworkflow.engine.SnakerInterceptor;
 import com.liteworkflow.engine.core.Execution;
-import com.liteworkflow.engine.entity.Task;
+import com.liteworkflow.task.entity.Task;
 
 /**
  * 日志拦截器

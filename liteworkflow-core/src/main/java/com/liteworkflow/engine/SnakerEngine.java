@@ -5,9 +5,9 @@ import java.util.Map;
 
 import com.liteworkflow.engine.cfg.Configuration;
 import com.liteworkflow.engine.core.Execution;
-import com.liteworkflow.engine.entity.Order;
-import com.liteworkflow.engine.entity.Task;
 import com.liteworkflow.engine.model.TaskModel;
+import com.liteworkflow.order.entity.Order;
+import com.liteworkflow.task.entity.Task;
 
 /**
  * 流程引擎接口

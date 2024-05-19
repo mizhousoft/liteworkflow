@@ -4,14 +4,14 @@ import java.util.List;
 
 import com.liteworkflow.engine.QueryService;
 import com.liteworkflow.engine.core.Execution;
-import com.liteworkflow.engine.entity.Order;
-import com.liteworkflow.engine.entity.Task;
 import com.liteworkflow.engine.handlers.IHandler;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.SubProcessModel;
 import com.liteworkflow.engine.model.TaskModel;
-import com.liteworkflow.engine.request.OrderPageRequest;
-import com.liteworkflow.engine.request.TaskPageRequest;
+import com.liteworkflow.order.entity.Order;
+import com.liteworkflow.order.request.OrderPageRequest;
+import com.liteworkflow.task.entity.Task;
+import com.liteworkflow.task.request.TaskPageRequest;
 
 /**
  * 合并处理的抽象处理器
