@@ -24,10 +24,10 @@ public class TestDecision3 extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.process();
-		queryService = engine.query();
+		processService = engine.getProcessService();
+		queryService = engine.getQueryService();
 
-		processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/decision/handler/process.snaker"));
+		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/decision/handler/process.snaker"));
 	}
 
 	@Test

@@ -1,6 +1,6 @@
 package com.liteworkflow.engine.cache;
 
-import com.liteworkflow.WorkflowException;
+import com.liteworkflow.ProcessException;
 
 /**
  * cache异常
@@ -8,7 +8,7 @@ import com.liteworkflow.WorkflowException;
  * @author yuqs
  * @since 1.3
  */
-public class CacheException extends WorkflowException
+public class CacheException extends ProcessException
 {
 	/**
 	 * 

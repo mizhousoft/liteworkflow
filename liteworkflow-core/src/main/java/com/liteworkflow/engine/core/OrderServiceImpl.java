@@ -196,7 +196,7 @@ public class OrderServiceImpl extends AccessService implements OrderService
 		List<Task> tasks = taskEntityService.queryByOrderId(orderId);
 		for (Task task : tasks)
 		{
-			engine.task().complete(task.getId(), operator);
+			engine.getTaskService().complete(task.getId(), operator);
 		}
 		Order order = orderEntityService.getOrder(orderId);
 		HistoryOrder history = new HistoryOrder(order);
@@ -231,7 +231,7 @@ public class OrderServiceImpl extends AccessService implements OrderService
 		if (histTasks != null && !histTasks.isEmpty())
 		{
 			HistoryTask histTask = histTasks.get(0);
-			engine.task().resume(histTask.getId(), histTask.getOperator());
+			engine.getTaskService().resume(histTask.getId(), histTask.getOperator());
 		}
 		return order;
 	}

@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.engine.cfg.EngineConfigurationImpl;
+import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 
 /**
  * WorkflowConfiguration
@@ -14,12 +14,12 @@ import com.liteworkflow.engine.cfg.EngineConfigurationImpl;
  * @version
  */
 @Configuration
-public class WorkflowConfiguration
+public class ProcessEngineAutoConfiguration
 {
 	@Bean
 	public ProcessEngine getSnakerEngine(SqlSessionFactory sqlSessionFactory, ApplicationContext applicationContext) throws Exception
 	{
-		EngineConfigurationImpl cfg = new EngineConfigurationImpl();
+		ProcessEngineConfigurationImpl cfg = new ProcessEngineConfigurationImpl();
 		cfg.setSqlSessionFactory(sqlSessionFactory);
 		cfg.setApplicationContext(applicationContext);
 

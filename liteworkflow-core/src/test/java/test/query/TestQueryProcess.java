@@ -23,8 +23,8 @@ public class TestQueryProcess extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.process();
-		queryService = engine.query();
+		processService = engine.getProcessService();
+		queryService = engine.getQueryService();
 	}
 
 	@Test
@@ -32,17 +32,17 @@ public class TestQueryProcess extends TestSpring
 	{
 		ProcessPageRequest request = new ProcessPageRequest();
 
-		List<Process> list = engine.process().getProcesss(request);
+		List<Process> list = engine.getProcessService().getProcesss(request);
 		System.out.println(list.size());
 
 		request.setNames(new String[] { "subprocess1" });
-		list = engine.process().getProcesss(request);
+		list = engine.getProcessService().getProcesss(request);
 		System.out.println(list.size());
 
-		Process process = engine.process().getProcessByVersion("subprocess1", 0);
+		Process process = engine.getProcessService().getProcessByVersion("subprocess1", 0);
 		System.out.println(process);
 
-		process = engine.process().getProcessByName("subprocess1");
+		process = engine.getProcessService().getProcessByName("subprocess1");
 		System.out.println(process);
 	}
 }

@@ -6,30 +6,30 @@ package com.liteworkflow;
  * @author yuqs
  * @since 1.0
  */
-public class WorkflowException extends RuntimeException
+public class ProcessException extends RuntimeException
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5220859421440167454L;
 
-	public WorkflowException()
+	public ProcessException()
 	{
 		super();
 	}
 
-	public WorkflowException(String msg, Throwable cause)
+	public ProcessException(String msg, Throwable cause)
 	{
 		super(msg);
 		super.initCause(cause);
 	}
 
-	public WorkflowException(String msg)
+	public ProcessException(String msg)
 	{
 		super(msg);
 	}
 
-	public WorkflowException(Throwable cause)
+	public ProcessException(Throwable cause)
 	{
 		super();
 		super.initCause(cause);

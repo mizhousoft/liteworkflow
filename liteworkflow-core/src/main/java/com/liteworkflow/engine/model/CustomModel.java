@@ -3,7 +3,7 @@ package com.liteworkflow.engine.model;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import com.liteworkflow.WorkflowException;
+import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.core.Execution;
 import com.liteworkflow.engine.handlers.IHandler;
 import com.liteworkflow.engine.helper.ClassHelper;
@@ -57,7 +57,7 @@ public class CustomModel extends WorkModel
 		}
 		if (invokeObject == null)
 		{
-			throw new WorkflowException("自定义模型[class=" + clazz + "]实例化对象失败");
+			throw new ProcessException("自定义模型[class=" + clazz + "]实例化对象失败");
 		}
 
 		if (invokeObject instanceof IHandler)
@@ -70,7 +70,7 @@ public class CustomModel extends WorkModel
 			Method method = ReflectHelper.findMethod(invokeObject.getClass(), methodName);
 			if (method == null)
 			{
-				throw new WorkflowException("自定义模型[class=" + clazz + "]无法找到方法名称:" + methodName);
+				throw new ProcessException("自定义模型[class=" + clazz + "]无法找到方法名称:" + methodName);
 			}
 			Object[] objects = getArgs(execution.getArgs(), args);
 			Object returnValue = ReflectHelper.invoke(method, invokeObject, objects);
@@ -79,7 +79,7 @@ public class CustomModel extends WorkModel
 				execution.getArgs().put(var, returnValue);
 			}
 		}
-		execution.getEngine().task().history(execution, this);
+		execution.getEngine().getTaskService().history(execution, this);
 		runOutTransition(execution);
 	}
 

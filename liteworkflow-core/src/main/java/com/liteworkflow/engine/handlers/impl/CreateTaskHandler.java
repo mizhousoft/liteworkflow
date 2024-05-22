@@ -5,7 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.liteworkflow.WorkflowException;
+import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.core.Execution;
 import com.liteworkflow.engine.core.ServiceContext;
 import com.liteworkflow.engine.handlers.IHandler;
@@ -43,7 +43,7 @@ public class CreateTaskHandler implements IHandler
 	 */
 	public void handle(Execution execution)
 	{
-		List<Task> tasks = execution.getEngine().task().createTask(model, execution);
+		List<Task> tasks = execution.getEngine().getTaskService().createTask(model, execution);
 		execution.addTasks(tasks);
 		/**
 		 * 从服务上下文中查找任务拦截器列表，依次对task集合进行拦截处理
@@ -59,7 +59,7 @@ public class CreateTaskHandler implements IHandler
 		catch (Exception e)
 		{
 			log.error("拦截器执行失败=" + e.getMessage());
-			throw new WorkflowException(e);
+			throw new ProcessException(e);
 		}
 	}
 }

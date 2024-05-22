@@ -22,10 +22,10 @@ public class TestAidant extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.process();
-		queryService = engine.query();
+		processService = engine.getProcessService();
+		queryService = engine.getQueryService();
 
-		processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/task/aidant/process.snaker"));
+		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/aidant/process.snaker"));
 	}
 
 	@Test
@@ -37,7 +37,7 @@ public class TestAidant extends TestSpring
 		for (Task task : tasks)
 		{
 			// engine.executeTask(task.getId());
-			engine.task().createNewTask(task.getId(), 1, "test");
+			engine.getTaskService().createNewTask(task.getId(), 1, "test");
 		}
 	}
 }

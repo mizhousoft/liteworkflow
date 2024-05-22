@@ -24,10 +24,10 @@ public class TestFreeFlow extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.process();
-		queryService = engine.query();
+		processService = engine.getProcessService();
+		queryService = engine.getQueryService();
 
-		processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/freeflow/free.snaker"));
+		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/freeflow/free.snaker"));
 	}
 
 	// @Test
@@ -47,13 +47,13 @@ public class TestFreeFlow extends TestSpring
 		tasks = engine.createFreeTask(order.getId(), "1", args, tm1);
 		for (Task task : tasks)
 		{
-			engine.task().complete(task.getId(), "1", null);
+			engine.getTaskService().complete(task.getId(), "1", null);
 		}
 
 		// tasks = engine.createFreeTask(order.getId(), "1", args, tm2);
 		// for(Task task : tasks) {
-		// engine.task().complete(task.getId(), "1", null);
+		// engine.getTaskService().complete(task.getId(), "1", null);
 		// }
-		engine.order().terminate(order.getId());
+		engine.getOrderService().terminate(order.getId());
 	}
 }

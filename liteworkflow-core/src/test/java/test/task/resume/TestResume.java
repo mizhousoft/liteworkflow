@@ -24,10 +24,10 @@ public class TestResume extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.process();
-		queryService = engine.query();
+		processService = engine.getProcessService();
+		queryService = engine.getQueryService();
 
-		processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
+		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
 	}
 
 	@Test
@@ -42,6 +42,6 @@ public class TestResume extends TestSpring
 		{
 			engine.executeTask(task.getId(), "1", args);
 		}
-		engine.order().resume(order.getId());
+		engine.getOrderService().resume(order.getId());
 	}
 }

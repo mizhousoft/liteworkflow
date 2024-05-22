@@ -24,10 +24,10 @@ public class TestTake extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.process();
-		queryService = engine.query();
+		processService = engine.getProcessService();
+		queryService = engine.getQueryService();
 
-		processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/task/take/process.snaker"));
+		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/take/process.snaker"));
 	}
 
 	@Test
@@ -42,7 +42,7 @@ public class TestTake extends TestSpring
 		for (Task task : tasks)
 		{
 			// engine.executeTask(task.getId(), "1");
-			engine.task().take(task.getId(), "1");
+			engine.getTaskService().take(task.getId(), "1");
 		}
 	}
 }

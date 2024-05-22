@@ -5,7 +5,7 @@ package com.liteworkflow.engine;
  *
  * @version
  */
-public interface EngineConfiguration
+public interface ProcessEngineConfiguration
 {
 	ProcessEngine buildProcessEngine() throws Exception;
 }

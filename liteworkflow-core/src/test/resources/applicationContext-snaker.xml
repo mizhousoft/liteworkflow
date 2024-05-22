@@ -5,11 +5,11 @@
 
 	<description>SnakerEngine配置 </description>
 	
-	<bean class="com.liteworkflow.engine.cfg.SnakerEngineFactoryBean">
+	<bean class="com.liteworkflow.engine.cfg.ProcessEngineFactoryBean">
 		<property name="engineConfiguration" ref="engineConfiguration"/>
 	</bean>
 	
-	<bean id="engineConfiguration" class="com.liteworkflow.engine.cfg.EngineConfigurationImpl">
+	<bean id="engineConfiguration" class="com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl">
 		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
 	</bean>
 	

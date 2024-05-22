@@ -2,7 +2,7 @@ package com.liteworkflow.engine.handlers.impl;
 
 import java.util.List;
 
-import com.liteworkflow.WorkflowException;
+import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.core.Execution;
 import com.liteworkflow.engine.handlers.IHandler;
@@ -28,27 +28,27 @@ public class EndProcessHandler implements IHandler
 	{
 		ProcessEngine engine = execution.getEngine();
 		Order order = execution.getOrder();
-		List<Task> tasks = engine.query().getActiveTasks(order.getId());
+		List<Task> tasks = engine.getQueryService().getActiveTasks(order.getId());
 		for (Task task : tasks)
 		{
 			if (task.isMajor())
-				throw new WorkflowException("存在未完成的主办任务,请确认.");
-			engine.task().complete(task.getId(), ProcessEngine.AUTO);
+				throw new ProcessException("存在未完成的主办任务,请确认.");
+			engine.getTaskService().complete(task.getId(), ProcessEngine.AUTO);
 		}
 		/**
 		 * 结束当前流程实例
 		 */
-		engine.order().complete(order.getId());
+		engine.getOrderService().complete(order.getId());
 
 		/**
 		 * 如果存在父流程，则重新构造Execution执行对象，交给父流程的SubProcessModel模型execute
 		 */
 		if (StringHelper.isNotEmpty(order.getParentId()))
 		{
-			Order parentOrder = engine.query().getOrder(order.getParentId());
+			Order parentOrder = engine.getQueryService().getOrder(order.getParentId());
 			if (parentOrder == null)
 				return;
-			Process process = engine.process().getProcessById(parentOrder.getProcessId());
+			Process process = engine.getProcessService().getProcessById(parentOrder.getProcessId());
 			ProcessModel pm = process.getModel();
 			if (pm == null)
 				return;

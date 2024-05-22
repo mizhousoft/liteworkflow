@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.liteworkflow.WorkflowException;
+import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.order.entity.Order;
@@ -92,7 +92,7 @@ public class Execution implements Serializable
 	{
 		if (execution == null || process == null || parentNodeName == null)
 		{
-			throw new WorkflowException("构造Execution对象失败，请检查execution、process、parentNodeName是否为空");
+			throw new ProcessException("构造Execution对象失败，请检查execution、process、parentNodeName是否为空");
 		}
 		this.engine = execution.getEngine();
 		this.process = process;
@@ -113,7 +113,7 @@ public class Execution implements Serializable
 	{
 		if (process == null || order == null)
 		{
-			throw new WorkflowException("构造Execution对象失败，请检查process、order是否为空");
+			throw new ProcessException("构造Execution对象失败，请检查process、order是否为空");
 		}
 		this.engine = engine;
 		this.process = process;

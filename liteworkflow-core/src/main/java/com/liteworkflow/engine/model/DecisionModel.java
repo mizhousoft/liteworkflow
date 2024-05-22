@@ -3,7 +3,7 @@ package com.liteworkflow.engine.model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.liteworkflow.WorkflowException;
+import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.DecisionHandler;
 import com.liteworkflow.engine.Expression;
 import com.liteworkflow.engine.core.Execution;
@@ -84,7 +84,7 @@ public class DecisionModel extends NodeModel
 			}
 		}
 		if (!isfound)
-			throw new WorkflowException(execution.getOrder().getId() + "->decision节点无法确定下一步执行路线");
+			throw new ProcessException(execution.getOrder().getId() + "->decision节点无法确定下一步执行路线");
 	}
 
 	public String getExpr()

@@ -22,23 +22,23 @@ public class TestProcess extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.process();
-		queryService = engine.query();
+		processService = engine.getProcessService();
+		queryService = engine.getQueryService();
 
-		processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
+		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
 	}
 
 	@Test
 	public void test()
 	{
-		Process process = engine.process().getProcessById(processId);
+		Process process = engine.getProcessService().getProcessById(processId);
 		System.out.println("output 1=" + process);
-		process = engine.process().getProcessByVersion(process.getName(), process.getVersion());
+		process = engine.getProcessService().getProcessByVersion(process.getName(), process.getVersion());
 		System.out.println("output 2=" + process);
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("task1.operator", "1");
 		engine.startInstanceById(processId, "1", args);
-		engine.process().undeploy(processId);
+		engine.getProcessService().undeploy(processId);
 		// engine.startInstanceById(processId, "1", args);
 	}
 }

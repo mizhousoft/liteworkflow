@@ -24,11 +24,11 @@ public class TestSimple extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.process();
-		queryService = engine.query();
+		processService = engine.getProcessService();
+		queryService = engine.getQueryService();
 
-		processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
-		engine.process().updateType(processId, "预算管理流程");
+		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
+		engine.getProcessService().updateType(processId, "预算管理流程");
 	}
 
 	@Test

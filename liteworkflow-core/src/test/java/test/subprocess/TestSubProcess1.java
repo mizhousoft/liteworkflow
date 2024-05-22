@@ -27,11 +27,11 @@ public class TestSubProcess1 extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.process();
-		queryService = engine.query();
+		processService = engine.getProcessService();
+		queryService = engine.getQueryService();
 
-		engine.process().deploy(StreamHelper.getStreamFromClasspath("test/subprocess/child.snaker"));
-		processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/subprocess/subprocess1.snaker"));
+		engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/subprocess/child.snaker"));
+		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/subprocess/subprocess1.snaker"));
 	}
 
 	@Test
@@ -42,7 +42,7 @@ public class TestSubProcess1 extends TestSpring
 		Order order = engine.startInstanceById(processId, "2", args);
 		System.out.println("************************" + order);
 
-		List<Task> tasks = engine.query().getActiveTasks(order.getId());
+		List<Task> tasks = engine.getQueryService().getActiveTasks(order.getId());
 		for (Task task : tasks)
 		{
 			System.out.println("************************begin:::::" + task);

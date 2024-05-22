@@ -2,7 +2,7 @@ package com.liteworkflow.engine.cfg;
 
 import org.springframework.beans.factory.FactoryBean;
 
-import com.liteworkflow.engine.EngineConfiguration;
+import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.ProcessEngine;
 
 /**
@@ -10,9 +10,9 @@ import com.liteworkflow.engine.ProcessEngine;
  *
  * @version
  */
-public class SnakerEngineFactoryBean implements FactoryBean<ProcessEngine>
+public class ProcessEngineFactoryBean implements FactoryBean<ProcessEngine>
 {
-	private EngineConfiguration engineConfiguration;
+	private ProcessEngineConfiguration engineConfiguration;
 
 	/**
 	 * {@inheritDoc}
@@ -37,7 +37,7 @@ public class SnakerEngineFactoryBean implements FactoryBean<ProcessEngine>
 	 * 
 	 * @param engineConfiguration
 	 */
-	public void setEngineConfiguration(EngineConfiguration engineConfiguration)
+	public void setEngineConfiguration(ProcessEngineConfiguration engineConfiguration)
 	{
 		this.engineConfiguration = engineConfiguration;
 	}

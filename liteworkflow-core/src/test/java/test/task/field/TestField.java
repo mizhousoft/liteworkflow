@@ -19,16 +19,16 @@ public class TestField extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.process();
-		queryService = engine.query();
+		processService = engine.getProcessService();
+		queryService = engine.getQueryService();
 
-		processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/task/field/process.snaker"));
+		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/field/process.snaker"));
 	}
 
 	@Test
 	public void test()
 	{
-		ProcessModel model = engine.process().getProcessById(processId).getModel();
+		ProcessModel model = engine.getProcessService().getProcessById(processId).getModel();
 		TaskModel taskModel = (TaskModel) model.getNode("task1");
 		System.out.println(taskModel.getFields());
 	}

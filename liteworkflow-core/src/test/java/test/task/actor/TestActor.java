@@ -17,15 +17,15 @@ public class TestActor extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.process();
-		queryService = engine.query();
+		processService = engine.getProcessService();
+		queryService = engine.getQueryService();
 	}
 
 	@Test
 	public void test()
 	{
-		// engine.task().addTaskActor("13b9edb451e5453394f7980ff4ab7ca9", new String[] { "test1",
+		// engine.getTaskService().addTaskActor("13b9edb451e5453394f7980ff4ab7ca9", new String[] { "test1",
 		// "test2" });
-		engine.task().removeTaskActor("13b9edb451e5453394f7980ff4ab7ca9", "2");
+		engine.getTaskService().removeTaskActor("13b9edb451e5453394f7980ff4ab7ca9", "2");
 	}
 }

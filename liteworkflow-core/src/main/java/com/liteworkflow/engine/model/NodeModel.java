@@ -6,7 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.liteworkflow.WorkflowException;
+import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.Action;
 import com.liteworkflow.engine.core.Execution;
 import com.liteworkflow.engine.helper.ClassHelper;
@@ -114,7 +114,7 @@ public abstract class NodeModel extends BaseModel implements Action
 		catch (Exception e)
 		{
 			log.error("拦截器执行失败=" + e.getMessage());
-			throw new WorkflowException(e);
+			throw new ProcessException(e);
 		}
 	}
 

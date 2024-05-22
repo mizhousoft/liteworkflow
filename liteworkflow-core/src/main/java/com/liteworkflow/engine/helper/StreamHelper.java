@@ -11,7 +11,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 
-import com.liteworkflow.WorkflowException;
+import com.liteworkflow.ProcessException;
 
 /**
  * 流数据帮助类
@@ -64,18 +64,18 @@ public class StreamHelper
 		{
 			if (!file.exists())
 			{
-				throw new WorkflowException("file " + file + " doesn't exist");
+				throw new ProcessException("file " + file + " doesn't exist");
 			}
 			if (file.isDirectory())
 			{
-				throw new WorkflowException("file " + file + " is a directory");
+				throw new ProcessException("file " + file + " is a directory");
 			}
 			stream = new FileInputStream(file);
 
 		}
 		catch (Exception e)
 		{
-			throw new WorkflowException("couldn't access file " + file + ": " + e.getMessage(), e);
+			throw new ProcessException("couldn't access file " + file + ": " + e.getMessage(), e);
 		}
 		return stream;
 	}
@@ -92,7 +92,7 @@ public class StreamHelper
 
 		if (stream == null)
 		{
-			throw new WorkflowException("resource " + resourceName + " does not exist");
+			throw new ProcessException("resource " + resourceName + " does not exist");
 		}
 		return stream;
 	}
@@ -106,7 +106,7 @@ public class StreamHelper
 		}
 		catch (IOException e)
 		{
-			throw new WorkflowException("couldn't open URL stream", e);
+			throw new ProcessException("couldn't open URL stream", e);
 		}
 		return stream;
 	}

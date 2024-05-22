@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.liteworkflow.WorkflowException;
+import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.helper.StreamHelper;
 import com.liteworkflow.order.entity.Order;
@@ -28,10 +28,10 @@ public class TestGroup extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.process();
-		queryService = engine.query();
+		processService = engine.getProcessService();
+		queryService = engine.getQueryService();
 
-		processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/task/group/process.snaker"));
+		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/group/process.snaker"));
 	}
 
 	@Test
@@ -52,7 +52,7 @@ public class TestGroup extends TestSpring
 
 			Assertions.fail();
 		}
-		catch (WorkflowException e)
+		catch (ProcessException e)
 		{
 			Assertions.assertTrue(true);
 		}

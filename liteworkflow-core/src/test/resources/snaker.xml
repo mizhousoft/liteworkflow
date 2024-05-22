@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <config>
-	<bean class="com.liteworkflow.engine.impl.LogInterceptor"/>
-	<bean class="com.liteworkflow.engine.impl.SurrogateInterceptor"/>
+	<bean class="com.liteworkflow.engine.interceptor.LogInterceptor"/>
+	<bean class="com.liteworkflow.engine.interceptor.SurrogateInterceptor"/>
 </config>

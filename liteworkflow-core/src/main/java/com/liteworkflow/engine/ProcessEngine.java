@@ -27,35 +27,35 @@ public interface ProcessEngine
 	 * 
 	 * @return IProcessService 流程定义服务
 	 */
-	public ProcessService process();
+	public ProcessService getProcessService();
 
 	/**
 	 * 获取查询服务
 	 * 
 	 * @return IQueryService 常用查询服务
 	 */
-	public QueryService query();
+	public QueryService getQueryService();
 
 	/**
 	 * 获取实例服务
 	 * 
 	 * @return IQueryService 流程实例服务
 	 */
-	public OrderService order();
+	public OrderService getOrderService();
 
 	/**
 	 * 获取任务服务
 	 * 
 	 * @return ITaskService 任务服务
 	 */
-	public TaskService task();
+	public TaskService getTaskService();
 
 	/**
 	 * 获取管理服务
 	 * 
 	 * @return IManagerService 管理服务
 	 */
-	public ManagerService manager();
+	public ManagerService getManagerService();
 
 	/**
 	 * 根据流程定义ID启动流程实例

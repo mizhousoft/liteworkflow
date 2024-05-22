@@ -27,10 +27,10 @@ public class TestModel extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.process();
-		queryService = engine.query();
+		processService = engine.getProcessService();
+		queryService = engine.getQueryService();
 
-		processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
+		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
 	}
 
 	@Test
@@ -43,7 +43,7 @@ public class TestModel extends TestSpring
 		List<Task> tasks = queryService.getActiveTasks(order.getId());
 		for (Task task : tasks)
 		{
-			TaskModel model = engine.task().getTaskModel(task.getId());
+			TaskModel model = engine.getTaskService().getTaskModel(task.getId());
 			System.out.println(model.getName());
 			List<TaskModel> models = model.getNextModels(TaskModel.class);
 			for (TaskModel tm : models)
@@ -51,7 +51,7 @@ public class TestModel extends TestSpring
 				System.out.println(tm.getName());
 			}
 		}
-		List<TaskModel> models = engine.process().getProcessById(processId).getModel().getModels(TaskModel.class);
+		List<TaskModel> models = engine.getProcessService().getProcessById(processId).getModel().getModels(TaskModel.class);
 		for (TaskModel tm : models)
 		{
 			System.out.println(tm.getName());

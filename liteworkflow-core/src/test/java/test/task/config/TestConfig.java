@@ -19,10 +19,10 @@ public class TestConfig extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.process();
-		queryService = engine.query();
-	
-		processId = engine.process().deploy(StreamHelper.getStreamFromClasspath("test/task/config/process.snaker"));
+		processService = engine.getProcessService();
+		queryService = engine.getQueryService();
+
+		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/config/process.snaker"));
 	}
 
 	@Test

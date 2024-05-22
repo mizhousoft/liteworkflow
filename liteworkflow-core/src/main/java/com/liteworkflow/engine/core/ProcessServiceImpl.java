@@ -6,7 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.liteworkflow.WorkflowException;
+import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.Constants;
 import com.liteworkflow.engine.ProcessService;
 import com.liteworkflow.engine.cache.Cache;
@@ -229,7 +229,7 @@ public class ProcessServiceImpl extends AccessService implements ProcessService,
 		{
 			e.printStackTrace();
 			log.error(e.getMessage());
-			throw new WorkflowException(e.getMessage(), e.getCause());
+			throw new ProcessException(e.getMessage(), e.getCause());
 		}
 	}
 
@@ -265,7 +265,7 @@ public class ProcessServiceImpl extends AccessService implements ProcessService,
 		{
 			e.printStackTrace();
 			log.error(e.getMessage());
-			throw new WorkflowException(e.getMessage(), e.getCause());
+			throw new ProcessException(e.getMessage(), e.getCause());
 		}
 	}
 
@@ -293,7 +293,7 @@ public class ProcessServiceImpl extends AccessService implements ProcessService,
 
 		for (HistoryOrder historyOrder : historyOrders)
 		{
-			ServiceContext.getEngine().order().cascadeRemove(historyOrder.getId());
+			ServiceContext.getEngine().getOrderService().cascadeRemove(historyOrder.getId());
 		}
 		processEntityService.delete(entity);
 		clear(entity);

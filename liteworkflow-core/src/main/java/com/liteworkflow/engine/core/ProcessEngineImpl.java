@@ -10,11 +10,11 @@ import org.slf4j.LoggerFactory;
 
 import com.liteworkflow.engine.ManagerService;
 import com.liteworkflow.engine.OrderService;
+import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.ProcessService;
 import com.liteworkflow.engine.QueryService;
-import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.TaskService;
-import com.liteworkflow.engine.cfg.EngineConfigurationImpl;
+import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.helper.DateHelper;
 import com.liteworkflow.engine.helper.StringHelper;
@@ -40,7 +40,7 @@ public class ProcessEngineImpl implements ProcessEngine
 	/**
 	 * Snaker配置对象
 	 */
-	protected EngineConfigurationImpl configuration;
+	protected ProcessEngineConfigurationImpl configuration;
 
 	/**
 	 * 流程定义业务类
@@ -70,7 +70,8 @@ public class ProcessEngineImpl implements ProcessEngine
 	/**
 	 * 获取流程定义服务
 	 */
-	public ProcessService process()
+	@Override
+	public ProcessService getProcessService()
 	{
 		AssertHelper.notNull(processService);
 		return processService;
@@ -79,7 +80,8 @@ public class ProcessEngineImpl implements ProcessEngine
 	/**
 	 * 获取查询服务
 	 */
-	public QueryService query()
+	@Override
+	public QueryService getQueryService()
 	{
 		AssertHelper.notNull(queryService);
 		return queryService;
@@ -90,7 +92,8 @@ public class ProcessEngineImpl implements ProcessEngine
 	 * 
 	 * @since 1.2.2
 	 */
-	public OrderService order()
+	@Override
+	public OrderService getOrderService()
 	{
 		AssertHelper.notNull(orderService);
 		return orderService;
@@ -101,7 +104,8 @@ public class ProcessEngineImpl implements ProcessEngine
 	 * 
 	 * @since 1.2.2
 	 */
-	public TaskService task()
+	@Override
+	public TaskService getTaskService()
 	{
 		AssertHelper.notNull(taskService);
 		return taskService;
@@ -112,7 +116,8 @@ public class ProcessEngineImpl implements ProcessEngine
 	 * 
 	 * @since 1.4
 	 */
-	public ManagerService manager()
+	@Override
+	public ManagerService getManagerService()
 	{
 		AssertHelper.notNull(managerService);
 		return managerService;
@@ -141,8 +146,8 @@ public class ProcessEngineImpl implements ProcessEngine
 	{
 		if (args == null)
 			args = new HashMap<String, Object>();
-		Process process = process().getProcessById(id);
-		process().check(process, id);
+		Process process = getProcessService().getProcessById(id);
+		getProcessService().check(process, id);
 		return startProcess(process, operator, args);
 	}
 
@@ -185,8 +190,8 @@ public class ProcessEngineImpl implements ProcessEngine
 	{
 		if (args == null)
 			args = new HashMap<String, Object>();
-		Process process = process().getProcessByVersion(name, version);
-		process().check(process, name);
+		Process process = getProcessService().getProcessByVersion(name, version);
+		getProcessService().check(process, name);
 		return startProcess(process, operator, args);
 	}
 
@@ -230,7 +235,7 @@ public class ProcessEngineImpl implements ProcessEngine
 	 */
 	private Execution execute(Process process, String operator, Map<String, Object> args, String parentId, String parentNodeName)
 	{
-		Order order = order().createOrder(process, operator, args, parentId, parentNodeName);
+		Order order = getOrderService().createOrder(process, operator, args, parentId, parentNodeName);
 
 		log.debug("创建流程实例对象:" + order);
 
@@ -288,7 +293,7 @@ public class ProcessEngineImpl implements ProcessEngine
 		AssertHelper.notNull(model, "当前任务未找到流程定义模型");
 		if (StringHelper.isEmpty(nodeName))
 		{
-			Task newTask = task().rejectTask(model, execution.getTask());
+			Task newTask = getTaskService().rejectTask(model, execution.getTask());
 			execution.addTask(newTask);
 		}
 		else
@@ -310,14 +315,14 @@ public class ProcessEngineImpl implements ProcessEngine
 	 */
 	public List<Task> createFreeTask(String orderId, String operator, Map<String, Object> args, TaskModel model)
 	{
-		Order order = query().getOrder(orderId);
+		Order order = getQueryService().getOrder(orderId);
 		AssertHelper.notNull(order, "指定的流程实例[id=" + orderId + "]已完成或不存在");
 		order.setLastUpdator(operator);
 		order.setLastUpdateTime(DateHelper.getTime());
-		Process process = process().getProcessById(order.getProcessId());
+		Process process = getProcessService().getProcessById(order.getProcessId());
 		Execution execution = new Execution(this, process, order, args);
 		execution.setOperator(operator);
-		return task().createTask(model, execution);
+		return getTaskService().createTask(model, execution);
 	}
 
 	/**
@@ -332,15 +337,15 @@ public class ProcessEngineImpl implements ProcessEngine
 	{
 		if (args == null)
 			args = new HashMap<String, Object>();
-		Task task = task().complete(taskId, operator, args);
+		Task task = getTaskService().complete(taskId, operator, args);
 
 		log.debug("任务[taskId=" + taskId + "]已完成");
 
-		Order order = query().getOrder(task.getOrderId());
+		Order order = getQueryService().getOrder(task.getOrderId());
 		AssertHelper.notNull(order, "指定的流程实例[id=" + task.getOrderId() + "]已完成或不存在");
 		order.setLastUpdator(operator);
 		order.setLastUpdateTime(DateHelper.getTime());
-		order().updateOrder(order);
+		getOrderService().updateOrder(order);
 		// 协办任务完成不产生执行对象
 		if (!task.isMajor())
 		{
@@ -358,7 +363,7 @@ public class ProcessEngineImpl implements ProcessEngine
 				args.put(entry.getKey(), entry.getValue());
 			}
 		}
-		Process process = process().getProcessById(order.getProcessId());
+		Process process = getProcessService().getProcessById(order.getProcessId());
 		Execution execution = new Execution(this, process, order, args);
 		execution.setOperator(operator);
 		execution.setTask(task);
@@ -370,7 +375,7 @@ public class ProcessEngineImpl implements ProcessEngine
 	 * 
 	 * @param configuration
 	 */
-	public void setConfiguration(EngineConfigurationImpl configuration)
+	public void setConfiguration(ProcessEngineConfigurationImpl configuration)
 	{
 		this.configuration = configuration;
 	}

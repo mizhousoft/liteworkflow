@@ -26,10 +26,10 @@ public class TestExpire extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.process();
-		queryService = engine.query();
+		processService = engine.getProcessService();
+		queryService = engine.getQueryService();
 
-		engine.process().deploy(StreamHelper.getStreamFromClasspath("test/time/expire/process.snaker"));
+		engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/time/expire/process.snaker"));
 	}
 
 	@Test

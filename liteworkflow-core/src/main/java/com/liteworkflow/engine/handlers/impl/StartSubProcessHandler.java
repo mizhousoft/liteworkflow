@@ -6,7 +6,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import com.liteworkflow.WorkflowException;
+import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.core.Execution;
 import com.liteworkflow.engine.handlers.IHandler;
@@ -48,7 +48,7 @@ public class StartSubProcessHandler implements IHandler
 	{
 		// 根据子流程模型名称获取子流程定义对象
 		ProcessEngine engine = execution.getEngine();
-		Process process = engine.process().getProcessByVersion(model.getProcessName(), model.getVersion());
+		Process process = engine.getProcessService().getProcessByVersion(model.getProcessName(), model.getVersion());
 
 		Execution child = execution.createSubExecution(execution, process, model.getName());
 		Order order = null;
@@ -65,11 +65,11 @@ public class StartSubProcessHandler implements IHandler
 			}
 			catch (InterruptedException e)
 			{
-				throw new WorkflowException("创建子流程线程被强制终止执行", e.getCause());
+				throw new ProcessException("创建子流程线程被强制终止执行", e.getCause());
 			}
 			catch (ExecutionException e)
 			{
-				throw new WorkflowException("创建子流程线程执行异常.", e.getCause());
+				throw new ProcessException("创建子流程线程执行异常.", e.getCause());
 			}
 		}
 		else
@@ -77,7 +77,7 @@ public class StartSubProcessHandler implements IHandler
 			order = engine.startInstanceByExecution(child);
 		}
 		AssertHelper.notNull(order, "子流程创建失败");
-		execution.addTasks(engine.query().getActiveTasks(order.getId()));
+		execution.addTasks(engine.getQueryService().getActiveTasks(order.getId()));
 	}
 
 	/**

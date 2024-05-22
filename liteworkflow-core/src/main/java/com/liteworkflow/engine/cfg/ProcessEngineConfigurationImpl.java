@@ -16,8 +16,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.liteworkflow.WorkflowException;
-import com.liteworkflow.engine.EngineConfiguration;
+import com.liteworkflow.ProcessException;
+import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.ManagerService;
 import com.liteworkflow.engine.OrderService;
 import com.liteworkflow.engine.ProcessService;
@@ -77,12 +77,12 @@ import com.liteworkflow.workitem.service.impl.WorkItemEntityServiceImpl;
  * @author yuqs
  * @since 1.0
  */
-public class EngineConfigurationImpl implements EngineConfiguration, ApplicationContextAware
+public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguration, ApplicationContextAware
 {
 	/**
 	 * 
 	 */
-	private static final Logger log = LoggerFactory.getLogger(EngineConfigurationImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(ProcessEngineConfigurationImpl.class);
 
 	private static final String BASE_CONFIG_FILE = "base.config.xml";
 
@@ -432,7 +432,7 @@ public class EngineConfigurationImpl implements EngineConfiguration, Application
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			throw new WorkflowException("资源解析失败，请检查配置文件[" + resource + "]", e.getCause());
+			throw new ProcessException("资源解析失败，请检查配置文件[" + resource + "]", e.getCause());
 		}
 	}
 
@@ -442,7 +442,7 @@ public class EngineConfigurationImpl implements EngineConfiguration, Application
 	 * @param fileName 属性文件名称
 	 * @return Configuration
 	 */
-	public EngineConfigurationImpl initProperties(String fileName)
+	public ProcessEngineConfigurationImpl initProperties(String fileName)
 	{
 		ConfigHelper.loadProperties(fileName);
 		return this;
@@ -454,7 +454,7 @@ public class EngineConfigurationImpl implements EngineConfiguration, Application
 	 * @param properties 属性对象
 	 * @return Configuration
 	 */
-	public EngineConfigurationImpl initProperties(Properties properties)
+	public ProcessEngineConfigurationImpl initProperties(Properties properties)
 	{
 		ConfigHelper.loadProperties(properties);
 		return this;
