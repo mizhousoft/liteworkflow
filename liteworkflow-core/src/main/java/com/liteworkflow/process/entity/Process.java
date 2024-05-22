@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.Blob;
 
-import com.liteworkflow.engine.SnakerException;
+import com.liteworkflow.WorkflowException;
 import com.liteworkflow.engine.helper.StreamHelper;
 import com.liteworkflow.engine.model.ProcessModel;
 
@@ -178,7 +178,7 @@ public class Process implements Serializable
 				}
 				catch (Exception e1)
 				{
-					throw new SnakerException("couldn't extract stream out of blob", e1);
+					throw new WorkflowException("couldn't extract stream out of blob", e1);
 				}
 			}
 		}

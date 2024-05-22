@@ -5,11 +5,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.liteworkflow.engine.SnakerException;
-import com.liteworkflow.engine.SnakerInterceptor;
+import com.liteworkflow.WorkflowException;
 import com.liteworkflow.engine.core.Execution;
 import com.liteworkflow.engine.core.ServiceContext;
 import com.liteworkflow.engine.handlers.IHandler;
+import com.liteworkflow.engine.interceptor.SnakerInterceptor;
 import com.liteworkflow.engine.model.TaskModel;
 import com.liteworkflow.task.entity.Task;
 
@@ -59,7 +59,7 @@ public class CreateTaskHandler implements IHandler
 		catch (Exception e)
 		{
 			log.error("拦截器执行失败=" + e.getMessage());
-			throw new SnakerException(e);
+			throw new WorkflowException(e);
 		}
 	}
 }

@@ -18,7 +18,7 @@ import com.liteworkflow.engine.Expression;
  */
 public class SpelExpression implements Expression
 {
-	ExpressionParser parser = new SpelExpressionParser();
+	private ExpressionParser parser = new SpelExpressionParser();
 
 	public <T> T eval(Class<T> T, String expr, Map<String, Object> args)
 	{
@@ -27,6 +27,7 @@ public class SpelExpression implements Expression
 		{
 			context.setVariable(entry.getKey(), entry.getValue());
 		}
+
 		return parser.parseExpression(expr).getValue(context, T);
 	}
 }

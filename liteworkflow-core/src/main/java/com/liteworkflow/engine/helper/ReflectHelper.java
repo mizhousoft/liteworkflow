@@ -5,7 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-import com.liteworkflow.engine.SnakerException;
+import com.liteworkflow.WorkflowException;
 
 /**
  * 反射帮助类
@@ -110,7 +110,7 @@ public class ReflectHelper
 	{
 		if (method == null)
 		{
-			throw new SnakerException("方法不能为空");
+			throw new WorkflowException("方法不能为空");
 		}
 		try
 		{
@@ -123,13 +123,13 @@ public class ReflectHelper
 		catch (InvocationTargetException e)
 		{
 			Throwable targetException = e.getTargetException();
-			throw new SnakerException(
+			throw new WorkflowException(
 			        "不能调用 '" + method.getName() + "' with " + Arrays.toString(args) + " on " + target + ": " + targetException.getMessage(),
 			        targetException);
 		}
 		catch (Exception e)
 		{
-			throw new SnakerException(
+			throw new WorkflowException(
 			        "不能调用 '" + method.getName() + "' with " + Arrays.toString(args) + " on " + target + ": " + e.getMessage(), e);
 		}
 	}

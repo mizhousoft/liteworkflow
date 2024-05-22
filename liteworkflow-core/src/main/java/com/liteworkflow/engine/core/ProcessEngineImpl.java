@@ -12,12 +12,9 @@ import com.liteworkflow.engine.ManagerService;
 import com.liteworkflow.engine.OrderService;
 import com.liteworkflow.engine.ProcessService;
 import com.liteworkflow.engine.QueryService;
-import com.liteworkflow.engine.SnakerEngine;
+import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.TaskService;
-import com.liteworkflow.engine.cache.CacheManager;
-import com.liteworkflow.engine.cache.CacheManagerAware;
-import com.liteworkflow.engine.cache.memory.MemoryCacheManager;
-import com.liteworkflow.engine.cfg.Configuration;
+import com.liteworkflow.engine.cfg.EngineConfigurationImpl;
 import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.helper.DateHelper;
 import com.liteworkflow.engine.helper.StringHelper;
@@ -36,14 +33,14 @@ import com.liteworkflow.task.entity.Task;
  * @author yuqs
  * @since 1.0
  */
-public class SnakerEngineImpl implements SnakerEngine
+public class ProcessEngineImpl implements ProcessEngine
 {
-	private static final Logger log = LoggerFactory.getLogger(SnakerEngineImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(ProcessEngineImpl.class);
 
 	/**
 	 * Snaker配置对象
 	 */
-	protected Configuration configuration;
+	protected EngineConfigurationImpl configuration;
 
 	/**
 	 * 流程定义业务类
@@ -69,32 +66,6 @@ public class SnakerEngineImpl implements SnakerEngine
 	 * 管理业务类
 	 */
 	protected ManagerService managerService;
-
-	/**
-	 * 根据serviceContext上下文，查找processService、orderService、taskService服务
-	 */
-	public SnakerEngine configure(Configuration config)
-	{
-		this.configuration = config;
-		processService = ServiceContext.find(ProcessService.class);
-		queryService = ServiceContext.find(QueryService.class);
-		orderService = ServiceContext.find(OrderService.class);
-		taskService = ServiceContext.find(TaskService.class);
-		managerService = ServiceContext.find(ManagerService.class);
-
-		CacheManager cacheManager = ServiceContext.find(CacheManager.class);
-		if (cacheManager == null)
-		{
-			// 默认使用内存缓存管理器
-			cacheManager = new MemoryCacheManager();
-		}
-		List<CacheManagerAware> cacheServices = ServiceContext.findList(CacheManagerAware.class);
-		for (CacheManagerAware cacheService : cacheServices)
-		{
-			cacheService.setCacheManager(cacheManager);
-		}
-		return this;
-	}
 
 	/**
 	 * 获取流程定义服务
@@ -260,10 +231,9 @@ public class SnakerEngineImpl implements SnakerEngine
 	private Execution execute(Process process, String operator, Map<String, Object> args, String parentId, String parentNodeName)
 	{
 		Order order = order().createOrder(process, operator, args, parentId, parentNodeName);
-		if (log.isDebugEnabled())
-		{
-			log.debug("创建流程实例对象:" + order);
-		}
+
+		log.debug("创建流程实例对象:" + order);
+
 		Execution current = new Execution(this, process, order, args);
 		current.setOperator(operator);
 		return current;
@@ -363,10 +333,9 @@ public class SnakerEngineImpl implements SnakerEngine
 		if (args == null)
 			args = new HashMap<String, Object>();
 		Task task = task().complete(taskId, operator, args);
-		if (log.isDebugEnabled())
-		{
-			log.debug("任务[taskId=" + taskId + "]已完成");
-		}
+
+		log.debug("任务[taskId=" + taskId + "]已完成");
+
 		Order order = query().getOrder(task.getOrderId());
 		AssertHelper.notNull(order, "指定的流程实例[id=" + task.getOrderId() + "]已完成或不存在");
 		order.setLastUpdator(operator);
@@ -394,6 +363,16 @@ public class SnakerEngineImpl implements SnakerEngine
 		execution.setOperator(operator);
 		execution.setTask(task);
 		return execution;
+	}
+
+	/**
+	 * 设置configuration
+	 * 
+	 * @param configuration
+	 */
+	public void setConfiguration(EngineConfigurationImpl configuration)
+	{
+		this.configuration = configuration;
 	}
 
 	public void setProcessService(ProcessService processService)

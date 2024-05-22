@@ -6,8 +6,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import com.liteworkflow.engine.SnakerEngine;
-import com.liteworkflow.engine.SnakerException;
+import com.liteworkflow.WorkflowException;
+import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.core.Execution;
 import com.liteworkflow.engine.handlers.IHandler;
 import com.liteworkflow.engine.helper.AssertHelper;
@@ -47,7 +47,7 @@ public class StartSubProcessHandler implements IHandler
 	public void handle(Execution execution)
 	{
 		// 根据子流程模型名称获取子流程定义对象
-		SnakerEngine engine = execution.getEngine();
+		ProcessEngine engine = execution.getEngine();
 		Process process = engine.process().getProcessByVersion(model.getProcessName(), model.getVersion());
 
 		Execution child = execution.createSubExecution(execution, process, model.getName());
@@ -65,11 +65,11 @@ public class StartSubProcessHandler implements IHandler
 			}
 			catch (InterruptedException e)
 			{
-				throw new SnakerException("创建子流程线程被强制终止执行", e.getCause());
+				throw new WorkflowException("创建子流程线程被强制终止执行", e.getCause());
 			}
 			catch (ExecutionException e)
 			{
-				throw new SnakerException("创建子流程线程执行异常.", e.getCause());
+				throw new WorkflowException("创建子流程线程执行异常.", e.getCause());
 			}
 		}
 		else
@@ -88,7 +88,7 @@ public class StartSubProcessHandler implements IHandler
 	 */
 	class ExecuteTask implements Callable<Order>
 	{
-		private SnakerEngine engine;
+		private ProcessEngine engine;
 
 		private Execution child;
 

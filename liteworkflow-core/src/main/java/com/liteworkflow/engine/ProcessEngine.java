@@ -3,7 +3,6 @@ package com.liteworkflow.engine;
 import java.util.List;
 import java.util.Map;
 
-import com.liteworkflow.engine.cfg.Configuration;
 import com.liteworkflow.engine.core.Execution;
 import com.liteworkflow.engine.model.TaskModel;
 import com.liteworkflow.order.entity.Order;
@@ -15,21 +14,13 @@ import com.liteworkflow.task.entity.Task;
  * @author yuqs
  * @since 1.0
  */
-public interface SnakerEngine
+public interface ProcessEngine
 {
 	public static final String ADMIN = "snaker.admin";
 
 	public static final String AUTO = "snaker.auto";
 
 	public static final String ID = "snaker.orderNo";
-
-	/**
-	 * 根据Configuration对象配置实现类
-	 * 
-	 * @param config 全局配置对象
-	 * @return SnakerEngine 流程引擎
-	 */
-	public SnakerEngine configure(Configuration config);
 
 	/**
 	 * 获取process服务

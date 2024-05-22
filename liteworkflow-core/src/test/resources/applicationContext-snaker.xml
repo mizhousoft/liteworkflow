@@ -4,45 +4,26 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<description>SnakerEngine配置 </description>
-	<bean class="com.liteworkflow.engine.spring.SpringSnakerEngine">
-		<property name="processService" ref="processService"/>
-		<property name="orderService" ref="orderService"/>
-		<property name="taskService" ref="taskService"/>
-		<property name="queryService" ref="queryService"/>
-		<property name="managerService" ref="managerService"/>
-	</bean>
-
-	<bean id="processService" class="com.liteworkflow.engine.core.ProcessServiceImpl">
-		<property name="cacheManager" ref="cacheManager"/>
-		<property name="processEntityService" ref="processEntityService" />
-		<property name="historyOrderEntityService" ref="historyOrderEntityService" />
-	</bean>
-	<bean id="orderService" class="com.liteworkflow.engine.core.OrderServiceImpl">
-		<property name="orderEntityService" ref="orderEntityService" />
-		<property name="ccOrderEntityService" ref="ccOrderEntityService" />
-		<property name="historyOrderEntityService" ref="historyOrderEntityService" />
-		<property name="taskEntityService" ref="taskEntityService" />
-		<property name="historyTaskEntityService" ref="historyTaskEntityService" />
-	</bean>
-	<bean id="taskService" class="com.liteworkflow.engine.core.TaskServiceImpl">
-		<property name="taskEntityService" ref="taskEntityService" />
-		<property name="taskActorEntityService" ref="taskActorEntityService" />
-		<property name="historyTaskEntityService" ref="historyTaskEntityService" />
-		<property name="orderEntityService" ref="orderEntityService" />
-	</bean>
-	<bean id="managerService" class="com.liteworkflow.engine.core.ManagerServiceImpl">
-		<property name="surrogateEntityService" ref="surrogateEntityService" />
-	</bean>
-	<bean id="queryService" class="com.liteworkflow.engine.core.QueryServiceImpl">
-		<property name="taskEntityService" ref="taskEntityService" />
-		<property name="historyTaskEntityService" ref="historyTaskEntityService" />
-		<property name="orderEntityService" ref="orderEntityService" />
-		<property name="historyOrderEntityService" ref="historyOrderEntityService" />
-		<property name="taskActorEntityService" ref="taskActorEntityService" />
-		<property name="historyTaskActorEntityService" ref="historyTaskActorEntityService" />
-		<property name="ccOrderEntityService" ref="ccOrderEntityService" />
-		<property name="workItemEntityService" ref="workItemEntityService" />
+	
+	<bean class="com.liteworkflow.engine.cfg.SnakerEngineFactoryBean">
+		<property name="engineConfiguration" ref="engineConfiguration"/>
 	</bean>
 	
-	<bean id="cacheManager" class="com.liteworkflow.engine.cache.memory.MemoryCacheManager"/>
+	<bean id="engineConfiguration" class="com.liteworkflow.engine.cfg.EngineConfigurationImpl">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	
+	<bean id="databaseIdProvider" class="org.apache.ibatis.mapping.VendorDatabaseIdProvider">
+		<property name="properties">
+		    <props>
+		      	<prop key="MySQL">mysql</prop>
+		    </props>
+	  	</property>
+	</bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	  	<property name="dataSource" ref="dataSource" />
+	  	<property name="databaseIdProvider" ref="databaseIdProvider"/>
+	</bean>
+	
 </beans>

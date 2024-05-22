@@ -11,7 +11,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.liteworkflow.engine.SnakerException;
+import com.liteworkflow.WorkflowException;
 import com.liteworkflow.engine.core.ServiceContext;
 import com.liteworkflow.engine.helper.XmlHelper;
 import com.liteworkflow.engine.model.NodeModel;
@@ -80,16 +80,16 @@ public class ModelParser
 			catch (SAXException e)
 			{
 				e.printStackTrace();
-				throw new SnakerException(e);
+				throw new WorkflowException(e);
 			}
 			catch (IOException e)
 			{
-				throw new SnakerException(e);
+				throw new WorkflowException(e);
 			}
 		}
 		else
 		{
-			throw new SnakerException("documentBuilder is null");
+			throw new WorkflowException("documentBuilder is null");
 		}
 	}
 
@@ -112,7 +112,7 @@ public class ModelParser
 		}
 		catch (RuntimeException e)
 		{
-			throw new SnakerException(e);
+			throw new WorkflowException(e);
 		}
 	}
 }

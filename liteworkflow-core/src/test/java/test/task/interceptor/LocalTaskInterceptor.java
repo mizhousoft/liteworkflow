@@ -3,8 +3,8 @@ package test.task.interceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.liteworkflow.engine.SnakerInterceptor;
 import com.liteworkflow.engine.core.Execution;
+import com.liteworkflow.engine.interceptor.SnakerInterceptor;
 import com.liteworkflow.task.entity.Task;
 
 /**

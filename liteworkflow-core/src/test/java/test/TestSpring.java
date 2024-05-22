@@ -8,19 +8,18 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import com.liteworkflow.engine.ProcessService;
 import com.liteworkflow.engine.QueryService;
-import com.liteworkflow.engine.SnakerEngine;
+import com.liteworkflow.engine.ProcessEngine;
 
 /**
  * @author yuqs
  */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = { "classpath:applicationContext.xml", "classpath:applicationContext-snaker.xml",
-        "classpath:applicationContext-mybatis.xml" })
+@ContextConfiguration(locations = { "classpath:applicationContext.xml", "classpath:applicationContext-snaker.xml" })
 public class TestSpring extends AbstractJUnit4SpringContextTests
 {
 	protected String processId;
 
-	protected SnakerEngine engine;
+	protected ProcessEngine engine;
 
 	protected ProcessService processService;
 

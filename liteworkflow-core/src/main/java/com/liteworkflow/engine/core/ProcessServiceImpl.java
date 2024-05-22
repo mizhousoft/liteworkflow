@@ -6,9 +6,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.liteworkflow.WorkflowException;
 import com.liteworkflow.engine.Constants;
 import com.liteworkflow.engine.ProcessService;
-import com.liteworkflow.engine.SnakerException;
 import com.liteworkflow.engine.cache.Cache;
 import com.liteworkflow.engine.cache.CacheManager;
 import com.liteworkflow.engine.cache.CacheManagerAware;
@@ -116,19 +116,15 @@ public class ProcessServiceImpl extends AccessService implements ProcessService,
 		}
 		if (entity != null)
 		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("obtain process[id={}] from cache.", id);
-			}
+			log.debug("obtain process[id={}] from cache.", id);
+
 			return entity;
 		}
 		entity = processEntityService.getProcess(id);
 		if (entity != null)
 		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("obtain process[id={}] from database.", id);
-			}
+			log.debug("obtain process[id={}] from database.", id);
+
 			cache(entity);
 		}
 		return entity;
@@ -167,10 +163,8 @@ public class ProcessServiceImpl extends AccessService implements ProcessService,
 		}
 		if (entity != null)
 		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("obtain process[name={}] from cache.", processName);
-			}
+			log.debug("obtain process[name={}] from cache.", processName);
+
 			return entity;
 		}
 
@@ -180,10 +174,8 @@ public class ProcessServiceImpl extends AccessService implements ProcessService,
 		List<Process> processs = processEntityService.queryList(request);
 		if (processs != null && !processs.isEmpty())
 		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("obtain process[name={}] from database.", processName);
-			}
+			log.debug("obtain process[name={}] from database.", processName);
+
 			entity = processs.get(0);
 			cache(entity);
 		}
@@ -237,7 +229,7 @@ public class ProcessServiceImpl extends AccessService implements ProcessService,
 		{
 			e.printStackTrace();
 			log.error(e.getMessage());
-			throw new SnakerException(e.getMessage(), e.getCause());
+			throw new WorkflowException(e.getMessage(), e.getCause());
 		}
 	}
 
@@ -273,7 +265,7 @@ public class ProcessServiceImpl extends AccessService implements ProcessService,
 		{
 			e.printStackTrace();
 			log.error(e.getMessage());
-			throw new SnakerException(e.getMessage(), e.getCause());
+			throw new WorkflowException(e.getMessage(), e.getCause());
 		}
 	}
 
@@ -339,19 +331,14 @@ public class ProcessServiceImpl extends AccessService implements ProcessService,
 		String processName = entity.getName() + DEFAULT_SEPARATOR + entity.getVersion();
 		if (nameCache != null && entityCache != null)
 		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("cache process id is[{}],name is[{}]", entity.getId(), processName);
-			}
+			log.debug("cache process id is[{}],name is[{}]", entity.getId(), processName);
+
 			entityCache.put(processName, entity);
 			nameCache.put(entity.getId(), processName);
 		}
 		else
 		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("no cache implementation class");
-			}
+			log.debug("no cache implementation class");
 		}
 	}
 
@@ -370,11 +357,6 @@ public class ProcessServiceImpl extends AccessService implements ProcessService,
 			nameCache.remove(entity.getId());
 			entityCache.remove(processName);
 		}
-	}
-
-	public void setCacheManager(CacheManager cacheManager)
-	{
-		this.cacheManager = cacheManager;
 	}
 
 	private Cache<String, Process> ensureAvailableEntityCache()
@@ -435,5 +417,10 @@ public class ProcessServiceImpl extends AccessService implements ProcessService,
 	public void setHistoryOrderEntityService(HistoryOrderEntityService historyOrderEntityService)
 	{
 		this.historyOrderEntityService = historyOrderEntityService;
+	}
+
+	public void setCacheManager(CacheManager cacheManager)
+	{
+		this.cacheManager = cacheManager;
 	}
 }

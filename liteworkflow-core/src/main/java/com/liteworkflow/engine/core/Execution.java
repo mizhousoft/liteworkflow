@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.liteworkflow.engine.SnakerEngine;
-import com.liteworkflow.engine.SnakerException;
+import com.liteworkflow.WorkflowException;
+import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.order.entity.Order;
 import com.liteworkflow.process.entity.Process;
@@ -28,7 +28,7 @@ public class Execution implements Serializable
 	/**
 	 * SnakerEngine holder
 	 */
-	private SnakerEngine engine;
+	private ProcessEngine engine;
 
 	/**
 	 * 流程定义对象
@@ -92,7 +92,7 @@ public class Execution implements Serializable
 	{
 		if (execution == null || process == null || parentNodeName == null)
 		{
-			throw new SnakerException("构造Execution对象失败，请检查execution、process、parentNodeName是否为空");
+			throw new WorkflowException("构造Execution对象失败，请检查execution、process、parentNodeName是否为空");
 		}
 		this.engine = execution.getEngine();
 		this.process = process;
@@ -109,11 +109,11 @@ public class Execution implements Serializable
 	 * @param order
 	 * @param args
 	 */
-	public Execution(SnakerEngine engine, Process process, Order order, Map<String, Object> args)
+	public Execution(ProcessEngine engine, Process process, Order order, Map<String, Object> args)
 	{
 		if (process == null || order == null)
 		{
-			throw new SnakerException("构造Execution对象失败，请检查process、order是否为空");
+			throw new WorkflowException("构造Execution对象失败，请检查process、order是否为空");
 		}
 		this.engine = engine;
 		this.process = process;
@@ -269,7 +269,7 @@ public class Execution implements Serializable
 	 * 
 	 * @return
 	 */
-	public SnakerEngine getEngine()
+	public ProcessEngine getEngine()
 	{
 		return engine;
 	}

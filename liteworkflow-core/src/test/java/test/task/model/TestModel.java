@@ -7,7 +7,7 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.liteworkflow.engine.SnakerEngine;
+import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.helper.StreamHelper;
 import com.liteworkflow.engine.model.TaskModel;
 import com.liteworkflow.order.entity.Order;
@@ -26,7 +26,7 @@ public class TestModel extends TestSpring
 	@BeforeEach
 	public void before()
 	{
-		engine = applicationContext.getBean(SnakerEngine.class);
+		engine = applicationContext.getBean(ProcessEngine.class);
 		processService = engine.process();
 		queryService = engine.query();
 

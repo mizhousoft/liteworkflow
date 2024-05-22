@@ -1,4 +1,4 @@
-package com.liteworkflow.engine.impl;
+package com.liteworkflow.engine.interceptor;
 
 import java.util.Date;
 import java.util.Map;
@@ -7,7 +7,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.liteworkflow.engine.SnakerInterceptor;
 import com.liteworkflow.engine.core.Execution;
 import com.liteworkflow.engine.core.ServiceContext;
 import com.liteworkflow.engine.model.TaskModel;

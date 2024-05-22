@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.liteworkflow.engine.Context;
-import com.liteworkflow.engine.SnakerEngine;
+import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.helper.AssertHelper;
 
 /**
@@ -28,7 +28,7 @@ public abstract class ServiceContext
 	/**
 	 * 流程引擎的引用
 	 */
-	private static SnakerEngine engine;
+	private static ProcessEngine engine;
 
 	/**
 	 * 获取Context实现类
@@ -55,12 +55,12 @@ public abstract class ServiceContext
 	 * 
 	 * @return
 	 */
-	public static SnakerEngine getEngine()
+	public static ProcessEngine getEngine()
 	{
 		AssertHelper.notNull(context, "未注册服务上下文");
 		if (engine == null)
 		{
-			engine = context.find(SnakerEngine.class);
+			engine = context.find(ProcessEngine.class);
 		}
 		return engine;
 	}
@@ -74,10 +74,9 @@ public abstract class ServiceContext
 	public static void put(String name, Object object)
 	{
 		AssertHelper.notNull(context, "未注册服务上下文");
-		if (log.isInfoEnabled())
-		{
-			log.info("put new instance[name=" + name + "][object=" + object + "]");
-		}
+
+		log.info("put new instance[name=" + name + "][object=" + object + "]");
+
 		context.put(name, object);
 	}
 
@@ -90,10 +89,9 @@ public abstract class ServiceContext
 	public static void put(String name, Class<?> clazz)
 	{
 		AssertHelper.notNull(context, "未注册服务上下文");
-		if (log.isInfoEnabled())
-		{
-			log.info("put new instance[name=" + name + "][clazz=" + clazz.getName() + "]");
-		}
+
+		log.info("put new instance[name=" + name + "][clazz=" + clazz.getName() + "]");
+
 		context.put(name, clazz);
 	}
 

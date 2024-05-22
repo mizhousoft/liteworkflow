@@ -1,4 +1,4 @@
-package com.liteworkflow.engine;
+package com.liteworkflow;
 
 /**
  * 框架抛出的所有异常都是此类（unchecked exception）
@@ -6,30 +6,30 @@ package com.liteworkflow.engine;
  * @author yuqs
  * @since 1.0
  */
-public class SnakerException extends RuntimeException
+public class WorkflowException extends RuntimeException
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5220859421440167454L;
 
-	public SnakerException()
+	public WorkflowException()
 	{
 		super();
 	}
 
-	public SnakerException(String msg, Throwable cause)
+	public WorkflowException(String msg, Throwable cause)
 	{
 		super(msg);
 		super.initCause(cause);
 	}
 
-	public SnakerException(String msg)
+	public WorkflowException(String msg)
 	{
 		super(msg);
 	}
 
-	public SnakerException(Throwable cause)
+	public WorkflowException(Throwable cause)
 	{
 		super();
 		super.initCause(cause);

@@ -6,7 +6,7 @@ import java.util.Map;
 import com.liteworkflow.engine.Completion;
 import com.liteworkflow.engine.Constants;
 import com.liteworkflow.engine.OrderService;
-import com.liteworkflow.engine.SnakerEngine;
+import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.helper.DateHelper;
 import com.liteworkflow.engine.helper.JsonHelper;
@@ -74,7 +74,7 @@ public class OrderServiceImpl extends AccessService implements OrderService
 				String expireTime = DateHelper.parseTime(args.get(model.getExpireTime()));
 				order.setExpireTime(expireTime);
 			}
-			String orderNo = (String) args.get(SnakerEngine.ID);
+			String orderNo = (String) args.get(ProcessEngine.ID);
 			if (StringHelper.isNotEmpty(orderNo))
 			{
 				order.setOrderNo(orderNo);
@@ -192,7 +192,7 @@ public class OrderServiceImpl extends AccessService implements OrderService
 	 */
 	public void terminate(String orderId, String operator)
 	{
-		SnakerEngine engine = ServiceContext.getEngine();
+		ProcessEngine engine = ServiceContext.getEngine();
 		List<Task> tasks = taskEntityService.queryByOrderId(orderId);
 		for (Task task : tasks)
 		{
@@ -226,7 +226,7 @@ public class OrderServiceImpl extends AccessService implements OrderService
 		historyOrder.setOrderState(Constants.STATE_ACTIVE);
 		historyOrderEntityService.update(historyOrder);
 
-		SnakerEngine engine = ServiceContext.getEngine();
+		ProcessEngine engine = ServiceContext.getEngine();
 		List<HistoryTask> histTasks = historyTaskEntityService.queryByOrderId(orderId);
 		if (histTasks != null && !histTasks.isEmpty())
 		{

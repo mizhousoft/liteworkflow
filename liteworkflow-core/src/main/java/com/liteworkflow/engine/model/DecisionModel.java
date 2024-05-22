@@ -3,13 +3,13 @@ package com.liteworkflow.engine.model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.liteworkflow.WorkflowException;
 import com.liteworkflow.engine.DecisionHandler;
 import com.liteworkflow.engine.Expression;
-import com.liteworkflow.engine.SnakerException;
 import com.liteworkflow.engine.core.Execution;
-import com.liteworkflow.engine.core.ServiceContext;
 import com.liteworkflow.engine.helper.ClassHelper;
 import com.liteworkflow.engine.helper.StringHelper;
+import com.liteworkflow.engine.spring.SpelExpression;
 
 /**
  * 决策定义decision元素
@@ -44,18 +44,12 @@ public class DecisionModel extends NodeModel
 	/**
 	 * 表达式解析器
 	 */
-	private transient Expression expression;
+	private Expression expression = new SpelExpression();
 
 	public void exec(Execution execution)
 	{
 		log.info(execution.getOrder().getId() + "->decision execution.getArgs():" + execution.getArgs());
-		if (expression == null)
-		{
-			expression = ServiceContext.getContext().find(Expression.class);
-		}
-		log.info("expression is " + expression);
-		if (expression == null)
-			throw new SnakerException("表达式解析器为空，请检查配置.");
+
 		String next = null;
 		if (StringHelper.isNotEmpty(expr))
 		{
@@ -90,7 +84,7 @@ public class DecisionModel extends NodeModel
 			}
 		}
 		if (!isfound)
-			throw new SnakerException(execution.getOrder().getId() + "->decision节点无法确定下一步执行路线");
+			throw new WorkflowException(execution.getOrder().getId() + "->decision节点无法确定下一步执行路线");
 	}
 
 	public String getExpr()

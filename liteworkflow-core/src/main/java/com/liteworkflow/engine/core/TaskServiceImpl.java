@@ -6,12 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.liteworkflow.WorkflowException;
 import com.liteworkflow.engine.Assignment;
 import com.liteworkflow.engine.AssignmentHandler;
 import com.liteworkflow.engine.Completion;
 import com.liteworkflow.engine.Constants;
-import com.liteworkflow.engine.SnakerEngine;
-import com.liteworkflow.engine.SnakerException;
+import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.TaskAccessStrategy;
 import com.liteworkflow.engine.TaskService;
 import com.liteworkflow.engine.helper.AssertHelper;
@@ -76,7 +76,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	 * 完成指定任务
 	 * 该方法仅仅结束活动任务，并不能驱动流程继续执行
 	 * 
-	 * @see SnakerEngineImpl#executeTask(String, String, java.util.Map)
+	 * @see ProcessEngineImpl#executeTask(String, String, java.util.Map)
 	 */
 	public Task complete(String taskId, String operator, Map<String, Object> args)
 	{
@@ -85,7 +85,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		task.setVariable(JsonHelper.toJson(args));
 		if (!isAllowed(task, operator))
 		{
-			throw new SnakerException("当前参与者[" + operator + "]不允许执行任务[taskId=" + taskId + "]");
+			throw new WorkflowException("当前参与者[" + operator + "]不允许执行任务[taskId=" + taskId + "]");
 		}
 		HistoryTask history = new HistoryTask(task);
 		history.setFinishTime(DateHelper.getTime());
@@ -161,7 +161,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		AssertHelper.notNull(task, "指定的任务[id=" + taskId + "]不存在");
 		if (!isAllowed(task, operator))
 		{
-			throw new SnakerException("当前参与者[" + operator + "]不允许提取任务[taskId=" + taskId + "]");
+			throw new WorkflowException("当前参与者[" + operator + "]不允许提取任务[taskId=" + taskId + "]");
 		}
 		task.setOperator(operator);
 		task.setFinishTime(DateHelper.getTime());
@@ -196,7 +196,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		}
 		else
 		{
-			throw new SnakerException("当前参与者[" + operator + "]不允许唤醒历史任务[taskId=" + taskId + "]");
+			throw new WorkflowException("当前参与者[" + operator + "]不允许唤醒历史任务[taskId=" + taskId + "]");
 		}
 	}
 
@@ -250,7 +250,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 				}
 				catch (CloneNotSupportedException ex)
 				{
-					throw new SnakerException("任务对象不支持复制", ex.getCause());
+					throw new WorkflowException("任务对象不支持复制", ex.getCause());
 				}
 				break;
 			default:
@@ -320,7 +320,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		}
 		if (tasks == null || tasks.isEmpty())
 		{
-			throw new SnakerException("后续活动任务已完成或不存在，无法撤回.");
+			throw new WorkflowException("后续活动任务已完成或不存在，无法撤回.");
 		}
 		for (Task task : tasks)
 		{
@@ -343,14 +343,14 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		String parentTaskId = currentTask.getParentTaskId();
 		if (StringHelper.isEmpty(parentTaskId) || parentTaskId.equals(START))
 		{
-			throw new SnakerException("上一步任务ID为空，无法驳回至上一步处理");
+			throw new WorkflowException("上一步任务ID为空，无法驳回至上一步处理");
 		}
 		NodeModel current = model.getNode(currentTask.getTaskName());
 		HistoryTask history = historyTaskEntityService.getHistTask(parentTaskId);
 		NodeModel parent = model.getNode(history.getTaskName());
 		if (!NodeModel.canRejected(current, parent))
 		{
-			throw new SnakerException("无法驳回至上一步处理，请确认上一步骤并非fork、join、suprocess以及会签任务");
+			throw new WorkflowException("无法驳回至上一步处理，请确认上一步骤并非fork、join、suprocess以及会签任务");
 		}
 
 		Task task = history.undoTask();
@@ -404,7 +404,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		}
 		catch (CloneNotSupportedException e)
 		{
-			throw new SnakerException("任务对象不支持复制", e.getCause());
+			throw new WorkflowException("任务对象不支持复制", e.getCause());
 		}
 		return tasks;
 	}
@@ -610,7 +610,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		else
 		{
 			// 其它类型，抛出不支持的类型异常
-			throw new SnakerException("任务参与者对象[" + actors + "]类型不支持." + "合法参数示例:Long,Integer,new String[]{},'10000,20000',List<String>");
+			throw new WorkflowException("任务参与者对象[" + actors + "]类型不支持." + "合法参数示例:Long,Integer,new String[]{},'10000,20000',List<String>");
 		}
 	}
 
@@ -621,7 +621,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	{
 		if (StringHelper.isNotEmpty(operator))
 		{
-			if (SnakerEngine.ADMIN.equalsIgnoreCase(operator) || SnakerEngine.AUTO.equalsIgnoreCase(operator))
+			if (ProcessEngine.ADMIN.equalsIgnoreCase(operator) || ProcessEngine.AUTO.equalsIgnoreCase(operator))
 			{
 				return true;
 			}

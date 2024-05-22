@@ -2,10 +2,10 @@ package com.liteworkflow.engine;
 
 import java.util.List;
 
-import com.liteworkflow.engine.cfg.Configuration;
+import com.liteworkflow.engine.cfg.EngineConfigurationImpl;
 
 /**
- * 服务查找接口，由{@link Configuration}设置
+ * 服务查找接口，由{@link EngineConfigurationImpl}设置
  * 
  * @author yuqs
  * @since 1.5

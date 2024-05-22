@@ -2,8 +2,8 @@ package com.liteworkflow.engine.handlers.impl;
 
 import java.util.List;
 
-import com.liteworkflow.engine.SnakerEngine;
-import com.liteworkflow.engine.SnakerException;
+import com.liteworkflow.WorkflowException;
+import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.core.Execution;
 import com.liteworkflow.engine.handlers.IHandler;
 import com.liteworkflow.engine.helper.StringHelper;
@@ -26,14 +26,14 @@ public class EndProcessHandler implements IHandler
 	 */
 	public void handle(Execution execution)
 	{
-		SnakerEngine engine = execution.getEngine();
+		ProcessEngine engine = execution.getEngine();
 		Order order = execution.getOrder();
 		List<Task> tasks = engine.query().getActiveTasks(order.getId());
 		for (Task task : tasks)
 		{
 			if (task.isMajor())
-				throw new SnakerException("存在未完成的主办任务,请确认.");
-			engine.task().complete(task.getId(), SnakerEngine.AUTO);
+				throw new WorkflowException("存在未完成的主办任务,请确认.");
+			engine.task().complete(task.getId(), ProcessEngine.AUTO);
 		}
 		/**
 		 * 结束当前流程实例

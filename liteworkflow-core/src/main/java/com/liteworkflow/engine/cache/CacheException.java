@@ -1,6 +1,6 @@
 package com.liteworkflow.engine.cache;
 
-import com.liteworkflow.engine.SnakerException;
+import com.liteworkflow.WorkflowException;
 
 /**
  * cache异常
@@ -8,7 +8,7 @@ import com.liteworkflow.engine.SnakerException;
  * @author yuqs
  * @since 1.3
  */
-public class CacheException extends SnakerException
+public class CacheException extends WorkflowException
 {
 	/**
 	 * 

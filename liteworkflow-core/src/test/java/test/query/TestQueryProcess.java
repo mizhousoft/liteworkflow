@@ -1,9 +1,12 @@
 package test.query;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.liteworkflow.engine.SnakerEngine;
+import com.liteworkflow.engine.ProcessEngine;
+import com.liteworkflow.process.entity.Process;
 import com.liteworkflow.process.request.ProcessPageRequest;
 
 import test.TestSpring;
@@ -19,7 +22,7 @@ public class TestQueryProcess extends TestSpring
 	@BeforeEach
 	public void before()
 	{
-		engine = applicationContext.getBean(SnakerEngine.class);
+		engine = applicationContext.getBean(ProcessEngine.class);
 		processService = engine.process();
 		queryService = engine.query();
 	}
@@ -29,12 +32,17 @@ public class TestQueryProcess extends TestSpring
 	{
 		ProcessPageRequest request = new ProcessPageRequest();
 
-		System.out.println(engine.process().getProcesss(request));
+		List<Process> list = engine.process().getProcesss(request);
+		System.out.println(list.size());
 
 		request.setNames(new String[] { "subprocess1" });
-		System.out.println(engine.process().getProcesss(request));
+		list = engine.process().getProcesss(request);
+		System.out.println(list.size());
 
-		System.out.println(engine.process().getProcessByVersion("subprocess1", 0));
-		System.out.println(engine.process().getProcessByName("subprocess1"));
+		Process process = engine.process().getProcessByVersion("subprocess1", 0);
+		System.out.println(process);
+
+		process = engine.process().getProcessByName("subprocess1");
+		System.out.println(process);
 	}
 }

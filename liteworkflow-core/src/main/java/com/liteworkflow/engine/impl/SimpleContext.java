@@ -7,11 +7,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.liteworkflow.engine.Context;
-import com.liteworkflow.engine.cfg.Configuration;
+import com.liteworkflow.engine.cfg.EngineConfigurationImpl;
 import com.liteworkflow.engine.helper.ClassHelper;
 
 /**
- * 简单的服务查找实现类，由 {@link Configuration}设置
+ * 简单的服务查找实现类，由 {@link EngineConfigurationImpl}设置
  * 
  * @author yuqs
  * @since 1.5

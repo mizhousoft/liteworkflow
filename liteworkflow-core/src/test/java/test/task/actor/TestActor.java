@@ -3,7 +3,7 @@ package test.task.actor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.liteworkflow.engine.SnakerEngine;
+import com.liteworkflow.engine.ProcessEngine;
 
 import test.TestSpring;
 
@@ -16,7 +16,7 @@ public class TestActor extends TestSpring
 	@BeforeEach
 	public void before()
 	{
-		engine = applicationContext.getBean(SnakerEngine.class);
+		engine = applicationContext.getBean(ProcessEngine.class);
 		processService = engine.process();
 		queryService = engine.query();
 	}

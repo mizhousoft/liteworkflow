@@ -7,7 +7,7 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.liteworkflow.engine.SnakerEngine;
+import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.helper.StreamHelper;
 import com.liteworkflow.order.entity.Order;
 import com.liteworkflow.task.entity.Task;
@@ -25,7 +25,7 @@ public class TestNotAllow extends TestSpring
 	@BeforeEach
 	public void before()
 	{
-		engine = applicationContext.getBean(SnakerEngine.class);
+		engine = applicationContext.getBean(ProcessEngine.class);
 		processService = engine.process();
 		queryService = engine.query();
 
@@ -42,7 +42,7 @@ public class TestNotAllow extends TestSpring
 		List<Task> tasks = queryService.getActiveTasks(order.getId());
 		for (Task task : tasks)
 		{
-			engine.executeTask(task.getId(), SnakerEngine.ADMIN, args);
+			engine.executeTask(task.getId(), ProcessEngine.ADMIN, args);
 		}
 	}
 }

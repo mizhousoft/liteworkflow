@@ -6,12 +6,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.liteworkflow.WorkflowException;
 import com.liteworkflow.engine.Action;
-import com.liteworkflow.engine.SnakerException;
-import com.liteworkflow.engine.SnakerInterceptor;
 import com.liteworkflow.engine.core.Execution;
 import com.liteworkflow.engine.helper.ClassHelper;
 import com.liteworkflow.engine.helper.StringHelper;
+import com.liteworkflow.engine.interceptor.SnakerInterceptor;
 
 /**
  * 节点元素（存在输入输出的变迁）
@@ -114,7 +114,7 @@ public abstract class NodeModel extends BaseModel implements Action
 		catch (Exception e)
 		{
 			log.error("拦截器执行失败=" + e.getMessage());
-			throw new SnakerException(e);
+			throw new WorkflowException(e);
 		}
 	}
 
