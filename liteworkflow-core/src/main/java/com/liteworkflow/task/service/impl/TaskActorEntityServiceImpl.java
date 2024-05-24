@@ -2,9 +2,6 @@ package com.liteworkflow.task.service.impl;
 
 import java.util.List;
 
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.mapper.MapperFactoryBean;
-
 import com.liteworkflow.task.entity.TaskActor;
 import com.liteworkflow.task.mapper.TaskActorMapper;
 import com.liteworkflow.task.service.TaskActorEntityService;
@@ -17,17 +14,6 @@ import com.liteworkflow.task.service.TaskActorEntityService;
 public class TaskActorEntityServiceImpl implements TaskActorEntityService
 {
 	private TaskActorMapper taskActorMapper;
-
-	public TaskActorEntityServiceImpl(SqlSessionFactory sqlSessionFactory) throws Exception
-	{
-		MapperFactoryBean<TaskActorMapper> factoryBean = new MapperFactoryBean<TaskActorMapper>();
-		factoryBean.setMapperInterface(TaskActorMapper.class);
-		factoryBean.setAddToConfig(true);
-		factoryBean.setSqlSessionFactory(sqlSessionFactory);
-		factoryBean.afterPropertiesSet();
-
-		this.taskActorMapper = (TaskActorMapper) factoryBean.getObject();
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -66,5 +52,15 @@ public class TaskActorEntityServiceImpl implements TaskActorEntityService
 	public List<TaskActor> getTaskActorsByTaskId(String taskId)
 	{
 		return taskActorMapper.getTaskActorsByTaskId(taskId);
+	}
+
+	/**
+	 * 设置taskActorMapper
+	 * 
+	 * @param taskActorMapper
+	 */
+	public void setTaskActorMapper(TaskActorMapper taskActorMapper)
+	{
+		this.taskActorMapper = taskActorMapper;
 	}
 }

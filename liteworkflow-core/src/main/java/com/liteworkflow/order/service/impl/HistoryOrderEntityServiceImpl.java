@@ -2,9 +2,6 @@ package com.liteworkflow.order.service.impl;
 
 import java.util.List;
 
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.mapper.MapperFactoryBean;
-
 import com.liteworkflow.order.entity.HistoryOrder;
 import com.liteworkflow.order.mapper.HistoryOrderMapper;
 import com.liteworkflow.order.request.HistoryOrderPageRequest;
@@ -21,17 +18,6 @@ import com.mizhousoft.commons.data.util.PageUtils;
 public class HistoryOrderEntityServiceImpl implements HistoryOrderEntityService
 {
 	private HistoryOrderMapper historyOrderMapper;
-
-	public HistoryOrderEntityServiceImpl(SqlSessionFactory sqlSessionFactory) throws Exception
-	{
-		MapperFactoryBean<HistoryOrderMapper> factoryBean = new MapperFactoryBean<HistoryOrderMapper>();
-		factoryBean.setMapperInterface(HistoryOrderMapper.class);
-		factoryBean.setAddToConfig(true);
-		factoryBean.setSqlSessionFactory(sqlSessionFactory);
-		factoryBean.afterPropertiesSet();
-
-		this.historyOrderMapper = (HistoryOrderMapper) factoryBean.getObject();
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -94,5 +80,15 @@ public class HistoryOrderEntityServiceImpl implements HistoryOrderEntityService
 		Page<HistoryOrder> page = PageBuilder.build(list, request, total);
 
 		return page;
+	}
+
+	/**
+	 * 设置historyOrderMapper
+	 * 
+	 * @param historyOrderMapper
+	 */
+	public void setHistoryOrderMapper(HistoryOrderMapper historyOrderMapper)
+	{
+		this.historyOrderMapper = historyOrderMapper;
 	}
 }

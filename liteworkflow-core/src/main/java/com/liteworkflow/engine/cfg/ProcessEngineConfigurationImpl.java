@@ -5,6 +5,7 @@ import java.io.InputStream;
 import javax.xml.parsers.DocumentBuilder;
 
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -37,15 +38,25 @@ import com.liteworkflow.engine.helper.StreamHelper;
 import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.helper.XmlHelper;
 import com.liteworkflow.engine.spring.SpringContext;
+import com.liteworkflow.order.mapper.CCOrderMapper;
+import com.liteworkflow.order.mapper.HistoryOrderMapper;
+import com.liteworkflow.order.mapper.OrderMapper;
 import com.liteworkflow.order.service.CCOrderEntityService;
 import com.liteworkflow.order.service.HistoryOrderEntityService;
 import com.liteworkflow.order.service.OrderEntityService;
 import com.liteworkflow.order.service.impl.CCOrderEntityServiceImpl;
 import com.liteworkflow.order.service.impl.HistoryOrderEntityServiceImpl;
 import com.liteworkflow.order.service.impl.OrderEntityServiceImpl;
+import com.liteworkflow.process.mapper.ProcessMapper;
 import com.liteworkflow.process.service.ProcessEntityService;
 import com.liteworkflow.process.service.impl.ProcessEntityServiceImpl;
+import com.liteworkflow.task.mapper.HistoryTaskActorMapper;
+import com.liteworkflow.task.mapper.HistoryTaskMapper;
+import com.liteworkflow.task.mapper.SurrogateMapper;
+import com.liteworkflow.task.mapper.TaskActorMapper;
+import com.liteworkflow.task.mapper.TaskMapper;
 import com.liteworkflow.task.service.HistoryTaskActorEntityService;
+import com.liteworkflow.task.service.HistoryTaskEntityService;
 import com.liteworkflow.task.service.SurrogateEntityService;
 import com.liteworkflow.task.service.TaskActorEntityService;
 import com.liteworkflow.task.service.TaskEntityService;
@@ -54,6 +65,7 @@ import com.liteworkflow.task.service.impl.HistoryTaskEntityServiceImpl;
 import com.liteworkflow.task.service.impl.SurrogateEntityServiceImpl;
 import com.liteworkflow.task.service.impl.TaskActorEntityServiceImpl;
 import com.liteworkflow.task.service.impl.TaskEntityServiceImpl;
+import com.liteworkflow.workitem.mapper.WorkItemMapper;
 import com.liteworkflow.workitem.service.WorkItemEntityService;
 import com.liteworkflow.workitem.service.impl.WorkItemEntityServiceImpl;
 
@@ -119,22 +131,84 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		return this.processEngine;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ApplicationContext getApplicationContext()
+	{
+		return this.applicationContext;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public CacheManager getCacheManager()
+	{
+		return this.cacheManager;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ProcessService getProcessService()
+	{
+		return this.processService;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public QueryService getQueryService()
+	{
+		return this.queryService;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public OrderService getOrderService()
+	{
+		return this.orderService;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public TaskService getTaskService()
+	{
+		return this.taskService;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ManagerService getManagerService()
+	{
+		return this.managerService;
+	}
+
 	private void initServices() throws Exception
 	{
-		ProcessEntityService processEntityService = new ProcessEntityServiceImpl(sqlSessionFactory);
+		ProcessEntityService processEntityService = initProcessEntityService(sqlSessionFactory);
 
-		HistoryTaskActorEntityService historyTaskActorEntityService = new HistoryTaskActorEntityServiceImpl(sqlSessionFactory);
-		HistoryTaskEntityServiceImpl historyTaskEntityService = new HistoryTaskEntityServiceImpl(sqlSessionFactory,
-		        historyTaskActorEntityService);
-		TaskActorEntityService taskActorEntityService = new TaskActorEntityServiceImpl(sqlSessionFactory);
-		TaskEntityService taskEntityService = new TaskEntityServiceImpl(sqlSessionFactory);
-		SurrogateEntityService surrogateEntityService = new SurrogateEntityServiceImpl(sqlSessionFactory);
+		HistoryTaskActorEntityService historyTaskActorEntityService = initHistoryTaskActorEntityService(sqlSessionFactory);
+		HistoryTaskEntityService historyTaskEntityService = initHistoryTaskEntityService(sqlSessionFactory, historyTaskActorEntityService);
+		TaskActorEntityService taskActorEntityService = initTaskActorEntityService(sqlSessionFactory);
+		TaskEntityService taskEntityService = initTaskEntityService(sqlSessionFactory);
+		SurrogateEntityService surrogateEntityService = initSurrogateEntityService(sqlSessionFactory);
 
-		HistoryOrderEntityService historyOrderEntityService = new HistoryOrderEntityServiceImpl(sqlSessionFactory);
-		CCOrderEntityService ccOrderEntityService = new CCOrderEntityServiceImpl(sqlSessionFactory);
-		OrderEntityService orderEntityService = new OrderEntityServiceImpl(sqlSessionFactory, historyOrderEntityService);
+		HistoryOrderEntityService historyOrderEntityService = initHistoryOrderEntityService(sqlSessionFactory);
+		CCOrderEntityService ccOrderEntityService = initCCOrderEntityService(sqlSessionFactory);
+		OrderEntityService orderEntityService = initOrderEntityService(sqlSessionFactory, historyOrderEntityService);
 
-		WorkItemEntityService workItemEntityService = new WorkItemEntityServiceImpl(sqlSessionFactory);
+		WorkItemEntityService workItemEntityService = initWorkItemEntityService(sqlSessionFactory);
 
 		ProcessServiceImpl processService = new ProcessServiceImpl();
 		processService.setCacheManager(cacheManager);
@@ -172,6 +246,161 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		ManagerServiceImpl managerService = new ManagerServiceImpl();
 		managerService.setSurrogateEntityService(surrogateEntityService);
 		this.managerService = managerService;
+	}
+
+	private ProcessEntityService initProcessEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
+	{
+		MapperFactoryBean<ProcessMapper> factoryBean = new MapperFactoryBean<ProcessMapper>();
+		factoryBean.setMapperInterface(ProcessMapper.class);
+		factoryBean.setAddToConfig(true);
+		factoryBean.setSqlSessionFactory(sqlSessionFactory);
+		factoryBean.afterPropertiesSet();
+
+		ProcessMapper processMapper = (ProcessMapper) factoryBean.getObject();
+
+		ProcessEntityServiceImpl processEntityService = new ProcessEntityServiceImpl();
+		processEntityService.setProcessMapper(processMapper);
+
+		return processEntityService;
+	}
+
+	private TaskActorEntityService initTaskActorEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
+	{
+		MapperFactoryBean<TaskActorMapper> factoryBean = new MapperFactoryBean<TaskActorMapper>();
+		factoryBean.setMapperInterface(TaskActorMapper.class);
+		factoryBean.setAddToConfig(true);
+		factoryBean.setSqlSessionFactory(sqlSessionFactory);
+		factoryBean.afterPropertiesSet();
+		TaskActorMapper taskActorMapper = (TaskActorMapper) factoryBean.getObject();
+
+		TaskActorEntityServiceImpl taskActorEntityService = new TaskActorEntityServiceImpl();
+		taskActorEntityService.setTaskActorMapper(taskActorMapper);
+
+		return taskActorEntityService;
+	}
+
+	private HistoryTaskEntityService initHistoryTaskEntityService(SqlSessionFactory sqlSessionFactory,
+	        HistoryTaskActorEntityService historyTaskActorEntityService) throws Exception
+	{
+		MapperFactoryBean<HistoryTaskMapper> factoryBean = new MapperFactoryBean<HistoryTaskMapper>();
+		factoryBean.setMapperInterface(HistoryTaskMapper.class);
+		factoryBean.setAddToConfig(true);
+		factoryBean.setSqlSessionFactory(sqlSessionFactory);
+		factoryBean.afterPropertiesSet();
+		HistoryTaskMapper historyTaskMapper = (HistoryTaskMapper) factoryBean.getObject();
+
+		HistoryTaskEntityServiceImpl historyTaskEntityService = new HistoryTaskEntityServiceImpl();
+		historyTaskEntityService.setHistoryTaskMapper(historyTaskMapper);
+		historyTaskEntityService.setHistoryTaskActorEntityService(historyTaskActorEntityService);
+
+		return historyTaskEntityService;
+	}
+
+	private OrderEntityService initOrderEntityService(SqlSessionFactory sqlSessionFactory,
+	        HistoryOrderEntityService historyOrderEntityService) throws Exception
+	{
+		MapperFactoryBean<OrderMapper> factoryBean = new MapperFactoryBean<OrderMapper>();
+		factoryBean.setMapperInterface(OrderMapper.class);
+		factoryBean.setAddToConfig(true);
+		factoryBean.setSqlSessionFactory(sqlSessionFactory);
+		factoryBean.afterPropertiesSet();
+		OrderMapper orderMapper = (OrderMapper) factoryBean.getObject();
+
+		OrderEntityServiceImpl orderEntityService = new OrderEntityServiceImpl();
+		orderEntityService.setOrderMapper(orderMapper);
+		orderEntityService.setHistoryOrderEntityService(historyOrderEntityService);
+
+		return orderEntityService;
+	}
+
+	private TaskEntityService initTaskEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
+	{
+		MapperFactoryBean<TaskMapper> factoryBean = new MapperFactoryBean<TaskMapper>();
+		factoryBean.setMapperInterface(TaskMapper.class);
+		factoryBean.setAddToConfig(true);
+		factoryBean.setSqlSessionFactory(sqlSessionFactory);
+		factoryBean.afterPropertiesSet();
+		TaskMapper taskMapper = (TaskMapper) factoryBean.getObject();
+
+		TaskEntityServiceImpl taskEntityService = new TaskEntityServiceImpl();
+		taskEntityService.setTaskMapper(taskMapper);
+
+		return taskEntityService;
+	}
+
+	private HistoryOrderEntityService initHistoryOrderEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
+	{
+		MapperFactoryBean<HistoryOrderMapper> factoryBean = new MapperFactoryBean<HistoryOrderMapper>();
+		factoryBean.setMapperInterface(HistoryOrderMapper.class);
+		factoryBean.setAddToConfig(true);
+		factoryBean.setSqlSessionFactory(sqlSessionFactory);
+		factoryBean.afterPropertiesSet();
+		HistoryOrderMapper historyOrderMapper = (HistoryOrderMapper) factoryBean.getObject();
+
+		HistoryOrderEntityServiceImpl historyOrderEntityService = new HistoryOrderEntityServiceImpl();
+		historyOrderEntityService.setHistoryOrderMapper(historyOrderMapper);
+
+		return historyOrderEntityService;
+	}
+
+	private HistoryTaskActorEntityService initHistoryTaskActorEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
+	{
+		MapperFactoryBean<HistoryTaskActorMapper> factoryBean = new MapperFactoryBean<HistoryTaskActorMapper>();
+		factoryBean.setMapperInterface(HistoryTaskActorMapper.class);
+		factoryBean.setAddToConfig(true);
+		factoryBean.setSqlSessionFactory(sqlSessionFactory);
+		factoryBean.afterPropertiesSet();
+		HistoryTaskActorMapper historyTaskActorMapper = (HistoryTaskActorMapper) factoryBean.getObject();
+
+		HistoryTaskActorEntityServiceImpl historyTaskActorEntityService = new HistoryTaskActorEntityServiceImpl();
+		historyTaskActorEntityService.setHistoryTaskActorMapper(historyTaskActorMapper);
+
+		return historyTaskActorEntityService;
+	}
+
+	private CCOrderEntityService initCCOrderEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
+	{
+		MapperFactoryBean<CCOrderMapper> factoryBean = new MapperFactoryBean<CCOrderMapper>();
+		factoryBean.setMapperInterface(CCOrderMapper.class);
+		factoryBean.setAddToConfig(true);
+		factoryBean.setSqlSessionFactory(sqlSessionFactory);
+		factoryBean.afterPropertiesSet();
+		CCOrderMapper ccOrderMapper = (CCOrderMapper) factoryBean.getObject();
+
+		CCOrderEntityServiceImpl ccOrderEntityService = new CCOrderEntityServiceImpl();
+		ccOrderEntityService.setCcOrderMapper(ccOrderMapper);
+
+		return ccOrderEntityService;
+	}
+
+	private SurrogateEntityService initSurrogateEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
+	{
+		MapperFactoryBean<SurrogateMapper> factoryBean = new MapperFactoryBean<SurrogateMapper>();
+		factoryBean.setMapperInterface(SurrogateMapper.class);
+		factoryBean.setAddToConfig(true);
+		factoryBean.setSqlSessionFactory(sqlSessionFactory);
+		factoryBean.afterPropertiesSet();
+		SurrogateMapper surrogateMapper = (SurrogateMapper) factoryBean.getObject();
+
+		SurrogateEntityServiceImpl surrogateEntityService = new SurrogateEntityServiceImpl();
+		surrogateEntityService.setSurrogateMapper(surrogateMapper);
+
+		return surrogateEntityService;
+	}
+
+	private WorkItemEntityService initWorkItemEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
+	{
+		MapperFactoryBean<WorkItemMapper> factoryBean = new MapperFactoryBean<WorkItemMapper>();
+		factoryBean.setMapperInterface(WorkItemMapper.class);
+		factoryBean.setAddToConfig(true);
+		factoryBean.setSqlSessionFactory(sqlSessionFactory);
+		factoryBean.afterPropertiesSet();
+		WorkItemMapper workItemMapper = (WorkItemMapper) factoryBean.getObject();
+
+		WorkItemEntityServiceImpl workItemEntityService = new WorkItemEntityServiceImpl();
+		workItemEntityService.setWorkItemMapper(workItemMapper);
+
+		return workItemEntityService;
 	}
 
 	/**
@@ -245,69 +474,6 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		{
 			throw new ProcessException("资源解析失败，请检查配置文件[" + resource + "]", e.getCause());
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ApplicationContext getApplicationContext()
-	{
-		return this.applicationContext;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public CacheManager getCacheManager()
-	{
-		return this.cacheManager;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ProcessService getProcessService()
-	{
-		return this.processService;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public QueryService getQueryService()
-	{
-		return this.queryService;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public OrderService getOrderService()
-	{
-		return this.orderService;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public TaskService getTaskService()
-	{
-		return this.taskService;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ManagerService getManagerService()
-	{
-		return this.managerService;
 	}
 
 	/**

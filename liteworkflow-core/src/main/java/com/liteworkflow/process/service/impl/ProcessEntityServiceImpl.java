@@ -2,9 +2,6 @@ package com.liteworkflow.process.service.impl;
 
 import java.util.List;
 
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.mapper.MapperFactoryBean;
-
 import com.liteworkflow.process.entity.Process;
 import com.liteworkflow.process.mapper.ProcessMapper;
 import com.liteworkflow.process.request.ProcessPageRequest;
@@ -21,23 +18,6 @@ import com.mizhousoft.commons.data.util.PageUtils;
 public class ProcessEntityServiceImpl implements ProcessEntityService
 {
 	private ProcessMapper processMapper;
-
-	/**
-	 * 构造函数
-	 * 
-	 * @throws Exception
-	 *
-	 */
-	public ProcessEntityServiceImpl(SqlSessionFactory sqlSessionFactory) throws Exception
-	{
-		MapperFactoryBean<ProcessMapper> factoryBean = new MapperFactoryBean<ProcessMapper>();
-		factoryBean.setMapperInterface(ProcessMapper.class);
-		factoryBean.setAddToConfig(true);
-		factoryBean.setSqlSessionFactory(sqlSessionFactory);
-		factoryBean.afterPropertiesSet();
-
-		this.processMapper = (ProcessMapper) factoryBean.getObject();
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -122,4 +102,12 @@ public class ProcessEntityServiceImpl implements ProcessEntityService
 		return page;
 	}
 
+	/**
+	 * 设置processMapper
+	 * @param processMapper
+	 */
+	public void setProcessMapper(ProcessMapper processMapper)
+	{
+		this.processMapper = processMapper;
+	}
 }
