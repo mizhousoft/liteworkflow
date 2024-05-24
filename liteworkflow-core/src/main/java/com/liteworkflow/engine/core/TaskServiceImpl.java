@@ -12,6 +12,7 @@ import com.liteworkflow.engine.AssignmentHandler;
 import com.liteworkflow.engine.Completion;
 import com.liteworkflow.engine.Constants;
 import com.liteworkflow.engine.ProcessEngine;
+import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.TaskAccessStrategy;
 import com.liteworkflow.engine.TaskService;
 import com.liteworkflow.engine.helper.AssertHelper;
@@ -44,6 +45,8 @@ import com.liteworkflow.task.service.TaskEntityService;
 public class TaskServiceImpl extends AccessService implements TaskService
 {
 	private static final String START = "start";
+
+	private ProcessEngineConfiguration engineConfiguration;
 
 	private TaskEntityService taskEntityService;
 
@@ -418,9 +421,9 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	public TaskModel getTaskModel(String taskId)
 	{
 		Task task = taskEntityService.getTask(taskId);
-		AssertHelper.notNull(task);
+
 		Order order = orderEntityService.getOrder(task.getOrderId());
-		AssertHelper.notNull(order);
+
 		Process process = ServiceContext.getEngine().getProcessService().getProcessById(order.getProcessId());
 		ProcessModel model = process.getModel();
 		NodeModel nodeModel = model.getNode(task.getTaskName());
@@ -696,4 +699,13 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		this.orderEntityService = orderEntityService;
 	}
 
+	/**
+	 * 设置engineConfiguration
+	 * 
+	 * @param engineConfiguration
+	 */
+	public void setEngineConfiguration(ProcessEngineConfiguration engineConfiguration)
+	{
+		this.engineConfiguration = engineConfiguration;
+	}
 }
