@@ -17,7 +17,7 @@ import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 public class ProcessEngineAutoConfiguration
 {
 	@Bean
-	public ProcessEngine getSnakerEngine(SqlSessionFactory sqlSessionFactory, ApplicationContext applicationContext) throws Exception
+	public ProcessEngine getProcessEngine(SqlSessionFactory sqlSessionFactory, ApplicationContext applicationContext) throws Exception
 	{
 		ProcessEngineConfigurationImpl cfg = new ProcessEngineConfigurationImpl();
 		cfg.setSqlSessionFactory(sqlSessionFactory);

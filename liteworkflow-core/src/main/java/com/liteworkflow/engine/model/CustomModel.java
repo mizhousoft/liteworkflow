@@ -3,11 +3,12 @@ package com.liteworkflow.engine.model;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import org.springframework.util.ReflectionUtils;
+
 import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.core.Execution;
 import com.liteworkflow.engine.handlers.IHandler;
 import com.liteworkflow.engine.helper.ClassHelper;
-import com.liteworkflow.engine.helper.ReflectHelper;
 import com.liteworkflow.engine.helper.StringHelper;
 
 /**
@@ -67,13 +68,24 @@ public class CustomModel extends WorkModel
 		}
 		else
 		{
-			Method method = ReflectHelper.findMethod(invokeObject.getClass(), methodName);
+			Method method = null;
+
+			Method[] menthods = ReflectionUtils.getAllDeclaredMethods(invokeObject.getClass());
+			for (Method m : menthods)
+			{
+				if (m.getName().equals(methodName))
+				{
+					method = m;
+					break;
+				}
+			}
+
 			if (method == null)
 			{
 				throw new ProcessException("自定义模型[class=" + clazz + "]无法找到方法名称:" + methodName);
 			}
 			Object[] objects = getArgs(execution.getArgs(), args);
-			Object returnValue = ReflectHelper.invoke(method, invokeObject, objects);
+			Object returnValue = ReflectionUtils.invokeMethod(method, invokeObject, objects);
 			if (StringHelper.isNotEmpty(var))
 			{
 				execution.getArgs().put(var, returnValue);

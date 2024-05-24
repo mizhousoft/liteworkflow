@@ -11,10 +11,10 @@ import org.slf4j.LoggerFactory;
 import com.liteworkflow.engine.ManagerService;
 import com.liteworkflow.engine.OrderService;
 import com.liteworkflow.engine.ProcessEngine;
+import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.ProcessService;
 import com.liteworkflow.engine.QueryService;
 import com.liteworkflow.engine.TaskService;
-import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.helper.DateHelper;
 import com.liteworkflow.engine.helper.StringHelper;
@@ -40,7 +40,7 @@ public class ProcessEngineImpl implements ProcessEngine
 	/**
 	 * Snaker配置对象
 	 */
-	protected ProcessEngineConfigurationImpl configuration;
+	protected ProcessEngineConfiguration configuration;
 
 	/**
 	 * 流程定义业务类
@@ -68,12 +68,28 @@ public class ProcessEngineImpl implements ProcessEngine
 	protected ManagerService managerService;
 
 	/**
+	 * 构造函数
+	 *
+	 * @param configuration
+	 */
+	public ProcessEngineImpl(ProcessEngineConfiguration configuration)
+	{
+		super();
+		this.configuration = configuration;
+
+		this.managerService = configuration.getManagerService();
+		this.orderService = configuration.getOrderService();
+		this.processService = configuration.getProcessService();
+		this.queryService = configuration.getQueryService();
+		this.taskService = configuration.getTaskService();
+	}
+
+	/**
 	 * 获取流程定义服务
 	 */
 	@Override
 	public ProcessService getProcessService()
 	{
-		AssertHelper.notNull(processService);
 		return processService;
 	}
 
@@ -83,7 +99,6 @@ public class ProcessEngineImpl implements ProcessEngine
 	@Override
 	public QueryService getQueryService()
 	{
-		AssertHelper.notNull(queryService);
 		return queryService;
 	}
 
@@ -95,7 +110,6 @@ public class ProcessEngineImpl implements ProcessEngine
 	@Override
 	public OrderService getOrderService()
 	{
-		AssertHelper.notNull(orderService);
 		return orderService;
 	}
 
@@ -107,7 +121,6 @@ public class ProcessEngineImpl implements ProcessEngine
 	@Override
 	public TaskService getTaskService()
 	{
-		AssertHelper.notNull(taskService);
 		return taskService;
 	}
 
@@ -119,7 +132,6 @@ public class ProcessEngineImpl implements ProcessEngine
 	@Override
 	public ManagerService getManagerService()
 	{
-		AssertHelper.notNull(managerService);
 		return managerService;
 	}
 
@@ -368,40 +380,5 @@ public class ProcessEngineImpl implements ProcessEngine
 		execution.setOperator(operator);
 		execution.setTask(task);
 		return execution;
-	}
-
-	/**
-	 * 设置configuration
-	 * 
-	 * @param configuration
-	 */
-	public void setConfiguration(ProcessEngineConfigurationImpl configuration)
-	{
-		this.configuration = configuration;
-	}
-
-	public void setProcessService(ProcessService processService)
-	{
-		this.processService = processService;
-	}
-
-	public void setOrderService(OrderService orderService)
-	{
-		this.orderService = orderService;
-	}
-
-	public void setTaskService(TaskService taskService)
-	{
-		this.taskService = taskService;
-	}
-
-	public void setQueryService(QueryService queryService)
-	{
-		this.queryService = queryService;
-	}
-
-	public void setManagerService(ManagerService managerService)
-	{
-		this.managerService = managerService;
 	}
 }

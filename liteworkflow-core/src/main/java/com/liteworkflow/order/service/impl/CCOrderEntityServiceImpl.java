@@ -2,6 +2,9 @@ package com.liteworkflow.order.service.impl;
 
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.mapper.MapperFactoryBean;
+
 import com.liteworkflow.order.entity.CCOrder;
 import com.liteworkflow.order.entity.HistoryOrder;
 import com.liteworkflow.order.mapper.CCOrderMapper;
@@ -19,6 +22,17 @@ import com.mizhousoft.commons.data.util.PageUtils;
 public class CCOrderEntityServiceImpl implements CCOrderEntityService
 {
 	private CCOrderMapper ccOrderMapper;
+
+	public CCOrderEntityServiceImpl(SqlSessionFactory sqlSessionFactory) throws Exception
+	{
+		MapperFactoryBean<CCOrderMapper> factoryBean = new MapperFactoryBean<CCOrderMapper>();
+		factoryBean.setMapperInterface(CCOrderMapper.class);
+		factoryBean.setAddToConfig(true);
+		factoryBean.setSqlSessionFactory(sqlSessionFactory);
+		factoryBean.afterPropertiesSet();
+
+		this.ccOrderMapper = (CCOrderMapper) factoryBean.getObject();
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -71,15 +85,4 @@ public class CCOrderEntityServiceImpl implements CCOrderEntityService
 
 		return page;
 	}
-
-	/**
-	 * 设置ccOrderMapper
-	 * 
-	 * @param ccOrderMapper
-	 */
-	public void setCcOrderMapper(CCOrderMapper ccOrderMapper)
-	{
-		this.ccOrderMapper = ccOrderMapper;
-	}
-
 }

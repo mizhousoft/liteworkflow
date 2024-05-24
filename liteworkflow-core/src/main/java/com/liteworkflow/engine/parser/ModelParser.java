@@ -79,7 +79,6 @@ public class ModelParser
 			}
 			catch (SAXException e)
 			{
-				e.printStackTrace();
 				throw new ProcessException(e);
 			}
 			catch (IOException e)

@@ -4,7 +4,6 @@ import java.util.Map;
 
 import com.liteworkflow.engine.cache.Cache;
 import com.liteworkflow.engine.cache.CacheException;
-import com.liteworkflow.engine.helper.AssertHelper;
 
 /**
  * 基于内存管理cache
@@ -26,7 +25,6 @@ public class MemoryCache<K, V> implements Cache<K, V>
 	 */
 	public MemoryCache(Map<K, V> backingMap)
 	{
-		AssertHelper.notNull(backingMap);
 		this.map = backingMap;
 	}
 

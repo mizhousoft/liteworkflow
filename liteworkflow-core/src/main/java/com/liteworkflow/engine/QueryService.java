@@ -12,6 +12,7 @@ import com.liteworkflow.task.entity.Task;
 import com.liteworkflow.task.request.TaskPageRequest;
 import com.liteworkflow.workitem.entity.WorkItem;
 import com.liteworkflow.workitem.request.WorkItemPageRequest;
+import com.mizhousoft.commons.data.domain.Page;
 
 /**
  * 流程相关的查询服务
@@ -92,7 +93,7 @@ public interface QueryService
 	 * @param filter 查询过滤器
 	 * @return List<Task> 活动任务集合
 	 */
-	com.mizhousoft.commons.data.domain.Page<Task> queryPageData(TaskPageRequest request);
+	Page<Task> queryPageData(TaskPageRequest request);
 
 	/**
 	 * 根据filter查询流程实例列表
@@ -109,7 +110,7 @@ public interface QueryService
 	 * @param filter 查询过滤器
 	 * @return List<Order> 活动实例集合
 	 */
-	com.mizhousoft.commons.data.domain.Page<Order> queryPageData(OrderPageRequest request);
+	Page<Order> queryPageData(OrderPageRequest request);
 
 	/**
 	 * 根据filter查询历史流程实例
@@ -126,7 +127,7 @@ public interface QueryService
 	 * @param filter 查询过滤器
 	 * @return List<HistoryOrder> 历史实例集合
 	 */
-	com.mizhousoft.commons.data.domain.Page<HistoryOrder> queryPageData(HistoryOrderPageRequest request);
+	Page<HistoryOrder> queryPageData(HistoryOrderPageRequest request);
 
 	/**
 	 * 根据filter查询活动任务
@@ -151,7 +152,7 @@ public interface QueryService
 	 * @param filter 查询过滤器
 	 * @return List<WorkItem> 活动工作项集合
 	 */
-	com.mizhousoft.commons.data.domain.Page<WorkItem> getWorkItems(WorkItemPageRequest request);
+	Page<WorkItem> getWorkItems(WorkItemPageRequest request);
 
 	/**
 	 * 根据filter分页查询抄送工作项（包含process、order）
@@ -160,7 +161,7 @@ public interface QueryService
 	 * @param filter 查询过滤器
 	 * @return List<WorkItem> 抄送工作项集合
 	 */
-	com.mizhousoft.commons.data.domain.Page<HistoryOrder> getCCWorks(CCOrderPageRequest request);
+	Page<HistoryOrder> getCCWorks(CCOrderPageRequest request);
 
 	/**
 	 * 根据filter分页查询已完成的历史任务项
@@ -169,5 +170,5 @@ public interface QueryService
 	 * @param filter 查询过滤器
 	 * @return List<WorkItem> 历史工作项集合
 	 */
-	com.mizhousoft.commons.data.domain.Page<WorkItem> getHistoryWorkItems(WorkItemPageRequest request);
+	Page<WorkItem> getHistoryWorkItems(WorkItemPageRequest request);
 }

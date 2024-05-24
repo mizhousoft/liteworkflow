@@ -2,6 +2,9 @@ package com.liteworkflow.order.service.impl;
 
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.mapper.MapperFactoryBean;
+
 import com.liteworkflow.order.entity.HistoryOrder;
 import com.liteworkflow.order.entity.Order;
 import com.liteworkflow.order.mapper.OrderMapper;
@@ -37,6 +40,18 @@ public class OrderEntityServiceImpl implements OrderEntityService
 	private OrderMapper orderMapper;
 
 	private HistoryOrderEntityService historyOrderEntityService;
+
+	public OrderEntityServiceImpl(SqlSessionFactory sqlSessionFactory, HistoryOrderEntityService historyOrderEntityService) throws Exception
+	{
+		MapperFactoryBean<OrderMapper> factoryBean = new MapperFactoryBean<OrderMapper>();
+		factoryBean.setMapperInterface(OrderMapper.class);
+		factoryBean.setAddToConfig(true);
+		factoryBean.setSqlSessionFactory(sqlSessionFactory);
+		factoryBean.afterPropertiesSet();
+
+		this.orderMapper = (OrderMapper) factoryBean.getObject();
+		this.historyOrderEntityService = historyOrderEntityService;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -123,25 +138,5 @@ public class OrderEntityServiceImpl implements OrderEntityService
 		Page<Order> page = PageBuilder.build(list, request, total);
 
 		return page;
-	}
-
-	/**
-	 * 设置orderMapper
-	 * 
-	 * @param orderMapper
-	 */
-	public void setOrderMapper(OrderMapper orderMapper)
-	{
-		this.orderMapper = orderMapper;
-	}
-
-	/**
-	 * 设置historyOrderEntityService
-	 * 
-	 * @param historyOrderEntityService
-	 */
-	public void setHistoryOrderEntityService(HistoryOrderEntityService historyOrderEntityService)
-	{
-		this.historyOrderEntityService = historyOrderEntityService;
 	}
 }

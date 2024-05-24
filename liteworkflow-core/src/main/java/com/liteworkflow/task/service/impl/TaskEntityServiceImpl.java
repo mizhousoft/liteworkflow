@@ -2,6 +2,9 @@ package com.liteworkflow.task.service.impl;
 
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.mapper.MapperFactoryBean;
+
 import com.liteworkflow.task.entity.Task;
 import com.liteworkflow.task.mapper.TaskMapper;
 import com.liteworkflow.task.request.TaskPageRequest;
@@ -18,6 +21,17 @@ import com.mizhousoft.commons.data.util.PageUtils;
 public class TaskEntityServiceImpl implements TaskEntityService
 {
 	private TaskMapper taskMapper;
+
+	public TaskEntityServiceImpl(SqlSessionFactory sqlSessionFactory) throws Exception
+	{
+		MapperFactoryBean<TaskMapper> factoryBean = new MapperFactoryBean<TaskMapper>();
+		factoryBean.setMapperInterface(TaskMapper.class);
+		factoryBean.setAddToConfig(true);
+		factoryBean.setSqlSessionFactory(sqlSessionFactory);
+		factoryBean.afterPropertiesSet();
+
+		this.taskMapper = (TaskMapper) factoryBean.getObject();
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -110,16 +124,6 @@ public class TaskEntityServiceImpl implements TaskEntityService
 		Page<Task> page = PageBuilder.build(list, request, total);
 
 		return page;
-	}
-
-	/**
-	 * 设置taskMapper
-	 * 
-	 * @param taskMapper
-	 */
-	public void setTaskMapper(TaskMapper taskMapper)
-	{
-		this.taskMapper = taskMapper;
 	}
 
 }
