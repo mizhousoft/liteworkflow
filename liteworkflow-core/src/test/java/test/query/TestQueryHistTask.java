@@ -20,7 +20,6 @@ public class TestQueryHistTask extends TestSpring
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		processService = engine.getProcessService();
-		queryService = engine.getQueryService();
 	}
 
 	@Test
@@ -28,10 +27,10 @@ public class TestQueryHistTask extends TestSpring
 	{
 		TaskPageRequest request = new TaskPageRequest();
 		request.setOperators(new String[] { "admin" });
-		System.out.println(queryService.getHistoryTasks(request));
+		System.out.println(engine.getHistoryService().getHistoryTasks(request));
 
 		WorkItemPageRequest wRequest = new WorkItemPageRequest();
 		wRequest.setOperators(new String[] { "admin" });
-		System.out.println(queryService.getHistoryWorkItems(wRequest));
+		System.out.println(engine.getHistoryService().getHistoryWorkItems(wRequest));
 	}
 }

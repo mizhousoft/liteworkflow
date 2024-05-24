@@ -1,9 +1,12 @@
 package com.liteworkflow.engine;
 
+import java.util.List;
 import java.util.Map;
 
 import com.liteworkflow.order.entity.Order;
+import com.liteworkflow.order.request.OrderPageRequest;
 import com.liteworkflow.process.entity.Process;
+import com.mizhousoft.commons.data.domain.Page;
 
 /**
  * 流程实例业务类
@@ -13,6 +16,31 @@ import com.liteworkflow.process.entity.Process;
  */
 public interface OrderService
 {
+	/**
+	 * 根据流程实例ID获取流程实例对象
+	 * 
+	 * @param orderId 流程实例id
+	 * @return Order 流程实例对象
+	 */
+	Order getOrder(String orderId);
+
+	/**
+	 * 根据filter查询流程实例列表
+	 * 
+	 * @param filter 查询过滤器
+	 * @return List<Order> 活动实例集合
+	 */
+	List<Order> getActiveOrders(OrderPageRequest request);
+
+	/**
+	 * 根据filter分页查询流程实例列表
+	 * 
+	 * @param page 分页对象
+	 * @param filter 查询过滤器
+	 * @return List<Order> 活动实例集合
+	 */
+	Page<Order> queryPageData(OrderPageRequest request);
+
 	/**
 	 * 根据流程、操作人员、父流程实例ID创建流程实例
 	 * 

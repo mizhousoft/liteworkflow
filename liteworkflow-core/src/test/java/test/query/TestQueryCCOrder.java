@@ -21,7 +21,6 @@ public class TestQueryCCOrder extends TestSpring
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		processService = engine.getProcessService();
-		queryService = engine.getQueryService();
 	}
 
 	@Test
@@ -30,6 +29,6 @@ public class TestQueryCCOrder extends TestSpring
 		CCOrderPageRequest request = new CCOrderPageRequest();
 		request.setState(1);
 
-		System.out.println(engine.getQueryService().getCCWorks(request));
+		System.out.println(engine.getHistoryService().getCCWorks(request));
 	}
 }

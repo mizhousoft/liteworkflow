@@ -20,6 +20,7 @@ public class ManagerServiceImpl extends AccessService implements ManagerService
 {
 	private SurrogateEntityService surrogateEntityService;
 
+	@Override
 	public void saveOrUpdate(Surrogate surrogate)
 	{
 		surrogate.setState(Constants.STATE_ACTIVE);
@@ -34,6 +35,7 @@ public class ManagerServiceImpl extends AccessService implements ManagerService
 		}
 	}
 
+	@Override
 	public void deleteSurrogate(String id)
 	{
 		Surrogate surrogate = getSurrogate(id);
@@ -41,11 +43,13 @@ public class ManagerServiceImpl extends AccessService implements ManagerService
 		surrogateEntityService.delete(surrogate);
 	}
 
+	@Override
 	public Surrogate getSurrogate(String id)
 	{
 		return surrogateEntityService.getSurrogate(id);
 	}
 
+	@Override
 	public String getSurrogate(String operator, String processName)
 	{
 		SurrogateFindRequest request = new SurrogateFindRequest();

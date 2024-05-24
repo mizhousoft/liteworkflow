@@ -23,7 +23,6 @@ public class TestSurrogate extends TestSpring
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		processService = engine.getProcessService();
-		queryService = engine.getQueryService();
 
 		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/surrogate/process.snaker"));
 	}

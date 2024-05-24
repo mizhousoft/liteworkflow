@@ -23,7 +23,6 @@ public class TestCustomHandler extends TestSpring
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		processService = engine.getProcessService();
-		queryService = engine.getQueryService();
 
 		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/custom/snaker1.snaker"));
 	}
@@ -33,7 +32,7 @@ public class TestCustomHandler extends TestSpring
 	{
 		Order order = engine.startInstanceById(processId);
 		System.out.println("order=" + order);
-		List<Task> tasks = queryService.getActiveTasks(order.getId());
+		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
 		for (Task task : tasks)
 		{
 			engine.executeTask(task.getId());

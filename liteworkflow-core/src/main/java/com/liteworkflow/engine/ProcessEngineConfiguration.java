@@ -24,6 +24,8 @@ public interface ProcessEngineConfiguration
 	OrderService getOrderService();
 
 	TaskService getTaskService();
+	
+	HistoryService getHistoryService();
 
 	ManagerService getManagerService();
 }

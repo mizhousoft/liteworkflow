@@ -14,6 +14,7 @@ import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.order.entity.CCOrder;
 import com.liteworkflow.order.entity.HistoryOrder;
 import com.liteworkflow.order.entity.Order;
+import com.liteworkflow.order.request.OrderPageRequest;
 import com.liteworkflow.order.service.CCOrderEntityService;
 import com.liteworkflow.order.service.HistoryOrderEntityService;
 import com.liteworkflow.order.service.OrderEntityService;
@@ -22,6 +23,7 @@ import com.liteworkflow.task.entity.HistoryTask;
 import com.liteworkflow.task.entity.Task;
 import com.liteworkflow.task.service.HistoryTaskEntityService;
 import com.liteworkflow.task.service.TaskEntityService;
+import com.mizhousoft.commons.data.domain.Page;
 
 /**
  * 流程实例业务类
@@ -41,11 +43,31 @@ public class OrderServiceImpl extends AccessService implements OrderService
 
 	private HistoryTaskEntityService historyTaskEntityService;
 
+	@Override
+	public Order getOrder(String orderId)
+	{
+		return orderEntityService.getOrder(orderId);
+	}
+
+	@Override
+	public List<Order> getActiveOrders(OrderPageRequest request)
+	{
+		return orderEntityService.queryList(request);
+	}
+
+	@Override
+	public Page<Order> queryPageData(OrderPageRequest request)
+	{
+		return orderEntityService.queryPageData(request);
+	}
+
 	/**
 	 * 创建活动实例
 	 * 
-	 * @see com.liteworkflow.engine.core.OrderServiceImpl#createOrder(Process, String, Map, String, String)
+	 * @see com.liteworkflow.engine.core.OrderServiceImpl#createOrder(Process, String, Map, String,
+	 *      String)
 	 */
+	@Override
 	public Order createOrder(Process process, String operator, Map<String, Object> args)
 	{
 		return createOrder(process, operator, args, null, null);
@@ -54,6 +76,7 @@ public class OrderServiceImpl extends AccessService implements OrderService
 	/**
 	 * 创建活动实例
 	 */
+	@Override
 	public Order createOrder(Process process, String operator, Map<String, Object> args, String parentId, String parentNodeName)
 	{
 		Order order = new Order();
@@ -95,6 +118,7 @@ public class OrderServiceImpl extends AccessService implements OrderService
 	 * @param orderId 实例id
 	 * @param args 变量数据
 	 */
+	@Override
 	public void addVariable(String orderId, Map<String, Object> args)
 	{
 		Order order = orderEntityService.getOrder(orderId);
@@ -107,6 +131,7 @@ public class OrderServiceImpl extends AccessService implements OrderService
 	/**
 	 * 创建实例的抄送
 	 */
+	@Override
 	public void createCCOrder(String orderId, String creator, String... actorIds)
 	{
 		for (String actorId : actorIds)
@@ -124,6 +149,7 @@ public class OrderServiceImpl extends AccessService implements OrderService
 	/**
 	 * 更新活动实例的last_Updator、last_Update_Time、expire_Time、version、variable
 	 */
+	@Override
 	public void updateOrder(Order order)
 	{
 		orderEntityService.updateOrder(order);
@@ -158,6 +184,7 @@ public class OrderServiceImpl extends AccessService implements OrderService
 	/**
 	 * 删除活动流程实例数据，更新历史流程实例的状态、结束时间
 	 */
+	@Override
 	public void complete(String orderId)
 	{
 		Order order = orderEntityService.getOrder(orderId);
@@ -179,6 +206,7 @@ public class OrderServiceImpl extends AccessService implements OrderService
 	 * 
 	 * @see com.liteworkflow.engine.core.OrderServiceImpl#terminate(String, String)
 	 */
+	@Override
 	public void terminate(String orderId)
 	{
 		terminate(orderId, null);
@@ -187,6 +215,7 @@ public class OrderServiceImpl extends AccessService implements OrderService
 	/**
 	 * 强制中止活动实例,并强制完成活动任务
 	 */
+	@Override
 	public void terminate(String orderId, String operator)
 	{
 		ProcessEngine engine = ServiceContext.getEngine();
@@ -215,6 +244,7 @@ public class OrderServiceImpl extends AccessService implements OrderService
 	 * @param orderId 实例id
 	 * @return 活动实例对象
 	 */
+	@Override
 	public Order resume(String orderId)
 	{
 		HistoryOrder historyOrder = historyOrderEntityService.getHistOrder(orderId);
@@ -242,6 +272,7 @@ public class OrderServiceImpl extends AccessService implements OrderService
 	 * 
 	 * @param id 实例id
 	 */
+	@Override
 	public void cascadeRemove(String id)
 	{
 		HistoryOrder historyOrder = historyOrderEntityService.getHistOrder(id);

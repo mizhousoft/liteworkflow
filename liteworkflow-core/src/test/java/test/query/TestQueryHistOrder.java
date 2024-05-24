@@ -21,7 +21,6 @@ public class TestQueryHistOrder extends TestSpring
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		processService = engine.getProcessService();
-		queryService = engine.getQueryService();
 	}
 
 	@Test
@@ -33,7 +32,7 @@ public class TestQueryHistOrder extends TestSpring
 		request.setState(0);
 		request.setProcessType("预算管理流程1");
 
-		System.out.println(engine.getQueryService().getHistoryOrders(request));
-		System.out.println(engine.getQueryService().getHistoryOrders(new HistoryOrderPageRequest()));
+		System.out.println(engine.getHistoryService().getHistoryOrders(request));
+		System.out.println(engine.getHistoryService().getHistoryOrders(new HistoryOrderPageRequest()));
 	}
 }

@@ -32,9 +32,11 @@ import com.liteworkflow.process.entity.Process;
 import com.liteworkflow.task.entity.HistoryTask;
 import com.liteworkflow.task.entity.Task;
 import com.liteworkflow.task.entity.TaskActor;
+import com.liteworkflow.task.request.TaskPageRequest;
 import com.liteworkflow.task.service.HistoryTaskEntityService;
 import com.liteworkflow.task.service.TaskActorEntityService;
 import com.liteworkflow.task.service.TaskEntityService;
+import com.mizhousoft.commons.data.domain.Page;
 
 /**
  * 任务执行业务类
@@ -59,9 +61,49 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	// 访问策略接口
 	private TaskAccessStrategy strategy = null;
 
+	@Override
+	public Task getTask(String taskId)
+	{
+		return taskEntityService.getTask(taskId);
+	}
+
+	@Override
+	public String[] getTaskActorsByTaskId(String taskId)
+	{
+		List<TaskActor> actors = taskActorEntityService.getTaskActorsByTaskId(taskId);
+		if (actors == null || actors.isEmpty())
+			return null;
+		String[] actorIds = new String[actors.size()];
+		for (int i = 0; i < actors.size(); i++)
+		{
+			TaskActor ta = actors.get(i);
+			actorIds[i] = ta.getActorId();
+		}
+		return actorIds;
+	}
+
+	@Override
+	public List<Task> getActiveTasks(String orderId)
+	{
+		return taskEntityService.queryByOrderId(orderId);
+	}
+
+	@Override
+	public List<Task> getActiveTasks(TaskPageRequest request)
+	{
+		return taskEntityService.queryList(request);
+	}
+
+	@Override
+	public Page<Task> queryPageData(TaskPageRequest request)
+	{
+		return taskEntityService.queryPageData(request);
+	}
+
 	/**
 	 * 完成指定任务
 	 */
+	@Override
 	public Task complete(String taskId)
 	{
 		return complete(taskId, null, null);
@@ -70,6 +112,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	/**
 	 * 完成指定任务
 	 */
+	@Override
 	public Task complete(String taskId, String operator)
 	{
 		return complete(taskId, operator, null);
@@ -81,6 +124,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	 * 
 	 * @see ProcessEngineImpl#executeTask(String, String, java.util.Map)
 	 */
+	@Override
 	public Task complete(String taskId, String operator, Map<String, Object> args)
 	{
 		Task task = taskEntityService.getTask(taskId);
@@ -123,6 +167,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	 * 
 	 * @param task 任务对象
 	 */
+	@Override
 	public void updateTask(Task task)
 	{
 		taskEntityService.update(task);
@@ -135,6 +180,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	 * @param model 自定义节点模型
 	 * @return 历史任务对象
 	 */
+	@Override
 	public HistoryTask history(Execution execution, CustomModel model)
 	{
 		HistoryTask historyTask = new HistoryTask();
@@ -158,6 +204,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	/**
 	 * 提取指定任务，设置完成时间及操作人，状态不改变
 	 */
+	@Override
 	public Task take(String taskId, String operator)
 	{
 		Task task = taskEntityService.getTask(taskId);
@@ -177,6 +224,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	/**
 	 * 唤醒指定的历史任务
 	 */
+	@Override
 	public Task resume(String taskId, String operator)
 	{
 		HistoryTask histTask = historyTaskEntityService.getHistTask(taskId);
@@ -206,6 +254,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	/**
 	 * 向指定任务添加参与者
 	 */
+	@Override
 	public void addTaskActor(String taskId, String... actors)
 	{
 		addTaskActor(taskId, null, actors);
@@ -215,6 +264,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	 * 向指定任务添加参与者
 	 * 该方法根据performType类型判断是否需要创建新的活动任务
 	 */
+	@Override
 	public void addTaskActor(String taskId, Integer performType, String... actors)
 	{
 		Task task = taskEntityService.getTask(taskId);
@@ -264,6 +314,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	/**
 	 * 向指定任务移除参与者
 	 */
+	@Override
 	public void removeTaskActor(String taskId, String... actors)
 	{
 		Task task = taskEntityService.getTask(taskId);
@@ -308,6 +359,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	/**
 	 * 撤回指定的任务
 	 */
+	@Override
 	public Task withdrawTask(String taskId, String operator)
 	{
 		HistoryTask hist = historyTaskEntityService.getHistTask(taskId);
@@ -341,6 +393,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	/**
 	 * 驳回任务
 	 */
+	@Override
 	public Task rejectTask(ProcessModel model, Task currentTask)
 	{
 		String parentTaskId = currentTask.getParentTaskId();
@@ -392,6 +445,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	 * 根据已有任务、任务类型、参与者创建新的任务
 	 * 适用于转派，动态协办处理
 	 */
+	@Override
 	public List<Task> createNewTask(String taskId, int taskType, String... actors)
 	{
 		Task task = taskEntityService.getTask(taskId);
@@ -418,6 +472,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	 * @param taskId 任务id
 	 * @return TaskModel
 	 */
+	@Override
 	public TaskModel getTaskModel(String taskId)
 	{
 		Task task = taskEntityService.getTask(taskId);
@@ -445,6 +500,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	 * @param execution 执行对象
 	 * @return List<Task> 任务列表
 	 */
+	@Override
 	public List<Task> createTask(TaskModel taskModel, Execution execution)
 	{
 		List<Task> tasks = new ArrayList<Task>();
@@ -620,6 +676,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	/**
 	 * 判断当前操作人operator是否允许执行taskId指定的任务
 	 */
+	@Override
 	public boolean isAllowed(Task task, String operator)
 	{
 		if (StringHelper.isNotEmpty(operator))

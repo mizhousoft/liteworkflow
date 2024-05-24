@@ -77,7 +77,7 @@ public class StartSubProcessHandler implements IHandler
 			order = engine.startInstanceByExecution(child);
 		}
 		AssertHelper.notNull(order, "子流程创建失败");
-		execution.addTasks(engine.getQueryService().getActiveTasks(order.getId()));
+		execution.addTasks(engine.getTaskService().getActiveTasks(order.getId()));
 	}
 
 	/**

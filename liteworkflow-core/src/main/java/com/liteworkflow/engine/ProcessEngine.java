@@ -36,6 +36,8 @@ public interface ProcessEngine
 	 */
 	public QueryService getQueryService();
 
+	public HistoryService getHistoryService();
+
 	/**
 	 * 获取实例服务
 	 * 

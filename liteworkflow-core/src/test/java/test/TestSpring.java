@@ -6,9 +6,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
-import com.liteworkflow.engine.ProcessService;
-import com.liteworkflow.engine.QueryService;
 import com.liteworkflow.engine.ProcessEngine;
+import com.liteworkflow.engine.ProcessService;
 
 /**
  * @author yuqs
@@ -22,8 +21,6 @@ public class TestSpring extends AbstractJUnit4SpringContextTests
 	protected ProcessEngine engine;
 
 	protected ProcessService processService;
-
-	protected QueryService queryService;
 
 	@Test
 	public void test()

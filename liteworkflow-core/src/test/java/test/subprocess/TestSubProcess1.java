@@ -28,7 +28,6 @@ public class TestSubProcess1 extends TestSpring
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		processService = engine.getProcessService();
-		queryService = engine.getQueryService();
 
 		engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/subprocess/child.snaker"));
 		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/subprocess/subprocess1.snaker"));
@@ -42,7 +41,7 @@ public class TestSubProcess1 extends TestSpring
 		Order order = engine.startInstanceById(processId, "2", args);
 		System.out.println("************************" + order);
 
-		List<Task> tasks = engine.getQueryService().getActiveTasks(order.getId());
+		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
 		for (Task task : tasks)
 		{
 			System.out.println("************************begin:::::" + task);

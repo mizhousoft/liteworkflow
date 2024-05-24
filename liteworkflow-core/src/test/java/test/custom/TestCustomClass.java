@@ -25,7 +25,6 @@ public class TestCustomClass extends TestSpring
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		processService = engine.getProcessService();
-		queryService = engine.getQueryService();
 
 		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/custom/snaker2.snaker"));
 	}
@@ -37,7 +36,7 @@ public class TestCustomClass extends TestSpring
 		args.put("msg", "custom test");
 		Order order = engine.startInstanceById(processId, null, args);
 		System.out.println("order=" + order);
-		List<Task> tasks = queryService.getActiveTasks(order.getId());
+		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
 		for (Task task : tasks)
 		{
 			engine.executeTask(task.getId(), null, args);

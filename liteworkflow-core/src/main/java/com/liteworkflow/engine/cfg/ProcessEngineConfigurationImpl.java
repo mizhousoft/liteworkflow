@@ -16,6 +16,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.liteworkflow.ProcessException;
+import com.liteworkflow.engine.HistoryService;
 import com.liteworkflow.engine.ManagerService;
 import com.liteworkflow.engine.OrderService;
 import com.liteworkflow.engine.ProcessEngine;
@@ -25,6 +26,7 @@ import com.liteworkflow.engine.QueryService;
 import com.liteworkflow.engine.TaskService;
 import com.liteworkflow.engine.cache.CacheManager;
 import com.liteworkflow.engine.cache.memory.MemoryCacheManager;
+import com.liteworkflow.engine.core.HistoryServiceImpl;
 import com.liteworkflow.engine.core.ManagerServiceImpl;
 import com.liteworkflow.engine.core.OrderServiceImpl;
 import com.liteworkflow.engine.core.ProcessEngineImpl;
@@ -100,6 +102,8 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	private OrderService orderService;
 
 	private TaskService taskService;
+
+	private HistoryService historyService;
 
 	private ManagerService managerService;
 
@@ -189,6 +193,15 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	 * {@inheritDoc}
 	 */
 	@Override
+	public HistoryService getHistoryService()
+	{
+		return this.historyService;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public ManagerService getManagerService()
 	{
 		return this.managerService;
@@ -216,14 +229,16 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		processService.setProcessEntityService(processEntityService);
 		this.processService = processService;
 
+		HistoryServiceImpl historyService = new HistoryServiceImpl();
+		historyService.setCcOrderEntityService(ccOrderEntityService);
+		historyService.setHistoryOrderEntityService(historyOrderEntityService);
+		historyService.setHistoryTaskEntityService(historyTaskEntityService);
+		historyService.setWorkItemEntityService(workItemEntityService);
+		historyService.setHistoryTaskActorEntityService(historyTaskActorEntityService);
+		historyService.setHistoryTaskEntityService(historyTaskEntityService);
+		this.historyService = historyService;
+
 		QueryServiceImpl queryService = new QueryServiceImpl();
-		queryService.setCcOrderEntityService(ccOrderEntityService);
-		queryService.setHistoryOrderEntityService(historyOrderEntityService);
-		queryService.setHistoryTaskActorEntityService(historyTaskActorEntityService);
-		queryService.setHistoryTaskEntityService(historyTaskEntityService);
-		queryService.setOrderEntityService(orderEntityService);
-		queryService.setTaskActorEntityService(taskActorEntityService);
-		queryService.setTaskEntityService(taskEntityService);
 		queryService.setWorkItemEntityService(workItemEntityService);
 		this.queryService = queryService;
 
@@ -495,4 +510,5 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	{
 		this.sqlSessionFactory = sqlSessionFactory;
 	}
+
 }

@@ -9,6 +9,8 @@ import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.TaskModel;
 import com.liteworkflow.task.entity.HistoryTask;
 import com.liteworkflow.task.entity.Task;
+import com.liteworkflow.task.request.TaskPageRequest;
+import com.mizhousoft.commons.data.domain.Page;
 
 /**
  * 任务业务类，包括以下服务：
@@ -24,6 +26,47 @@ import com.liteworkflow.task.entity.Task;
  */
 public interface TaskService
 {
+	/**
+	 * 根据任务ID获取任务对象
+	 * 
+	 * @param taskId 任务id
+	 * @return Task 任务对象
+	 */
+	Task getTask(String taskId);
+
+	/**
+	 * 根据任务ID获取活动任务参与者数组
+	 * 
+	 * @param taskId 任务id
+	 * @return String[] 参与者id数组
+	 */
+	String[] getTaskActorsByTaskId(String taskId);
+
+	/**
+	 * 根据filter查询活动任务
+	 * 
+	 * @param filter 查询过滤器
+	 * @return List<Task> 活动任务集合
+	 */
+	List<Task> getActiveTasks(String orderId);
+
+	/**
+	 * 根据filter查询活动任务
+	 * 
+	 * @param filter 查询过滤器
+	 * @return List<Task> 活动任务集合
+	 */
+	List<Task> getActiveTasks(TaskPageRequest request);
+
+	/**
+	 * 根据filter分页查询活动任务
+	 * 
+	 * @param page 分页对象
+	 * @param filter 查询过滤器
+	 * @return List<Task> 活动任务集合
+	 */
+	Page<Task> queryPageData(TaskPageRequest request);
+
 	/**
 	 * 完成指定的任务，删除活动任务记录，创建历史任务
 	 * 

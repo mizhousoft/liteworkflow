@@ -28,7 +28,7 @@ public class EndProcessHandler implements IHandler
 	{
 		ProcessEngine engine = execution.getEngine();
 		Order order = execution.getOrder();
-		List<Task> tasks = engine.getQueryService().getActiveTasks(order.getId());
+		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
 		for (Task task : tasks)
 		{
 			if (task.isMajor())
@@ -45,7 +45,7 @@ public class EndProcessHandler implements IHandler
 		 */
 		if (StringHelper.isNotEmpty(order.getParentId()))
 		{
-			Order parentOrder = engine.getQueryService().getOrder(order.getParentId());
+			Order parentOrder = engine.getOrderService().getOrder(order.getParentId());
 			if (parentOrder == null)
 				return;
 			Process process = engine.getProcessService().getProcessById(parentOrder.getProcessId());

@@ -20,7 +20,6 @@ public class TestField extends TestSpring
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		processService = engine.getProcessService();
-		queryService = engine.getQueryService();
 
 		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/field/process.snaker"));
 	}

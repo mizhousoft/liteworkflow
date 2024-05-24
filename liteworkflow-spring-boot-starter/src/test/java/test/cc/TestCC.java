@@ -9,9 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.liteworkflow.boot.WorkflowApplication;
-import com.liteworkflow.engine.ProcessService;
-import com.liteworkflow.engine.QueryService;
 import com.liteworkflow.engine.ProcessEngine;
+import com.liteworkflow.engine.ProcessService;
 import com.liteworkflow.engine.helper.StreamHelper;
 import com.liteworkflow.order.entity.Order;
 
@@ -29,13 +28,10 @@ public class TestCC
 
 	protected ProcessService processService;
 
-	protected QueryService queryService;
-
 	@BeforeEach
 	public void before()
 	{
 		processService = engine.getProcessService();
-		queryService = engine.getQueryService();
 
 		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
 	}

@@ -23,7 +23,6 @@ public class TestTransfer extends TestSpring
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		processService = engine.getProcessService();
-		queryService = engine.getQueryService();
 
 		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/transfer/process.snaker"));
 	}
@@ -33,7 +32,7 @@ public class TestTransfer extends TestSpring
 	{
 		Order order = engine.startInstanceByName("transfer", 0);
 		System.out.println("order=" + order);
-		List<Task> tasks = queryService.getActiveTasks(order.getId());
+		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
 		for (Task task : tasks)
 		{
 			engine.getTaskService().createNewTask(task.getId(), 0, "test");

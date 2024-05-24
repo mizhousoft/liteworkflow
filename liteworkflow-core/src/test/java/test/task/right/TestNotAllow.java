@@ -27,7 +27,6 @@ public class TestNotAllow extends TestSpring
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		processService = engine.getProcessService();
-		queryService = engine.getQueryService();
 
 		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/right/process.snaker"));
 	}
@@ -39,7 +38,7 @@ public class TestNotAllow extends TestSpring
 		args.put("task1.operator", new String[] { "2" });
 		Order order = engine.startInstanceById(processId, "2", args);
 		System.out.println(order);
-		List<Task> tasks = queryService.getActiveTasks(order.getId());
+		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
 		for (Task task : tasks)
 		{
 			engine.executeTask(task.getId(), ProcessEngine.ADMIN, args);

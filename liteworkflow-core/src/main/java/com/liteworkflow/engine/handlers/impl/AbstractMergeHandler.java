@@ -2,7 +2,8 @@ package com.liteworkflow.engine.handlers.impl;
 
 import java.util.List;
 
-import com.liteworkflow.engine.QueryService;
+import com.liteworkflow.engine.OrderService;
+import com.liteworkflow.engine.TaskService;
 import com.liteworkflow.engine.core.Execution;
 import com.liteworkflow.engine.handlers.IHandler;
 import com.liteworkflow.engine.model.ProcessModel;
@@ -28,7 +29,9 @@ public abstract class AbstractMergeHandler implements IHandler
 		 * 查询当前流程实例的无法参与合并的node列表
 		 * 若所有中间node都完成，则设置为已合并状态，告诉model可继续执行join的输出变迁
 		 */
-		QueryService queryService = execution.getEngine().getQueryService();
+		OrderService orderService = execution.getEngine().getOrderService();
+		TaskService taskService = execution.getEngine().getTaskService();
+
 		Order order = execution.getOrder();
 		ProcessModel model = execution.getModel();
 		String[] activeNodes = findActiveNodes();
@@ -40,7 +43,7 @@ public abstract class AbstractMergeHandler implements IHandler
 			OrderPageRequest request = new OrderPageRequest();
 			request.setParentId(order.getId());
 			request.setExcludedIds(new String[] { execution.getChildOrderId() });
-			List<Order> orders = queryService.getActiveOrders(request);
+			List<Order> orders = orderService.getActiveOrders(request);
 			// 如果所有子流程都已完成，则表示可合并
 			if (orders == null || orders.isEmpty())
 			{
@@ -58,7 +61,7 @@ public abstract class AbstractMergeHandler implements IHandler
 			request.setExcludedIds(new String[] { execution.getTask().getId() });
 			request.setNames(activeNodes);
 
-			List<Task> tasks = queryService.getActiveTasks(request);
+			List<Task> tasks = taskService.getActiveTasks(request);
 			if (tasks == null || tasks.isEmpty())
 			{
 				// 如果所有task都已完成，则表示可合并

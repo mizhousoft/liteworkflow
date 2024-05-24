@@ -24,7 +24,6 @@ public class TestQueryProcess extends TestSpring
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		processService = engine.getProcessService();
-		queryService = engine.getQueryService();
 	}
 
 	@Test

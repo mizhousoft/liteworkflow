@@ -18,7 +18,6 @@ public class TestActor extends TestSpring
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		processService = engine.getProcessService();
-		queryService = engine.getQueryService();
 	}
 
 	@Test

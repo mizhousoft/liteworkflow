@@ -20,7 +20,6 @@ public class TestQueryTask extends TestSpring
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		processService = engine.getProcessService();
-		queryService = engine.getQueryService();
 	}
 
 	@Test
@@ -28,12 +27,12 @@ public class TestQueryTask extends TestSpring
 	{
 		TaskPageRequest request = new TaskPageRequest();
 		request.setOperators(new String[] { "1" });
-		System.out.println(queryService.getActiveTasks(request));
+		System.out.println(engine.getTaskService().getActiveTasks(request));
 
 		WorkItemPageRequest rrequest = new WorkItemPageRequest();
 		rrequest.setOperators(new String[] { "1" });
 		rrequest.setOrderId("36c0228fcfa740d5b62682dc954eaecd");
 
-		System.out.println(queryService.getWorkItems(rrequest));
+		System.out.println(engine.getQueryService().getWorkItems(rrequest));
 	}
 }
