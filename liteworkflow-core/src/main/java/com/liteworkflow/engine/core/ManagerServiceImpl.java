@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.liteworkflow.engine.Constants;
 import com.liteworkflow.engine.ManagerService;
+import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.helper.DateHelper;
 import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.task.entity.Surrogate;
@@ -22,6 +23,7 @@ public class ManagerServiceImpl extends AccessService implements ManagerService
 
 	public void saveOrUpdate(Surrogate surrogate)
 	{
+		AssertHelper.notNull(surrogate);
 		surrogate.setState(Constants.STATE_ACTIVE);
 		if (StringHelper.isEmpty(surrogate.getId()))
 		{
@@ -37,7 +39,7 @@ public class ManagerServiceImpl extends AccessService implements ManagerService
 	public void deleteSurrogate(String id)
 	{
 		Surrogate surrogate = getSurrogate(id);
-
+		AssertHelper.notNull(surrogate);
 		surrogateEntityService.delete(surrogate);
 	}
 

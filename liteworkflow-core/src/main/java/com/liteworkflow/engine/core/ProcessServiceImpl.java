@@ -11,6 +11,7 @@ import com.liteworkflow.engine.Constants;
 import com.liteworkflow.engine.ProcessService;
 import com.liteworkflow.engine.cache.Cache;
 import com.liteworkflow.engine.cache.CacheManager;
+import com.liteworkflow.engine.cache.CacheManagerAware;
 import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.helper.DateHelper;
 import com.liteworkflow.engine.helper.StreamHelper;
@@ -31,7 +32,7 @@ import com.mizhousoft.commons.data.domain.Page;
  * @author yuqs
  * @since 1.0
  */
-public class ProcessServiceImpl extends AccessService implements ProcessService
+public class ProcessServiceImpl extends AccessService implements ProcessService, CacheManagerAware
 {
 	private static final Logger log = LoggerFactory.getLogger(ProcessServiceImpl.class);
 
@@ -199,6 +200,7 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 	 */
 	public String deploy(InputStream input, String creator)
 	{
+		AssertHelper.notNull(input);
 		try
 		{
 			byte[] bytes = StreamHelper.readBytes(input);
@@ -225,6 +227,8 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
+			log.error(e.getMessage());
 			throw new ProcessException(e.getMessage(), e.getCause());
 		}
 	}
@@ -236,8 +240,9 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 	 */
 	public void redeploy(String id, InputStream input)
 	{
+		AssertHelper.notNull(input);
 		Process entity = processEntityService.getProcess(id);
-
+		AssertHelper.notNull(entity);
 		try
 		{
 			byte[] bytes = StreamHelper.readBytes(input);
@@ -258,6 +263,8 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
+			log.error(e.getMessage());
 			throw new ProcessException(e.getMessage(), e.getCause());
 		}
 	}

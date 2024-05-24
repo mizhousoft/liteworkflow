@@ -113,6 +113,7 @@ public abstract class NodeModel extends BaseModel implements Action
 		}
 		catch (Exception e)
 		{
+			log.error("拦截器执行失败=" + e.getMessage());
 			throw new ProcessException(e);
 		}
 	}

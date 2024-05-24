@@ -2,9 +2,6 @@ package com.liteworkflow.task.service.impl;
 
 import java.util.List;
 
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.mapper.MapperFactoryBean;
-
 import com.liteworkflow.task.entity.Surrogate;
 import com.liteworkflow.task.mapper.SurrogateMapper;
 import com.liteworkflow.task.request.SurrogateFindRequest;
@@ -18,17 +15,6 @@ import com.liteworkflow.task.service.SurrogateEntityService;
 public class SurrogateEntityServiceImpl implements SurrogateEntityService
 {
 	private SurrogateMapper surrogateMapper;
-
-	public SurrogateEntityServiceImpl(SqlSessionFactory sqlSessionFactory) throws Exception
-	{
-		MapperFactoryBean<SurrogateMapper> factoryBean = new MapperFactoryBean<SurrogateMapper>();
-		factoryBean.setMapperInterface(SurrogateMapper.class);
-		factoryBean.setAddToConfig(true);
-		factoryBean.setSqlSessionFactory(sqlSessionFactory);
-		factoryBean.afterPropertiesSet();
-
-		this.surrogateMapper = (SurrogateMapper) factoryBean.getObject();
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -73,5 +59,15 @@ public class SurrogateEntityServiceImpl implements SurrogateEntityService
 	public List<Surrogate> queryList(SurrogateFindRequest request)
 	{
 		return surrogateMapper.queryList(request);
+	}
+
+	/**
+	 * 设置surrogateMapper
+	 * 
+	 * @param surrogateMapper
+	 */
+	public void setSurrogateMapper(SurrogateMapper surrogateMapper)
+	{
+		this.surrogateMapper = surrogateMapper;
 	}
 }

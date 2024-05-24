@@ -2,9 +2,6 @@ package com.liteworkflow.workitem.service.impl;
 
 import java.util.List;
 
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.mapper.MapperFactoryBean;
-
 import com.liteworkflow.workitem.entity.WorkItem;
 import com.liteworkflow.workitem.mapper.WorkItemMapper;
 import com.liteworkflow.workitem.request.WorkItemPageRequest;
@@ -21,17 +18,6 @@ import com.mizhousoft.commons.data.util.PageUtils;
 public class WorkItemEntityServiceImpl implements WorkItemEntityService
 {
 	private WorkItemMapper workItemMapper;
-
-	public WorkItemEntityServiceImpl(SqlSessionFactory sqlSessionFactory) throws Exception
-	{
-		MapperFactoryBean<WorkItemMapper> factoryBean = new MapperFactoryBean<WorkItemMapper>();
-		factoryBean.setMapperInterface(WorkItemMapper.class);
-		factoryBean.setAddToConfig(true);
-		factoryBean.setSqlSessionFactory(sqlSessionFactory);
-		factoryBean.afterPropertiesSet();
-
-		this.workItemMapper = (WorkItemMapper) factoryBean.getObject();
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -63,6 +49,16 @@ public class WorkItemEntityServiceImpl implements WorkItemEntityService
 		Page<WorkItem> page = PageBuilder.build(list, request, total);
 
 		return page;
+	}
+
+	/**
+	 * 设置workItemMapper
+	 * 
+	 * @param workItemMapper
+	 */
+	public void setWorkItemMapper(WorkItemMapper workItemMapper)
+	{
+		this.workItemMapper = workItemMapper;
 	}
 
 }

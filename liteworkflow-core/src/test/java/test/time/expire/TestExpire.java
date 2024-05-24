@@ -52,7 +52,7 @@ public class TestExpire extends TestSpring
 		}
 		catch (InterruptedException e)
 		{
-
+			e.printStackTrace();
 		}
 	}
 }

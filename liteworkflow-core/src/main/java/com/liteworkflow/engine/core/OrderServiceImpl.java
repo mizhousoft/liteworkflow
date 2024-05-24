@@ -7,6 +7,7 @@ import com.liteworkflow.engine.Completion;
 import com.liteworkflow.engine.Constants;
 import com.liteworkflow.engine.OrderService;
 import com.liteworkflow.engine.ProcessEngine;
+import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.helper.DateHelper;
 import com.liteworkflow.engine.helper.JsonHelper;
 import com.liteworkflow.engine.helper.StringHelper;
@@ -135,6 +136,7 @@ public class OrderServiceImpl extends AccessService implements OrderService
 	public void updateCCStatus(String orderId, String... actorIds)
 	{
 		List<CCOrder> ccorders = ccOrderEntityService.getCCOrder(orderId, actorIds);
+		AssertHelper.notNull(ccorders);
 		for (CCOrder ccorder : ccorders)
 		{
 			ccorder.setStatus(Constants.STATE_FINISH);
@@ -149,6 +151,7 @@ public class OrderServiceImpl extends AccessService implements OrderService
 	public void deleteCCOrder(String orderId, String actorId)
 	{
 		List<CCOrder> ccorders = ccOrderEntityService.getCCOrder(orderId, actorId);
+		AssertHelper.notNull(ccorders);
 		for (CCOrder ccorder : ccorders)
 		{
 			ccOrderEntityService.delete(ccorder);
@@ -245,7 +248,7 @@ public class OrderServiceImpl extends AccessService implements OrderService
 	public void cascadeRemove(String id)
 	{
 		HistoryOrder historyOrder = historyOrderEntityService.getHistOrder(id);
-
+		AssertHelper.notNull(historyOrder);
 		List<Task> activeTasks = taskEntityService.queryByOrderId(id);
 		List<HistoryTask> historyTasks = historyTaskEntityService.queryByOrderId(id);
 		for (Task task : activeTasks)

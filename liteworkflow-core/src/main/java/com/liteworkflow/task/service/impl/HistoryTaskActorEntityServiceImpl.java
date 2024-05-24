@@ -2,9 +2,6 @@ package com.liteworkflow.task.service.impl;
 
 import java.util.List;
 
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.mapper.MapperFactoryBean;
-
 import com.liteworkflow.task.entity.HistoryTaskActor;
 import com.liteworkflow.task.mapper.HistoryTaskActorMapper;
 import com.liteworkflow.task.service.HistoryTaskActorEntityService;
@@ -17,17 +14,6 @@ import com.liteworkflow.task.service.HistoryTaskActorEntityService;
 public class HistoryTaskActorEntityServiceImpl implements HistoryTaskActorEntityService
 {
 	private HistoryTaskActorMapper historyTaskActorMapper;
-
-	public HistoryTaskActorEntityServiceImpl(SqlSessionFactory sqlSessionFactory) throws Exception
-	{
-		MapperFactoryBean<HistoryTaskActorMapper> factoryBean = new MapperFactoryBean<HistoryTaskActorMapper>();
-		factoryBean.setMapperInterface(HistoryTaskActorMapper.class);
-		factoryBean.setAddToConfig(true);
-		factoryBean.setSqlSessionFactory(sqlSessionFactory);
-		factoryBean.afterPropertiesSet();
-
-		this.historyTaskActorMapper = (HistoryTaskActorMapper) factoryBean.getObject();
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -54,6 +40,16 @@ public class HistoryTaskActorEntityServiceImpl implements HistoryTaskActorEntity
 	public List<HistoryTaskActor> getHistTaskActorsByTaskId(String taskId)
 	{
 		return historyTaskActorMapper.getHistTaskActorsByTaskId(taskId);
+	}
+
+	/**
+	 * 设置historyTaskActorMapper
+	 * 
+	 * @param historyTaskActorMapper
+	 */
+	public void setHistoryTaskActorMapper(HistoryTaskActorMapper historyTaskActorMapper)
+	{
+		this.historyTaskActorMapper = historyTaskActorMapper;
 	}
 
 }

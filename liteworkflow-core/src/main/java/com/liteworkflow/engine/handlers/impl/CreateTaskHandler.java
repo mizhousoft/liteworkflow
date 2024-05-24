@@ -58,6 +58,7 @@ public class CreateTaskHandler implements IHandler
 		}
 		catch (Exception e)
 		{
+			log.error("拦截器执行失败=" + e.getMessage());
 			throw new ProcessException(e);
 		}
 	}

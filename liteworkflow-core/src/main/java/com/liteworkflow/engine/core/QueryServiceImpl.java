@@ -23,7 +23,6 @@ import com.liteworkflow.task.service.TaskEntityService;
 import com.liteworkflow.workitem.entity.WorkItem;
 import com.liteworkflow.workitem.request.WorkItemPageRequest;
 import com.liteworkflow.workitem.service.WorkItemEntityService;
-import com.mizhousoft.commons.data.domain.Page;
 
 /**
  * 查询服务实现类
@@ -107,7 +106,7 @@ public class QueryServiceImpl extends AccessService implements QueryService
 		return taskEntityService.queryList(request);
 	}
 
-	public Page<Task> queryPageData(TaskPageRequest request)
+	public com.mizhousoft.commons.data.domain.Page<Task> queryPageData(TaskPageRequest request)
 	{
 		return taskEntityService.queryPageData(request);
 	}
@@ -117,7 +116,7 @@ public class QueryServiceImpl extends AccessService implements QueryService
 		return orderEntityService.queryList(request);
 	}
 
-	public Page<Order> queryPageData(OrderPageRequest request)
+	public com.mizhousoft.commons.data.domain.Page<Order> queryPageData(OrderPageRequest request)
 	{
 		return orderEntityService.queryPageData(request);
 	}
@@ -127,7 +126,7 @@ public class QueryServiceImpl extends AccessService implements QueryService
 		return historyOrderEntityService.queryList(request);
 	}
 
-	public Page<HistoryOrder> queryPageData(HistoryOrderPageRequest request)
+	public com.mizhousoft.commons.data.domain.Page<HistoryOrder> queryPageData(HistoryOrderPageRequest request)
 	{
 		return historyOrderEntityService.queryPageData(request);
 	}
@@ -142,17 +141,17 @@ public class QueryServiceImpl extends AccessService implements QueryService
 		return historyTaskEntityService.queryList(request);
 	}
 
-	public Page<WorkItem> getWorkItems(WorkItemPageRequest request)
+	public com.mizhousoft.commons.data.domain.Page<WorkItem> getWorkItems(WorkItemPageRequest request)
 	{
 		return workItemEntityService.queryPageData(request);
 	}
 
-	public Page<HistoryOrder> getCCWorks(CCOrderPageRequest request)
+	public com.mizhousoft.commons.data.domain.Page<HistoryOrder> getCCWorks(CCOrderPageRequest request)
 	{
 		return ccOrderEntityService.queryPageData(request);
 	}
 
-	public Page<WorkItem> getHistoryWorkItems(WorkItemPageRequest request)
+	public com.mizhousoft.commons.data.domain.Page<WorkItem> getHistoryWorkItems(WorkItemPageRequest request)
 	{
 		return workItemEntityService.queryHistory(request);
 	}
