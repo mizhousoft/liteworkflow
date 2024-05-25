@@ -7,7 +7,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.engine.ProcessService;
+import com.liteworkflow.engine.RepositoryService;
 
 /**
  * @author yuqs
@@ -20,13 +20,13 @@ public class TestSpring extends AbstractJUnit4SpringContextTests
 
 	protected ProcessEngine engine;
 
-	protected ProcessService processService;
+	protected RepositoryService repositoryService;
 
 	@Test
 	public void test()
 	{
 		// SnakerEngine engine = applicationContext.getBean(SnakerEngine.class);
-		// engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("contactform.snaker"));
+		// engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("contactform.snaker"));
 		// Map<String, Object> args = new HashMap<String, Object>();
 		// args.put("receipt.operator", new String[]{"1"});
 		// Order order = engine.startInstanceByName("contactFormFlow", 0, "2", args);

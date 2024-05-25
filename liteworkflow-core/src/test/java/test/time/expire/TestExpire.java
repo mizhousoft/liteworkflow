@@ -26,9 +26,9 @@ public class TestExpire extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.getProcessService();
+		repositoryService = engine.getRepositoryService();
 
-		engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/time/expire/process.snaker"));
+		engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/time/expire/process.snaker"));
 	}
 
 	@Test
@@ -38,7 +38,7 @@ public class TestExpire extends TestSpring
 		args.put("task1.operator", new String[] { "1" });
 		args.put("task1.expireTime", LocalDateTimeUtils.toDate(LocalDateTime.of(2014, 4, 15, 9, 0)));
 		args.put("task1.reminderTime", LocalDateTimeUtils.toDate(LocalDateTime.of(2014, 4, 15, 8, 57)));
-		Order order = engine.startInstanceByName(PROCESSNAME, null, "2", args);
+		Order order = engine.getRuntimeService().startInstanceByName(PROCESSNAME, null, "2", args);
 		System.out.println("order=" + order);
 		// List<Task> tasks = queryService.getActiveTasks(new
 		// QueryFilter().setOrderId(order.getId()));

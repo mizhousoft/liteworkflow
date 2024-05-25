@@ -14,7 +14,7 @@ import com.liteworkflow.engine.model.ProcessModel;
  * @author yuqs
  * @since 1.0
  */
-public class Process implements Serializable
+public class ProcessDefinition implements Serializable
 {
 
 	/**

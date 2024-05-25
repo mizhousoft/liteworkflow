@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.liteworkflow.order.entity.Order;
 import com.liteworkflow.order.request.OrderPageRequest;
-import com.liteworkflow.process.entity.Process;
+import com.liteworkflow.process.entity.ProcessDefinition;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
@@ -49,7 +49,7 @@ public interface OrderService
 	 * @param args 参数列表
 	 * @return Order 活动流程实例对象
 	 */
-	Order createOrder(Process process, String operator, Map<String, Object> args);
+	Order createOrder(ProcessDefinition process, String operator, Map<String, Object> args);
 
 	/**
 	 * 根据流程、操作人员、父流程实例ID创建流程实例
@@ -61,7 +61,7 @@ public interface OrderService
 	 * @param parentNodeName 父流程节点模型
 	 * @return 活动流程实例对象
 	 */
-	Order createOrder(Process process, String operator, Map<String, Object> args, String parentId, String parentNodeName);
+	Order createOrder(ProcessDefinition process, String operator, Map<String, Object> args, String parentId, String parentNodeName);
 
 	/**
 	 * 向指定实例id添加全局变量数据

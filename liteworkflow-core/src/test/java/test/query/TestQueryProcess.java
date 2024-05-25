@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.process.entity.Process;
+import com.liteworkflow.process.entity.ProcessDefinition;
 import com.liteworkflow.process.request.ProcessPageRequest;
 
 import test.TestSpring;
@@ -23,7 +23,7 @@ public class TestQueryProcess extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.getProcessService();
+		repositoryService = engine.getRepositoryService();
 	}
 
 	@Test
@@ -31,17 +31,17 @@ public class TestQueryProcess extends TestSpring
 	{
 		ProcessPageRequest request = new ProcessPageRequest();
 
-		List<Process> list = engine.getProcessService().getProcesss(request);
+		List<ProcessDefinition> list = engine.getRepositoryService().getProcesss(request);
 		System.out.println(list.size());
 
 		request.setNames(new String[] { "subprocess1" });
-		list = engine.getProcessService().getProcesss(request);
+		list = engine.getRepositoryService().getProcesss(request);
 		System.out.println(list.size());
 
-		Process process = engine.getProcessService().getProcessByVersion("subprocess1", 0);
+		ProcessDefinition process = engine.getRepositoryService().getProcessByVersion("subprocess1", 0);
 		System.out.println(process);
 
-		process = engine.getProcessService().getProcessByName("subprocess1");
+		process = engine.getRepositoryService().getProcessByName("subprocess1");
 		System.out.println(process);
 	}
 }

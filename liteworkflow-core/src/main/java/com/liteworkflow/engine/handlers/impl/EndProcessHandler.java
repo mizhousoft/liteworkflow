@@ -4,13 +4,14 @@ import java.util.List;
 
 import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.ProcessEngine;
+import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.core.Execution;
 import com.liteworkflow.engine.handlers.IHandler;
 import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.SubProcessModel;
 import com.liteworkflow.order.entity.Order;
-import com.liteworkflow.process.entity.Process;
+import com.liteworkflow.process.entity.ProcessDefinition;
 import com.liteworkflow.task.entity.Task;
 
 /**
@@ -26,7 +27,7 @@ public class EndProcessHandler implements IHandler
 	 */
 	public void handle(Execution execution)
 	{
-		ProcessEngine engine = execution.getEngine();
+		 ProcessEngineConfiguration engine = execution.getEngineConfiguration();
 		Order order = execution.getOrder();
 		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
 		for (Task task : tasks)
@@ -48,7 +49,7 @@ public class EndProcessHandler implements IHandler
 			Order parentOrder = engine.getOrderService().getOrder(order.getParentId());
 			if (parentOrder == null)
 				return;
-			Process process = engine.getProcessService().getProcessById(parentOrder.getProcessId());
+			ProcessDefinition process = engine.getRepositoryService().getProcessById(parentOrder.getProcessId());
 			ProcessModel pm = process.getModel();
 			if (pm == null)
 				return;

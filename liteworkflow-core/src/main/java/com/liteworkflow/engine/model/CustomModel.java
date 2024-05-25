@@ -91,7 +91,7 @@ public class CustomModel extends WorkModel
 				execution.getArgs().put(var, returnValue);
 			}
 		}
-		execution.getEngine().getTaskService().history(execution, this);
+		execution.getEngineConfiguration().getTaskService().history(execution, this);
 		runOutTransition(execution);
 	}
 

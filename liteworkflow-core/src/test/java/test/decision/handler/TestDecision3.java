@@ -24,9 +24,9 @@ public class TestDecision3 extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.getProcessService();
+		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/decision/handler/process.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/decision/handler/process.snaker"));
 	}
 
 	@Test
@@ -37,7 +37,7 @@ public class TestDecision3 extends TestSpring
 		args.put("task2.operator", new String[] { "1" });
 		args.put("task3.operator", new String[] { "1" });
 		args.put("content", "toTask3");
-		Order order = engine.startInstanceById(processId, "2", args);
+		Order order = engine.getRuntimeService().startInstanceById(processId, "2", args);
 		System.out.println(order);
 	}
 }

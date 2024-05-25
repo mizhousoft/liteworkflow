@@ -18,7 +18,7 @@ import com.liteworkflow.order.request.OrderPageRequest;
 import com.liteworkflow.order.service.CCOrderEntityService;
 import com.liteworkflow.order.service.HistoryOrderEntityService;
 import com.liteworkflow.order.service.OrderEntityService;
-import com.liteworkflow.process.entity.Process;
+import com.liteworkflow.process.entity.ProcessDefinition;
 import com.liteworkflow.task.entity.HistoryTask;
 import com.liteworkflow.task.entity.Task;
 import com.liteworkflow.task.service.HistoryTaskEntityService;
@@ -64,11 +64,11 @@ public class OrderServiceImpl extends AccessService implements OrderService
 	/**
 	 * 创建活动实例
 	 * 
-	 * @see com.liteworkflow.engine.core.OrderServiceImpl#createOrder(Process, String, Map, String,
+	 * @see com.liteworkflow.engine.core.OrderServiceImpl#createOrder(ProcessDefinition, String, Map, String,
 	 *      String)
 	 */
 	@Override
-	public Order createOrder(Process process, String operator, Map<String, Object> args)
+	public Order createOrder(ProcessDefinition process, String operator, Map<String, Object> args)
 	{
 		return createOrder(process, operator, args, null, null);
 	}
@@ -77,7 +77,7 @@ public class OrderServiceImpl extends AccessService implements OrderService
 	 * 创建活动实例
 	 */
 	@Override
-	public Order createOrder(Process process, String operator, Map<String, Object> args, String parentId, String parentNodeName)
+	public Order createOrder(ProcessDefinition process, String operator, Map<String, Object> args, String parentId, String parentNodeName)
 	{
 		Order order = new Order();
 		order.setId(StringHelper.getPrimaryKey());

@@ -20,7 +20,7 @@ public class TestQueryCCOrder extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.getProcessService();
+		repositoryService = engine.getRepositoryService();
 	}
 
 	@Test

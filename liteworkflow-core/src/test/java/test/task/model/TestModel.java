@@ -27,9 +27,9 @@ public class TestModel extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.getProcessService();
+		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
 	}
 
 	@Test
@@ -37,7 +37,7 @@ public class TestModel extends TestSpring
 	{
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("task1.operator", new String[] { "1" });
-		Order order = engine.startInstanceByName("simple", null, "2", args);
+		Order order = engine.getRuntimeService().startInstanceByName("simple", null, "2", args);
 		System.out.println("order=" + order);
 		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
 		for (Task task : tasks)
@@ -50,7 +50,7 @@ public class TestModel extends TestSpring
 				System.out.println(tm.getName());
 			}
 		}
-		List<TaskModel> models = engine.getProcessService().getProcessById(processId).getModel().getModels(TaskModel.class);
+		List<TaskModel> models = engine.getRepositoryService().getProcessById(processId).getModel().getModels(TaskModel.class);
 		for (TaskModel tm : models)
 		{
 			System.out.println(tm.getName());

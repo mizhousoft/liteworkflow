@@ -3,7 +3,7 @@ package com.liteworkflow.engine;
 import java.io.InputStream;
 import java.util.List;
 
-import com.liteworkflow.process.entity.Process;
+import com.liteworkflow.process.entity.ProcessDefinition;
 import com.liteworkflow.process.request.ProcessPageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
@@ -13,7 +13,7 @@ import com.mizhousoft.commons.data.domain.Page;
  * @author yuqs
  * @since 1.0
  */
-public interface ProcessService
+public interface RepositoryService
 {
 	/**
 	 * 检查流程定义对象
@@ -21,14 +21,14 @@ public interface ProcessService
 	 * @param process 流程定义对象
 	 * @param idOrName 流程定义id/name
 	 */
-	void check(Process process, String idOrName);
+	void check(ProcessDefinition process, String idOrName);
 
 	/**
 	 * 保存流程定义
 	 * 
 	 * @param process 流程定义对象
 	 */
-	void saveProcess(Process process);
+	void saveProcess(ProcessDefinition process);
 
 	/**
 	 * 更新流程定义的类别
@@ -45,7 +45,7 @@ public interface ProcessService
 	 * @param id 流程定义id
 	 * @return Process 流程定义对象
 	 */
-	Process getProcessById(String id);
+	ProcessDefinition getProcessById(String id);
 
 	/**
 	 * 根据流程name获取流程定义对象
@@ -53,7 +53,7 @@ public interface ProcessService
 	 * @param name 流程定义名称
 	 * @return Process 流程定义对象
 	 */
-	Process getProcessByName(String name);
+	ProcessDefinition getProcessByName(String name);
 
 	/**
 	 * 根据流程name、version获取流程定义对象
@@ -62,7 +62,7 @@ public interface ProcessService
 	 * @param version 版本号
 	 * @return Process 流程定义对象
 	 */
-	Process getProcessByVersion(String name, Integer version);
+	ProcessDefinition getProcessByVersion(String name, Integer version);
 
 	/**
 	 * 根据给定的参数列表args查询process
@@ -70,7 +70,7 @@ public interface ProcessService
 	 * @param filter 查询过滤器
 	 * @return List<Process> 流程定义对象集合
 	 */
-	List<Process> getProcesss(ProcessPageRequest request);
+	List<ProcessDefinition> getProcesss(ProcessPageRequest request);
 
 	/**
 	 * 根据给定的参数列表args分页查询process
@@ -79,7 +79,7 @@ public interface ProcessService
 	 * @param filter 查询过滤器
 	 * @return List<Process> 流程定义对象集合
 	 */
-	Page<Process> queryPageData(ProcessPageRequest request);
+	Page<ProcessDefinition> queryPageData(ProcessPageRequest request);
 
 	/**
 	 * 根據InputStream輸入流，部署流程定义

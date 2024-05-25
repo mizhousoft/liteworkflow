@@ -17,15 +17,15 @@ public interface ProcessEngineConfiguration
 
 	CacheManager getCacheManager();
 
-	ProcessService getProcessService();
-
-	QueryService getQueryService();
+	RepositoryService getRepositoryService();
 
 	OrderService getOrderService();
 
 	TaskService getTaskService();
-	
+
 	HistoryService getHistoryService();
 
 	ManagerService getManagerService();
+
+	public RuntimeService getRuntimeService();
 }

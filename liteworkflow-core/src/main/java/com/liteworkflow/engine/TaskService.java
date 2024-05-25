@@ -27,6 +27,59 @@ import com.mizhousoft.commons.data.domain.Page;
 public interface TaskService
 {
 	/**
+	 * 根据任务主键ID执行任务
+	 * 
+	 * @param taskId 任务主键ID
+	 * @return List<Task> 任务集合
+	 * @see #executeTask(String, String, Map)
+	 */
+	public List<Task> executeTask(String taskId);
+
+	/**
+	 * 根据任务主键ID，操作人ID执行任务
+	 * 
+	 * @param taskId 任务主键ID
+	 * @param operator 操作人主键ID
+	 * @return List<Task> 任务集合
+	 * @see #executeTask(String, String, Map)
+	 */
+	public List<Task> executeTask(String taskId, String operator);
+
+	/**
+	 * 根据任务主键ID，操作人ID，参数列表执行任务
+	 * 
+	 * @param taskId 任务主键ID
+	 * @param operator 操作人主键ID
+	 * @param args 参数列表
+	 * @return List<Task> 任务集合
+	 */
+	public List<Task> executeTask(String taskId, String operator, Map<String, Object> args);
+
+	/**
+	 * 根据任务主键ID，操作人ID，参数列表执行任务，并且根据nodeName跳转到任意节点
+	 * 1、nodeName为null时，则跳转至上一步处理
+	 * 2、nodeName不为null时，则任意跳转，即动态创建转移
+	 * 
+	 * @param taskId 任务主键ID
+	 * @param operator 操作人主键ID
+	 * @param args 参数列表
+	 * @param nodeName 跳转的节点名称
+	 * @return List<Task> 任务集合
+	 */
+	public List<Task> executeAndJumpTask(String taskId, String operator, Map<String, Object> args, String nodeName);
+
+	/**
+	 * 根据流程实例ID，操作人ID，参数列表按照节点模型model创建新的自由任务
+	 * 
+	 * @param orderId 流程实例id
+	 * @param operator 操作人id
+	 * @param args 参数列表
+	 * @param model 节点模型
+	 * @return List<Task> 任务集合
+	 */
+	public List<Task> createFreeTask(String orderId, String operator, Map<String, Object> args, TaskModel model);
+
+	/**
 	 * 根据任务ID获取任务对象
 	 * 
 	 * @param taskId 任务id
@@ -93,13 +146,6 @@ public interface TaskService
 	 * @return Task 任务对象
 	 */
 	Task complete(String taskId, String operator, Map<String, Object> args);
-
-	/**
-	 * 更新任务对象
-	 * 
-	 * @param task 任务对象
-	 */
-	void updateTask(Task task);
 
 	/**
 	 * 根据执行对象、自定义节点模型创建历史任务记录

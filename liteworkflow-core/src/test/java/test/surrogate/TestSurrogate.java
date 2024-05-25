@@ -22,9 +22,9 @@ public class TestSurrogate extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.getProcessService();
+		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/surrogate/process.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/surrogate/process.snaker"));
 	}
 
 	@Test
@@ -32,7 +32,7 @@ public class TestSurrogate extends TestSpring
 	{
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("task1.operator", new String[] { "test" });
-		Order order = engine.startInstanceByName("surrogate", 0, "2", args);
+		Order order = engine.getRuntimeService().startInstanceByName("surrogate", 0, "2", args);
 		System.out.println("order=" + order);
 		// List<Task> tasks = queryService.getActiveTasks(new
 		// QueryFilter().setOrderId(order.getId()));

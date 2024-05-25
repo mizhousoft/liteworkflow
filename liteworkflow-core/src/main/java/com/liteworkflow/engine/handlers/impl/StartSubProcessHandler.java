@@ -7,13 +7,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import com.liteworkflow.ProcessException;
-import com.liteworkflow.engine.ProcessEngine;
+import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.core.Execution;
 import com.liteworkflow.engine.handlers.IHandler;
 import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.model.SubProcessModel;
 import com.liteworkflow.order.entity.Order;
-import com.liteworkflow.process.entity.Process;
+import com.liteworkflow.process.entity.ProcessDefinition;
 
 /**
  * 启动子流程的处理器
@@ -47,8 +47,9 @@ public class StartSubProcessHandler implements IHandler
 	public void handle(Execution execution)
 	{
 		// 根据子流程模型名称获取子流程定义对象
-		ProcessEngine engine = execution.getEngine();
-		Process process = engine.getProcessService().getProcessByVersion(model.getProcessName(), model.getVersion());
+		ProcessEngineConfiguration engineConfiguration = execution.getEngineConfiguration();
+		ProcessDefinition process = engineConfiguration.getRepositoryService().getProcessByVersion(model.getProcessName(),
+		        model.getVersion());
 
 		Execution child = execution.createSubExecution(execution, process, model.getName());
 		Order order = null;
@@ -74,10 +75,10 @@ public class StartSubProcessHandler implements IHandler
 		}
 		else
 		{
-			order = engine.startInstanceByExecution(child);
+			order = engineConfiguration.getRuntimeService().startInstanceByExecution(child);
 		}
 		AssertHelper.notNull(order, "子流程创建失败");
-		execution.addTasks(engine.getTaskService().getActiveTasks(order.getId()));
+		execution.addTasks(engineConfiguration.getTaskService().getActiveTasks(order.getId()));
 	}
 
 	/**
@@ -88,7 +89,7 @@ public class StartSubProcessHandler implements IHandler
 	 */
 	class ExecuteTask implements Callable<Order>
 	{
-		private ProcessEngine engine;
+		private ProcessEngineConfiguration engineConfiguration;
 
 		private Execution child;
 
@@ -99,15 +100,15 @@ public class StartSubProcessHandler implements IHandler
 		 * @param process
 		 * @param parentNodeName
 		 */
-		public ExecuteTask(Execution execution, Process process, String parentNodeName)
+		public ExecuteTask(Execution execution, ProcessDefinition process, String parentNodeName)
 		{
-			this.engine = execution.getEngine();
+			this.engineConfiguration = execution.getEngineConfiguration();
 			child = execution.createSubExecution(execution, process, parentNodeName);
 		}
 
 		public Order call() throws Exception
 		{
-			return engine.startInstanceByExecution(child);
+			return this.engineConfiguration.getRuntimeService().startInstanceByExecution(child);
 		}
 	}
 }

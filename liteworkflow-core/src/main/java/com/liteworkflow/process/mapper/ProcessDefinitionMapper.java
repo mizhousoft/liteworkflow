@@ -2,7 +2,7 @@ package com.liteworkflow.process.mapper;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.liteworkflow.process.entity.Process;
+import com.liteworkflow.process.entity.ProcessDefinition;
 import com.mizhousoft.commons.mapper.PageableMapper;
 
 /**
@@ -10,7 +10,7 @@ import com.mizhousoft.commons.mapper.PageableMapper;
  *
  * @version
  */
-public interface ProcessMapper extends PageableMapper<Process, String>
+public interface ProcessDefinitionMapper extends PageableMapper<ProcessDefinition, String>
 {
 	/**
 	 * 更新流程定义类别
@@ -26,7 +26,7 @@ public interface ProcessMapper extends PageableMapper<Process, String>
 	 * @param id 流程定义id
 	 * @return Process 流程定义对象
 	 */
-	Process getProcess(String id);
+	ProcessDefinition getProcess(String id);
 
 	/**
 	 * 根据流程名称查询最近的版本号

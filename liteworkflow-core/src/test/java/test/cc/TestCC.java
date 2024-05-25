@@ -22,9 +22,9 @@ public class TestCC extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.getProcessService();
+		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
 	}
 
 	@Test
@@ -34,7 +34,7 @@ public class TestCC extends TestSpring
 
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("task1.operator", new String[] { "1" });
-		Order order = engine.startInstanceByName("simple", 0, "2", args);
+		Order order = engine.getRuntimeService().startInstanceByName("simple", 0, "2", args);
 		engine.getOrderService().createCCOrder(order.getId(), "test");
 		// engine.getOrderService().updateCCStatus("b0fcc08da45d4e88819d9c287917b525", "test");
 		// engine.getOrderService().deleteCCOrder("01b960b9d5df4be7b8565b9f64bc1856", "test");

@@ -2,30 +2,30 @@ package com.liteworkflow.process.service;
 
 import java.util.List;
 
-import com.liteworkflow.process.entity.Process;
+import com.liteworkflow.process.entity.ProcessDefinition;
 import com.liteworkflow.process.request.ProcessPageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
- * ProcessEntityService
+ * ProcessDefinitionEntityService
  *
  * @version
  */
-public interface ProcessEntityService
+public interface ProcessDefinitionEntityService
 {
 	/**
 	 * 保存流程定义对象
 	 * 
 	 * @param process 流程定义对象
 	 */
-	void save(Process process);
+	void save(ProcessDefinition process);
 
 	/**
 	 * 更新流程定义对象
 	 * 
 	 * @param process 流程定义对象
 	 */
-	void update(Process process);
+	void update(ProcessDefinition process);
 
 	/**
 	 * 更新流程定义类别
@@ -40,7 +40,7 @@ public interface ProcessEntityService
 	 * 
 	 * @param process 流程定义对象
 	 */
-	void delete(Process process);
+	void delete(ProcessDefinition process);
 
 	/**
 	 * 根据流程定义id查询流程定义对象
@@ -48,7 +48,7 @@ public interface ProcessEntityService
 	 * @param id 流程定义id
 	 * @return Process 流程定义对象
 	 */
-	Process getProcess(String id);
+	ProcessDefinition getProcess(String id);
 
 	/**
 	 * 根据流程名称查询最近的版本号
@@ -64,7 +64,7 @@ public interface ProcessEntityService
 	 * @param request
 	 * @return
 	 */
-	List<Process> queryList(ProcessPageRequest request);
+	List<ProcessDefinition> queryList(ProcessPageRequest request);
 
 	/**
 	 * 分页查询
@@ -72,5 +72,5 @@ public interface ProcessEntityService
 	 * @param request
 	 * @return
 	 */
-	Page<Process> queryPageData(ProcessPageRequest request);
+	Page<ProcessDefinition> queryPageData(ProcessPageRequest request);
 }

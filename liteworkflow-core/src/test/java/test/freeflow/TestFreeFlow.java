@@ -24,9 +24,9 @@ public class TestFreeFlow extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.getProcessService();
+		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/freeflow/free.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/freeflow/free.snaker"));
 	}
 
 	// @Test
@@ -34,7 +34,7 @@ public class TestFreeFlow extends TestSpring
 	{
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("task1.operator", new String[] { "1" });
-		Order order = engine.startInstanceById(processId, "2", args);
+		Order order = engine.getRuntimeService().startInstanceById(processId, "2", args);
 		// System.out.println("order=" + order);
 		TaskModel tm1 = new TaskModel();
 		tm1.setName("task1");
@@ -43,7 +43,7 @@ public class TestFreeFlow extends TestSpring
 		tm2.setName("task2");
 		tm2.setDisplayName("任务2");
 		List<Task> tasks = null;
-		tasks = engine.createFreeTask(order.getId(), "1", args, tm1);
+		tasks = engine.getTaskService().createFreeTask(order.getId(), "1", args, tm1);
 		for (Task task : tasks)
 		{
 			engine.getTaskService().complete(task.getId(), "1", null);

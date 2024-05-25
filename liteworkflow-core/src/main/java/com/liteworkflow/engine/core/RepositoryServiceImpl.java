@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.Constants;
-import com.liteworkflow.engine.ProcessService;
+import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.cache.Cache;
 import com.liteworkflow.engine.cache.CacheManager;
 import com.liteworkflow.engine.helper.AssertHelper;
@@ -20,9 +20,9 @@ import com.liteworkflow.engine.parser.ModelParser;
 import com.liteworkflow.order.entity.HistoryOrder;
 import com.liteworkflow.order.request.HistoryOrderPageRequest;
 import com.liteworkflow.order.service.HistoryOrderEntityService;
-import com.liteworkflow.process.entity.Process;
+import com.liteworkflow.process.entity.ProcessDefinition;
 import com.liteworkflow.process.request.ProcessPageRequest;
-import com.liteworkflow.process.service.ProcessEntityService;
+import com.liteworkflow.process.service.ProcessDefinitionEntityService;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
@@ -31,9 +31,9 @@ import com.mizhousoft.commons.data.domain.Page;
  * @author yuqs
  * @since 1.0
  */
-public class ProcessServiceImpl extends AccessService implements ProcessService
+public class RepositoryServiceImpl extends AccessService implements RepositoryService
 {
-	private static final Logger log = LoggerFactory.getLogger(ProcessServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(RepositoryServiceImpl.class);
 
 	private static final String DEFAULT_SEPARATOR = ".";
 
@@ -55,19 +55,19 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 	/**
 	 * 实体cache(key=name,value=entity对象)
 	 */
-	private Cache<String, Process> entityCache;
+	private Cache<String, ProcessDefinition> entityCache;
 
 	/**
 	 * 名称cache(key=id,value=name对象)
 	 */
 	private Cache<String, String> nameCache;
 
-	private ProcessEntityService processEntityService;
+	private ProcessDefinitionEntityService processDefinitionEntityService;
 
 	private HistoryOrderEntityService historyOrderEntityService;
 
 	@Override
-	public void check(Process process, String idOrName)
+	public void check(ProcessDefinition process, String idOrName)
 	{
 		AssertHelper.notNull(process, "指定的流程定义[id/name=" + idOrName + "]不存在");
 		if (process.getState() != null && process.getState() == 0)
@@ -80,9 +80,9 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 	 * 保存process实体对象
 	 */
 	@Override
-	public void saveProcess(Process process)
+	public void saveProcess(ProcessDefinition process)
 	{
-		processEntityService.save(process);
+		processDefinitionEntityService.save(process);
 	}
 
 	/**
@@ -91,9 +91,9 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 	@Override
 	public void updateType(String id, String type)
 	{
-		Process entity = getProcessById(id);
+		ProcessDefinition entity = getProcessById(id);
 		entity.setType(type);
-		processEntityService.updateProcessType(id, type);
+		processDefinitionEntityService.updateProcessType(id, type);
 		cache(entity);
 	}
 
@@ -102,13 +102,13 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 	 * 先通过cache获取，如果返回空，就从数据库读取并put
 	 */
 	@Override
-	public Process getProcessById(String id)
+	public ProcessDefinition getProcessById(String id)
 	{
 		AssertHelper.notEmpty(id);
-		Process entity = null;
+		ProcessDefinition entity = null;
 		String processName;
 		Cache<String, String> nameCache = ensureAvailableNameCache();
-		Cache<String, Process> entityCache = ensureAvailableEntityCache();
+		Cache<String, ProcessDefinition> entityCache = ensureAvailableEntityCache();
 		if (nameCache != null && entityCache != null)
 		{
 			processName = nameCache.get(id);
@@ -123,7 +123,7 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 
 			return entity;
 		}
-		entity = processEntityService.getProcess(id);
+		entity = processDefinitionEntityService.getProcess(id);
 		if (entity != null)
 		{
 			log.debug("obtain process[id={}] from database.", id);
@@ -138,7 +138,7 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 	 * 先通过cache获取，如果返回空，就从数据库读取并put
 	 */
 	@Override
-	public Process getProcessByName(String name)
+	public ProcessDefinition getProcessByName(String name)
 	{
 		return getProcessByVersion(name, null);
 	}
@@ -148,20 +148,20 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 	 * 先通过cache获取，如果返回空，就从数据库读取并put
 	 */
 	@Override
-	public Process getProcessByVersion(String name, Integer version)
+	public ProcessDefinition getProcessByVersion(String name, Integer version)
 	{
 		AssertHelper.notEmpty(name);
 		if (version == null)
 		{
-			version = processEntityService.getLatestProcessVersion(name);
+			version = processDefinitionEntityService.getLatestProcessVersion(name);
 		}
 		if (version == null)
 		{
 			version = 0;
 		}
-		Process entity = null;
+		ProcessDefinition entity = null;
 		String processName = name + DEFAULT_SEPARATOR + version;
-		Cache<String, Process> entityCache = ensureAvailableEntityCache();
+		Cache<String, ProcessDefinition> entityCache = ensureAvailableEntityCache();
 		if (entityCache != null)
 		{
 			entity = entityCache.get(processName);
@@ -176,7 +176,7 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 		ProcessPageRequest request = new ProcessPageRequest();
 		request.setNames(new String[] { name });
 		request.setVersion(version);
-		List<Process> processs = processEntityService.queryList(request);
+		List<ProcessDefinition> processs = processDefinitionEntityService.queryList(request);
 		if (processs != null && !processs.isEmpty())
 		{
 			log.debug("obtain process[name={}] from database.", processName);
@@ -211,8 +211,8 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 		{
 			byte[] bytes = StreamHelper.readBytes(input);
 			ProcessModel model = ModelParser.parse(bytes);
-			Integer version = processEntityService.getLatestProcessVersion(model.getName());
-			Process entity = new Process();
+			Integer version = processDefinitionEntityService.getLatestProcessVersion(model.getName());
+			ProcessDefinition entity = new ProcessDefinition();
 			entity.setId(StringHelper.getPrimaryKey());
 			if (version == null || version < 0)
 			{
@@ -245,7 +245,7 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 	@Override
 	public void redeploy(String id, InputStream input)
 	{
-		Process entity = processEntityService.getProcess(id);
+		ProcessDefinition entity = processDefinitionEntityService.getProcess(id);
 
 		try
 		{
@@ -254,10 +254,10 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 			String oldProcessName = entity.getName();
 			entity.setModel(model);
 			entity.setBytes(bytes);
-			processEntityService.update(entity);
+			processDefinitionEntityService.update(entity);
 			if (!oldProcessName.equalsIgnoreCase(entity.getName()))
 			{
-				Cache<String, Process> entityCache = ensureAvailableEntityCache();
+				Cache<String, ProcessDefinition> entityCache = ensureAvailableEntityCache();
 				if (entityCache != null)
 				{
 					entityCache.remove(oldProcessName + DEFAULT_SEPARATOR + entity.getVersion());
@@ -277,9 +277,9 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 	@Override
 	public void undeploy(String id)
 	{
-		Process entity = processEntityService.getProcess(id);
+		ProcessDefinition entity = processDefinitionEntityService.getProcess(id);
 		entity.setState(Constants.STATE_FINISH);
-		processEntityService.update(entity);
+		processDefinitionEntityService.update(entity);
 		cache(entity);
 	}
 
@@ -289,7 +289,7 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 	@Override
 	public void cascadeRemove(String id)
 	{
-		Process entity = processEntityService.getProcess(id);
+		ProcessDefinition entity = processDefinitionEntityService.getProcess(id);
 
 		HistoryOrderPageRequest request = new HistoryOrderPageRequest();
 		request.setProcessId(id);
@@ -299,7 +299,7 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 		{
 			ServiceContext.getEngine().getOrderService().cascadeRemove(historyOrder.getId());
 		}
-		processEntityService.delete(entity);
+		processDefinitionEntityService.delete(entity);
 		clear(entity);
 	}
 
@@ -307,18 +307,18 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 	 * 查询流程定义
 	 */
 	@Override
-	public List<Process> getProcesss(ProcessPageRequest request)
+	public List<ProcessDefinition> getProcesss(ProcessPageRequest request)
 	{
-		return processEntityService.queryList(request);
+		return processDefinitionEntityService.queryList(request);
 	}
 
 	/**
 	 * 分页查询流程定义
 	 */
 	@Override
-	public Page<Process> queryPageData(ProcessPageRequest request)
+	public Page<ProcessDefinition> queryPageData(ProcessPageRequest request)
 	{
-		return processEntityService.queryPageData(request);
+		return processDefinitionEntityService.queryPageData(request);
 	}
 
 	/**
@@ -326,10 +326,10 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 	 * 
 	 * @param entity 流程定义对象
 	 */
-	private void cache(Process entity)
+	private void cache(ProcessDefinition entity)
 	{
 		Cache<String, String> nameCache = ensureAvailableNameCache();
-		Cache<String, Process> entityCache = ensureAvailableEntityCache();
+		Cache<String, ProcessDefinition> entityCache = ensureAvailableEntityCache();
 		if (entity.getModel() == null && entity.getDBContent() != null)
 		{
 			entity.setModel(ModelParser.parse(entity.getDBContent()));
@@ -353,10 +353,10 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 	 * 
 	 * @param entity 流程定义对象
 	 */
-	private void clear(Process entity)
+	private void clear(ProcessDefinition entity)
 	{
 		Cache<String, String> nameCache = ensureAvailableNameCache();
-		Cache<String, Process> entityCache = ensureAvailableEntityCache();
+		Cache<String, ProcessDefinition> entityCache = ensureAvailableEntityCache();
 		String processName = entity.getName() + DEFAULT_SEPARATOR + entity.getVersion();
 		if (nameCache != null && entityCache != null)
 		{
@@ -365,9 +365,9 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 		}
 	}
 
-	private Cache<String, Process> ensureAvailableEntityCache()
+	private Cache<String, ProcessDefinition> ensureAvailableEntityCache()
 	{
-		Cache<String, Process> entityCache = ensureEntityCache();
+		Cache<String, ProcessDefinition> entityCache = ensureEntityCache();
 		if (entityCache == null && this.cacheManager != null)
 		{
 			entityCache = this.cacheManager.getCache(CACHE_ENTITY);
@@ -385,12 +385,12 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 		return nameCache;
 	}
 
-	public Cache<String, Process> ensureEntityCache()
+	public Cache<String, ProcessDefinition> ensureEntityCache()
 	{
 		return entityCache;
 	}
 
-	public void setEntityCache(Cache<String, Process> entityCache)
+	public void setEntityCache(Cache<String, ProcessDefinition> entityCache)
 	{
 		this.entityCache = entityCache;
 	}
@@ -406,13 +406,13 @@ public class ProcessServiceImpl extends AccessService implements ProcessService
 	}
 
 	/**
-	 * 设置processEntityService
+	 * 设置processDefinitionEntityService
 	 * 
-	 * @param processEntityService
+	 * @param processDefinitionEntityService
 	 */
-	public void setProcessEntityService(ProcessEntityService processEntityService)
+	public void setProcessDefinitionEntityService(ProcessDefinitionEntityService processDefinitionEntityService)
 	{
-		this.processEntityService = processEntityService;
+		this.processDefinitionEntityService = processDefinitionEntityService;
 	}
 
 	/**

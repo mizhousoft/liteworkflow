@@ -24,9 +24,9 @@ public class TestCustomClass extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.getProcessService();
+		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/custom/snaker2.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/custom/snaker2.snaker"));
 	}
 
 	@Test
@@ -34,12 +34,12 @@ public class TestCustomClass extends TestSpring
 	{
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("msg", "custom test");
-		Order order = engine.startInstanceById(processId, null, args);
+		Order order = engine.getRuntimeService().startInstanceById(processId, null, args);
 		System.out.println("order=" + order);
 		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
 		for (Task task : tasks)
 		{
-			engine.executeTask(task.getId(), null, args);
+			engine.getTaskService().executeTask(task.getId(), null, args);
 		}
 	}
 }

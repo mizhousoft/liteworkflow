@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.liteworkflow.boot.WorkflowApplication;
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.engine.ProcessService;
+import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.helper.StreamHelper;
 import com.liteworkflow.order.entity.Order;
 
@@ -26,14 +26,14 @@ public class TestCC
 	@Autowired
 	protected ProcessEngine engine;
 
-	protected ProcessService processService;
+	protected RepositoryService repositoryService;
 
 	@BeforeEach
 	public void before()
 	{
-		processService = engine.getProcessService();
+		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
 	}
 
 	@Test
@@ -41,7 +41,7 @@ public class TestCC
 	{
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("task1.operator", new String[] { "1" });
-		Order order = engine.startInstanceByName("simple", 0, "2", args);
+		Order order = engine.getRuntimeService().startInstanceByName("simple", 0, "2", args);
 		engine.getOrderService().createCCOrder(order.getId(), "test");
 		// engine.getOrderService().updateCCStatus("b0fcc08da45d4e88819d9c287917b525", "test");
 		// engine.getOrderService().deleteCCOrder("01b960b9d5df4be7b8565b9f64bc1856", "test");

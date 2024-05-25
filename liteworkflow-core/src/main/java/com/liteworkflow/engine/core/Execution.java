@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.liteworkflow.ProcessException;
-import com.liteworkflow.engine.ProcessEngine;
+import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.order.entity.Order;
-import com.liteworkflow.process.entity.Process;
+import com.liteworkflow.process.entity.ProcessDefinition;
 import com.liteworkflow.task.entity.Task;
 
 /**
@@ -28,12 +28,12 @@ public class Execution implements Serializable
 	/**
 	 * SnakerEngine holder
 	 */
-	private ProcessEngine engine;
+	private ProcessEngineConfiguration engineConfiguration;;
 
 	/**
 	 * 流程定义对象
 	 */
-	private Process process;
+	private ProcessDefinition process;
 
 	/**
 	 * 流程实例对象
@@ -88,13 +88,13 @@ public class Execution implements Serializable
 	 * @param process
 	 * @param parentNodeName
 	 */
-	Execution(Execution execution, Process process, String parentNodeName)
+	Execution(Execution execution, ProcessDefinition process, String parentNodeName)
 	{
 		if (execution == null || process == null || parentNodeName == null)
 		{
 			throw new ProcessException("构造Execution对象失败，请检查execution、process、parentNodeName是否为空");
 		}
-		this.engine = execution.getEngine();
+		this.engineConfiguration = execution.getEngineConfiguration();
 		this.process = process;
 		this.args = execution.getArgs();
 		this.parentOrder = execution.getOrder();
@@ -109,13 +109,13 @@ public class Execution implements Serializable
 	 * @param order
 	 * @param args
 	 */
-	public Execution(ProcessEngine engine, Process process, Order order, Map<String, Object> args)
+	public Execution(ProcessEngineConfiguration engineConfiguration, ProcessDefinition process, Order order, Map<String, Object> args)
 	{
 		if (process == null || order == null)
 		{
 			throw new ProcessException("构造Execution对象失败，请检查process、order是否为空");
 		}
-		this.engine = engine;
+		this.engineConfiguration = engineConfiguration;
 		this.process = process;
 		this.order = order;
 		this.args = args;
@@ -129,7 +129,7 @@ public class Execution implements Serializable
 	 * @param parentNodeName
 	 * @return
 	 */
-	public Execution createSubExecution(Execution execution, Process process, String parentNodeName)
+	public Execution createSubExecution(Execution execution, ProcessDefinition process, String parentNodeName)
 	{
 		return new Execution(execution, process, parentNodeName);
 	}
@@ -139,7 +139,7 @@ public class Execution implements Serializable
 	 * 
 	 * @return
 	 */
-	public Process getProcess()
+	public ProcessDefinition getProcess()
 	{
 		return process;
 	}
@@ -265,13 +265,13 @@ public class Execution implements Serializable
 	}
 
 	/**
-	 * 获取引擎
+	 * 获取engineConfiguration
 	 * 
 	 * @return
 	 */
-	public ProcessEngine getEngine()
+	public ProcessEngineConfiguration getEngineConfiguration()
 	{
-		return engine;
+		return engineConfiguration;
 	}
 
 	public Order getParentOrder()

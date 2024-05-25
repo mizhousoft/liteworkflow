@@ -19,7 +19,7 @@ public class TestQueryTask extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.getProcessService();
+		repositoryService = engine.getRepositoryService();
 	}
 
 	@Test
@@ -33,6 +33,6 @@ public class TestQueryTask extends TestSpring
 		rrequest.setOperators(new String[] { "1" });
 		rrequest.setOrderId("36c0228fcfa740d5b62682dc954eaecd");
 
-		System.out.println(engine.getQueryService().getWorkItems(rrequest));
+		System.out.println(engine.getRuntimeService().getWorkItems(rrequest));
 	}
 }

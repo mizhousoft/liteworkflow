@@ -1,18 +1,24 @@
 package com.liteworkflow.engine.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.Assignment;
 import com.liteworkflow.engine.AssignmentHandler;
 import com.liteworkflow.engine.Completion;
 import com.liteworkflow.engine.Constants;
+import com.liteworkflow.engine.OrderService;
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.ProcessEngineConfiguration;
+import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.TaskAccessStrategy;
 import com.liteworkflow.engine.TaskService;
 import com.liteworkflow.engine.helper.AssertHelper;
@@ -26,9 +32,10 @@ import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.TaskModel;
 import com.liteworkflow.engine.model.TaskModel.PerformType;
 import com.liteworkflow.engine.model.TaskModel.TaskType;
+import com.liteworkflow.engine.model.TransitionModel;
 import com.liteworkflow.order.entity.Order;
 import com.liteworkflow.order.service.OrderEntityService;
-import com.liteworkflow.process.entity.Process;
+import com.liteworkflow.process.entity.ProcessDefinition;
 import com.liteworkflow.task.entity.HistoryTask;
 import com.liteworkflow.task.entity.Task;
 import com.liteworkflow.task.entity.TaskActor;
@@ -46,6 +53,8 @@ import com.mizhousoft.commons.data.domain.Page;
  */
 public class TaskServiceImpl extends AccessService implements TaskService
 {
+	private static final Logger log = LoggerFactory.getLogger(TaskServiceImpl.class);
+
 	private static final String START = "start";
 
 	private ProcessEngineConfiguration engineConfiguration;
@@ -58,8 +67,149 @@ public class TaskServiceImpl extends AccessService implements TaskService
 
 	private OrderEntityService orderEntityService;
 
+	/**
+	 * 流程定义业务类
+	 */
+	protected RepositoryService repositoryService;
+
+	/**
+	 * 流程实例业务类
+	 */
+	protected OrderService orderService;
+
 	// 访问策略接口
 	private TaskAccessStrategy strategy = null;
+
+	/**
+	 * 根据任务主键ID执行任务
+	 */
+	@Override
+	public List<Task> executeTask(String taskId)
+	{
+		return executeTask(taskId, null);
+	}
+
+	/**
+	 * 根据任务主键ID，操作人ID执行任务
+	 */
+	@Override
+	public List<Task> executeTask(String taskId, String operator)
+	{
+		return executeTask(taskId, operator, null);
+	}
+
+	/**
+	 * 根据任务主键ID，操作人ID，参数列表执行任务
+	 */
+	@Override
+	public List<Task> executeTask(String taskId, String operator, Map<String, Object> args)
+	{
+		// 完成任务，并且构造执行对象
+		Execution execution = execute(taskId, operator, args);
+		if (execution == null)
+			return Collections.emptyList();
+		ProcessModel model = execution.getProcess().getModel();
+		if (model != null)
+		{
+			NodeModel nodeModel = model.getNode(execution.getTask().getTaskName());
+			// 将执行对象交给该任务对应的节点模型执行
+			nodeModel.execute(execution);
+		}
+		return execution.getTasks();
+	}
+
+	/**
+	 * 根据任务主键ID，操作人ID，参数列表执行任务，并且根据nodeName跳转到任意节点
+	 * 1、nodeName为null时，则驳回至上一步处理
+	 * 2、nodeName不为null时，则任意跳转，即动态创建转移
+	 */
+	@Override
+	public List<Task> executeAndJumpTask(String taskId, String operator, Map<String, Object> args, String nodeName)
+	{
+		Execution execution = execute(taskId, operator, args);
+		if (execution == null)
+			return Collections.emptyList();
+		ProcessModel model = execution.getProcess().getModel();
+		AssertHelper.notNull(model, "当前任务未找到流程定义模型");
+		if (StringHelper.isEmpty(nodeName))
+		{
+			Task newTask = rejectTask(model, execution.getTask());
+			execution.addTask(newTask);
+		}
+		else
+		{
+			NodeModel nodeModel = model.getNode(nodeName);
+			AssertHelper.notNull(nodeModel, "根据节点名称[" + nodeName + "]无法找到节点模型");
+			// 动态创建转移对象，由转移对象执行execution实例
+			TransitionModel tm = new TransitionModel();
+			tm.setTarget(nodeModel);
+			tm.setEnabled(true);
+			tm.execute(execution);
+		}
+
+		return execution.getTasks();
+	}
+
+	/**
+	 * 根据流程实例ID，操作人ID，参数列表按照节点模型model创建新的自由任务
+	 */
+	@Override
+	public List<Task> createFreeTask(String orderId, String operator, Map<String, Object> args, TaskModel model)
+	{
+		Order order = orderService.getOrder(orderId);
+		AssertHelper.notNull(order, "指定的流程实例[id=" + orderId + "]已完成或不存在");
+		order.setLastUpdator(operator);
+		order.setLastUpdateTime(DateHelper.getTime());
+		ProcessDefinition process = repositoryService.getProcessById(order.getProcessId());
+		Execution execution = new Execution(engineConfiguration, process, order, args);
+		execution.setOperator(operator);
+		return createTask(model, execution);
+	}
+
+	/**
+	 * 根据任务主键ID，操作人ID，参数列表完成任务，并且构造执行对象
+	 * 
+	 * @param taskId 任务id
+	 * @param operator 操作人
+	 * @param args 参数列表
+	 * @return Execution
+	 */
+	private Execution execute(String taskId, String operator, Map<String, Object> args)
+	{
+		if (args == null)
+			args = new HashMap<String, Object>();
+		Task task = complete(taskId, operator, args);
+
+		log.debug("任务[taskId=" + taskId + "]已完成");
+
+		Order order = orderService.getOrder(task.getOrderId());
+		AssertHelper.notNull(order, "指定的流程实例[id=" + task.getOrderId() + "]已完成或不存在");
+		order.setLastUpdator(operator);
+		order.setLastUpdateTime(DateHelper.getTime());
+		orderService.updateOrder(order);
+		// 协办任务完成不产生执行对象
+		if (!task.isMajor())
+		{
+			return null;
+		}
+		Map<String, Object> orderMaps = order.getVariableMap();
+		if (orderMaps != null)
+		{
+			for (Map.Entry<String, Object> entry : orderMaps.entrySet())
+			{
+				if (args.containsKey(entry.getKey()))
+				{
+					continue;
+				}
+				args.put(entry.getKey(), entry.getValue());
+			}
+		}
+		ProcessDefinition process = repositoryService.getProcessById(order.getProcessId());
+		Execution execution = new Execution(engineConfiguration, process, order, args);
+		execution.setOperator(operator);
+		execution.setTask(task);
+		return execution;
+	}
 
 	@Override
 	public Task getTask(String taskId)
@@ -160,17 +310,6 @@ public class TaskServiceImpl extends AccessService implements TaskService
 			completion.complete(history);
 		}
 		return task;
-	}
-
-	/**
-	 * 更新任务对象的finish_Time、operator、expire_Time、version、variable
-	 * 
-	 * @param task 任务对象
-	 */
-	@Override
-	public void updateTask(Task task)
-	{
-		taskEntityService.update(task);
 	}
 
 	/**
@@ -479,7 +618,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 
 		Order order = orderEntityService.getOrder(task.getOrderId());
 
-		Process process = ServiceContext.getEngine().getProcessService().getProcessById(order.getProcessId());
+		ProcessDefinition process = ServiceContext.getEngine().getRepositoryService().getProcessById(order.getProcessId());
 		ProcessModel model = process.getModel();
 		NodeModel nodeModel = model.getNode(task.getTaskName());
 		AssertHelper.notNull(nodeModel, "任务id无法找到节点模型.");
@@ -764,5 +903,25 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	public void setEngineConfiguration(ProcessEngineConfiguration engineConfiguration)
 	{
 		this.engineConfiguration = engineConfiguration;
+	}
+
+	/**
+	 * 设置repositoryService
+	 * 
+	 * @param repositoryService
+	 */
+	public void setRepositoryService(RepositoryService repositoryService)
+	{
+		this.repositoryService = repositoryService;
+	}
+
+	/**
+	 * 设置orderService
+	 * 
+	 * @param orderService
+	 */
+	public void setOrderService(OrderService orderService)
+	{
+		this.orderService = orderService;
 	}
 }

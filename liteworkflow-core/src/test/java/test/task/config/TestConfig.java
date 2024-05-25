@@ -19,15 +19,15 @@ public class TestConfig extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.getProcessService();
+		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/config/process.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/task/config/process.snaker"));
 	}
 
 	@Test
 	public void test()
 	{
-		Order order = engine.startInstanceByName("config", 0, "2", null);
+		Order order = engine.getRuntimeService().startInstanceByName("config", 0, "2", null);
 		System.out.println("order=" + order);
 	}
 }

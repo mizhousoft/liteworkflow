@@ -22,15 +22,15 @@ public class TestTransfer extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.getProcessService();
+		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/transfer/process.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/task/transfer/process.snaker"));
 	}
 
 	@Test
 	public void test()
 	{
-		Order order = engine.startInstanceByName("transfer", 0);
+		Order order = engine.getRuntimeService().startInstanceByName("transfer", 0);
 		System.out.println("order=" + order);
 		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
 		for (Task task : tasks)

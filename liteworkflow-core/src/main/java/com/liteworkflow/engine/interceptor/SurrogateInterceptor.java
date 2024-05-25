@@ -1,6 +1,7 @@
 package com.liteworkflow.engine.interceptor;
 
 import com.liteworkflow.engine.ProcessEngine;
+import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.TaskService;
 import com.liteworkflow.engine.core.Execution;
 import com.liteworkflow.engine.helper.StringHelper;
@@ -20,7 +21,7 @@ public class SurrogateInterceptor implements SnakerInterceptor
 {
 	public void intercept(Execution execution)
 	{
-		ProcessEngine engine = execution.getEngine();
+		ProcessEngineConfiguration engine = execution.getEngineConfiguration();
 		for (Task task : execution.getTasks())
 		{
 			if (task.getActorIds() == null)

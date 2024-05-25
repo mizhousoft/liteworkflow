@@ -24,10 +24,10 @@ public class TestSimple extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.getProcessService();
+		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
-		engine.getProcessService().updateType(processId, "预算管理流程");
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
+		engine.getRepositoryService().updateType(processId, "预算管理流程");
 	}
 
 	@Test
@@ -35,12 +35,12 @@ public class TestSimple extends TestSpring
 	{
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("task1.operator", new String[] { "1" });
-		Order order = engine.startInstanceByName("simple", 0, "2", args);
+		Order order = engine.getRuntimeService().startInstanceByName("simple", 0, "2", args);
 		System.out.println("order=" + order);
 		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
 		for (Task task : tasks)
 		{
-			engine.executeTask(task.getId(), "1", args);
+			engine.getTaskService().executeTask(task.getId(), "1", args);
 		}
 	}
 }

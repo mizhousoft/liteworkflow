@@ -24,9 +24,9 @@ public class TestForkJoin extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.getProcessService();
+		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/concurrency/forkjoin/process.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/concurrency/forkjoin/process.snaker"));
 	}
 
 	@Test
@@ -36,12 +36,12 @@ public class TestForkJoin extends TestSpring
 		args.put("task1.operator", new String[] { "1" });
 		args.put("task2.operator", new String[] { "1" });
 		args.put("task3.operator", new String[] { "1" });
-		Order order = engine.startInstanceById(processId, "2", args);
+		Order order = engine.getRuntimeService().startInstanceById(processId, "2", args);
 		System.out.println(order);
 		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
 		for (Task task : tasks)
 		{
-			engine.executeTask(task.getId(), "1");
+			engine.getTaskService().executeTask(task.getId(), "1");
 		}
 	}
 }

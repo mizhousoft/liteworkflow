@@ -22,9 +22,9 @@ public class TestActorAll extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.getProcessService();
+		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/concurrency/actorall/process.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/concurrency/actorall/process.snaker"));
 	}
 
 	@Test
@@ -32,7 +32,7 @@ public class TestActorAll extends TestSpring
 	{
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("task1.operator", new String[] { "1", "2" });
-		Order order = engine.startInstanceById(processId, "2", args);
+		Order order = engine.getRuntimeService().startInstanceById(processId, "2", args);
 		System.out.println(order);
 		// Assert.assertEquals(2, tasks.size());
 		// execute(tasks, args);

@@ -28,9 +28,9 @@ public class TestGroup extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.getProcessService();
+		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/group/process.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/task/group/process.snaker"));
 	}
 
 	@Test
@@ -40,13 +40,13 @@ public class TestGroup extends TestSpring
 		{
 			Map<String, Object> args = new HashMap<String, Object>();
 			args.put("task1.operator", new String[] { "role1" });
-			Order order = engine.startInstanceByName("group", 0, "2", args);
+			Order order = engine.getRuntimeService().startInstanceByName("group", 0, "2", args);
 			System.out.println("order=" + order);
 			List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
 			for (Task task : tasks)
 			{
 				// 操作人改为test时，角色对应test，会无权处理
-				engine.executeTask(task.getId(), "test1", args);
+				engine.getTaskService().executeTask(task.getId(), "test1", args);
 			}
 
 			Assertions.fail();

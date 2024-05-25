@@ -43,7 +43,7 @@ public class CreateTaskHandler implements IHandler
 	 */
 	public void handle(Execution execution)
 	{
-		List<Task> tasks = execution.getEngine().getTaskService().createTask(model, execution);
+		List<Task> tasks = execution.getEngineConfiguration().getTaskService().createTask(model, execution);
 		execution.addTasks(tasks);
 		/**
 		 * 从服务上下文中查找任务拦截器列表，依次对task集合进行拦截处理

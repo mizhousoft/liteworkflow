@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.liteworkflow.process.mapper.ProcessMapper">
+<mapper namespace="com.liteworkflow.process.mapper.ProcessDefinitionMapper">
 	
-	<resultMap type="com.liteworkflow.process.entity.Process" id="ProcessMap">
+	<resultMap type="com.liteworkflow.process.entity.ProcessDefinition" id="ProcessDefinitionMap">
 		<id property="id" column="id" />
 		<result property="name" column="name" />
 		<result property="displayName" column="display_Name" />
@@ -42,7 +42,7 @@
 		delete from wf_process where id = #{id}
 	</delete>
 	
-	<select id="getProcess" parameterType="java.util.Map" resultMap="ProcessMap">
+	<select id="getProcess" parameterType="java.util.Map" resultMap="ProcessDefinitionMap">
 		select id, name, display_Name, type, instance_Url, state, content, version, create_Time, creator 
 		from wf_process 
 		where id = #{id}
@@ -84,7 +84,7 @@
 		</where>
 	</select>
 	
-	<select id="findPageData" parameterType="java.util.Map" resultMap="ProcessMap">
+	<select id="findPageData" parameterType="java.util.Map" resultMap="ProcessDefinitionMap">
 		select id, name, display_Name, type, instance_Url, state, content, version, create_Time, creator 
 		from wf_process 
 		<where>

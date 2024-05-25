@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.helper.StreamHelper;
-import com.liteworkflow.process.entity.Process;
+import com.liteworkflow.process.entity.ProcessDefinition;
 
 import test.TestSpring;
 
@@ -22,22 +22,22 @@ public class TestProcess extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.getProcessService();
+		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
 	}
 
 	@Test
 	public void test()
 	{
-		Process process = engine.getProcessService().getProcessById(processId);
+		ProcessDefinition process = engine.getRepositoryService().getProcessById(processId);
 		System.out.println("output 1=" + process);
-		process = engine.getProcessService().getProcessByVersion(process.getName(), process.getVersion());
+		process = engine.getRepositoryService().getProcessByVersion(process.getName(), process.getVersion());
 		System.out.println("output 2=" + process);
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("task1.operator", "1");
-		engine.startInstanceById(processId, "1", args);
-		engine.getProcessService().undeploy(processId);
+		engine.getRuntimeService().startInstanceById(processId, "1", args);
+		engine.getRepositoryService().undeploy(processId);
 		// engine.startInstanceById(processId, "1", args);
 	}
 }

@@ -22,20 +22,20 @@ public class TestCustomHandler extends TestSpring
 	public void before()
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
-		processService = engine.getProcessService();
+		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getProcessService().deploy(StreamHelper.getStreamFromClasspath("test/custom/snaker1.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/custom/snaker1.snaker"));
 	}
 
 	@Test
 	public void test()
 	{
-		Order order = engine.startInstanceById(processId);
+		Order order = engine.getRuntimeService().startInstanceById(processId);
 		System.out.println("order=" + order);
 		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
 		for (Task task : tasks)
 		{
-			engine.executeTask(task.getId());
+			engine.getTaskService().executeTask(task.getId());
 		}
 	}
 }
