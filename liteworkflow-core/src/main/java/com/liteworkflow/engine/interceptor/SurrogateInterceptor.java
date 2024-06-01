@@ -3,9 +3,9 @@ package com.liteworkflow.engine.interceptor;
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.TaskService;
-import com.liteworkflow.engine.core.Execution;
 import com.liteworkflow.engine.helper.StringHelper;
-import com.liteworkflow.task.entity.Task;
+import com.liteworkflow.engine.impl.Execution;
+import com.liteworkflow.engine.persistence.task.entity.Task;
 
 /**
  * 委托代理拦截器

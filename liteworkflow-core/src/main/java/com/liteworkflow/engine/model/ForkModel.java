@@ -1,6 +1,6 @@
 package com.liteworkflow.engine.model;
 
-import com.liteworkflow.engine.core.Execution;
+import com.liteworkflow.engine.impl.Execution;
 
 /**
  * 分支定义fork元素

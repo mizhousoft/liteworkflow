@@ -3,7 +3,7 @@ package com.liteworkflow.engine.scheduling;
 import java.util.Map;
 
 import com.liteworkflow.engine.model.NodeModel;
-import com.liteworkflow.process.entity.ProcessDefinition;
+import com.liteworkflow.engine.persistence.process.entity.ProcessDefinition;
 
 /**
  * 提醒接口

@@ -1,7 +1,7 @@
 package com.liteworkflow.engine;
 
-import com.liteworkflow.order.entity.HistoryOrder;
-import com.liteworkflow.task.entity.HistoryTask;
+import com.liteworkflow.engine.persistence.order.entity.HistoricProcessInstance;
+import com.liteworkflow.engine.persistence.task.entity.HistoryTask;
 
 /**
  * 任务、实例完成时触发动作的接口
@@ -23,5 +23,5 @@ public interface Completion
 	 * 
 	 * @param order 实例对象
 	 */
-	public void complete(HistoryOrder order);
+	public void complete(HistoricProcessInstance order);
 }

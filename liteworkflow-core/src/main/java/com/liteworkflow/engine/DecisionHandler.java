@@ -1,6 +1,6 @@
 package com.liteworkflow.engine;
 
-import com.liteworkflow.engine.core.Execution;
+import com.liteworkflow.engine.impl.Execution;
 
 /**
  * 决策处理器接口

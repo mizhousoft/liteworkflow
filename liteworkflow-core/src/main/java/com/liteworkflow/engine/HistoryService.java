@@ -2,13 +2,13 @@ package com.liteworkflow.engine;
 
 import java.util.List;
 
-import com.liteworkflow.order.entity.HistoryOrder;
-import com.liteworkflow.order.request.CCOrderPageRequest;
-import com.liteworkflow.order.request.HistoryOrderPageRequest;
-import com.liteworkflow.task.entity.HistoryTask;
-import com.liteworkflow.task.request.TaskPageRequest;
-import com.liteworkflow.workitem.entity.WorkItem;
-import com.liteworkflow.workitem.request.WorkItemPageRequest;
+import com.liteworkflow.engine.persistence.order.entity.HistoricProcessInstance;
+import com.liteworkflow.engine.persistence.order.request.CCOrderPageRequest;
+import com.liteworkflow.engine.persistence.order.request.HistoricProcessInstPageRequest;
+import com.liteworkflow.engine.persistence.task.entity.HistoryTask;
+import com.liteworkflow.engine.persistence.task.request.TaskPageRequest;
+import com.liteworkflow.engine.persistence.workitem.entity.WorkItem;
+import com.liteworkflow.engine.persistence.workitem.request.WorkItemPageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
@@ -24,7 +24,7 @@ public interface HistoryService
 	 * @param orderId 历史流程实例id
 	 * @return HistoryOrder 历史流程实例对象
 	 */
-	HistoryOrder getHistOrder(String orderId);
+	HistoricProcessInstance getHistOrder(String orderId);
 
 	/**
 	 * 根据任务ID获取历史任务对象
@@ -48,7 +48,7 @@ public interface HistoryService
 	 * @param filter 查询过滤器
 	 * @return List<HistoryOrder> 历史实例集合
 	 */
-	List<HistoryOrder> getHistoryOrders(HistoryOrderPageRequest request);
+	List<HistoricProcessInstance> getHistoryOrders(HistoricProcessInstPageRequest request);
 
 	/**
 	 * 根据filter分页查询历史流程实例
@@ -57,7 +57,7 @@ public interface HistoryService
 	 * @param filter 查询过滤器
 	 * @return List<HistoryOrder> 历史实例集合
 	 */
-	Page<HistoryOrder> queryPageData(HistoryOrderPageRequest request);
+	Page<HistoricProcessInstance> queryPageData(HistoricProcessInstPageRequest request);
 
 	/**
 	 * 根据filter查询活动任务
@@ -82,7 +82,7 @@ public interface HistoryService
 	 * @param filter 查询过滤器
 	 * @return List<WorkItem> 抄送工作项集合
 	 */
-	Page<HistoryOrder> getCCWorks(CCOrderPageRequest request);
+	Page<HistoricProcessInstance> getCCWorks(CCOrderPageRequest request);
 
 	/**
 	 * 根据filter分页查询已完成的历史任务项

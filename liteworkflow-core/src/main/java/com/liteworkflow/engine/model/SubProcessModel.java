@@ -1,6 +1,6 @@
 package com.liteworkflow.engine.model;
 
-import com.liteworkflow.engine.core.Execution;
+import com.liteworkflow.engine.impl.Execution;
 
 /**
  * 子流程定义subprocess元素

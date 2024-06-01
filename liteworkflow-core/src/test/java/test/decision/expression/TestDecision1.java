@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.helper.StreamHelper;
-import com.liteworkflow.order.entity.Order;
+import com.liteworkflow.engine.persistence.order.entity.ProcessInstance;
 
 import test.TestSpring;
 
@@ -37,7 +37,7 @@ public class TestDecision1 extends TestSpring
 		args.put("task2.operator", new String[] { "1" });
 		// args.put("task3.operator", new String[]{"1","2"});
 		args.put("content", "toTask2");
-		Order order = engine.getRuntimeService().startInstanceById(processId, "2", args);
+		ProcessInstance order = engine.getRuntimeService().startInstanceById(processId, "2", args);
 		System.out.println(order);
 	}
 }

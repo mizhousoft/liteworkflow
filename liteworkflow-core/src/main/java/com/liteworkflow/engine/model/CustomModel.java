@@ -6,10 +6,10 @@ import java.util.Map;
 import org.springframework.util.ReflectionUtils;
 
 import com.liteworkflow.ProcessException;
-import com.liteworkflow.engine.core.Execution;
-import com.liteworkflow.engine.handlers.IHandler;
+import com.liteworkflow.engine.IHandler;
 import com.liteworkflow.engine.helper.ClassHelper;
 import com.liteworkflow.engine.helper.StringHelper;
+import com.liteworkflow.engine.impl.Execution;
 
 /**
  * 自定义模型

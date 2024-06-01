@@ -19,7 +19,7 @@ public interface ProcessEngineConfiguration
 
 	RepositoryService getRepositoryService();
 
-	OrderService getOrderService();
+	ProcessInstanceService getProcessInstanceService();
 
 	TaskService getTaskService();
 

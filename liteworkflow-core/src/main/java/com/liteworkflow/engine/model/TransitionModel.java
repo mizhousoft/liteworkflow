@@ -1,9 +1,9 @@
 package com.liteworkflow.engine.model;
 
 import com.liteworkflow.engine.Action;
-import com.liteworkflow.engine.core.Execution;
-import com.liteworkflow.engine.handlers.impl.CreateTaskHandler;
-import com.liteworkflow.engine.handlers.impl.StartSubProcessHandler;
+import com.liteworkflow.engine.impl.Execution;
+import com.liteworkflow.engine.impl.command.CreateTaskHandler;
+import com.liteworkflow.engine.impl.command.StartSubProcessHandler;
 
 /**
  * 变迁定义transition元素

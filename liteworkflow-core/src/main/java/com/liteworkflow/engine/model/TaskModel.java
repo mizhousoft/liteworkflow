@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.liteworkflow.engine.AssignmentHandler;
-import com.liteworkflow.engine.core.Execution;
-import com.liteworkflow.engine.handlers.impl.MergeActorHandler;
 import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.helper.ClassHelper;
 import com.liteworkflow.engine.helper.StringHelper;
+import com.liteworkflow.engine.impl.Execution;
+import com.liteworkflow.engine.impl.command.MergeActorHandler;
 import com.liteworkflow.engine.scheduling.JobCallback;
 
 /**

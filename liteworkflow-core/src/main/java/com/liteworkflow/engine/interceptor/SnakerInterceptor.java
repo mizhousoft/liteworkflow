@@ -1,6 +1,6 @@
 package com.liteworkflow.engine.interceptor;
 
-import com.liteworkflow.engine.core.Execution;
+import com.liteworkflow.engine.impl.Execution;
 
 /**
  * 任务拦截器，对产生的任务结果进行拦截

@@ -1,7 +1,7 @@
 package com.liteworkflow.engine.model;
 
-import com.liteworkflow.engine.core.Execution;
-import com.liteworkflow.engine.handlers.impl.MergeBranchHandler;
+import com.liteworkflow.engine.impl.Execution;
+import com.liteworkflow.engine.impl.command.MergeBranchHandler;
 
 /**
  * 合并定义join元素

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liteworkflow.engine.persistence.task.mapper.SurrogateMapper">
+	
+	<resultMap type="com.liteworkflow.engine.persistence.task.entity.Surrogate" id="SurrogateMap">
+		<id property="id" column="id" />
+		<result property="processName" column="process_Name" />
+		<result property="operator" column="operator" />
+		<result property="surrogate" column="surrogate" />
+		<result property="odate" column="odate" />
+		<result property="sdate" column="sdate" />
+		<result property="edate" column="edate" />
+		<result property="state" column="state" />
+	</resultMap>
+	
+	<insert id="save">
+		insert into wf_surrogate (id, process_Name, operator, surrogate, odate, sdate, edate, state)
+		values (#{id}, #{processName}, #{operator}, #{surrogate}, #{odate}, #{sdate}, #{edate}, #{state})
+	</insert>
+	
+	<update id="update">
+        update wf_surrogate 
+        set process_Name = #{processName}, 
+        surrogate = #{operator}, 
+        odate = #{odate}, 
+        sdate = #{sdate}, 
+        edate = #{edate}, 
+        state = #{state} 
+        where id = #{id}
+	</update>
+		
+	<delete id="delete">
+		delete from wf_surrogate where id = #{id}
+	</delete>
+	
+	<select id="getSurrogate" parameterType="java.util.Map" resultMap="SurrogateMap">
+		select id, process_Name, operator, surrogate, odate, sdate, edate, state 
+		from wf_surrogate
+		where id = #{id}
+	</select>
+	
+	<select id="queryList" parameterType="java.util.Map" resultMap="SurrogateMap">
+		select id, process_Name, operator, surrogate, odate, sdate, edate, state 
+		from wf_surrogate
+		where state = 1
+   		<if test="operators != null and operators.length != 0">
+            and operator in
+            <foreach collection="operators" item="operator" index="index" open="(" close=")" separator=",">
+                #{operator}
+            </foreach>
+        </if>
+        <if test="names != null and names.length != 0">
+            and process_Name in
+            <foreach collection="names" item="name" index="index" open="(" close=")" separator=",">
+                #{name}
+            </foreach>
+        </if>
+        <if test="operateTime != null">
+			and sdate &lt;= #{operateTime} and edate &gt;= #{operateTime}
+   		</if>
+		order by #{orderBy} #{order}
+	</select>
+	
+</mapper>

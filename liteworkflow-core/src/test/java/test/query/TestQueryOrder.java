@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.order.request.OrderPageRequest;
+import com.liteworkflow.engine.persistence.order.request.ProcessInstPageRequest;
 
 import test.TestSpring;
 
@@ -26,13 +26,13 @@ public class TestQueryOrder extends TestSpring
 	@Test
 	public void test()
 	{
-		OrderPageRequest request = new OrderPageRequest();
+		ProcessInstPageRequest request = new ProcessInstPageRequest();
 		request.setCreateTimeStart("2014-01-01");
 		request.setProcessId("860e5edae536495a9f51937f435a1c01");
 
-		System.out.println(engine.getOrderService().getActiveOrders(request));
+		System.out.println(engine.getProcessInstanceService().getActiveOrders(request));
 
-		System.out.println(engine.getOrderService().getActiveOrders(new OrderPageRequest()));
-		System.out.println(engine.getOrderService().getOrder("b2802224d75d4847ae5bfb0f7e621b8f"));
+		System.out.println(engine.getProcessInstanceService().getActiveOrders(new ProcessInstPageRequest()));
+		System.out.println(engine.getProcessInstanceService().getOrder("b2802224d75d4847ae5bfb0f7e621b8f"));
 	}
 }

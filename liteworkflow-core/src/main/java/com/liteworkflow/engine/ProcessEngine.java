@@ -28,7 +28,7 @@ public interface ProcessEngine
 	 * 
 	 * @return IQueryService 流程实例服务
 	 */
-	public OrderService getOrderService();
+	public ProcessInstanceService getProcessInstanceService();
 
 	/**
 	 * 获取任务服务

@@ -2,10 +2,10 @@ package com.liteworkflow.engine;
 
 import java.util.Map;
 
-import com.liteworkflow.engine.core.Execution;
-import com.liteworkflow.order.entity.Order;
-import com.liteworkflow.workitem.entity.WorkItem;
-import com.liteworkflow.workitem.request.WorkItemPageRequest;
+import com.liteworkflow.engine.impl.Execution;
+import com.liteworkflow.engine.persistence.order.entity.ProcessInstance;
+import com.liteworkflow.engine.persistence.workitem.entity.WorkItem;
+import com.liteworkflow.engine.persistence.workitem.request.WorkItemPageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
@@ -23,7 +23,7 @@ public interface RuntimeService
 	 * @return Order 流程实例
 	 * @see #startInstanceById(String, String, Map)
 	 */
-	public Order startInstanceById(String id);
+	public ProcessInstance startInstanceById(String id);
 
 	/**
 	 * 根据流程定义ID，操作人ID启动流程实例
@@ -33,7 +33,7 @@ public interface RuntimeService
 	 * @return Order 流程实例
 	 * @see #startInstanceById(String, String, Map)
 	 */
-	public Order startInstanceById(String id, String operator);
+	public ProcessInstance startInstanceById(String id, String operator);
 
 	/**
 	 * 根据流程定义ID，操作人ID，参数列表启动流程实例
@@ -43,7 +43,7 @@ public interface RuntimeService
 	 * @param args 参数列表
 	 * @return Order 流程实例
 	 */
-	public Order startInstanceById(String id, String operator, Map<String, Object> args);
+	public ProcessInstance startInstanceById(String id, String operator, Map<String, Object> args);
 
 	/**
 	 * 根据流程名称启动流程实例
@@ -51,7 +51,7 @@ public interface RuntimeService
 	 * @param name 流程定义名称
 	 * @return Order 流程实例
 	 */
-	public Order startInstanceByName(String name);
+	public ProcessInstance startInstanceByName(String name);
 
 	/**
 	 * 根据流程名称、版本号启动流程实例
@@ -60,7 +60,7 @@ public interface RuntimeService
 	 * @param version 版本号
 	 * @return Order 流程实例
 	 */
-	public Order startInstanceByName(String name, Integer version);
+	public ProcessInstance startInstanceByName(String name, Integer version);
 
 	/**
 	 * 根据流程名称、版本号、操作人启动流程实例
@@ -70,7 +70,7 @@ public interface RuntimeService
 	 * @param operator 操作人
 	 * @return Order 流程实例
 	 */
-	public Order startInstanceByName(String name, Integer version, String operator);
+	public ProcessInstance startInstanceByName(String name, Integer version, String operator);
 
 	/**
 	 * 根据流程名称、版本号、操作人、参数列表启动流程实例
@@ -81,7 +81,7 @@ public interface RuntimeService
 	 * @param args 参数列表
 	 * @return Order 流程实例
 	 */
-	public Order startInstanceByName(String name, Integer version, String operator, Map<String, Object> args);
+	public ProcessInstance startInstanceByName(String name, Integer version, String operator, Map<String, Object> args);
 
 	/**
 	 * 根据父执行对象启动子流程实例
@@ -89,7 +89,7 @@ public interface RuntimeService
 	 * @param execution 执行对象
 	 * @return Order 流程实例
 	 */
-	public Order startInstanceByExecution(Execution execution);
+	public ProcessInstance startInstanceByExecution(Execution execution);
 
 	/**
 	 * 根据filter分页查询工作项（包含process、order、task三个实体的字段集合）

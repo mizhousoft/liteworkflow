@@ -9,8 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.helper.StreamHelper;
 import com.liteworkflow.engine.model.TaskModel;
-import com.liteworkflow.order.entity.Order;
-import com.liteworkflow.task.entity.Task;
+import com.liteworkflow.engine.persistence.order.entity.ProcessInstance;
+import com.liteworkflow.engine.persistence.task.entity.Task;
 
 import test.TestSpring;
 
@@ -34,7 +34,7 @@ public class TestFreeFlow extends TestSpring
 	{
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("task1.operator", new String[] { "1" });
-		Order order = engine.getRuntimeService().startInstanceById(processId, "2", args);
+		ProcessInstance order = engine.getRuntimeService().startInstanceById(processId, "2", args);
 		// System.out.println("order=" + order);
 		TaskModel tm1 = new TaskModel();
 		tm1.setName("task1");
@@ -53,6 +53,6 @@ public class TestFreeFlow extends TestSpring
 		// for(Task task : tasks) {
 		// engine.getTaskService().complete(task.getId(), "1", null);
 		// }
-		engine.getOrderService().terminate(order.getId());
+		engine.getProcessInstanceService().terminate(order.getId());
 	}
 }

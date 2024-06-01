@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.helper.StreamHelper;
-import com.liteworkflow.order.entity.Order;
-import com.liteworkflow.task.entity.Task;
+import com.liteworkflow.engine.persistence.order.entity.ProcessInstance;
+import com.liteworkflow.engine.persistence.task.entity.Task;
 
 import test.TestSpring;
 
@@ -34,7 +34,7 @@ public class TestCustomClass extends TestSpring
 	{
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("msg", "custom test");
-		Order order = engine.getRuntimeService().startInstanceById(processId, null, args);
+		ProcessInstance order = engine.getRuntimeService().startInstanceById(processId, null, args);
 		System.out.println("order=" + order);
 		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
 		for (Task task : tasks)

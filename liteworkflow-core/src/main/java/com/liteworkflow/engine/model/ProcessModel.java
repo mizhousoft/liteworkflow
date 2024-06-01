@@ -3,10 +3,10 @@ package com.liteworkflow.engine.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.liteworkflow.engine.NoGenerator;
 import com.liteworkflow.engine.helper.ClassHelper;
 import com.liteworkflow.engine.helper.StringHelper;
-import com.liteworkflow.engine.impl.DefaultNoGenerator;
+import com.liteworkflow.engine.impl.NoGenerator;
+import com.liteworkflow.engine.impl.strategy.DefaultNoGenerator;
 
 /**
  * 流程定义process元素

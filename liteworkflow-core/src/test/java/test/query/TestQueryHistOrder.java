@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.order.request.HistoryOrderPageRequest;
+import com.liteworkflow.engine.persistence.order.request.HistoricProcessInstPageRequest;
 
 import test.TestSpring;
 
@@ -26,13 +26,13 @@ public class TestQueryHistOrder extends TestSpring
 	@Test
 	public void test()
 	{
-		HistoryOrderPageRequest request = new HistoryOrderPageRequest();
+		HistoricProcessInstPageRequest request = new HistoricProcessInstPageRequest();
 		request.setCreateTimeStart("2014-01-01");
 		request.setNames(new String[] { "simple" });
 		request.setState(0);
 		request.setProcessType("预算管理流程1");
 
 		System.out.println(engine.getHistoryService().getHistoryOrders(request));
-		System.out.println(engine.getHistoryService().getHistoryOrders(new HistoryOrderPageRequest()));
+		System.out.println(engine.getHistoryService().getHistoryOrders(new HistoricProcessInstPageRequest()));
 	}
 }

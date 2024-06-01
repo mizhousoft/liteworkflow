@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.helper.StreamHelper;
-import com.liteworkflow.order.entity.Order;
+import com.liteworkflow.engine.persistence.order.entity.ProcessInstance;
 
 import test.TestSpring;
 
@@ -34,8 +34,8 @@ public class TestCC extends TestSpring
 
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("task1.operator", new String[] { "1" });
-		Order order = engine.getRuntimeService().startInstanceByName("simple", 0, "2", args);
-		engine.getOrderService().createCCOrder(order.getId(), "test");
+		ProcessInstance order = engine.getRuntimeService().startInstanceByName("simple", 0, "2", args);
+		engine.getProcessInstanceService().createCCOrder(order.getId(), "test");
 		// engine.getOrderService().updateCCStatus("b0fcc08da45d4e88819d9c287917b525", "test");
 		// engine.getOrderService().deleteCCOrder("01b960b9d5df4be7b8565b9f64bc1856", "test");
 	}

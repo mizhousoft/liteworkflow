@@ -3,8 +3,8 @@ package com.liteworkflow.engine.model;
 import java.util.Collections;
 import java.util.List;
 
-import com.liteworkflow.engine.core.Execution;
-import com.liteworkflow.engine.handlers.impl.EndProcessHandler;
+import com.liteworkflow.engine.impl.Execution;
+import com.liteworkflow.engine.impl.command.EndProcessHandler;
 
 /**
  * 结束节点end元素

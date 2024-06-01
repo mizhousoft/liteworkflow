@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.helper.StreamHelper;
-import com.liteworkflow.order.entity.Order;
+import com.liteworkflow.engine.persistence.order.entity.ProcessInstance;
 
 import test.TestSpring;
 
@@ -27,7 +27,7 @@ public class TestConfig extends TestSpring
 	@Test
 	public void test()
 	{
-		Order order = engine.getRuntimeService().startInstanceByName("config", 0, "2", null);
+		ProcessInstance order = engine.getRuntimeService().startInstanceByName("config", 0, "2", null);
 		System.out.println("order=" + order);
 	}
 }

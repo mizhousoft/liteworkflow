@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.task.request.TaskPageRequest;
-import com.liteworkflow.workitem.request.WorkItemPageRequest;
+import com.liteworkflow.engine.persistence.task.request.TaskPageRequest;
+import com.liteworkflow.engine.persistence.workitem.request.WorkItemPageRequest;
 
 import test.TestSpring;
 

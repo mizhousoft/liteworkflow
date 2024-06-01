@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.liteworkflow.engine.Completion;
-import com.liteworkflow.order.entity.HistoryOrder;
-import com.liteworkflow.task.entity.HistoryTask;
+import com.liteworkflow.engine.persistence.order.entity.HistoricProcessInstance;
+import com.liteworkflow.engine.persistence.task.entity.HistoryTask;
 
 /**
  * 默认的任务、实例完成时触发的动作
@@ -22,7 +22,7 @@ public class GeneralCompletion implements Completion
 		log.info("The task[{}] has been user[{}] has completed", task.getId(), task.getOperator());
 	}
 
-	public void complete(HistoryOrder order)
+	public void complete(HistoricProcessInstance order)
 	{
 		log.info("The order[{}] has completed", order.getId());
 	}

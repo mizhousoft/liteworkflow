@@ -3,8 +3,8 @@ package com.liteworkflow.engine.interceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.liteworkflow.engine.core.Execution;
-import com.liteworkflow.task.entity.Task;
+import com.liteworkflow.engine.impl.Execution;
+import com.liteworkflow.engine.persistence.task.entity.Task;
 
 /**
  * 日志拦截器

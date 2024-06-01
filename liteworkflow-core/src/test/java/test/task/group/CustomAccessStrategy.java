@@ -3,7 +3,7 @@ package test.task.group;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.liteworkflow.engine.impl.GeneralAccessStrategy;
+import com.liteworkflow.engine.impl.strategy.GeneralAccessStrategy;
 
 /**
  * @author yuqs

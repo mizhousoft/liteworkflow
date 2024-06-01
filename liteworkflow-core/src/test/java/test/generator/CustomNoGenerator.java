@@ -1,6 +1,6 @@
 package test.generator;
 
-import com.liteworkflow.engine.NoGenerator;
+import com.liteworkflow.engine.impl.NoGenerator;
 import com.liteworkflow.engine.model.ProcessModel;
 
 /**

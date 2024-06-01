@@ -3,13 +3,13 @@ package com.liteworkflow.engine;
 import java.util.List;
 import java.util.Map;
 
-import com.liteworkflow.engine.core.Execution;
+import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.model.CustomModel;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.TaskModel;
-import com.liteworkflow.task.entity.HistoryTask;
-import com.liteworkflow.task.entity.Task;
-import com.liteworkflow.task.request.TaskPageRequest;
+import com.liteworkflow.engine.persistence.task.entity.HistoryTask;
+import com.liteworkflow.engine.persistence.task.entity.Task;
+import com.liteworkflow.engine.persistence.task.request.TaskPageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**

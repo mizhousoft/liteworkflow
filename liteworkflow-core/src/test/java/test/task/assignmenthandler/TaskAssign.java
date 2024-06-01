@@ -1,7 +1,7 @@
 package test.task.assignmenthandler;
 
 import com.liteworkflow.engine.Assignment;
-import com.liteworkflow.engine.core.Execution;
+import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.model.TaskModel;
 
 /**

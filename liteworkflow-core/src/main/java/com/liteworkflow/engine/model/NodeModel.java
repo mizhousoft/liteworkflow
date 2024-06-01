@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 
 import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.Action;
-import com.liteworkflow.engine.core.Execution;
 import com.liteworkflow.engine.helper.ClassHelper;
 import com.liteworkflow.engine.helper.StringHelper;
+import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.interceptor.SnakerInterceptor;
 
 /**

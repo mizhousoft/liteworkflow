@@ -3,8 +3,8 @@ package com.liteworkflow.engine;
 import java.io.InputStream;
 import java.util.List;
 
-import com.liteworkflow.process.entity.ProcessDefinition;
-import com.liteworkflow.process.request.ProcessPageRequest;
+import com.liteworkflow.engine.persistence.process.entity.ProcessDefinition;
+import com.liteworkflow.engine.persistence.process.request.ProcessDefPageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
@@ -70,7 +70,7 @@ public interface RepositoryService
 	 * @param filter 查询过滤器
 	 * @return List<Process> 流程定义对象集合
 	 */
-	List<ProcessDefinition> getProcesss(ProcessPageRequest request);
+	List<ProcessDefinition> getProcesss(ProcessDefPageRequest request);
 
 	/**
 	 * 根据给定的参数列表args分页查询process
@@ -79,7 +79,7 @@ public interface RepositoryService
 	 * @param filter 查询过滤器
 	 * @return List<Process> 流程定义对象集合
 	 */
-	Page<ProcessDefinition> queryPageData(ProcessPageRequest request);
+	Page<ProcessDefinition> queryPageData(ProcessDefPageRequest request);
 
 	/**
 	 * 根據InputStream輸入流，部署流程定义

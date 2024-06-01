@@ -1,7 +1,7 @@
 package test.decision.handler;
 
 import com.liteworkflow.engine.DecisionHandler;
-import com.liteworkflow.engine.core.Execution;
+import com.liteworkflow.engine.impl.Execution;
 
 /**
  * @author yuqs

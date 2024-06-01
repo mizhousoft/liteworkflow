@@ -3,7 +3,7 @@ package com.liteworkflow.engine.model;
 import java.util.Collections;
 import java.util.List;
 
-import com.liteworkflow.engine.core.Execution;
+import com.liteworkflow.engine.impl.Execution;
 
 /**
  * 开始节点定义start元素

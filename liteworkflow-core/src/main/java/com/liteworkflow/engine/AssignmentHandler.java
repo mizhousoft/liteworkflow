@@ -1,6 +1,6 @@
 package com.liteworkflow.engine;
 
-import com.liteworkflow.engine.core.Execution;
+import com.liteworkflow.engine.impl.Execution;
 
 /**
  * 分配参与者的处理接口

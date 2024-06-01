@@ -1,7 +1,7 @@
 package test.custom;
 
-import com.liteworkflow.engine.core.Execution;
-import com.liteworkflow.engine.handlers.IHandler;
+import com.liteworkflow.engine.IHandler;
+import com.liteworkflow.engine.impl.Execution;
 
 /**
  * @author yuqs

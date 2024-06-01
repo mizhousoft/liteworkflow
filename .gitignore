@@ -6,3 +6,4 @@ pkg
 /.metadata/
 .factorypath
 .springBeans
+.DS_Store

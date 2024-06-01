@@ -6,8 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.process.entity.ProcessDefinition;
-import com.liteworkflow.process.request.ProcessPageRequest;
+import com.liteworkflow.engine.persistence.process.entity.ProcessDefinition;
+import com.liteworkflow.engine.persistence.process.request.ProcessDefPageRequest;
 
 import test.TestSpring;
 
@@ -29,7 +29,7 @@ public class TestQueryProcess extends TestSpring
 	@Test
 	public void test()
 	{
-		ProcessPageRequest request = new ProcessPageRequest();
+		ProcessDefPageRequest request = new ProcessDefPageRequest();
 
 		List<ProcessDefinition> list = engine.getRepositoryService().getProcesss(request);
 		System.out.println(list.size());
