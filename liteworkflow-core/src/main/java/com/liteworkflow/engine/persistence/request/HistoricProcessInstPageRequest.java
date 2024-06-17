@@ -4,7 +4,7 @@ import com.liteworkflow.engine.Constants;
 import com.mizhousoft.commons.data.domain.PageRequest;
 
 /**
- * HistoryOrderPageRequest
+ * HistoricProcessInstPageRequest
  *
  * @version
  */

@@ -21,14 +21,14 @@
 	</resultMap>
 	
 	<insert id="save">
-		insert into wf_order (id, process_Id, creator, create_Time, parent_Id, parent_Node_Name, expire_Time,
+		insert into wf_process_instance (id, process_Id, creator, create_Time, parent_Id, parent_Node_Name, expire_Time,
 		last_Update_Time, last_Updator, order_No, variable, version)
 		values (#{id}, #{processId}, #{creator}, #{createTime}, #{parentId}, #{parentNodeName}, #{expireTime}, 
 		#{lastUpdateTime}, #{lastUpdator}, #{orderNo}, #{variable}, #{version})
 	</insert>
 	
 	<update id="update">
-        update wf_order 
+        update wf_process_instance 
         set last_Updator = #{lastUpdator},  
         last_Update_Time = #{lastUpdateTime},  
         variable = #{variable},  
@@ -44,18 +44,18 @@
 	</update>
 		
 	<delete id="delete">
-		delete from wf_order where id = #{id}
+		delete from wf_process_instance where id = #{id}
 	</delete>
 		
 	<select id="getOrder" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
 		select o.id, o.process_Id, o.creator, o.create_Time, o.parent_Id, o.parent_Node_Name, o.expire_Time,
 		o.last_Update_Time, o.last_Updator, o.priority, o.order_No, o.variable, o.version 
-		from wf_order o 
+		from wf_process_instance o 
 		where id = #{instanceId}
 	</select>
 
 	<select id="countTotal" resultType="Long">
-		select count(o.id) from wf_order o left join wf_process p on p.id = o.process_id
+		select count(o.id) from wf_process_instance o left join wf_process p on p.id = o.process_id
 		<where>
        		<if test="request.operators != null and request.operators.length != 0">
                 o.creator in
@@ -103,7 +103,7 @@
 	<select id="findPageData" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
 		select o.id, o.process_Id, o.creator, o.create_Time, o.parent_Id, o.parent_Node_Name, o.expire_Time,
 		o.last_Update_Time, o.last_Updator, o.priority, o.order_No, o.variable, o.version 
-		from wf_order o left join wf_process p on p.id = o.process_id
+		from wf_process_instance o left join wf_process p on p.id = o.process_id
 		<where>
        		<if test="request.operators != null and request.operators.length != 0">
                 o.creator in

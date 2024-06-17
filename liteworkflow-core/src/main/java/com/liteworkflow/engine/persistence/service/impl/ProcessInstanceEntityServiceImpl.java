@@ -13,7 +13,7 @@ import com.mizhousoft.commons.data.util.PageBuilder;
 import com.mizhousoft.commons.data.util.PageUtils;
 
 /**
- * OrderEntityService
+ * ProcessInstanceEntityService
  *
  * @version
  */
@@ -42,46 +42,46 @@ public class ProcessInstanceEntityServiceImpl implements ProcessInstanceEntitySe
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void saveOrder(ProcessInstance order)
+	public void saveInstance(ProcessInstance instance)
 	{
-		processInstanceMapper.save(order);
+		processInstanceMapper.save(instance);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void saveOrderAndHistory(ProcessInstance order)
+	public void saveInstanceAndHistoric(ProcessInstance instance)
 	{
-		HistoricProcessInstance history = new HistoricProcessInstance(order);
-		history.setOrderState(STATE_ACTIVE);
-		processInstanceMapper.save(order);
-		historicProcessInstanceEntityService.save(history);
+		HistoricProcessInstance historicInstance = new HistoricProcessInstance(instance);
+		historicInstance.setOrderState(STATE_ACTIVE);
+		processInstanceMapper.save(instance);
+		historicProcessInstanceEntityService.save(historicInstance);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void updateOrder(ProcessInstance order)
+	public void updateInstance(ProcessInstance instance)
 	{
-		processInstanceMapper.update(order);
+		processInstanceMapper.update(instance);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void deleteOrder(ProcessInstance order)
+	public void deleteInstance(ProcessInstance instance)
 	{
-		processInstanceMapper.delete(order.getId());
+		processInstanceMapper.delete(instance.getId());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessInstance getOrder(String instanceId)
+	public ProcessInstance getInstance(String instanceId)
 	{
 		return processInstanceMapper.getOrder(instanceId);
 	}
@@ -90,12 +90,12 @@ public class ProcessInstanceEntityServiceImpl implements ProcessInstanceEntitySe
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void updateOrderVariable(ProcessInstance order)
+	public void updateVariable(ProcessInstance instance)
 	{
-		updateOrder(order);
-		HistoricProcessInstance hist = historicProcessInstanceEntityService.getHistOrder(order.getId());
-		hist.setVariable(order.getVariable());
-		historicProcessInstanceEntityService.update(hist);
+		updateInstance(instance);
+		HistoricProcessInstance historicInstance = historicProcessInstanceEntityService.getHistoricInstance(instance.getId());
+		historicInstance.setVariable(instance.getVariable());
+		historicProcessInstanceEntityService.update(historicInstance);
 	}
 
 	/**

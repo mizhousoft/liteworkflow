@@ -7,7 +7,7 @@ import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.model.CustomModel;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.TaskModel;
-import com.liteworkflow.engine.persistence.entity.HistoryTask;
+import com.liteworkflow.engine.persistence.entity.HistoricTask;
 import com.liteworkflow.engine.persistence.entity.Task;
 import com.liteworkflow.engine.persistence.request.TaskPageRequest;
 import com.mizhousoft.commons.data.domain.Page;
@@ -154,7 +154,7 @@ public interface TaskService
 	 * @param model 自定义节点模型
 	 * @return 历史任务
 	 */
-	HistoryTask history(Execution execution, CustomModel model);
+	HistoricTask history(Execution execution, CustomModel model);
 
 	/**
 	 * 根据任务主键ID，操作人ID提取任务

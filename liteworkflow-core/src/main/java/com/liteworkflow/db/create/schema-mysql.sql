@@ -11,7 +11,7 @@ CREATE TABLE wf_process (
     creator           VARCHAR(50) comment '创建人'
 )comment='流程定义表';
 
-CREATE TABLE wf_order (
+CREATE TABLE wf_process_instance (
     id                VARCHAR(32) NOT NULL PRIMARY KEY comment '主键ID',
     parent_Id         VARCHAR(32) comment '父流程ID',
     process_Id        VARCHAR(32) NOT NULL comment '流程定义ID',
@@ -49,7 +49,7 @@ CREATE TABLE wf_task_actor (
     actor_Id          VARCHAR(50) not null comment '参与者ID'
 )comment='任务参与者表';
 
-create table wf_hist_order (
+create table wf_hist_process_instance (
     id                VARCHAR(32) not null primary key comment '主键ID',
     process_Id        VARCHAR(32) not null comment '流程定义ID',
     order_State       TINYINT(1) not null comment '状态',
@@ -108,14 +108,14 @@ create table wf_cc_order (
 create index IDX_CCORDER_ORDER on wf_cc_order (instance_Id);
 
 create index IDX_PROCESS_NAME on wf_process (name);
-create index IDX_ORDER_PROCESSID on wf_order (process_Id);
-create index IDX_ORDER_NO on wf_order (order_No);
+create index IDX_ORDER_PROCESSID on wf_process_instance (process_Id);
+create index IDX_ORDER_NO on wf_process_instance (order_No);
 create index IDX_TASK_ORDER on wf_task (instance_Id);
 create index IDX_TASK_TASKNAME on wf_task (task_Name);
 create index IDX_TASK_PARENTTASK on wf_task (parent_Task_Id);
 create index IDX_TASKACTOR_TASK on wf_task_actor (task_Id);
-create index IDX_HIST_ORDER_PROCESSID on wf_hist_order (process_Id);
-create index IDX_HIST_ORDER_NO on wf_hist_order (order_No);
+create index IDX_HIST_ORDER_PROCESSID on wf_hist_process_instance (process_Id);
+create index IDX_HIST_ORDER_NO on wf_hist_process_instance (order_No);
 create index IDX_HIST_TASK_ORDER on wf_hist_task (instance_Id);
 create index IDX_HIST_TASK_TASKNAME on wf_hist_task (task_Name);
 create index IDX_HIST_TASK_PARENTTASK on wf_hist_task (parent_Task_Id);
@@ -126,11 +126,11 @@ alter table wf_task_actor
   references wf_task (id);
 alter table wf_task
   add constraint FK_TASK_INSTANCEID foreign key (instance_Id)
-  references wf_order (id);
-alter table wf_order
+  references wf_process_instance (id);
+alter table wf_process_instance
   add constraint FK_ORDER_PARENTID foreign key (parent_Id)
-  references wf_order (id);
-alter table wf_order
+  references wf_process_instance (id);
+alter table wf_process_instance
   add constraint FK_ORDER_PROCESSID foreign key (process_Id)
   references wf_process (id);
 alter table wf_hist_task_actor
@@ -138,10 +138,10 @@ alter table wf_hist_task_actor
   references wf_hist_task (id);
 alter table wf_hist_task
   add constraint FK_HIST_TASK_INSTANCEID foreign key (instance_Id)
-  references wf_hist_order (id);
-alter table wf_hist_order
+  references wf_hist_process_instance (id);
+alter table wf_hist_process_instance
   add constraint FK_HIST_ORDER_PARENTID foreign key (parent_Id)
-  references wf_hist_order (id);
-alter table wf_hist_order
+  references wf_hist_process_instance (id);
+alter table wf_hist_process_instance
   add constraint FK_HIST_ORDER_PROCESSID foreign key (process_Id)
   references wf_process (id);

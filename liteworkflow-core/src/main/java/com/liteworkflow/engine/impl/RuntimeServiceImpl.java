@@ -186,11 +186,11 @@ public class RuntimeServiceImpl implements RuntimeService
 	 */
 	private Execution execute(ProcessDefinition process, String operator, Map<String, Object> args, String parentId, String parentNodeName)
 	{
-		ProcessInstance order = processInstanceService.createOrder(process, operator, args, parentId, parentNodeName);
+		ProcessInstance instance = processInstanceService.createInstance(process, operator, args, parentId, parentNodeName);
 
-		log.debug("创建流程实例对象:" + order);
+		log.debug("创建流程实例对象:" + instance);
 
-		Execution current = new Execution(configuration, process, order, args);
+		Execution current = new Execution(configuration, process, instance, args);
 		current.setOperator(operator);
 		return current;
 	}

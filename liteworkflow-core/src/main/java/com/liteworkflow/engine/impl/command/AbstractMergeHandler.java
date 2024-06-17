@@ -43,9 +43,9 @@ public abstract class AbstractMergeHandler implements IHandler
 			ProcessInstPageRequest request = new ProcessInstPageRequest();
 			request.setParentId(instance.getId());
 			request.setExcludedIds(new String[] { execution.getChildOrderId() });
-			List<ProcessInstance> orders = processInstanceService.getActiveOrders(request);
+			List<ProcessInstance> instances = processInstanceService.getActiveInstances(request);
 			// 如果所有子流程都已完成，则表示可合并
-			if (orders == null || orders.isEmpty())
+			if (instances == null || instances.isEmpty())
 			{
 				isSubProcessMerged = true;
 			}

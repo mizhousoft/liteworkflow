@@ -33,7 +33,7 @@
 	<select id="countTotal" resultType="Long">
 		select count(distinct t.id)
 		from wf_task t
-		left join wf_order o on t.instance_Id = o.id
+		left join wf_process_instance o on t.instance_Id = o.id
 		left join wf_task_actor ta on ta.task_id=t.id
 		left join wf_process p on p.id = o.process_id
 		<where>
@@ -83,7 +83,7 @@
 		t.display_Name as task_Name, t.task_Name as task_Key, t.task_Type, t.perform_Type, t.operator, t.action_Url,
 		t.create_Time as task_Create_Time, t.finish_Time as task_End_Time, t.expire_Time as task_Expire_Time, t.variable as task_Variable
 		from wf_task t
-		left join wf_order o on t.instance_Id = o.id
+		left join wf_process_instance o on t.instance_Id = o.id
 		left join wf_task_actor ta on ta.task_id=t.id
 		left join wf_process p on p.id = o.process_id
 		<where>
@@ -129,10 +129,10 @@
 		limit #{rowOffset}, #{request.pageSize}
 	</select>
 	
-	<select id="countHistory" resultType="Long">
+	<select id="countHistoric" resultType="Long">
 		select count(distinct t.id)
 		from wf_hist_task t 
-		left join wf_hist_order o on t.instance_Id = o.id
+		left join wf_hist_process_instance o on t.instance_Id = o.id
 		left join wf_hist_task_actor ta on ta.task_id=t.id
 		left join wf_process p on p.id = o.process_id
 		<where>
@@ -176,13 +176,13 @@
 		</where>
 	</select>
 	
-	<select id="findHistory" parameterType="java.util.Map" resultMap="WorkItemMap">
+	<select id="findHistoric" parameterType="java.util.Map" resultMap="WorkItemMap">
 		select distinct o.process_Id, t.instance_Id, t.id as id, t.id as task_Id, p.display_Name as process_Name, p.instance_Url, o.parent_Id, o.creator,
 		o.create_Time as order_Create_Time, o.expire_Time as order_Expire_Time, o.order_No, o.variable as order_Variable,
 		t.display_Name as task_Name, t.task_Name as task_Key, t.task_Type, t.perform_Type,t.operator, t.action_Url,
 		t.create_Time as task_Create_Time, t.finish_Time as task_End_Time, t.expire_Time as task_Expire_Time, t.variable as task_Variable
 		from wf_hist_task t 
-		left join wf_hist_order o on t.instance_Id = o.id
+		left join wf_hist_process_instance o on t.instance_Id = o.id
 		left join wf_hist_task_actor ta on ta.task_id=t.id
 		left join wf_process p on p.id = o.process_id
 		<where>

@@ -45,7 +45,7 @@
 	</select>
 
 	<select id="countTotal" resultType="Long">
-		select count(id) from wf_cc_order cc left join wf_hist_order o on cc.instance_Id = o.id
+		select count(id) from wf_cc_order cc left join wf_hist_process_instance o on cc.instance_Id = o.id
 		<where>
        		<if test="request.operators != null and request.operators.length != 0">
                 cc.actor_Id in
@@ -77,7 +77,7 @@
 	<select id="findPageData" parameterType="java.util.Map" resultMap="com.liteworkflow.engine.persistence.mapper.HistoricProcessInstanceMapper.HistoricProcessInstanceMap">
 		select id, process_Id, order_State, priority, cc.creator, cc.create_Time, end_Time, parent_Id, expire_Time,
 		order_No, variable
-		from wf_cc_order cc left join wf_hist_order o on cc.instance_Id = o.id
+		from wf_cc_order cc left join wf_hist_process_instance o on cc.instance_Id = o.id
 		<where>
        		<if test="request.operators != null and request.operators.length != 0">
                 cc.actor_Id in

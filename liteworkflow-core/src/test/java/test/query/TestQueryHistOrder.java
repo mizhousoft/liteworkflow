@@ -32,7 +32,7 @@ public class TestQueryHistOrder extends TestSpring
 		request.setState(0);
 		request.setProcessType("预算管理流程1");
 
-		System.out.println(engine.getHistoryService().getHistoryOrders(request));
-		System.out.println(engine.getHistoryService().getHistoryOrders(new HistoricProcessInstPageRequest()));
+		System.out.println(engine.getHistoryService().getHistoricInstances(request));
+		System.out.println(engine.getHistoryService().getHistoricInstances(new HistoricProcessInstPageRequest()));
 	}
 }

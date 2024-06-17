@@ -20,24 +20,24 @@ public interface ProcessInstanceService
 	 * 根据流程实例ID获取流程实例对象
 	 * 
 	 * @param instanceId 流程实例id
-	 * @return Order 流程实例对象
+	 * @return ProcessInstance 流程实例对象
 	 */
-	ProcessInstance getOrder(String instanceId);
+	ProcessInstance getInstance(String instanceId);
 
 	/**
 	 * 根据filter查询流程实例列表
 	 * 
 	 * @param filter 查询过滤器
-	 * @return List<Order> 活动实例集合
+	 * @return List<ProcessInstance> 活动实例集合
 	 */
-	List<ProcessInstance> getActiveOrders(ProcessInstPageRequest request);
+	List<ProcessInstance> getActiveInstances(ProcessInstPageRequest request);
 
 	/**
 	 * 根据filter分页查询流程实例列表
 	 * 
 	 * @param page 分页对象
 	 * @param filter 查询过滤器
-	 * @return List<Order> 活动实例集合
+	 * @return List<ProcessInstance> 活动实例集合
 	 */
 	Page<ProcessInstance> queryPageData(ProcessInstPageRequest request);
 
@@ -47,9 +47,9 @@ public interface ProcessInstanceService
 	 * @param process 流程定义对象
 	 * @param operator 操作人员ID
 	 * @param args 参数列表
-	 * @return Order 活动流程实例对象
+	 * @return ProcessInstance 活动流程实例对象
 	 */
-	ProcessInstance createOrder(ProcessDefinition process, String operator, Map<String, Object> args);
+	ProcessInstance createInstance(ProcessDefinition process, String operator, Map<String, Object> args);
 
 	/**
 	 * 根据流程、操作人员、父流程实例ID创建流程实例
@@ -61,7 +61,7 @@ public interface ProcessInstanceService
 	 * @param parentNodeName 父流程节点模型
 	 * @return 活动流程实例对象
 	 */
-	ProcessInstance createOrder(ProcessDefinition process, String operator, Map<String, Object> args, String parentId,
+	ProcessInstance createInstance(ProcessDefinition process, String operator, Map<String, Object> args, String parentId,
 	        String parentNodeName);
 
 	/**
@@ -115,9 +115,9 @@ public interface ProcessInstanceService
 	/**
 	 * 更新流程实例
 	 * 
-	 * @param order 流程实例对象
+	 * @param instance 流程实例对象
 	 */
-	void updateOrder(ProcessInstance order);
+	void updateInstance(ProcessInstance instance);
 
 	/**
 	 * 更新抄送记录为已阅
@@ -138,7 +138,7 @@ public interface ProcessInstanceService
 	/**
 	 * 谨慎使用.数据恢复非常痛苦，你懂得~~
 	 * 级联删除指定流程实例的所有数据：
-	 * 1.wf_order,wf_hist_order
+	 * 1.wf_process_instance,wf_hist_process_instance
 	 * 2.wf_task,wf_hist_task
 	 * 3.wf_task_actor,wf_hist_task_actor
 	 * 4.wf_cc_order

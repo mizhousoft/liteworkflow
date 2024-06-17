@@ -31,13 +31,13 @@ import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.TaskModel;
 import com.liteworkflow.engine.model.TaskModel.PerformType;
 import com.liteworkflow.engine.model.TaskModel.TaskType;
-import com.liteworkflow.engine.persistence.entity.HistoryTask;
+import com.liteworkflow.engine.persistence.entity.HistoricTask;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.persistence.entity.Task;
 import com.liteworkflow.engine.persistence.entity.TaskActor;
 import com.liteworkflow.engine.persistence.request.TaskPageRequest;
-import com.liteworkflow.engine.persistence.service.HistoryTaskEntityService;
+import com.liteworkflow.engine.persistence.service.HistoricTaskEntityService;
 import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.TaskActorEntityService;
 import com.liteworkflow.engine.persistence.service.TaskEntityService;
@@ -62,7 +62,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 
 	private TaskActorEntityService taskActorEntityService;
 
-	private HistoryTaskEntityService historyTaskEntityService;
+	private HistoricTaskEntityService historicTaskEntityService;
 
 	private ProcessInstanceEntityService processInstanceEntityService;
 
@@ -155,7 +155,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	@Override
 	public List<Task> createFreeTask(String instanceId, String operator, Map<String, Object> args, TaskModel model)
 	{
-		ProcessInstance order = processInstanceService.getOrder(instanceId);
+		ProcessInstance order = processInstanceService.getInstance(instanceId);
 		AssertHelper.notNull(order, "指定的流程实例[id=" + instanceId + "]已完成或不存在");
 		order.setLastUpdator(operator);
 		order.setLastUpdateTime(DateHelper.getTime());
@@ -181,20 +181,20 @@ public class TaskServiceImpl extends AccessService implements TaskService
 
 		log.debug("任务[taskId=" + taskId + "]已完成");
 
-		ProcessInstance order = processInstanceService.getOrder(task.getInstanceId());
-		AssertHelper.notNull(order, "指定的流程实例[id=" + task.getInstanceId() + "]已完成或不存在");
-		order.setLastUpdator(operator);
-		order.setLastUpdateTime(DateHelper.getTime());
-		processInstanceService.updateOrder(order);
+		ProcessInstance instance = processInstanceService.getInstance(task.getInstanceId());
+		AssertHelper.notNull(instance, "指定的流程实例[id=" + task.getInstanceId() + "]已完成或不存在");
+		instance.setLastUpdator(operator);
+		instance.setLastUpdateTime(DateHelper.getTime());
+		processInstanceService.updateInstance(instance);
 		// 协办任务完成不产生执行对象
 		if (!task.isMajor())
 		{
 			return null;
 		}
-		Map<String, Object> orderMaps = order.getVariableMap();
-		if (orderMaps != null)
+		Map<String, Object> instanceVarMaps = instance.getVariableMap();
+		if (instanceVarMaps != null)
 		{
-			for (Map.Entry<String, Object> entry : orderMaps.entrySet())
+			for (Map.Entry<String, Object> entry : instanceVarMaps.entrySet())
 			{
 				if (args.containsKey(entry.getKey()))
 				{
@@ -203,8 +203,8 @@ public class TaskServiceImpl extends AccessService implements TaskService
 				args.put(entry.getKey(), entry.getValue());
 			}
 		}
-		ProcessDefinition process = repositoryService.getProcessById(order.getProcessId());
-		Execution execution = new Execution(engineConfiguration, process, order, args);
+		ProcessDefinition process = repositoryService.getProcessById(instance.getProcessId());
+		Execution execution = new Execution(engineConfiguration, process, instance, args);
 		execution.setOperator(operator);
 		execution.setTask(task);
 		return execution;
@@ -283,11 +283,11 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		{
 			throw new ProcessException("当前参与者[" + operator + "]不允许执行任务[taskId=" + taskId + "]");
 		}
-		HistoryTask history = new HistoryTask(task);
-		history.setFinishTime(DateHelper.getTime());
-		history.setTaskState(Constants.STATE_FINISH);
-		history.setOperator(operator);
-		if (history.getActorIds() == null)
+		HistoricTask historicTask = new HistoricTask(task);
+		historicTask.setFinishTime(DateHelper.getTime());
+		historicTask.setTaskState(Constants.STATE_FINISH);
+		historicTask.setOperator(operator);
+		if (historicTask.getActorIds() == null)
 		{
 			List<TaskActor> actors = taskActorEntityService.getTaskActorsByTaskId(task.getId());
 			String[] actorIds = new String[actors.size()];
@@ -295,10 +295,10 @@ public class TaskServiceImpl extends AccessService implements TaskService
 			{
 				actorIds[i] = actors.get(i).getActorId();
 			}
-			history.setActorIds(actorIds);
+			historicTask.setActorIds(actorIds);
 		}
 
-		historyTaskEntityService.saveHistory(history);
+		historicTaskEntityService.saveEntity(historicTask);
 
 		taskActorEntityService.deleteByTaskId(task.getId());
 		taskEntityService.delete(task);
@@ -306,7 +306,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		Completion completion = getCompletion();
 		if (completion != null)
 		{
-			completion.complete(history);
+			completion.complete(historicTask);
 		}
 		return task;
 	}
@@ -319,24 +319,24 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	 * @return 历史任务对象
 	 */
 	@Override
-	public HistoryTask history(Execution execution, CustomModel model)
+	public HistoricTask history(Execution execution, CustomModel model)
 	{
-		HistoryTask historyTask = new HistoryTask();
-		historyTask.setId(StringHelper.getPrimaryKey());
-		historyTask.setInstanceId(execution.getInstance().getId());
+		HistoricTask historicTask = new HistoricTask();
+		historicTask.setId(StringHelper.getPrimaryKey());
+		historicTask.setInstanceId(execution.getInstance().getId());
 		String currentTime = DateHelper.getTime();
-		historyTask.setCreateTime(currentTime);
-		historyTask.setFinishTime(currentTime);
-		historyTask.setDisplayName(model.getDisplayName());
-		historyTask.setTaskName(model.getName());
-		historyTask.setTaskState(Constants.STATE_FINISH);
-		historyTask.setTaskType(TaskType.Record.ordinal());
-		historyTask.setParentTaskId(execution.getTask() == null ? START : execution.getTask().getId());
-		historyTask.setVariable(JsonHelper.toJson(execution.getArgs()));
+		historicTask.setCreateTime(currentTime);
+		historicTask.setFinishTime(currentTime);
+		historicTask.setDisplayName(model.getDisplayName());
+		historicTask.setTaskName(model.getName());
+		historicTask.setTaskState(Constants.STATE_FINISH);
+		historicTask.setTaskType(TaskType.Record.ordinal());
+		historicTask.setParentTaskId(execution.getTask() == null ? START : execution.getTask().getId());
+		historicTask.setVariable(JsonHelper.toJson(execution.getArgs()));
 
-		historyTaskEntityService.saveHistory(historyTask);
+		historicTaskEntityService.saveEntity(historicTask);
 
-		return historyTask;
+		return historicTask;
 	}
 
 	/**
@@ -365,7 +365,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	@Override
 	public Task resume(String taskId, String operator)
 	{
-		HistoryTask histTask = historyTaskEntityService.getHistTask(taskId);
+		HistoricTask histTask = historicTaskEntityService.getHistTask(taskId);
 		AssertHelper.notNull(histTask, "指定的历史任务[id=" + taskId + "]不存在");
 		boolean isAllowed = true;
 		if (StringHelper.isNotEmpty(histTask.getOperator()))
@@ -500,7 +500,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	@Override
 	public Task withdrawTask(String taskId, String operator)
 	{
-		HistoryTask hist = historyTaskEntityService.getHistTask(taskId);
+		HistoricTask hist = historicTaskEntityService.getHistTask(taskId);
 		AssertHelper.notNull(hist, "指定的历史任务[id=" + taskId + "]不存在");
 		List<Task> tasks;
 		if (hist.isPerformAny())
@@ -540,17 +540,17 @@ public class TaskServiceImpl extends AccessService implements TaskService
 			throw new ProcessException("上一步任务ID为空，无法驳回至上一步处理");
 		}
 		NodeModel current = model.getNode(currentTask.getTaskName());
-		HistoryTask history = historyTaskEntityService.getHistTask(parentTaskId);
-		NodeModel parent = model.getNode(history.getTaskName());
+		HistoricTask historicTask = historicTaskEntityService.getHistTask(parentTaskId);
+		NodeModel parent = model.getNode(historicTask.getTaskName());
 		if (!NodeModel.canRejected(current, parent))
 		{
 			throw new ProcessException("无法驳回至上一步处理，请确认上一步骤并非fork、join、suprocess以及会签任务");
 		}
 
-		Task task = history.undoTask();
+		Task task = historicTask.undoTask();
 		task.setId(StringHelper.getPrimaryKey());
 		task.setCreateTime(DateHelper.getTime());
-		task.setOperator(history.getOperator());
+		task.setOperator(historicTask.getOperator());
 		taskEntityService.save(task);
 		assignTask(task.getId(), task.getOperator());
 		return task;
@@ -615,7 +615,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	{
 		Task task = taskEntityService.getTask(taskId);
 
-		ProcessInstance order = processInstanceEntityService.getOrder(task.getInstanceId());
+		ProcessInstance order = processInstanceEntityService.getInstance(task.getInstanceId());
 
 		ProcessDefinition process = engineConfiguration.getRepositoryService().getProcessById(order.getProcessId());
 		ProcessModel model = process.getModel();
@@ -875,13 +875,13 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	}
 
 	/**
-	 * 设置historyTaskEntityService
+	 * 设置historicTaskEntityService
 	 * 
-	 * @param historyTaskEntityService
+	 * @param historicTaskEntityService
 	 */
-	public void setHistoryTaskEntityService(HistoryTaskEntityService historyTaskEntityService)
+	public void setHistoricTaskEntityService(HistoricTaskEntityService historicTaskEntityService)
 	{
-		this.historyTaskEntityService = historyTaskEntityService;
+		this.historicTaskEntityService = historicTaskEntityService;
 	}
 
 	/**

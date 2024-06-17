@@ -7,7 +7,7 @@ import com.liteworkflow.engine.persistence.request.ProcessInstPageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
- * OrderEntityService
+ * ProcessInstanceEntityService
  *
  * @version
  */
@@ -16,45 +16,45 @@ public interface ProcessInstanceEntityService
 	/**
 	 * 保存流程实例对象
 	 * 
-	 * @param order 流程实例对象
+	 * @param instance 流程实例对象
 	 */
-	void saveOrder(ProcessInstance order);
+	void saveInstance(ProcessInstance instance);
 
 	/**
 	 * 保存流程实例
 	 * 
-	 * @param order 流程实例对象
+	 * @param instance 流程实例对象
 	 */
-	void saveOrderAndHistory(ProcessInstance order);
+	void saveInstanceAndHistoric(ProcessInstance instance);
 
 	/**
 	 * 更新流程实例对象
 	 * 
-	 * @param order 流程实例对象
+	 * @param instance 流程实例对象
 	 */
-	void updateOrder(ProcessInstance order);
+	void updateInstance(ProcessInstance instance);
 
 	/**
 	 * 删除流程实例对象
 	 * 
-	 * @param order 流程实例对象
+	 * @param instance 流程实例对象
 	 */
-	void deleteOrder(ProcessInstance order);
+	void deleteInstance(ProcessInstance instance);
 
 	/**
 	 * 根据流程实例id查询实例对象
 	 * 
 	 * @param instanceId 活动流程实例id
-	 * @return Order 活动流程实例对象
+	 * @return ProcessInstance 活动流程实例对象
 	 */
-	ProcessInstance getOrder(String instanceId);
+	ProcessInstance getInstance(String instanceId);
 
 	/**
 	 * 更新实例变量（包括历史实例表）
 	 * 
-	 * @param order 实例对象
+	 * @param instance 实例对象
 	 */
-	void updateOrderVariable(ProcessInstance order);
+	void updateVariable(ProcessInstance instance);
 
 	/**
 	 * 

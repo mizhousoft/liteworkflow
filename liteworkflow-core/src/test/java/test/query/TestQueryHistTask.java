@@ -27,10 +27,10 @@ public class TestQueryHistTask extends TestSpring
 	{
 		TaskPageRequest request = new TaskPageRequest();
 		request.setOperators(new String[] { "admin" });
-		System.out.println(engine.getHistoryService().getHistoryTasks(request));
+		System.out.println(engine.getHistoryService().getHistoricTasks(request));
 
 		WorkItemPageRequest wRequest = new WorkItemPageRequest();
 		wRequest.setOperators(new String[] { "admin" });
-		System.out.println(engine.getHistoryService().getHistoryWorkItems(wRequest));
+		System.out.println(engine.getHistoryService().getHistoricWorkItems(wRequest));
 	}
 }

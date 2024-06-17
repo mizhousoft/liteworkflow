@@ -14,14 +14,14 @@ import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.persistence.entity.CCOrder;
 import com.liteworkflow.engine.persistence.entity.HistoricProcessInstance;
-import com.liteworkflow.engine.persistence.entity.HistoryTask;
+import com.liteworkflow.engine.persistence.entity.HistoricTask;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.persistence.entity.Task;
 import com.liteworkflow.engine.persistence.request.ProcessInstPageRequest;
 import com.liteworkflow.engine.persistence.service.CCOrderEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricProcessInstanceEntityService;
-import com.liteworkflow.engine.persistence.service.HistoryTaskEntityService;
+import com.liteworkflow.engine.persistence.service.HistoricTaskEntityService;
 import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.TaskEntityService;
 import com.mizhousoft.commons.data.domain.Page;
@@ -44,16 +44,16 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 
 	private TaskEntityService taskEntityService;
 
-	private HistoryTaskEntityService historyTaskEntityService;
+	private HistoricTaskEntityService historicTaskEntityService;
 
 	@Override
-	public ProcessInstance getOrder(String instanceId)
+	public ProcessInstance getInstance(String instanceId)
 	{
-		return processInstanceEntityService.getOrder(instanceId);
+		return processInstanceEntityService.getInstance(instanceId);
 	}
 
 	@Override
-	public List<ProcessInstance> getActiveOrders(ProcessInstPageRequest request)
+	public List<ProcessInstance> getActiveInstances(ProcessInstPageRequest request)
 	{
 		return processInstanceEntityService.queryList(request);
 	}
@@ -67,54 +67,54 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 	/**
 	 * 创建活动实例
 	 * 
-	 * @see com.liteworkflow.engine.impl.ProcessInstanceServiceImpl#createOrder(ProcessDefinition,
+	 * @see com.liteworkflow.engine.impl.ProcessInstanceServiceImpl#createInstance(ProcessDefinition,
 	 *      String, Map, String,
 	 *      String)
 	 */
 	@Override
-	public ProcessInstance createOrder(ProcessDefinition process, String operator, Map<String, Object> args)
+	public ProcessInstance createInstance(ProcessDefinition process, String operator, Map<String, Object> args)
 	{
-		return createOrder(process, operator, args, null, null);
+		return createInstance(process, operator, args, null, null);
 	}
 
 	/**
 	 * 创建活动实例
 	 */
 	@Override
-	public ProcessInstance createOrder(ProcessDefinition process, String operator, Map<String, Object> args, String parentId,
+	public ProcessInstance createInstance(ProcessDefinition process, String operator, Map<String, Object> args, String parentId,
 	        String parentNodeName)
 	{
-		ProcessInstance order = new ProcessInstance();
-		order.setId(StringHelper.getPrimaryKey());
-		order.setParentId(parentId);
-		order.setParentNodeName(parentNodeName);
-		order.setCreateTime(DateHelper.getTime());
-		order.setLastUpdateTime(order.getCreateTime());
-		order.setCreator(operator);
-		order.setLastUpdator(order.getCreator());
-		order.setProcessId(process.getId());
+		ProcessInstance instance = new ProcessInstance();
+		instance.setId(StringHelper.getPrimaryKey());
+		instance.setParentId(parentId);
+		instance.setParentNodeName(parentNodeName);
+		instance.setCreateTime(DateHelper.getTime());
+		instance.setLastUpdateTime(instance.getCreateTime());
+		instance.setCreator(operator);
+		instance.setLastUpdator(instance.getCreator());
+		instance.setProcessId(process.getId());
 		ProcessModel model = process.getModel();
 		if (model != null && args != null)
 		{
 			if (StringHelper.isNotEmpty(model.getExpireTime()))
 			{
 				String expireTime = DateHelper.parseTime(args.get(model.getExpireTime()));
-				order.setExpireTime(expireTime);
+				instance.setExpireTime(expireTime);
 			}
 			String orderNo = (String) args.get(ProcessEngine.ID);
 			if (StringHelper.isNotEmpty(orderNo))
 			{
-				order.setOrderNo(orderNo);
+				instance.setOrderNo(orderNo);
 			}
 			else
 			{
-				order.setOrderNo(model.getGenerator().generate(model));
+				instance.setOrderNo(model.getGenerator().generate(model));
 			}
 		}
 
-		order.setVariable(JsonHelper.toJson(args));
-		processInstanceEntityService.saveOrderAndHistory(order);
-		return order;
+		instance.setVariable(JsonHelper.toJson(args));
+		processInstanceEntityService.saveInstanceAndHistoric(instance);
+		return instance;
 	}
 
 	/**
@@ -126,11 +126,11 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 	@Override
 	public void addVariable(String instanceId, Map<String, Object> args)
 	{
-		ProcessInstance order = processInstanceEntityService.getOrder(instanceId);
-		Map<String, Object> data = order.getVariableMap();
+		ProcessInstance instance = processInstanceEntityService.getInstance(instanceId);
+		Map<String, Object> data = instance.getVariableMap();
 		data.putAll(args);
-		order.setVariable(JsonHelper.toJson(data));
-		processInstanceEntityService.updateOrderVariable(order);
+		instance.setVariable(JsonHelper.toJson(data));
+		processInstanceEntityService.updateVariable(instance);
 	}
 
 	/**
@@ -155,9 +155,9 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 	 * 更新活动实例的last_Updator、last_Update_Time、expire_Time、version、variable
 	 */
 	@Override
-	public void updateOrder(ProcessInstance order)
+	public void updateInstance(ProcessInstance instance)
 	{
-		processInstanceEntityService.updateOrder(order);
+		processInstanceEntityService.updateInstance(instance);
 	}
 
 	/**
@@ -192,17 +192,17 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 	@Override
 	public void complete(String instanceId)
 	{
-		ProcessInstance order = processInstanceEntityService.getOrder(instanceId);
-		HistoricProcessInstance history = historicProcessInstanceEntityService.getHistOrder(instanceId);
-		history.setOrderState(Constants.STATE_FINISH);
-		history.setEndTime(DateHelper.getTime());
+		ProcessInstance instance = processInstanceEntityService.getInstance(instanceId);
+		HistoricProcessInstance historicInstance = historicProcessInstanceEntityService.getHistoricInstance(instanceId);
+		historicInstance.setOrderState(Constants.STATE_FINISH);
+		historicInstance.setEndTime(DateHelper.getTime());
 
-		historicProcessInstanceEntityService.update(history);
-		processInstanceEntityService.deleteOrder(order);
+		historicProcessInstanceEntityService.update(historicInstance);
+		processInstanceEntityService.deleteInstance(instance);
 		Completion completion = getCompletion();
 		if (completion != null)
 		{
-			completion.complete(history);
+			completion.complete(historicInstance);
 		}
 	}
 
@@ -228,17 +228,17 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 		{
 			engineConfiguration.getTaskService().complete(task.getId(), operator);
 		}
-		ProcessInstance order = processInstanceEntityService.getOrder(instanceId);
-		HistoricProcessInstance history = new HistoricProcessInstance(order);
-		history.setOrderState(Constants.STATE_TERMINATION);
-		history.setEndTime(DateHelper.getTime());
+		ProcessInstance order = processInstanceEntityService.getInstance(instanceId);
+		HistoricProcessInstance historicInstance = new HistoricProcessInstance(order);
+		historicInstance.setOrderState(Constants.STATE_TERMINATION);
+		historicInstance.setEndTime(DateHelper.getTime());
 
-		historicProcessInstanceEntityService.update(history);
-		processInstanceEntityService.deleteOrder(order);
+		historicProcessInstanceEntityService.update(historicInstance);
+		processInstanceEntityService.deleteInstance(order);
 		Completion completion = getCompletion();
 		if (completion != null)
 		{
-			completion.complete(history);
+			completion.complete(historicInstance);
 		}
 	}
 
@@ -251,16 +251,16 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 	@Override
 	public ProcessInstance resume(String instanceId)
 	{
-		HistoricProcessInstance historyOrder = historicProcessInstanceEntityService.getHistOrder(instanceId);
-		ProcessInstance order = historyOrder.undo();
-		processInstanceEntityService.saveOrder(order);
-		historyOrder.setOrderState(Constants.STATE_ACTIVE);
-		historicProcessInstanceEntityService.update(historyOrder);
+		HistoricProcessInstance historicInstance = historicProcessInstanceEntityService.getHistoricInstance(instanceId);
+		ProcessInstance order = historicInstance.undo();
+		processInstanceEntityService.saveInstance(order);
+		historicInstance.setOrderState(Constants.STATE_ACTIVE);
+		historicProcessInstanceEntityService.update(historicInstance);
 
-		List<HistoryTask> histTasks = historyTaskEntityService.queryByInstanceId(instanceId);
+		List<HistoricTask> histTasks = historicTaskEntityService.queryByInstanceId(instanceId);
 		if (histTasks != null && !histTasks.isEmpty())
 		{
-			HistoryTask histTask = histTasks.get(0);
+			HistoricTask histTask = histTasks.get(0);
 			engineConfiguration.getTaskService().resume(histTask.getId(), histTask.getOperator());
 		}
 		return order;
@@ -268,7 +268,7 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 
 	/**
 	 * 级联删除指定流程实例的所有数据：
-	 * 1.wf_order,wf_hist_order
+	 * 1.wf_process_instance,wf_hist_process_instance
 	 * 2.wf_task,wf_hist_task
 	 * 3.wf_task_actor,wf_hist_task_actor
 	 * 4.wf_cc_order
@@ -278,17 +278,17 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 	@Override
 	public void cascadeRemove(String id)
 	{
-		HistoricProcessInstance historyOrder = historicProcessInstanceEntityService.getHistOrder(id);
+		HistoricProcessInstance historicInstance = historicProcessInstanceEntityService.getHistoricInstance(id);
 
 		List<Task> activeTasks = taskEntityService.queryByInstanceId(id);
-		List<HistoryTask> historyTasks = historyTaskEntityService.queryByInstanceId(id);
+		List<HistoricTask> historicTasks = historicTaskEntityService.queryByInstanceId(id);
 		for (Task task : activeTasks)
 		{
 			taskEntityService.delete(task);
 		}
-		for (HistoryTask historyTask : historyTasks)
+		for (HistoricTask historicTask : historicTasks)
 		{
-			historyTaskEntityService.deleteHistoryTask(historyTask);
+			historicTaskEntityService.deleteEntity(historicTask);
 		}
 		List<CCOrder> ccOrders = ccOrderEntityService.getCCOrder(id);
 		for (CCOrder ccOrder : ccOrders)
@@ -296,11 +296,11 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 			ccOrderEntityService.delete(ccOrder);
 		}
 
-		ProcessInstance order = processInstanceEntityService.getOrder(id);
-		historicProcessInstanceEntityService.delete(historyOrder);
-		if (order != null)
+		ProcessInstance instance = processInstanceEntityService.getInstance(id);
+		historicProcessInstanceEntityService.delete(historicInstance);
+		if (instance != null)
 		{
-			processInstanceEntityService.deleteOrder(order);
+			processInstanceEntityService.deleteInstance(instance);
 		}
 	}
 
@@ -345,13 +345,13 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 	}
 
 	/**
-	 * 设置historyTaskEntityService
+	 * 设置historicTaskEntityService
 	 * 
-	 * @param historyTaskEntityService
+	 * @param historicTaskEntityService
 	 */
-	public void setHistoryTaskEntityService(HistoryTaskEntityService historyTaskEntityService)
+	public void setHistoricTaskEntityService(HistoricTaskEntityService historicTaskEntityService)
 	{
-		this.historyTaskEntityService = historyTaskEntityService;
+		this.historicTaskEntityService = historicTaskEntityService;
 	}
 
 	/**

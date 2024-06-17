@@ -11,7 +11,7 @@ import com.mizhousoft.commons.data.util.PageBuilder;
 import com.mizhousoft.commons.data.util.PageUtils;
 
 /**
- * HistoryOrderEntityService
+ * HistoricProcessInstanceEntityService
  *
  * @version
  */
@@ -23,36 +23,36 @@ public class HistoricProcessInstanceEntityServiceImpl implements HistoricProcess
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void save(HistoricProcessInstance order)
+	public void save(HistoricProcessInstance historicInstance)
 	{
-		historicProcessInstanceMapper.save(order);
+		historicProcessInstanceMapper.save(historicInstance);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void update(HistoricProcessInstance order)
+	public void update(HistoricProcessInstance historicInstance)
 	{
-		historicProcessInstanceMapper.update(order);
+		historicProcessInstanceMapper.update(historicInstance);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void delete(HistoricProcessInstance historyOrder)
+	public void delete(HistoricProcessInstance historicInstance)
 	{
-		historicProcessInstanceMapper.delete(historyOrder.getId());
+		historicProcessInstanceMapper.delete(historicInstance.getId());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public HistoricProcessInstance getHistOrder(String instanceId)
+	public HistoricProcessInstance getHistoricInstance(String instanceId)
 	{
-		return historicProcessInstanceMapper.getHistOrder(instanceId);
+		return historicProcessInstanceMapper.getHistoricInstance(instanceId);
 	}
 
 	/**

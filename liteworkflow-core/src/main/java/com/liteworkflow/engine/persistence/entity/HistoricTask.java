@@ -13,7 +13,7 @@ import com.liteworkflow.engine.model.TaskModel.PerformType;
  * @author yuqs
  * @since 1.0
  */
-public class HistoryTask implements Serializable
+public class HistoricTask implements Serializable
 {
 
 	/**
@@ -116,12 +116,12 @@ public class HistoryTask implements Serializable
 		this.variable = variable;
 	}
 
-	public HistoryTask()
+	public HistoricTask()
 	{
 
 	}
 
-	public HistoryTask(Task task)
+	public HistoricTask(Task task)
 	{
 		this.id = task.getId();
 		this.instanceId = task.getInstanceId();
@@ -316,7 +316,7 @@ public class HistoryTask implements Serializable
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append("HistoryTask(id=").append(this.id);
+		sb.append("HistoricTask(id=").append(this.id);
 		sb.append(",instanceId=").append(this.instanceId);
 		sb.append(",taskName=").append(this.taskName);
 		sb.append(",displayName").append(this.displayName);

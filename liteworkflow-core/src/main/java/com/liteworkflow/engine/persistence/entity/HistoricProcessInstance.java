@@ -100,20 +100,20 @@ public class HistoricProcessInstance implements Serializable
 	 */
 	public ProcessInstance undo()
 	{
-		ProcessInstance order = new ProcessInstance();
-		order.setId(this.id);
-		order.setProcessId(this.processId);
-		order.setParentId(this.parentId);
-		order.setCreator(this.creator);
-		order.setCreateTime(this.createTime);
-		order.setLastUpdator(this.creator);
-		order.setLastUpdateTime(this.endTime);
-		order.setExpireTime(this.expireTime);
-		order.setOrderNo(this.orderNo);
-		order.setPriority(this.priority);
-		order.setVariable(this.variable);
-		order.setVersion(0);
-		return order;
+		ProcessInstance instance = new ProcessInstance();
+		instance.setId(this.id);
+		instance.setProcessId(this.processId);
+		instance.setParentId(this.parentId);
+		instance.setCreator(this.creator);
+		instance.setCreateTime(this.createTime);
+		instance.setLastUpdator(this.creator);
+		instance.setLastUpdateTime(this.endTime);
+		instance.setExpireTime(this.expireTime);
+		instance.setOrderNo(this.orderNo);
+		instance.setPriority(this.priority);
+		instance.setVariable(this.variable);
+		instance.setVersion(0);
+		return instance;
 	}
 
 	public String getProcessId()
@@ -238,7 +238,7 @@ public class HistoricProcessInstance implements Serializable
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append("HistoryOrder(id=").append(this.id);
+		sb.append("HistoricProcessInstance(id=").append(this.id);
 		sb.append(",processId=").append(this.processId);
 		sb.append(",creator=").append(this.creator);
 		sb.append(",createTime").append(this.createTime);

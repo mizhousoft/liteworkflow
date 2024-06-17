@@ -117,7 +117,7 @@ public interface RepositoryService
 	 * 谨慎使用.数据恢复非常痛苦，你懂得~~
 	 * 级联删除指定流程定义的所有数据：
 	 * 1.wf_process
-	 * 2.wf_order,wf_hist_order
+	 * 2.wf_process_instance,wf_hist_process_instance
 	 * 3.wf_task,wf_hist_task
 	 * 4.wf_task_actor,wf_hist_task_actor
 	 * 5.wf_cc_order

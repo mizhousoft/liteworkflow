@@ -37,7 +37,7 @@ public interface WorkItemMapper
 	 * @param request
 	 * @return
 	 */
-	long countHistory(@Param("request") WorkItemPageRequest request);
+	long countHistoric(@Param("request") WorkItemPageRequest request);
 
 	/**
 	 * 查询
@@ -46,6 +46,6 @@ public interface WorkItemMapper
 	 * @param request
 	 * @return
 	 */
-	List<WorkItem> findHistory(@Param("rowOffset") long rowOffset, @Param("request") WorkItemPageRequest request);
+	List<WorkItem> findHistoric(@Param("rowOffset") long rowOffset, @Param("request") WorkItemPageRequest request);
 
 }

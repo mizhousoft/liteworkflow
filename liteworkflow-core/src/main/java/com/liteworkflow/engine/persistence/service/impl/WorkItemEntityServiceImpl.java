@@ -39,12 +39,12 @@ public class WorkItemEntityServiceImpl implements WorkItemEntityService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Page<WorkItem> queryHistory(WorkItemPageRequest request)
+	public Page<WorkItem> queryHistoric(WorkItemPageRequest request)
 	{
-		long total = workItemMapper.countHistory(request);
+		long total = workItemMapper.countHistoric(request);
 		long rowOffset = PageUtils.calcRowOffset(request, total);
 
-		List<WorkItem> list = workItemMapper.findHistory(rowOffset, request);
+		List<WorkItem> list = workItemMapper.findHistoric(rowOffset, request);
 
 		Page<WorkItem> page = PageBuilder.build(list, request, total);
 

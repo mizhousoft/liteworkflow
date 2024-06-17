@@ -296,11 +296,11 @@ public class RepositoryServiceImpl extends AccessService implements RepositorySe
 
 		HistoricProcessInstPageRequest request = new HistoricProcessInstPageRequest();
 		request.setProcessId(id);
-		List<HistoricProcessInstance> historyOrders = historicProcessInstanceEntityService.queryList(request);
+		List<HistoricProcessInstance> historicInstances = historicProcessInstanceEntityService.queryList(request);
 
-		for (HistoricProcessInstance historyOrder : historyOrders)
+		for (HistoricProcessInstance historicInstance : historicInstances)
 		{
-			engineConfiguration.getProcessInstanceService().cascadeRemove(historyOrder.getId());
+			engineConfiguration.getProcessInstanceService().cascadeRemove(historicInstance.getId());
 		}
 		processDefinitionEntityService.delete(entity);
 		clear(entity);

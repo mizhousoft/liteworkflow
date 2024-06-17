@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.liteworkflow.engine.persistence.mapper.HistoryTaskMapper">
+<mapper namespace="com.liteworkflow.engine.persistence.mapper.HistoricTaskMapper">
 	
-	<resultMap type="com.liteworkflow.engine.persistence.entity.HistoryTask" id="HistoryTaskMap">
+	<resultMap type="com.liteworkflow.engine.persistence.entity.HistoricTask" id="HistoricTaskMap">
 		<id property="id" column="id" />
 		<result property="instanceId" column="instance_Id" />
 		<result property="taskName" column="task_Name" />
@@ -31,14 +31,14 @@
 		delete from wf_hist_task where id = #{id}
 	</delete>
 	
-	<select id="getHistTask" parameterType="java.util.Map" resultMap="HistoryTaskMap">
+	<select id="getHistTask" parameterType="java.util.Map" resultMap="HistoricTaskMap">
 		select id, instance_Id, task_Name, display_Name, task_Type, perform_Type, task_State, operator, create_Time,
 		finish_Time, expire_Time, action_Url, parent_Task_Id, variable 
 		from wf_hist_task
 		where id = #{taskId}
 	</select>
 	
-	<select id="findList" parameterType="java.util.Map" resultMap="HistoryTaskMap">
+	<select id="findList" parameterType="java.util.Map" resultMap="HistoricTaskMap">
 		select id, instance_Id, task_Name, display_Name, task_Type, perform_Type, task_State, operator, create_Time,
 		finish_Time, expire_Time, action_Url, parent_Task_Id, variable 
 		from wf_hist_task

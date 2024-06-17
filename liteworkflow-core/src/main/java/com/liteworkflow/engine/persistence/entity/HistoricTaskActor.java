@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author yuqs
  * @since 1.0
  */
-public class HistoryTaskActor implements Serializable
+public class HistoricTaskActor implements Serializable
 {
 
 	/**

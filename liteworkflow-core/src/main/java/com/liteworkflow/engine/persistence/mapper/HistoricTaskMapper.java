@@ -2,29 +2,29 @@ package com.liteworkflow.engine.persistence.mapper;
 
 import java.util.List;
 
-import com.liteworkflow.engine.persistence.entity.HistoryTask;
+import com.liteworkflow.engine.persistence.entity.HistoricTask;
 import com.liteworkflow.engine.persistence.request.TaskPageRequest;
 
 /**
- * HistoryTaskMapper
+ * HistoricTaskMapper
  *
  * @version
  */
-public interface HistoryTaskMapper
+public interface HistoricTaskMapper
 {
 	/**
 	 * 迁移活动任务
 	 * 
-	 * @param task 历史任务对象
+	 * @param historicTask 历史任务对象
 	 */
-	void save(HistoryTask task);
+	void save(HistoricTask historicTask);
 
 	/**
 	 * 删除历史任务记录
 	 * 
-	 * @param historyTask 历史任务
+	 * @param historicTask 历史任务
 	 */
-	void delete(HistoryTask historyTask);
+	void delete(HistoricTask historicTask);
 
 	/**
 	 * 根据任务ID获取历史任务对象
@@ -32,7 +32,7 @@ public interface HistoryTaskMapper
 	 * @param taskId 历史任务id
 	 * @return 历史任务对象
 	 */
-	HistoryTask getHistTask(String taskId);
+	HistoricTask getHistTask(String taskId);
 
 	/**
 	 * 
@@ -40,5 +40,5 @@ public interface HistoryTaskMapper
 	 * @param request
 	 * @return
 	 */
-	List<HistoryTask> findList(TaskPageRequest request);
+	List<HistoricTask> findList(TaskPageRequest request);
 }

@@ -42,8 +42,8 @@ import com.liteworkflow.engine.impl.TaskServiceImpl;
 import com.liteworkflow.engine.impl.context.SpringContext;
 import com.liteworkflow.engine.persistence.mapper.CCOrderMapper;
 import com.liteworkflow.engine.persistence.mapper.HistoricProcessInstanceMapper;
-import com.liteworkflow.engine.persistence.mapper.HistoryTaskActorMapper;
-import com.liteworkflow.engine.persistence.mapper.HistoryTaskMapper;
+import com.liteworkflow.engine.persistence.mapper.HistoricTaskActorMapper;
+import com.liteworkflow.engine.persistence.mapper.HistoricTaskMapper;
 import com.liteworkflow.engine.persistence.mapper.ProcessDefinitionMapper;
 import com.liteworkflow.engine.persistence.mapper.ProcessInstanceMapper;
 import com.liteworkflow.engine.persistence.mapper.SurrogateMapper;
@@ -52,8 +52,8 @@ import com.liteworkflow.engine.persistence.mapper.TaskMapper;
 import com.liteworkflow.engine.persistence.mapper.WorkItemMapper;
 import com.liteworkflow.engine.persistence.service.CCOrderEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricProcessInstanceEntityService;
-import com.liteworkflow.engine.persistence.service.HistoryTaskActorEntityService;
-import com.liteworkflow.engine.persistence.service.HistoryTaskEntityService;
+import com.liteworkflow.engine.persistence.service.HistoricTaskActorEntityService;
+import com.liteworkflow.engine.persistence.service.HistoricTaskEntityService;
 import com.liteworkflow.engine.persistence.service.ProcessDefinitionEntityService;
 import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.SurrogateEntityService;
@@ -62,8 +62,8 @@ import com.liteworkflow.engine.persistence.service.TaskEntityService;
 import com.liteworkflow.engine.persistence.service.WorkItemEntityService;
 import com.liteworkflow.engine.persistence.service.impl.CCOrderEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.HistoricProcessInstanceEntityServiceImpl;
-import com.liteworkflow.engine.persistence.service.impl.HistoryTaskActorEntityServiceImpl;
-import com.liteworkflow.engine.persistence.service.impl.HistoryTaskEntityServiceImpl;
+import com.liteworkflow.engine.persistence.service.impl.HistoricTaskActorEntityServiceImpl;
+import com.liteworkflow.engine.persistence.service.impl.HistoricTaskEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.ProcessDefinitionEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.ProcessInstanceEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.SurrogateEntityServiceImpl;
@@ -213,8 +213,9 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	{
 		ProcessDefinitionEntityService processDefinitionEntityService = initProcessDefinitionEntityService(sqlSessionFactory);
 
-		HistoryTaskActorEntityService historyTaskActorEntityService = initHistoryTaskActorEntityService(sqlSessionFactory);
-		HistoryTaskEntityService historyTaskEntityService = initHistoryTaskEntityService(sqlSessionFactory, historyTaskActorEntityService);
+		HistoricTaskActorEntityService historicTaskActorEntityService = initHistoricTaskActorEntityService(sqlSessionFactory);
+		HistoricTaskEntityService historicTaskEntityService = initHistoricTaskEntityService(sqlSessionFactory,
+		        historicTaskActorEntityService);
 		TaskActorEntityService taskActorEntityService = initTaskActorEntityService(sqlSessionFactory);
 		TaskEntityService taskEntityService = initTaskEntityService(sqlSessionFactory);
 		SurrogateEntityService surrogateEntityService = initSurrogateEntityService(sqlSessionFactory);
@@ -237,23 +238,22 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		HistoryServiceImpl historyService = new HistoryServiceImpl();
 		historyService.setCcOrderEntityService(ccOrderEntityService);
 		historyService.setHistoricProcessInstanceEntityService(historicProcessInstanceEntityService);
-		historyService.setHistoryTaskEntityService(historyTaskEntityService);
+		historyService.setHistoricTaskEntityService(historicTaskEntityService);
+		historyService.setHistoricTaskActorEntityService(historicTaskActorEntityService);
 		historyService.setWorkItemEntityService(workItemEntityService);
-		historyService.setHistoryTaskActorEntityService(historyTaskActorEntityService);
-		historyService.setHistoryTaskEntityService(historyTaskEntityService);
 		this.historyService = historyService;
-		
+
 		ProcessInstanceServiceImpl processInstanceService = new ProcessInstanceServiceImpl();
 		processInstanceService.setCcOrderEntityService(ccOrderEntityService);
 		processInstanceService.setHistoricProcessInstanceEntityService(historicProcessInstanceEntityService);
-		processInstanceService.setHistoryTaskEntityService(historyTaskEntityService);
+		processInstanceService.setHistoricTaskEntityService(historicTaskEntityService);
 		processInstanceService.setProcessInstanceEntityService(processInstanceEntityService);
 		processInstanceService.setTaskEntityService(taskEntityService);
 		processInstanceService.setEngineConfiguration(this);
 		this.processInstanceService = processInstanceService;
 
 		TaskServiceImpl taskService = new TaskServiceImpl();
-		taskService.setHistoryTaskEntityService(historyTaskEntityService);
+		taskService.setHistoricTaskEntityService(historicTaskEntityService);
 		taskService.setProcessInstanceEntityService(processInstanceEntityService);
 		taskService.setTaskActorEntityService(taskActorEntityService);
 		taskService.setTaskEntityService(taskEntityService);
@@ -301,21 +301,21 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		return taskActorEntityService;
 	}
 
-	private HistoryTaskEntityService initHistoryTaskEntityService(SqlSessionFactory sqlSessionFactory,
-	        HistoryTaskActorEntityService historyTaskActorEntityService) throws Exception
+	private HistoricTaskEntityService initHistoricTaskEntityService(SqlSessionFactory sqlSessionFactory,
+	        HistoricTaskActorEntityService historicTaskActorEntityService) throws Exception
 	{
-		MapperFactoryBean<HistoryTaskMapper> factoryBean = new MapperFactoryBean<HistoryTaskMapper>();
-		factoryBean.setMapperInterface(HistoryTaskMapper.class);
+		MapperFactoryBean<HistoricTaskMapper> factoryBean = new MapperFactoryBean<HistoricTaskMapper>();
+		factoryBean.setMapperInterface(HistoricTaskMapper.class);
 		factoryBean.setAddToConfig(true);
 		factoryBean.setSqlSessionFactory(sqlSessionFactory);
 		factoryBean.afterPropertiesSet();
-		HistoryTaskMapper historyTaskMapper = (HistoryTaskMapper) factoryBean.getObject();
+		HistoricTaskMapper historicTaskMapper = (HistoricTaskMapper) factoryBean.getObject();
 
-		HistoryTaskEntityServiceImpl historyTaskEntityService = new HistoryTaskEntityServiceImpl();
-		historyTaskEntityService.setHistoryTaskMapper(historyTaskMapper);
-		historyTaskEntityService.setHistoryTaskActorEntityService(historyTaskActorEntityService);
+		HistoricTaskEntityServiceImpl historicTaskEntityService = new HistoricTaskEntityServiceImpl();
+		historicTaskEntityService.setHistoricTaskMapper(historicTaskMapper);
+		historicTaskEntityService.setHistoricTaskActorEntityService(historicTaskActorEntityService);
 
-		return historyTaskEntityService;
+		return historicTaskEntityService;
 	}
 
 	private ProcessInstanceEntityService initProcessInstanceEntityService(SqlSessionFactory sqlSessionFactory,
@@ -366,19 +366,19 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		return historicProcessInstanceEntityService;
 	}
 
-	private HistoryTaskActorEntityService initHistoryTaskActorEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
+	private HistoricTaskActorEntityService initHistoricTaskActorEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
 	{
-		MapperFactoryBean<HistoryTaskActorMapper> factoryBean = new MapperFactoryBean<HistoryTaskActorMapper>();
-		factoryBean.setMapperInterface(HistoryTaskActorMapper.class);
+		MapperFactoryBean<HistoricTaskActorMapper> factoryBean = new MapperFactoryBean<HistoricTaskActorMapper>();
+		factoryBean.setMapperInterface(HistoricTaskActorMapper.class);
 		factoryBean.setAddToConfig(true);
 		factoryBean.setSqlSessionFactory(sqlSessionFactory);
 		factoryBean.afterPropertiesSet();
-		HistoryTaskActorMapper historyTaskActorMapper = (HistoryTaskActorMapper) factoryBean.getObject();
+		HistoricTaskActorMapper historicTaskActorMapper = (HistoricTaskActorMapper) factoryBean.getObject();
 
-		HistoryTaskActorEntityServiceImpl historyTaskActorEntityService = new HistoryTaskActorEntityServiceImpl();
-		historyTaskActorEntityService.setHistoryTaskActorMapper(historyTaskActorMapper);
+		HistoricTaskActorEntityServiceImpl historicTaskActorEntityService = new HistoricTaskActorEntityServiceImpl();
+		historicTaskActorEntityService.setHistoricTaskActorMapper(historicTaskActorMapper);
 
-		return historyTaskActorEntityService;
+		return historicTaskActorEntityService;
 	}
 
 	private CCOrderEntityService initCCOrderEntityService(SqlSessionFactory sqlSessionFactory) throws Exception

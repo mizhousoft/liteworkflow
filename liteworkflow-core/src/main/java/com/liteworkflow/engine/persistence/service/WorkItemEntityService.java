@@ -26,5 +26,5 @@ public interface WorkItemEntityService
 	 * @param request
 	 * @return
 	 */
-	Page<WorkItem> queryHistory(WorkItemPageRequest request);
+	Page<WorkItem> queryHistoric(WorkItemPageRequest request);
 }

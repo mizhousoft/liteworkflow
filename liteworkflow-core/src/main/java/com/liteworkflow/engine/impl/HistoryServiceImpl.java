@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.liteworkflow.engine.HistoryService;
 import com.liteworkflow.engine.persistence.entity.HistoricProcessInstance;
-import com.liteworkflow.engine.persistence.entity.HistoryTask;
-import com.liteworkflow.engine.persistence.entity.HistoryTaskActor;
+import com.liteworkflow.engine.persistence.entity.HistoricTask;
+import com.liteworkflow.engine.persistence.entity.HistoricTaskActor;
 import com.liteworkflow.engine.persistence.entity.WorkItem;
 import com.liteworkflow.engine.persistence.request.CCOrderPageRequest;
 import com.liteworkflow.engine.persistence.request.HistoricProcessInstPageRequest;
@@ -13,8 +13,8 @@ import com.liteworkflow.engine.persistence.request.TaskPageRequest;
 import com.liteworkflow.engine.persistence.request.WorkItemPageRequest;
 import com.liteworkflow.engine.persistence.service.CCOrderEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricProcessInstanceEntityService;
-import com.liteworkflow.engine.persistence.service.HistoryTaskActorEntityService;
-import com.liteworkflow.engine.persistence.service.HistoryTaskEntityService;
+import com.liteworkflow.engine.persistence.service.HistoricTaskActorEntityService;
+import com.liteworkflow.engine.persistence.service.HistoricTaskEntityService;
 import com.liteworkflow.engine.persistence.service.WorkItemEntityService;
 import com.mizhousoft.commons.data.domain.Page;
 
@@ -25,7 +25,7 @@ import com.mizhousoft.commons.data.domain.Page;
  */
 public class HistoryServiceImpl implements HistoryService
 {
-	private HistoryTaskEntityService historyTaskEntityService;
+	private HistoricTaskEntityService historicTaskEntityService;
 
 	private HistoricProcessInstanceEntityService historicProcessInstanceEntityService;
 
@@ -33,16 +33,16 @@ public class HistoryServiceImpl implements HistoryService
 
 	private WorkItemEntityService workItemEntityService;
 
-	private HistoryTaskActorEntityService historyTaskActorEntityService;
+	private HistoricTaskActorEntityService historicTaskActorEntityService;
 
 	@Override
-	public HistoricProcessInstance getHistOrder(String instanceId)
+	public HistoricProcessInstance getHistoricInstance(String instanceId)
 	{
-		return historicProcessInstanceEntityService.getHistOrder(instanceId);
+		return historicProcessInstanceEntityService.getHistoricInstance(instanceId);
 	}
 
 	@Override
-	public List<HistoricProcessInstance> getHistoryOrders(HistoricProcessInstPageRequest request)
+	public List<HistoricProcessInstance> getHistoricInstances(HistoricProcessInstPageRequest request)
 	{
 		return historicProcessInstanceEntityService.queryList(request);
 	}
@@ -54,36 +54,36 @@ public class HistoryServiceImpl implements HistoryService
 	}
 
 	@Override
-	public HistoryTask getHistTask(String taskId)
+	public HistoricTask getHistTask(String taskId)
 	{
-		return historyTaskEntityService.getHistTask(taskId);
+		return historicTaskEntityService.getHistTask(taskId);
 	}
 
 	@Override
-	public String[] getHistoryTaskActorsByTaskId(String taskId)
+	public String[] getHistoricTaskActorsByTaskId(String taskId)
 	{
-		List<HistoryTaskActor> actors = historyTaskActorEntityService.getHistTaskActorsByTaskId(taskId);
+		List<HistoricTaskActor> actors = historicTaskActorEntityService.getHistTaskActorsByTaskId(taskId);
 		if (actors == null || actors.isEmpty())
 			return null;
 		String[] actorIds = new String[actors.size()];
 		for (int i = 0; i < actors.size(); i++)
 		{
-			HistoryTaskActor ta = actors.get(i);
+			HistoricTaskActor ta = actors.get(i);
 			actorIds[i] = ta.getActorId();
 		}
 		return actorIds;
 	}
 
 	@Override
-	public List<HistoryTask> getHistoryTasks(String instanceId)
+	public List<HistoricTask> getHistoricTasks(String instanceId)
 	{
-		return historyTaskEntityService.queryByInstanceId(instanceId);
+		return historicTaskEntityService.queryByInstanceId(instanceId);
 	}
 
 	@Override
-	public List<HistoryTask> getHistoryTasks(TaskPageRequest request)
+	public List<HistoricTask> getHistoricTasks(TaskPageRequest request)
 	{
-		return historyTaskEntityService.queryList(request);
+		return historicTaskEntityService.queryList(request);
 	}
 
 	@Override
@@ -93,19 +93,19 @@ public class HistoryServiceImpl implements HistoryService
 	}
 
 	@Override
-	public Page<WorkItem> getHistoryWorkItems(WorkItemPageRequest request)
+	public Page<WorkItem> getHistoricWorkItems(WorkItemPageRequest request)
 	{
-		return workItemEntityService.queryHistory(request);
+		return workItemEntityService.queryHistoric(request);
 	}
 
 	/**
-	 * 设置historyTaskEntityService
+	 * 设置historicTaskEntityService
 	 * 
-	 * @param historyTaskEntityService
+	 * @param historicTaskEntityService
 	 */
-	public void setHistoryTaskEntityService(HistoryTaskEntityService historyTaskEntityService)
+	public void setHistoricTaskEntityService(HistoricTaskEntityService historicTaskEntityService)
 	{
-		this.historyTaskEntityService = historyTaskEntityService;
+		this.historicTaskEntityService = historicTaskEntityService;
 	}
 
 	/**
@@ -139,13 +139,12 @@ public class HistoryServiceImpl implements HistoryService
 	}
 
 	/**
-	 * 设置historyTaskActorEntityService
+	 * 设置historicTaskActorEntityService
 	 * 
-	 * @param historyTaskActorEntityService
+	 * @param historicTaskActorEntityService
 	 */
-	public void setHistoryTaskActorEntityService(HistoryTaskActorEntityService historyTaskActorEntityService)
+	public void setHistoricTaskActorEntityService(HistoricTaskActorEntityService historicTaskActorEntityService)
 	{
-		this.historyTaskActorEntityService = historyTaskActorEntityService;
+		this.historicTaskActorEntityService = historicTaskActorEntityService;
 	}
-
 }
