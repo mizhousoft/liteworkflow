@@ -1,7 +1,7 @@
 package com.liteworkflow.engine;
 
-import com.liteworkflow.engine.persistence.order.entity.HistoricProcessInstance;
-import com.liteworkflow.engine.persistence.task.entity.HistoryTask;
+import com.liteworkflow.engine.persistence.entity.HistoricProcessInstance;
+import com.liteworkflow.engine.persistence.entity.HistoryTask;
 
 /**
  * 任务、实例完成时触发动作的接口

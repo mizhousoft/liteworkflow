@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.impl.ServiceContext;
 import com.liteworkflow.engine.model.TaskModel;
-import com.liteworkflow.engine.persistence.task.entity.Task;
+import com.liteworkflow.engine.persistence.entity.Task;
 import com.liteworkflow.engine.scheduling.IScheduler;
 import com.liteworkflow.engine.scheduling.JobEntity;
 import com.liteworkflow.engine.scheduling.JobEntity.JobType;
@@ -46,7 +46,7 @@ public class SchedulerInterceptor implements SnakerInterceptor
 			return;
 		for (Task task : execution.getTasks())
 		{
-			String id = execution.getProcess().getId() + "-" + execution.getOrder().getId() + "-" + task.getId();
+			String id = execution.getProcess().getId() + "-" + execution.getInstance().getId() + "-" + task.getId();
 			Date expireDate = task.getExpireDate();
 			if (expireDate != null)
 			{

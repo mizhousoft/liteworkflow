@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liteworkflow.engine.persistence.mapper.HistoryTaskActorMapper">
+	
+	<resultMap type="com.liteworkflow.engine.persistence.entity.HistoryTaskActor" id="HistoryTaskActorMap">
+		<result property="taskId" column="task_Id" />
+		<result property="actorId" column="actor_Id" />
+	</resultMap>
+	
+	<insert id="save">
+		insert into wf_hist_task_actor (task_Id, actor_Id) 
+		values (#{taskId}, #{actorId})
+	</insert>
+	
+	<delete id="deleteByTaskId">
+		delete from wf_hist_task where task_Id = #{taskId}
+	</delete>
+	
+	<select id="getHistTaskActorsByTaskId" parameterType="java.util.Map" resultMap="HistoryTaskActorMap">
+		select task_Id, actor_Id from 
+		wf_hist_task_actor
+		where task_Id = #{taskId}
+	</select>
+	
+</mapper>

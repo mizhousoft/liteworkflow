@@ -2,7 +2,7 @@ package com.liteworkflow.engine.impl;
 
 import java.util.List;
 
-import com.liteworkflow.engine.persistence.task.entity.TaskActor;
+import com.liteworkflow.engine.persistence.entity.TaskActor;
 
 /**
  * 任务访问策略类

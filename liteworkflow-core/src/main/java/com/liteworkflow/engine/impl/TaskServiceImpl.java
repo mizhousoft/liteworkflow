@@ -31,16 +31,16 @@ import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.TaskModel;
 import com.liteworkflow.engine.model.TaskModel.PerformType;
 import com.liteworkflow.engine.model.TaskModel.TaskType;
-import com.liteworkflow.engine.persistence.order.entity.ProcessInstance;
-import com.liteworkflow.engine.persistence.order.service.ProcessInstanceEntityService;
-import com.liteworkflow.engine.persistence.process.entity.ProcessDefinition;
-import com.liteworkflow.engine.persistence.task.entity.HistoryTask;
-import com.liteworkflow.engine.persistence.task.entity.Task;
-import com.liteworkflow.engine.persistence.task.entity.TaskActor;
-import com.liteworkflow.engine.persistence.task.request.TaskPageRequest;
-import com.liteworkflow.engine.persistence.task.service.HistoryTaskEntityService;
-import com.liteworkflow.engine.persistence.task.service.TaskActorEntityService;
-import com.liteworkflow.engine.persistence.task.service.TaskEntityService;
+import com.liteworkflow.engine.persistence.entity.HistoryTask;
+import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
+import com.liteworkflow.engine.persistence.entity.ProcessInstance;
+import com.liteworkflow.engine.persistence.entity.Task;
+import com.liteworkflow.engine.persistence.entity.TaskActor;
+import com.liteworkflow.engine.persistence.request.TaskPageRequest;
+import com.liteworkflow.engine.persistence.service.HistoryTaskEntityService;
+import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
+import com.liteworkflow.engine.persistence.service.TaskActorEntityService;
+import com.liteworkflow.engine.persistence.service.TaskEntityService;
 import com.liteworkflow.engine.model.TransitionModel;
 import com.mizhousoft.commons.data.domain.Page;
 
@@ -153,10 +153,10 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	 * 根据流程实例ID，操作人ID，参数列表按照节点模型model创建新的自由任务
 	 */
 	@Override
-	public List<Task> createFreeTask(String orderId, String operator, Map<String, Object> args, TaskModel model)
+	public List<Task> createFreeTask(String instanceId, String operator, Map<String, Object> args, TaskModel model)
 	{
-		ProcessInstance order = processInstanceService.getOrder(orderId);
-		AssertHelper.notNull(order, "指定的流程实例[id=" + orderId + "]已完成或不存在");
+		ProcessInstance order = processInstanceService.getOrder(instanceId);
+		AssertHelper.notNull(order, "指定的流程实例[id=" + instanceId + "]已完成或不存在");
 		order.setLastUpdator(operator);
 		order.setLastUpdateTime(DateHelper.getTime());
 		ProcessDefinition process = repositoryService.getProcessById(order.getProcessId());
@@ -181,8 +181,8 @@ public class TaskServiceImpl extends AccessService implements TaskService
 
 		log.debug("任务[taskId=" + taskId + "]已完成");
 
-		ProcessInstance order = processInstanceService.getOrder(task.getOrderId());
-		AssertHelper.notNull(order, "指定的流程实例[id=" + task.getOrderId() + "]已完成或不存在");
+		ProcessInstance order = processInstanceService.getOrder(task.getInstanceId());
+		AssertHelper.notNull(order, "指定的流程实例[id=" + task.getInstanceId() + "]已完成或不存在");
 		order.setLastUpdator(operator);
 		order.setLastUpdateTime(DateHelper.getTime());
 		processInstanceService.updateOrder(order);
@@ -232,9 +232,9 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	}
 
 	@Override
-	public List<Task> getActiveTasks(String orderId)
+	public List<Task> getActiveTasks(String instanceId)
 	{
-		return taskEntityService.queryByOrderId(orderId);
+		return taskEntityService.queryByInstanceId(instanceId);
 	}
 
 	@Override
@@ -323,7 +323,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	{
 		HistoryTask historyTask = new HistoryTask();
 		historyTask.setId(StringHelper.getPrimaryKey());
-		historyTask.setOrderId(execution.getOrder().getId());
+		historyTask.setInstanceId(execution.getInstance().getId());
 		String currentTime = DateHelper.getTime();
 		historyTask.setCreateTime(currentTime);
 		historyTask.setFinishTime(currentTime);
@@ -509,7 +509,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		}
 		else
 		{
-			tasks = taskEntityService.getNextActiveTaskList(hist.getOrderId(), hist.getTaskName(), hist.getParentTaskId());
+			tasks = taskEntityService.getNextActiveTaskList(hist.getInstanceId(), hist.getTaskName(), hist.getParentTaskId());
 		}
 		if (tasks == null || tasks.isEmpty())
 		{
@@ -615,7 +615,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	{
 		Task task = taskEntityService.getTask(taskId);
 
-		ProcessInstance order = processInstanceEntityService.getOrder(task.getOrderId());
+		ProcessInstance order = processInstanceEntityService.getOrder(task.getInstanceId());
 
 		ProcessDefinition process = engineConfiguration.getRepositoryService().getProcessById(order.getProcessId());
 		ProcessModel model = process.getModel();
@@ -698,7 +698,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	private Task createTaskBase(TaskModel model, Execution execution)
 	{
 		Task task = new Task();
-		task.setOrderId(execution.getOrder().getId());
+		task.setInstanceId(execution.getInstance().getId());
 		task.setTaskName(model.getName());
 		task.setDisplayName(model.getDisplayName());
 		task.setCreateTime(DateHelper.getTime());
@@ -886,6 +886,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 
 	/**
 	 * 设置processInstanceEntityService
+	 * 
 	 * @param processInstanceEntityService
 	 */
 	public void setProcessInstanceEntityService(ProcessInstanceEntityService processInstanceEntityService)

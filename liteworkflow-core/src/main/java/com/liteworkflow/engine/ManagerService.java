@@ -1,6 +1,6 @@
 package com.liteworkflow.engine;
 
-import com.liteworkflow.engine.persistence.task.entity.Surrogate;
+import com.liteworkflow.engine.persistence.entity.Surrogate;
 
 /**
  * 管理服务接口,用于流程管理控制服务

@@ -12,18 +12,18 @@ import com.liteworkflow.engine.helper.DateHelper;
 import com.liteworkflow.engine.helper.JsonHelper;
 import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.model.ProcessModel;
-import com.liteworkflow.engine.persistence.order.entity.CCOrder;
-import com.liteworkflow.engine.persistence.order.entity.HistoricProcessInstance;
-import com.liteworkflow.engine.persistence.order.entity.ProcessInstance;
-import com.liteworkflow.engine.persistence.order.request.ProcessInstPageRequest;
-import com.liteworkflow.engine.persistence.order.service.CCOrderEntityService;
-import com.liteworkflow.engine.persistence.order.service.HistoricProcessInstanceEntityService;
-import com.liteworkflow.engine.persistence.order.service.ProcessInstanceEntityService;
-import com.liteworkflow.engine.persistence.process.entity.ProcessDefinition;
-import com.liteworkflow.engine.persistence.task.entity.HistoryTask;
-import com.liteworkflow.engine.persistence.task.entity.Task;
-import com.liteworkflow.engine.persistence.task.service.HistoryTaskEntityService;
-import com.liteworkflow.engine.persistence.task.service.TaskEntityService;
+import com.liteworkflow.engine.persistence.entity.CCOrder;
+import com.liteworkflow.engine.persistence.entity.HistoricProcessInstance;
+import com.liteworkflow.engine.persistence.entity.HistoryTask;
+import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
+import com.liteworkflow.engine.persistence.entity.ProcessInstance;
+import com.liteworkflow.engine.persistence.entity.Task;
+import com.liteworkflow.engine.persistence.request.ProcessInstPageRequest;
+import com.liteworkflow.engine.persistence.service.CCOrderEntityService;
+import com.liteworkflow.engine.persistence.service.HistoricProcessInstanceEntityService;
+import com.liteworkflow.engine.persistence.service.HistoryTaskEntityService;
+import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
+import com.liteworkflow.engine.persistence.service.TaskEntityService;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
@@ -47,9 +47,9 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 	private HistoryTaskEntityService historyTaskEntityService;
 
 	@Override
-	public ProcessInstance getOrder(String orderId)
+	public ProcessInstance getOrder(String instanceId)
 	{
-		return processInstanceEntityService.getOrder(orderId);
+		return processInstanceEntityService.getOrder(instanceId);
 	}
 
 	@Override
@@ -120,13 +120,13 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 	/**
 	 * 向活动实例临时添加全局变量数据
 	 * 
-	 * @param orderId 实例id
+	 * @param instanceId 实例id
 	 * @param args 变量数据
 	 */
 	@Override
-	public void addVariable(String orderId, Map<String, Object> args)
+	public void addVariable(String instanceId, Map<String, Object> args)
 	{
-		ProcessInstance order = processInstanceEntityService.getOrder(orderId);
+		ProcessInstance order = processInstanceEntityService.getOrder(instanceId);
 		Map<String, Object> data = order.getVariableMap();
 		data.putAll(args);
 		order.setVariable(JsonHelper.toJson(data));
@@ -137,12 +137,12 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 	 * 创建实例的抄送
 	 */
 	@Override
-	public void createCCOrder(String orderId, String creator, String... actorIds)
+	public void createCCOrder(String instanceId, String creator, String... actorIds)
 	{
 		for (String actorId : actorIds)
 		{
 			CCOrder ccorder = new CCOrder();
-			ccorder.setOrderId(orderId);
+			ccorder.setInstanceId(instanceId);
 			ccorder.setActorId(actorId);
 			ccorder.setCreator(creator);
 			ccorder.setStatus(Constants.STATE_ACTIVE);
@@ -163,9 +163,9 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 	/**
 	 * 更新抄送记录状态为已阅
 	 */
-	public void updateCCStatus(String orderId, String... actorIds)
+	public void updateCCStatus(String instanceId, String... actorIds)
 	{
-		List<CCOrder> ccorders = ccOrderEntityService.getCCOrder(orderId, actorIds);
+		List<CCOrder> ccorders = ccOrderEntityService.getCCOrder(instanceId, actorIds);
 		for (CCOrder ccorder : ccorders)
 		{
 			ccorder.setStatus(Constants.STATE_FINISH);
@@ -177,9 +177,9 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 	/**
 	 * 删除指定的抄送记录
 	 */
-	public void deleteCCOrder(String orderId, String actorId)
+	public void deleteCCOrder(String instanceId, String actorId)
 	{
-		List<CCOrder> ccorders = ccOrderEntityService.getCCOrder(orderId, actorId);
+		List<CCOrder> ccorders = ccOrderEntityService.getCCOrder(instanceId, actorId);
 		for (CCOrder ccorder : ccorders)
 		{
 			ccOrderEntityService.delete(ccorder);
@@ -190,10 +190,10 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 	 * 删除活动流程实例数据，更新历史流程实例的状态、结束时间
 	 */
 	@Override
-	public void complete(String orderId)
+	public void complete(String instanceId)
 	{
-		ProcessInstance order = processInstanceEntityService.getOrder(orderId);
-		HistoricProcessInstance history = historicProcessInstanceEntityService.getHistOrder(orderId);
+		ProcessInstance order = processInstanceEntityService.getOrder(instanceId);
+		HistoricProcessInstance history = historicProcessInstanceEntityService.getHistOrder(instanceId);
 		history.setOrderState(Constants.STATE_FINISH);
 		history.setEndTime(DateHelper.getTime());
 
@@ -212,23 +212,23 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 	 * @see com.liteworkflow.engine.impl.ProcessInstanceServiceImpl#terminate(String, String)
 	 */
 	@Override
-	public void terminate(String orderId)
+	public void terminate(String instanceId)
 	{
-		terminate(orderId, null);
+		terminate(instanceId, null);
 	}
 
 	/**
 	 * 强制中止活动实例,并强制完成活动任务
 	 */
 	@Override
-	public void terminate(String orderId, String operator)
+	public void terminate(String instanceId, String operator)
 	{
-		List<Task> tasks = taskEntityService.queryByOrderId(orderId);
+		List<Task> tasks = taskEntityService.queryByInstanceId(instanceId);
 		for (Task task : tasks)
 		{
 			engineConfiguration.getTaskService().complete(task.getId(), operator);
 		}
-		ProcessInstance order = processInstanceEntityService.getOrder(orderId);
+		ProcessInstance order = processInstanceEntityService.getOrder(instanceId);
 		HistoricProcessInstance history = new HistoricProcessInstance(order);
 		history.setOrderState(Constants.STATE_TERMINATION);
 		history.setEndTime(DateHelper.getTime());
@@ -245,19 +245,19 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 	/**
 	 * 激活已完成的历史流程实例
 	 * 
-	 * @param orderId 实例id
+	 * @param instanceId 实例id
 	 * @return 活动实例对象
 	 */
 	@Override
-	public ProcessInstance resume(String orderId)
+	public ProcessInstance resume(String instanceId)
 	{
-		HistoricProcessInstance historyOrder = historicProcessInstanceEntityService.getHistOrder(orderId);
+		HistoricProcessInstance historyOrder = historicProcessInstanceEntityService.getHistOrder(instanceId);
 		ProcessInstance order = historyOrder.undo();
 		processInstanceEntityService.saveOrder(order);
 		historyOrder.setOrderState(Constants.STATE_ACTIVE);
 		historicProcessInstanceEntityService.update(historyOrder);
 
-		List<HistoryTask> histTasks = historyTaskEntityService.queryByOrderId(orderId);
+		List<HistoryTask> histTasks = historyTaskEntityService.queryByInstanceId(instanceId);
 		if (histTasks != null && !histTasks.isEmpty())
 		{
 			HistoryTask histTask = histTasks.get(0);
@@ -280,8 +280,8 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 	{
 		HistoricProcessInstance historyOrder = historicProcessInstanceEntityService.getHistOrder(id);
 
-		List<Task> activeTasks = taskEntityService.queryByOrderId(id);
-		List<HistoryTask> historyTasks = historyTaskEntityService.queryByOrderId(id);
+		List<Task> activeTasks = taskEntityService.queryByInstanceId(id);
+		List<HistoryTask> historyTasks = historyTaskEntityService.queryByInstanceId(id);
 		for (Task task : activeTasks)
 		{
 			taskEntityService.delete(task);
@@ -336,6 +336,7 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 
 	/**
 	 * 设置historicProcessInstanceEntityService
+	 * 
 	 * @param historicProcessInstanceEntityService
 	 */
 	public void setHistoricProcessInstanceEntityService(HistoricProcessInstanceEntityService historicProcessInstanceEntityService)
@@ -355,11 +356,12 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 
 	/**
 	 * 设置engineConfiguration
+	 * 
 	 * @param engineConfiguration
 	 */
 	public void setEngineConfiguration(ProcessEngineConfiguration engineConfiguration)
 	{
 		this.engineConfiguration = engineConfiguration;
 	}
-	
+
 }

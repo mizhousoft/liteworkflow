@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.helper.StreamHelper;
-import com.liteworkflow.engine.persistence.order.entity.ProcessInstance;
+import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 
 import test.TestSpring;
 
@@ -34,10 +34,5 @@ public class TestSurrogate extends TestSpring
 		args.put("task1.operator", new String[] { "test" });
 		ProcessInstance order = engine.getRuntimeService().startInstanceByName("surrogate", 0, "2", args);
 		System.out.println("order=" + order);
-		// List<Task> tasks = queryService.getActiveTasks(new
-		// QueryFilter().setOrderId(order.getId()));
-		// for(Task task : tasks) {
-		// //engine.executeTask(task.getId(), "1", args);
-		// }
 	}
 }

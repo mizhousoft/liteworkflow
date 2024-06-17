@@ -24,7 +24,7 @@ public class MergeActorHandler extends AbstractMergeHandler
 	}
 
 	/**
-	 * actor all方式，查询参数为：orderId、taskName
+	 * actor all方式，查询参数为：taskName
 	 * 
 	 * @see com.liteworkflow.engine.impl.command.AbstractMergeHandler#findActiveNodes()
 	 */

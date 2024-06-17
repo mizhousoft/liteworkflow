@@ -3,19 +3,19 @@ package com.liteworkflow.engine.impl;
 import java.util.List;
 
 import com.liteworkflow.engine.HistoryService;
-import com.liteworkflow.engine.persistence.order.entity.HistoricProcessInstance;
-import com.liteworkflow.engine.persistence.order.request.CCOrderPageRequest;
-import com.liteworkflow.engine.persistence.order.request.HistoricProcessInstPageRequest;
-import com.liteworkflow.engine.persistence.order.service.CCOrderEntityService;
-import com.liteworkflow.engine.persistence.order.service.HistoricProcessInstanceEntityService;
-import com.liteworkflow.engine.persistence.task.entity.HistoryTask;
-import com.liteworkflow.engine.persistence.task.entity.HistoryTaskActor;
-import com.liteworkflow.engine.persistence.task.request.TaskPageRequest;
-import com.liteworkflow.engine.persistence.task.service.HistoryTaskActorEntityService;
-import com.liteworkflow.engine.persistence.task.service.HistoryTaskEntityService;
-import com.liteworkflow.engine.persistence.workitem.entity.WorkItem;
-import com.liteworkflow.engine.persistence.workitem.request.WorkItemPageRequest;
-import com.liteworkflow.engine.persistence.workitem.service.WorkItemEntityService;
+import com.liteworkflow.engine.persistence.entity.HistoricProcessInstance;
+import com.liteworkflow.engine.persistence.entity.HistoryTask;
+import com.liteworkflow.engine.persistence.entity.HistoryTaskActor;
+import com.liteworkflow.engine.persistence.entity.WorkItem;
+import com.liteworkflow.engine.persistence.request.CCOrderPageRequest;
+import com.liteworkflow.engine.persistence.request.HistoricProcessInstPageRequest;
+import com.liteworkflow.engine.persistence.request.TaskPageRequest;
+import com.liteworkflow.engine.persistence.request.WorkItemPageRequest;
+import com.liteworkflow.engine.persistence.service.CCOrderEntityService;
+import com.liteworkflow.engine.persistence.service.HistoricProcessInstanceEntityService;
+import com.liteworkflow.engine.persistence.service.HistoryTaskActorEntityService;
+import com.liteworkflow.engine.persistence.service.HistoryTaskEntityService;
+import com.liteworkflow.engine.persistence.service.WorkItemEntityService;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
@@ -36,9 +36,9 @@ public class HistoryServiceImpl implements HistoryService
 	private HistoryTaskActorEntityService historyTaskActorEntityService;
 
 	@Override
-	public HistoricProcessInstance getHistOrder(String orderId)
+	public HistoricProcessInstance getHistOrder(String instanceId)
 	{
-		return historicProcessInstanceEntityService.getHistOrder(orderId);
+		return historicProcessInstanceEntityService.getHistOrder(instanceId);
 	}
 
 	@Override
@@ -75,9 +75,9 @@ public class HistoryServiceImpl implements HistoryService
 	}
 
 	@Override
-	public List<HistoryTask> getHistoryTasks(String orderId)
+	public List<HistoryTask> getHistoryTasks(String instanceId)
 	{
-		return historyTaskEntityService.queryByOrderId(orderId);
+		return historyTaskEntityService.queryByInstanceId(instanceId);
 	}
 
 	@Override
@@ -110,6 +110,7 @@ public class HistoryServiceImpl implements HistoryService
 
 	/**
 	 * 设置historicProcessInstanceEntityService
+	 * 
 	 * @param historicProcessInstanceEntityService
 	 */
 	public void setHistoricProcessInstanceEntityService(HistoricProcessInstanceEntityService historicProcessInstanceEntityService)

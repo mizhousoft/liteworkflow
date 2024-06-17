@@ -8,9 +8,9 @@ import java.util.Map;
 import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.model.ProcessModel;
-import com.liteworkflow.engine.persistence.order.entity.ProcessInstance;
-import com.liteworkflow.engine.persistence.process.entity.ProcessDefinition;
-import com.liteworkflow.engine.persistence.task.entity.Task;
+import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
+import com.liteworkflow.engine.persistence.entity.ProcessInstance;
+import com.liteworkflow.engine.persistence.entity.Task;
 
 /**
  * 流程执行过程中所传递的执行对象，其中包含流程定义、流程模型、流程实例对象、执行参数、返回的任务列表
@@ -38,12 +38,12 @@ public class Execution implements Serializable
 	/**
 	 * 流程实例对象
 	 */
-	private ProcessInstance order;
+	private ProcessInstance instance;
 
 	/**
 	 * 父流程实例
 	 */
-	private ProcessInstance parentOrder;
+	private ProcessInstance parentInstance;
 
 	/**
 	 * 父流程实例节点名称
@@ -97,7 +97,7 @@ public class Execution implements Serializable
 		this.engineConfiguration = execution.getEngineConfiguration();
 		this.process = process;
 		this.args = execution.getArgs();
-		this.parentOrder = execution.getOrder();
+		this.parentInstance = execution.getInstance();
 		this.parentNodeName = parentNodeName;
 		this.operator = execution.getOperator();
 	}
@@ -106,19 +106,19 @@ public class Execution implements Serializable
 	 * 构造函数，接收流程定义、流程实例对象、执行参数
 	 * 
 	 * @param process
-	 * @param order
+	 * @param instance
 	 * @param args
 	 */
-	public Execution(ProcessEngineConfiguration engineConfiguration, ProcessDefinition process, ProcessInstance order,
+	public Execution(ProcessEngineConfiguration engineConfiguration, ProcessDefinition process, ProcessInstance instance,
 	        Map<String, Object> args)
 	{
-		if (process == null || order == null)
+		if (process == null || instance == null)
 		{
 			throw new ProcessException("构造Execution对象失败，请检查process、order是否为空");
 		}
 		this.engineConfiguration = engineConfiguration;
 		this.process = process;
-		this.order = order;
+		this.instance = instance;
 		this.args = args;
 	}
 
@@ -156,13 +156,13 @@ public class Execution implements Serializable
 	}
 
 	/**
-	 * 获取流程实例对象
+	 * 获取instance
 	 * 
 	 * @return
 	 */
-	public ProcessInstance getOrder()
+	public ProcessInstance getInstance()
 	{
-		return order;
+		return instance;
 	}
 
 	/**
@@ -275,9 +275,14 @@ public class Execution implements Serializable
 		return engineConfiguration;
 	}
 
-	public ProcessInstance getParentOrder()
+	/**
+	 * 获取parentInstance
+	 * 
+	 * @return
+	 */
+	public ProcessInstance getParentInstance()
 	{
-		return parentOrder;
+		return parentInstance;
 	}
 
 	public String getParentNodeName()

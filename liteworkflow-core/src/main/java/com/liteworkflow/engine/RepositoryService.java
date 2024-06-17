@@ -3,8 +3,8 @@ package com.liteworkflow.engine;
 import java.io.InputStream;
 import java.util.List;
 
-import com.liteworkflow.engine.persistence.process.entity.ProcessDefinition;
-import com.liteworkflow.engine.persistence.process.request.ProcessDefPageRequest;
+import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
+import com.liteworkflow.engine.persistence.request.ProcessDefPageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**

@@ -16,7 +16,7 @@ public class JoinModel extends NodeModel
 	 */
 	private static final long serialVersionUID = 5296621319088076775L;
 
-	public void exec(Execution execution)
+	public void doExecute(Execution execution)
 	{
 		fire(new MergeBranchHandler(this), execution);
 		if (execution.isMerged())

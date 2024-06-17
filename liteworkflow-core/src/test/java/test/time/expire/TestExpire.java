@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.helper.StreamHelper;
-import com.liteworkflow.engine.persistence.order.entity.ProcessInstance;
+import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.mizhousoft.commons.lang.LocalDateTimeUtils;
 
 import test.TestSpring;
@@ -40,11 +40,6 @@ public class TestExpire extends TestSpring
 		args.put("task1.reminderTime", LocalDateTimeUtils.toDate(LocalDateTime.of(2014, 4, 15, 8, 57)));
 		ProcessInstance order = engine.getRuntimeService().startInstanceByName(PROCESSNAME, null, "2", args);
 		System.out.println("order=" + order);
-		// List<Task> tasks = queryService.getActiveTasks(new
-		// QueryFilter().setOrderId(order.getId()));
-		// for(Task task : tasks) {
-		// engine.executeTask(task.getId(), "1", args);
-		// }
 		try
 		{
 			Thread.sleep(1000);

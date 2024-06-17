@@ -46,9 +46,9 @@ public class DecisionModel extends NodeModel
 	 */
 	private Expression expression = new SpelExpression();
 
-	public void exec(Execution execution)
+	public void doExecute(Execution execution)
 	{
-		log.info(execution.getOrder().getId() + "->decision execution.getArgs():" + execution.getArgs());
+		log.info(execution.getInstance().getId() + "->decision execution.getArgs():" + execution.getArgs());
 
 		String next = null;
 		if (StringHelper.isNotEmpty(expr))
@@ -59,7 +59,7 @@ public class DecisionModel extends NodeModel
 		{
 			next = decide.decide(execution);
 		}
-		log.info(execution.getOrder().getId() + "->decision expression[expr=" + expr + "] return result:" + next);
+		log.info(execution.getInstance().getId() + "->decision expression[expr=" + expr + "] return result:" + next);
 		boolean isfound = false;
 		for (TransitionModel tm : getOutputs())
 		{
@@ -84,7 +84,7 @@ public class DecisionModel extends NodeModel
 			}
 		}
 		if (!isfound)
-			throw new ProcessException(execution.getOrder().getId() + "->decision节点无法确定下一步执行路线");
+			throw new ProcessException(execution.getInstance().getId() + "->decision节点无法确定下一步执行路线");
 	}
 
 	public String getExpr()

@@ -2,13 +2,13 @@ package com.liteworkflow.engine;
 
 import java.util.List;
 
-import com.liteworkflow.engine.persistence.order.entity.HistoricProcessInstance;
-import com.liteworkflow.engine.persistence.order.request.CCOrderPageRequest;
-import com.liteworkflow.engine.persistence.order.request.HistoricProcessInstPageRequest;
-import com.liteworkflow.engine.persistence.task.entity.HistoryTask;
-import com.liteworkflow.engine.persistence.task.request.TaskPageRequest;
-import com.liteworkflow.engine.persistence.workitem.entity.WorkItem;
-import com.liteworkflow.engine.persistence.workitem.request.WorkItemPageRequest;
+import com.liteworkflow.engine.persistence.entity.HistoricProcessInstance;
+import com.liteworkflow.engine.persistence.entity.HistoryTask;
+import com.liteworkflow.engine.persistence.entity.WorkItem;
+import com.liteworkflow.engine.persistence.request.CCOrderPageRequest;
+import com.liteworkflow.engine.persistence.request.HistoricProcessInstPageRequest;
+import com.liteworkflow.engine.persistence.request.TaskPageRequest;
+import com.liteworkflow.engine.persistence.request.WorkItemPageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
@@ -21,10 +21,10 @@ public interface HistoryService
 	/**
 	 * 根据流程实例ID获取历史流程实例对象
 	 * 
-	 * @param orderId 历史流程实例id
+	 * @param instanceId 历史流程实例id
 	 * @return HistoryOrder 历史流程实例对象
 	 */
-	HistoricProcessInstance getHistOrder(String orderId);
+	HistoricProcessInstance getHistOrder(String instanceId);
 
 	/**
 	 * 根据任务ID获取历史任务对象
@@ -65,7 +65,7 @@ public interface HistoryService
 	 * @param filter 查询过滤器
 	 * @return List<Task> 活动任务集合
 	 */
-	List<HistoryTask> getHistoryTasks(String orderId);
+	List<HistoryTask> getHistoryTasks(String instanceId);
 
 	/**
 	 * 根据filter查询活动任务

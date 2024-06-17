@@ -10,9 +10,9 @@ import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.SubProcessModel;
-import com.liteworkflow.engine.persistence.order.entity.ProcessInstance;
-import com.liteworkflow.engine.persistence.process.entity.ProcessDefinition;
-import com.liteworkflow.engine.persistence.task.entity.Task;
+import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
+import com.liteworkflow.engine.persistence.entity.ProcessInstance;
+import com.liteworkflow.engine.persistence.entity.Task;
 
 /**
  * 结束流程实例的处理器
@@ -28,8 +28,8 @@ public class EndProcessHandler implements IHandler
 	public void handle(Execution execution)
 	{
 		ProcessEngineConfiguration engine = execution.getEngineConfiguration();
-		ProcessInstance order = execution.getOrder();
-		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
+		ProcessInstance instance = execution.getInstance();
+		List<Task> tasks = engine.getTaskService().getActiveTasks(instance.getId());
 		for (Task task : tasks)
 		{
 			if (task.isMajor())
@@ -39,23 +39,23 @@ public class EndProcessHandler implements IHandler
 		/**
 		 * 结束当前流程实例
 		 */
-		engine.getProcessInstanceService().complete(order.getId());
+		engine.getProcessInstanceService().complete(instance.getId());
 
 		/**
 		 * 如果存在父流程，则重新构造Execution执行对象，交给父流程的SubProcessModel模型execute
 		 */
-		if (StringHelper.isNotEmpty(order.getParentId()))
+		if (StringHelper.isNotEmpty(instance.getParentId()))
 		{
-			ProcessInstance parentOrder = engine.getProcessInstanceService().getOrder(order.getParentId());
+			ProcessInstance parentOrder = engine.getProcessInstanceService().getOrder(instance.getParentId());
 			if (parentOrder == null)
 				return;
 			ProcessDefinition process = engine.getRepositoryService().getProcessById(parentOrder.getProcessId());
 			ProcessModel pm = process.getModel();
 			if (pm == null)
 				return;
-			SubProcessModel spm = (SubProcessModel) pm.getNode(order.getParentNodeName());
+			SubProcessModel spm = (SubProcessModel) pm.getNode(instance.getParentNodeName());
 			Execution newExecution = new Execution(engine, process, parentOrder, execution.getArgs());
-			newExecution.setChildOrderId(order.getId());
+			newExecution.setChildOrderId(instance.getId());
 			newExecution.setTask(execution.getTask());
 			spm.execute(newExecution);
 			/**

@@ -12,7 +12,7 @@ import com.liteworkflow.boot.WorkflowApplication;
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.helper.StreamHelper;
-import com.liteworkflow.engine.persistence.order.entity.ProcessInstance;
+import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 
 /**
  * @author yuqs

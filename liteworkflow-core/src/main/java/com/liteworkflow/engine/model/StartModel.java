@@ -26,7 +26,7 @@ public class StartModel extends NodeModel
 		return Collections.emptyList();
 	}
 
-	protected void exec(Execution execution)
+	protected void doExecute(Execution execution)
 	{
 		runOutTransition(execution);
 	}

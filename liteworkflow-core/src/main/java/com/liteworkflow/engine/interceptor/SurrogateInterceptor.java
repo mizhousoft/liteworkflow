@@ -5,7 +5,7 @@ import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.TaskService;
 import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.impl.Execution;
-import com.liteworkflow.engine.persistence.task.entity.Task;
+import com.liteworkflow.engine.persistence.entity.Task;
 
 /**
  * 委托代理拦截器

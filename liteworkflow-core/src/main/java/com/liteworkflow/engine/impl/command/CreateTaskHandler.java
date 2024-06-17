@@ -11,7 +11,7 @@ import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.impl.ServiceContext;
 import com.liteworkflow.engine.interceptor.SnakerInterceptor;
 import com.liteworkflow.engine.model.TaskModel;
-import com.liteworkflow.engine.persistence.task.entity.Task;
+import com.liteworkflow.engine.persistence.entity.Task;
 
 /**
  * 任务创建操作的处理器

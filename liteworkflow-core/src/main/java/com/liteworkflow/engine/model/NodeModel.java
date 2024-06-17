@@ -68,7 +68,7 @@ public abstract class NodeModel extends BaseModel implements Action
 	 * 
 	 * @param execution 执行对象
 	 */
-	protected abstract void exec(Execution execution);
+	protected abstract void doExecute(Execution execution);
 
 	/**
 	 * 对执行逻辑增加前置、后置拦截处理
@@ -78,7 +78,7 @@ public abstract class NodeModel extends BaseModel implements Action
 	public void execute(Execution execution)
 	{
 		intercept(preInterceptorList, execution);
-		exec(execution);
+		doExecute(execution);
 		intercept(postInterceptorList, execution);
 	}
 

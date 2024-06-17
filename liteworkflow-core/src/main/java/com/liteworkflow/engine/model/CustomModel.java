@@ -50,7 +50,7 @@ public class CustomModel extends WorkModel
 	 */
 	private Object invokeObject;
 
-	public void exec(Execution execution)
+	public void doExecute(Execution execution)
 	{
 		if (invokeObject == null)
 		{

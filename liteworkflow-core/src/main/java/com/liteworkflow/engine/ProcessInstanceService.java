@@ -3,9 +3,9 @@ package com.liteworkflow.engine;
 import java.util.List;
 import java.util.Map;
 
-import com.liteworkflow.engine.persistence.order.entity.ProcessInstance;
-import com.liteworkflow.engine.persistence.order.request.ProcessInstPageRequest;
-import com.liteworkflow.engine.persistence.process.entity.ProcessDefinition;
+import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
+import com.liteworkflow.engine.persistence.entity.ProcessInstance;
+import com.liteworkflow.engine.persistence.request.ProcessInstPageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
@@ -19,10 +19,10 @@ public interface ProcessInstanceService
 	/**
 	 * 根据流程实例ID获取流程实例对象
 	 * 
-	 * @param orderId 流程实例id
+	 * @param instanceId 流程实例id
 	 * @return Order 流程实例对象
 	 */
-	ProcessInstance getOrder(String orderId);
+	ProcessInstance getOrder(String instanceId);
 
 	/**
 	 * 根据filter查询流程实例列表
@@ -67,50 +67,50 @@ public interface ProcessInstanceService
 	/**
 	 * 向指定实例id添加全局变量数据
 	 * 
-	 * @param orderId 实例id
+	 * @param instanceId 实例id
 	 * @param args 变量数据
 	 */
-	void addVariable(String orderId, Map<String, Object> args);
+	void addVariable(String instanceId, Map<String, Object> args);
 
 	/**
 	 * 创建抄送实例
 	 * 
-	 * @param orderId 流程实例id
+	 * @param instanceId 流程实例id
 	 * @param actorIds 参与者id
 	 * @param creator 创建人id
 	 * @since 1.5
 	 */
-	void createCCOrder(String orderId, String creator, String... actorIds);
+	void createCCOrder(String instanceId, String creator, String... actorIds);
 
 	/**
 	 * 流程实例正常完成
 	 * 
-	 * @param orderId 流程实例id
+	 * @param instanceId 流程实例id
 	 */
-	void complete(String orderId);
+	void complete(String instanceId);
 
 	/**
 	 * 流程实例强制终止
 	 * 
-	 * @param orderId 流程实例id
+	 * @param instanceId 流程实例id
 	 */
-	void terminate(String orderId);
+	void terminate(String instanceId);
 
 	/**
 	 * 流程实例强制终止
 	 * 
-	 * @param orderId 流程实例id
+	 * @param instanceId 流程实例id
 	 * @param operator 处理人员
 	 */
-	void terminate(String orderId, String operator);
+	void terminate(String instanceId, String operator);
 
 	/**
 	 * 唤醒历史流程实例
 	 * 
-	 * @param orderId 流程实例id
+	 * @param instanceId 流程实例id
 	 * @return 活动实例对象
 	 */
-	ProcessInstance resume(String orderId);
+	ProcessInstance resume(String instanceId);
 
 	/**
 	 * 更新流程实例
@@ -122,18 +122,18 @@ public interface ProcessInstanceService
 	/**
 	 * 更新抄送记录为已阅
 	 * 
-	 * @param orderId 流程实例id
+	 * @param instanceId 流程实例id
 	 * @param actorIds 参与者id
 	 */
-	void updateCCStatus(String orderId, String... actorIds);
+	void updateCCStatus(String instanceId, String... actorIds);
 
 	/**
 	 * 删除抄送记录
 	 * 
-	 * @param orderId 流程实例id
+	 * @param instanceId 流程实例id
 	 * @param actorId 参与者id
 	 */
-	void deleteCCOrder(String orderId, String actorId);
+	void deleteCCOrder(String instanceId, String actorId);
 
 	/**
 	 * 谨慎使用.数据恢复非常痛苦，你懂得~~

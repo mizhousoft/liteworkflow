@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.interceptor.SnakerInterceptor;
-import com.liteworkflow.engine.persistence.task.entity.Task;
+import com.liteworkflow.engine.persistence.entity.Task;
 
 /**
  * @author yuqs

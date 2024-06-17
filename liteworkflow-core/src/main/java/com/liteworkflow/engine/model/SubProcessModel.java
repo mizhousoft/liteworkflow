@@ -30,7 +30,7 @@ public class SubProcessModel extends WorkModel
 	 */
 	private ProcessModel subProcess;
 
-	protected void exec(Execution execution)
+	protected void doExecute(Execution execution)
 	{
 		runOutTransition(execution);
 	}

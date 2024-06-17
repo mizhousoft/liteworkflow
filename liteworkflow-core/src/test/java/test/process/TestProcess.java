@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.helper.StreamHelper;
-import com.liteworkflow.engine.persistence.process.entity.ProcessDefinition;
+import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 
 import test.TestSpring;
 

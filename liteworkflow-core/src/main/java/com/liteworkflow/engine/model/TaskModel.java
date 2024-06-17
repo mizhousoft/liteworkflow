@@ -124,7 +124,7 @@ public class TaskModel extends WorkModel
 	 */
 	private List<FieldModel> fields = null;
 
-	protected void exec(Execution execution)
+	protected void doExecute(Execution execution)
 	{
 		if (performType == null || performType.equalsIgnoreCase(PERFORMTYPE_ANY))
 		{

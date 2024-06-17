@@ -9,10 +9,10 @@ import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.SubProcessModel;
 import com.liteworkflow.engine.model.TaskModel;
-import com.liteworkflow.engine.persistence.order.entity.ProcessInstance;
-import com.liteworkflow.engine.persistence.order.request.ProcessInstPageRequest;
-import com.liteworkflow.engine.persistence.task.entity.Task;
-import com.liteworkflow.engine.persistence.task.request.TaskPageRequest;
+import com.liteworkflow.engine.persistence.entity.ProcessInstance;
+import com.liteworkflow.engine.persistence.entity.Task;
+import com.liteworkflow.engine.persistence.request.ProcessInstPageRequest;
+import com.liteworkflow.engine.persistence.request.TaskPageRequest;
 
 /**
  * 合并处理的抽象处理器
@@ -32,7 +32,7 @@ public abstract class AbstractMergeHandler implements IHandler
 		ProcessInstanceService processInstanceService = execution.getEngineConfiguration().getProcessInstanceService();
 		TaskService taskService = execution.getEngineConfiguration().getTaskService();
 
-		ProcessInstance order = execution.getOrder();
+		ProcessInstance instance = execution.getInstance();
 		ProcessModel model = execution.getModel();
 		String[] activeNodes = findActiveNodes();
 		boolean isSubProcessMerged = false;
@@ -41,7 +41,7 @@ public abstract class AbstractMergeHandler implements IHandler
 		if (model.containsNodeNames(SubProcessModel.class, activeNodes))
 		{
 			ProcessInstPageRequest request = new ProcessInstPageRequest();
-			request.setParentId(order.getId());
+			request.setParentId(instance.getId());
 			request.setExcludedIds(new String[] { execution.getChildOrderId() });
 			List<ProcessInstance> orders = processInstanceService.getActiveOrders(request);
 			// 如果所有子流程都已完成，则表示可合并
@@ -57,7 +57,7 @@ public abstract class AbstractMergeHandler implements IHandler
 		if (isSubProcessMerged && model.containsNodeNames(TaskModel.class, activeNodes))
 		{
 			TaskPageRequest request = new TaskPageRequest();
-			request.setOrderId(order.getId());
+			request.setInstanceId(instance.getId());
 			request.setExcludedIds(new String[] { execution.getTask().getId() });
 			request.setNames(activeNodes);
 

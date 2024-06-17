@@ -6,9 +6,9 @@ import com.liteworkflow.engine.Constants;
 import com.liteworkflow.engine.ManagerService;
 import com.liteworkflow.engine.helper.DateHelper;
 import com.liteworkflow.engine.helper.StringHelper;
-import com.liteworkflow.engine.persistence.task.entity.Surrogate;
-import com.liteworkflow.engine.persistence.task.request.SurrogateFindRequest;
-import com.liteworkflow.engine.persistence.task.service.SurrogateEntityService;
+import com.liteworkflow.engine.persistence.entity.Surrogate;
+import com.liteworkflow.engine.persistence.request.SurrogateFindRequest;
+import com.liteworkflow.engine.persistence.service.SurrogateEntityService;
 
 /**
  * 管理服务类

@@ -7,9 +7,9 @@ import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.model.CustomModel;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.TaskModel;
-import com.liteworkflow.engine.persistence.task.entity.HistoryTask;
-import com.liteworkflow.engine.persistence.task.entity.Task;
-import com.liteworkflow.engine.persistence.task.request.TaskPageRequest;
+import com.liteworkflow.engine.persistence.entity.HistoryTask;
+import com.liteworkflow.engine.persistence.entity.Task;
+import com.liteworkflow.engine.persistence.request.TaskPageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
@@ -71,13 +71,13 @@ public interface TaskService
 	/**
 	 * 根据流程实例ID，操作人ID，参数列表按照节点模型model创建新的自由任务
 	 * 
-	 * @param orderId 流程实例id
+	 * @param instanceId 流程实例id
 	 * @param operator 操作人id
 	 * @param args 参数列表
 	 * @param model 节点模型
 	 * @return List<Task> 任务集合
 	 */
-	public List<Task> createFreeTask(String orderId, String operator, Map<String, Object> args, TaskModel model);
+	public List<Task> createFreeTask(String instanceId, String operator, Map<String, Object> args, TaskModel model);
 
 	/**
 	 * 根据任务ID获取任务对象
@@ -101,7 +101,7 @@ public interface TaskService
 	 * @param filter 查询过滤器
 	 * @return List<Task> 活动任务集合
 	 */
-	List<Task> getActiveTasks(String orderId);
+	List<Task> getActiveTasks(String instanceId);
 
 	/**
 	 * 根据filter查询活动任务

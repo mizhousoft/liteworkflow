@@ -12,11 +12,11 @@ import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.RuntimeService;
 import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.model.StartModel;
-import com.liteworkflow.engine.persistence.order.entity.ProcessInstance;
-import com.liteworkflow.engine.persistence.process.entity.ProcessDefinition;
-import com.liteworkflow.engine.persistence.workitem.entity.WorkItem;
-import com.liteworkflow.engine.persistence.workitem.request.WorkItemPageRequest;
-import com.liteworkflow.engine.persistence.workitem.service.WorkItemEntityService;
+import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
+import com.liteworkflow.engine.persistence.entity.ProcessInstance;
+import com.liteworkflow.engine.persistence.entity.WorkItem;
+import com.liteworkflow.engine.persistence.request.WorkItemPageRequest;
+import com.liteworkflow.engine.persistence.service.WorkItemEntityService;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
@@ -149,7 +149,7 @@ public class RuntimeServiceImpl implements RuntimeService
 			start.execute(execution);
 		}
 
-		return execution.getOrder();
+		return execution.getInstance();
 	}
 
 	/**
@@ -162,10 +162,16 @@ public class RuntimeServiceImpl implements RuntimeService
 		StartModel start = process.getModel().getStart();
 		AssertHelper.notNull(start, "流程定义[id=" + process.getId() + "]没有开始节点");
 
-		Execution current = execute(process, execution.getOperator(), execution.getArgs(), execution.getParentOrder().getId(),
+		Execution current = execute(process, execution.getOperator(), execution.getArgs(), execution.getParentInstance().getId(),
 		        execution.getParentNodeName());
 		start.execute(current);
-		return current.getOrder();
+		return current.getInstance();
+	}
+
+	@Override
+	public Page<WorkItem> getWorkItems(WorkItemPageRequest request)
+	{
+		return workItemEntityService.queryPageData(request);
 	}
 
 	/**
@@ -187,11 +193,5 @@ public class RuntimeServiceImpl implements RuntimeService
 		Execution current = new Execution(configuration, process, order, args);
 		current.setOperator(operator);
 		return current;
-	}
-
-	@Override
-	public Page<WorkItem> getWorkItems(WorkItemPageRequest request)
-	{
-		return workItemEntityService.queryPageData(request);
 	}
 }

@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.liteworkflow.engine.Completion;
-import com.liteworkflow.engine.persistence.order.entity.HistoricProcessInstance;
-import com.liteworkflow.engine.persistence.task.entity.HistoryTask;
+import com.liteworkflow.engine.persistence.entity.HistoricProcessInstance;
+import com.liteworkflow.engine.persistence.entity.HistoryTask;
 
 /**
  * 默认的任务、实例完成时触发的动作

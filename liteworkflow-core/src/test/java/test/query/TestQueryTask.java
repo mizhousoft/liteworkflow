@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.engine.persistence.task.request.TaskPageRequest;
-import com.liteworkflow.engine.persistence.workitem.request.WorkItemPageRequest;
+import com.liteworkflow.engine.persistence.request.TaskPageRequest;
+import com.liteworkflow.engine.persistence.request.WorkItemPageRequest;
 
 import test.TestSpring;
 
@@ -31,7 +31,7 @@ public class TestQueryTask extends TestSpring
 
 		WorkItemPageRequest rrequest = new WorkItemPageRequest();
 		rrequest.setOperators(new String[] { "1" });
-		rrequest.setOrderId("36c0228fcfa740d5b62682dc954eaecd");
+		rrequest.setInstanceId("36c0228fcfa740d5b62682dc954eaecd");
 
 		System.out.println(engine.getRuntimeService().getWorkItems(rrequest));
 	}
