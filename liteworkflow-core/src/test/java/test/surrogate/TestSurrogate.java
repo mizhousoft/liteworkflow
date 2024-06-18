@@ -32,7 +32,7 @@ public class TestSurrogate extends TestSpring
 	{
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("task1.operator", new String[] { "test" });
-		ProcessInstance order = engine.getRuntimeService().startInstanceByName("surrogate", 0, "2", args);
-		System.out.println("order=" + order);
+		ProcessInstance instance = engine.getRuntimeService().startInstanceByName("surrogate", 0, "2", args);
+		System.out.println("instance=" + instance);
 	}
 }

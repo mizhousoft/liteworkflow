@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.engine.persistence.request.CCOrderPageRequest;
+import com.liteworkflow.engine.persistence.request.CCInstancePageRequest;
 
 import test.TestSpring;
 
@@ -14,7 +14,7 @@ import test.TestSpring;
  * @author yuqs
  * @since 1.0
  */
-public class TestQueryCCOrder extends TestSpring
+public class TestQueryCCInstance extends TestSpring
 {
 	@BeforeEach
 	public void before()
@@ -26,7 +26,7 @@ public class TestQueryCCOrder extends TestSpring
 	@Test
 	public void test()
 	{
-		CCOrderPageRequest request = new CCOrderPageRequest();
+		CCInstancePageRequest request = new CCInstancePageRequest();
 		request.setState(1);
 
 		System.out.println(engine.getHistoryService().getCCWorks(request));

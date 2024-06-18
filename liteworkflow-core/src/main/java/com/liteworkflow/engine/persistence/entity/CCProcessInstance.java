@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author yuqs
  * @since 1.5
  */
-public class CCOrder implements Serializable
+public class CCProcessInstance implements Serializable
 {
 	private static final long serialVersionUID = -7596174225209412843L;
 

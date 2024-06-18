@@ -30,9 +30,9 @@ public class TestLocalInterceptor extends TestSpring
 	@Test
 	public void test()
 	{
-		ProcessInstance order = engine.getRuntimeService().startInstanceById(processId, "2");
-		System.out.println("order=" + order);
-		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
+		ProcessInstance instance = engine.getRuntimeService().startInstanceById(processId, "2");
+		System.out.println("instance=" + instance);
+		List<Task> tasks = engine.getTaskService().getActiveTasks(instance.getId());
 		for (Task task : tasks)
 		{
 			engine.getTaskService().executeTask(task.getId(), "1");

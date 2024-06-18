@@ -30,9 +30,9 @@ public class TestTransfer extends TestSpring
 	@Test
 	public void test()
 	{
-		ProcessInstance order = engine.getRuntimeService().startInstanceByName("transfer", 0);
-		System.out.println("order=" + order);
-		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
+		ProcessInstance instance = engine.getRuntimeService().startInstanceByName("transfer", 0);
+		System.out.println("instance=" + instance);
+		List<Task> tasks = engine.getTaskService().getActiveTasks(instance.getId());
 		for (Task task : tasks)
 		{
 			engine.getTaskService().createNewTask(task.getId(), 0, "test");

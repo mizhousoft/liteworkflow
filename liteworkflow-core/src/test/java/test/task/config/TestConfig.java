@@ -27,7 +27,7 @@ public class TestConfig extends TestSpring
 	@Test
 	public void test()
 	{
-		ProcessInstance order = engine.getRuntimeService().startInstanceByName("config", 0, "2", null);
-		System.out.println("order=" + order);
+		ProcessInstance instance = engine.getRuntimeService().startInstanceByName("config", 0, "2", null);
+		System.out.println("instance=" + instance);
 	}
 }

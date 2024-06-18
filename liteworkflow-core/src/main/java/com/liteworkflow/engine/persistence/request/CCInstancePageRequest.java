@@ -4,11 +4,11 @@ import com.liteworkflow.engine.Constants;
 import com.mizhousoft.commons.data.domain.PageRequest;
 
 /**
- * CCOrderPageRequest
+ * CCInstancePageRequest
  *
  * @version
  */
-public class CCOrderPageRequest extends PageRequest
+public class CCInstancePageRequest extends PageRequest
 {
 	private static final long serialVersionUID = -2630784391027545999L;
 

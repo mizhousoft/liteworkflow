@@ -14,7 +14,7 @@ import test.TestSpring;
  * @author yuqs
  * @since 1.0
  */
-public class TestQueryHistOrder extends TestSpring
+public class TestQueryHistInstance extends TestSpring
 {
 	@BeforeEach
 	public void before()

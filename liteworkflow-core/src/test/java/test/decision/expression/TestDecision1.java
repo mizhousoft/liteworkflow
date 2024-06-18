@@ -37,7 +37,7 @@ public class TestDecision1 extends TestSpring
 		args.put("task2.operator", new String[] { "1" });
 		// args.put("task3.operator", new String[]{"1","2"});
 		args.put("content", "toTask2");
-		ProcessInstance order = engine.getRuntimeService().startInstanceById(processId, "2", args);
-		System.out.println(order);
+		ProcessInstance instance = engine.getRuntimeService().startInstanceById(processId, "2", args);
+		System.out.println(instance);
 	}
 }

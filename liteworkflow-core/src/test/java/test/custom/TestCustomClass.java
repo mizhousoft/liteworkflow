@@ -34,9 +34,9 @@ public class TestCustomClass extends TestSpring
 	{
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("msg", "custom test");
-		ProcessInstance order = engine.getRuntimeService().startInstanceById(processId, null, args);
-		System.out.println("order=" + order);
-		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
+		ProcessInstance instance = engine.getRuntimeService().startInstanceById(processId, null, args);
+		System.out.println("instance=" + instance);
+		List<Task> tasks = engine.getTaskService().getActiveTasks(instance.getId());
 		for (Task task : tasks)
 		{
 			engine.getTaskService().executeTask(task.getId(), null, args);

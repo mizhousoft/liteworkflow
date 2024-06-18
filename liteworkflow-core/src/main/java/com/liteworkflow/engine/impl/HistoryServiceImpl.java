@@ -7,11 +7,11 @@ import com.liteworkflow.engine.persistence.entity.HistoricProcessInstance;
 import com.liteworkflow.engine.persistence.entity.HistoricTask;
 import com.liteworkflow.engine.persistence.entity.HistoricTaskActor;
 import com.liteworkflow.engine.persistence.entity.WorkItem;
-import com.liteworkflow.engine.persistence.request.CCOrderPageRequest;
+import com.liteworkflow.engine.persistence.request.CCInstancePageRequest;
 import com.liteworkflow.engine.persistence.request.HistoricProcessInstPageRequest;
 import com.liteworkflow.engine.persistence.request.TaskPageRequest;
 import com.liteworkflow.engine.persistence.request.WorkItemPageRequest;
-import com.liteworkflow.engine.persistence.service.CCOrderEntityService;
+import com.liteworkflow.engine.persistence.service.CCProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricTaskActorEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricTaskEntityService;
@@ -29,7 +29,7 @@ public class HistoryServiceImpl implements HistoryService
 
 	private HistoricProcessInstanceEntityService historicProcessInstanceEntityService;
 
-	private CCOrderEntityService ccOrderEntityService;
+	private CCProcessInstanceEntityService ccProcessInstanceEntityService;
 
 	private WorkItemEntityService workItemEntityService;
 
@@ -87,9 +87,9 @@ public class HistoryServiceImpl implements HistoryService
 	}
 
 	@Override
-	public Page<HistoricProcessInstance> getCCWorks(CCOrderPageRequest request)
+	public Page<HistoricProcessInstance> getCCWorks(CCInstancePageRequest request)
 	{
-		return ccOrderEntityService.queryPageData(request);
+		return ccProcessInstanceEntityService.queryPageData(request);
 	}
 
 	@Override
@@ -119,13 +119,13 @@ public class HistoryServiceImpl implements HistoryService
 	}
 
 	/**
-	 * 设置ccOrderEntityService
+	 * 设置ccProcessInstanceEntityService
 	 * 
-	 * @param ccOrderEntityService
+	 * @param ccProcessInstanceEntityService
 	 */
-	public void setCcOrderEntityService(CCOrderEntityService ccOrderEntityService)
+	public void setCcProcessInstanceEntityService(CCProcessInstanceEntityService ccProcessInstanceEntityService)
 	{
-		this.ccOrderEntityService = ccOrderEntityService;
+		this.ccProcessInstanceEntityService = ccProcessInstanceEntityService;
 	}
 
 	/**

@@ -30,9 +30,9 @@ public class TestCustomHandler extends TestSpring
 	@Test
 	public void test()
 	{
-		ProcessInstance order = engine.getRuntimeService().startInstanceById(processId);
-		System.out.println("order=" + order);
-		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
+		ProcessInstance instance = engine.getRuntimeService().startInstanceById(processId);
+		System.out.println("instance=" + instance);
+		List<Task> tasks = engine.getTaskService().getActiveTasks(instance.getId());
 		for (Task task : tasks)
 		{
 			engine.getTaskService().executeTask(task.getId());

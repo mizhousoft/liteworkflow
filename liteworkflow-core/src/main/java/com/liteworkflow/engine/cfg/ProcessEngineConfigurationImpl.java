@@ -40,7 +40,7 @@ import com.liteworkflow.engine.impl.RuntimeServiceImpl;
 import com.liteworkflow.engine.impl.ServiceContext;
 import com.liteworkflow.engine.impl.TaskServiceImpl;
 import com.liteworkflow.engine.impl.context.SpringContext;
-import com.liteworkflow.engine.persistence.mapper.CCOrderMapper;
+import com.liteworkflow.engine.persistence.mapper.CCProcessInstanceMapper;
 import com.liteworkflow.engine.persistence.mapper.HistoricProcessInstanceMapper;
 import com.liteworkflow.engine.persistence.mapper.HistoricTaskActorMapper;
 import com.liteworkflow.engine.persistence.mapper.HistoricTaskMapper;
@@ -50,7 +50,7 @@ import com.liteworkflow.engine.persistence.mapper.SurrogateMapper;
 import com.liteworkflow.engine.persistence.mapper.TaskActorMapper;
 import com.liteworkflow.engine.persistence.mapper.TaskMapper;
 import com.liteworkflow.engine.persistence.mapper.WorkItemMapper;
-import com.liteworkflow.engine.persistence.service.CCOrderEntityService;
+import com.liteworkflow.engine.persistence.service.CCProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricTaskActorEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricTaskEntityService;
@@ -60,7 +60,7 @@ import com.liteworkflow.engine.persistence.service.SurrogateEntityService;
 import com.liteworkflow.engine.persistence.service.TaskActorEntityService;
 import com.liteworkflow.engine.persistence.service.TaskEntityService;
 import com.liteworkflow.engine.persistence.service.WorkItemEntityService;
-import com.liteworkflow.engine.persistence.service.impl.CCOrderEntityServiceImpl;
+import com.liteworkflow.engine.persistence.service.impl.CCProcessInstanceEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.HistoricProcessInstanceEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.HistoricTaskActorEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.HistoricTaskEntityServiceImpl;
@@ -222,7 +222,7 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 
 		HistoricProcessInstanceEntityService historicProcessInstanceEntityService = initHistoricProcessInstanceEntityService(
 		        sqlSessionFactory);
-		CCOrderEntityService ccOrderEntityService = initCCOrderEntityService(sqlSessionFactory);
+		CCProcessInstanceEntityService ccProcessInstanceEntityService = initCCProcessInstanceEntityService(sqlSessionFactory);
 		ProcessInstanceEntityService processInstanceEntityService = initProcessInstanceEntityService(sqlSessionFactory,
 		        historicProcessInstanceEntityService);
 
@@ -236,7 +236,7 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		this.repositoryService = repositoryService;
 
 		HistoryServiceImpl historyService = new HistoryServiceImpl();
-		historyService.setCcOrderEntityService(ccOrderEntityService);
+		historyService.setCcProcessInstanceEntityService(ccProcessInstanceEntityService);
 		historyService.setHistoricProcessInstanceEntityService(historicProcessInstanceEntityService);
 		historyService.setHistoricTaskEntityService(historicTaskEntityService);
 		historyService.setHistoricTaskActorEntityService(historicTaskActorEntityService);
@@ -244,7 +244,7 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		this.historyService = historyService;
 
 		ProcessInstanceServiceImpl processInstanceService = new ProcessInstanceServiceImpl();
-		processInstanceService.setCcOrderEntityService(ccOrderEntityService);
+		processInstanceService.setCcProcessInstanceEntityService(ccProcessInstanceEntityService);
 		processInstanceService.setHistoricProcessInstanceEntityService(historicProcessInstanceEntityService);
 		processInstanceService.setHistoricTaskEntityService(historicTaskEntityService);
 		processInstanceService.setProcessInstanceEntityService(processInstanceEntityService);
@@ -381,19 +381,19 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		return historicTaskActorEntityService;
 	}
 
-	private CCOrderEntityService initCCOrderEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
+	private CCProcessInstanceEntityService initCCProcessInstanceEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
 	{
-		MapperFactoryBean<CCOrderMapper> factoryBean = new MapperFactoryBean<CCOrderMapper>();
-		factoryBean.setMapperInterface(CCOrderMapper.class);
+		MapperFactoryBean<CCProcessInstanceMapper> factoryBean = new MapperFactoryBean<CCProcessInstanceMapper>();
+		factoryBean.setMapperInterface(CCProcessInstanceMapper.class);
 		factoryBean.setAddToConfig(true);
 		factoryBean.setSqlSessionFactory(sqlSessionFactory);
 		factoryBean.afterPropertiesSet();
-		CCOrderMapper ccOrderMapper = (CCOrderMapper) factoryBean.getObject();
+		CCProcessInstanceMapper ccProcessInstanceMapper = (CCProcessInstanceMapper) factoryBean.getObject();
 
-		CCOrderEntityServiceImpl ccOrderEntityService = new CCOrderEntityServiceImpl();
-		ccOrderEntityService.setCcOrderMapper(ccOrderMapper);
+		CCProcessInstanceEntityServiceImpl ccProcessInstanceEntityService = new CCProcessInstanceEntityServiceImpl();
+		ccProcessInstanceEntityService.setCcProcessInstanceMapper(ccProcessInstanceMapper);
 
-		return ccOrderEntityService;
+		return ccProcessInstanceEntityService;
 	}
 
 	private SurrogateEntityService initSurrogateEntityService(SqlSessionFactory sqlSessionFactory) throws Exception

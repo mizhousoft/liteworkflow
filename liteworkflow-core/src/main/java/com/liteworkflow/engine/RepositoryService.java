@@ -120,7 +120,7 @@ public interface RepositoryService
 	 * 2.wf_process_instance,wf_hist_process_instance
 	 * 3.wf_task,wf_hist_task
 	 * 4.wf_task_actor,wf_hist_task_actor
-	 * 5.wf_cc_order
+	 * 5.wf_cc_process_instance
 	 * 
 	 * @param id
 	 */

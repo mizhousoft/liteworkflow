@@ -30,9 +30,9 @@ public class TestAidant extends TestSpring
 	@Test
 	public void test()
 	{
-		ProcessInstance order = engine.getRuntimeService().startInstanceByName("aidant", 0);
-		System.out.println("order=" + order);
-		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
+		ProcessInstance instance = engine.getRuntimeService().startInstanceByName("aidant", 0);
+		System.out.println("instance=" + instance);
+		List<Task> tasks = engine.getTaskService().getActiveTasks(instance.getId());
 		for (Task task : tasks)
 		{
 			// engine.executeTask(task.getId());

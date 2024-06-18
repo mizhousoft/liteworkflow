@@ -5,7 +5,7 @@ import java.util.List;
 import com.liteworkflow.engine.persistence.entity.HistoricProcessInstance;
 import com.liteworkflow.engine.persistence.entity.HistoricTask;
 import com.liteworkflow.engine.persistence.entity.WorkItem;
-import com.liteworkflow.engine.persistence.request.CCOrderPageRequest;
+import com.liteworkflow.engine.persistence.request.CCInstancePageRequest;
 import com.liteworkflow.engine.persistence.request.HistoricProcessInstPageRequest;
 import com.liteworkflow.engine.persistence.request.TaskPageRequest;
 import com.liteworkflow.engine.persistence.request.WorkItemPageRequest;
@@ -76,13 +76,13 @@ public interface HistoryService
 	List<HistoricTask> getHistoricTasks(TaskPageRequest request);
 
 	/**
-	 * 根据filter分页查询抄送工作项（包含process、order）
+	 * 根据filter分页查询抄送工作项（包含process、instance）
 	 * 
 	 * @param page 分页对象
 	 * @param filter 查询过滤器
 	 * @return List<WorkItem> 抄送工作项集合
 	 */
-	Page<HistoricProcessInstance> getCCWorks(CCOrderPageRequest request);
+	Page<HistoricProcessInstance> getCCWorks(CCInstancePageRequest request);
 
 	/**
 	 * 根据filter分页查询已完成的历史任务项

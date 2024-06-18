@@ -80,7 +80,7 @@ public interface ProcessInstanceService
 	 * @param creator 创建人id
 	 * @since 1.5
 	 */
-	void createCCOrder(String instanceId, String creator, String... actorIds);
+	void createCCInstance(String instanceId, String creator, String... actorIds);
 
 	/**
 	 * 流程实例正常完成
@@ -133,7 +133,7 @@ public interface ProcessInstanceService
 	 * @param instanceId 流程实例id
 	 * @param actorId 参与者id
 	 */
-	void deleteCCOrder(String instanceId, String actorId);
+	void deleteCCInstance(String instanceId, String actorId);
 
 	/**
 	 * 谨慎使用.数据恢复非常痛苦，你懂得~~
@@ -141,7 +141,7 @@ public interface ProcessInstanceService
 	 * 1.wf_process_instance,wf_hist_process_instance
 	 * 2.wf_task,wf_hist_task
 	 * 3.wf_task_actor,wf_hist_task_actor
-	 * 4.wf_cc_order
+	 * 4.wf_cc_process_instance
 	 * 
 	 * @param id
 	 */

@@ -33,7 +33,7 @@ public class HistoricProcessInstance implements Serializable
 	/**
 	 * 流程实例状态（0：结束；1：活动）
 	 */
-	private Integer orderState;
+	private Integer state;
 
 	/**
 	 * 流程实例创建者ID
@@ -80,17 +80,17 @@ public class HistoricProcessInstance implements Serializable
 
 	}
 
-	public HistoricProcessInstance(ProcessInstance order)
+	public HistoricProcessInstance(ProcessInstance instance)
 	{
-		this.id = order.getId();
-		this.processId = order.getProcessId();
-		this.createTime = order.getCreateTime();
-		this.expireTime = order.getExpireTime();
-		this.creator = order.getCreator();
-		this.parentId = order.getParentId();
-		this.priority = order.getPriority();
-		this.orderNo = order.getOrderNo();
-		this.variable = order.getVariable();
+		this.id = instance.getId();
+		this.processId = instance.getProcessId();
+		this.createTime = instance.getCreateTime();
+		this.expireTime = instance.getExpireTime();
+		this.creator = instance.getCreator();
+		this.parentId = instance.getParentId();
+		this.priority = instance.getPriority();
+		this.orderNo = instance.getOrderNo();
+		this.variable = instance.getVariable();
 	}
 
 	/**
@@ -126,14 +126,24 @@ public class HistoricProcessInstance implements Serializable
 		this.processId = processId;
 	}
 
-	public Integer getOrderState()
+	/**
+	 * 获取state
+	 * 
+	 * @return
+	 */
+	public Integer getState()
 	{
-		return orderState;
+		return state;
 	}
 
-	public void setOrderState(Integer orderState)
+	/**
+	 * 设置state
+	 * 
+	 * @param state
+	 */
+	public void setState(Integer state)
 	{
-		this.orderState = orderState;
+		this.state = state;
 	}
 
 	public String getCreator()

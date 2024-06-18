@@ -54,7 +54,7 @@ public class ProcessInstanceEntityServiceImpl implements ProcessInstanceEntitySe
 	public void saveInstanceAndHistoric(ProcessInstance instance)
 	{
 		HistoricProcessInstance historicInstance = new HistoricProcessInstance(instance);
-		historicInstance.setOrderState(STATE_ACTIVE);
+		historicInstance.setState(STATE_ACTIVE);
 		processInstanceMapper.save(instance);
 		historicProcessInstanceEntityService.save(historicInstance);
 	}
@@ -83,7 +83,7 @@ public class ProcessInstanceEntityServiceImpl implements ProcessInstanceEntitySe
 	@Override
 	public ProcessInstance getInstance(String instanceId)
 	{
-		return processInstanceMapper.getOrder(instanceId);
+		return processInstanceMapper.getInstance(instanceId);
 	}
 
 	/**

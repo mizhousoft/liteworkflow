@@ -38,10 +38,10 @@ public class TestSubProcess1 extends TestSpring
 	{
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("task1.operator", new String[] { "1" });
-		ProcessInstance order = engine.getRuntimeService().startInstanceById(processId, "2", args);
-		System.out.println("************************" + order);
+		ProcessInstance instance = engine.getRuntimeService().startInstanceById(processId, "2", args);
+		System.out.println("************************" + instance);
 
-		List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
+		List<Task> tasks = engine.getTaskService().getActiveTasks(instance.getId());
 		for (Task task : tasks)
 		{
 			System.out.println("************************begin:::::" + task);

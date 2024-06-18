@@ -155,12 +155,12 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	@Override
 	public List<Task> createFreeTask(String instanceId, String operator, Map<String, Object> args, TaskModel model)
 	{
-		ProcessInstance order = processInstanceService.getInstance(instanceId);
-		AssertHelper.notNull(order, "指定的流程实例[id=" + instanceId + "]已完成或不存在");
-		order.setLastUpdator(operator);
-		order.setLastUpdateTime(DateHelper.getTime());
-		ProcessDefinition process = repositoryService.getProcessById(order.getProcessId());
-		Execution execution = new Execution(engineConfiguration, process, order, args);
+		ProcessInstance instance = processInstanceService.getInstance(instanceId);
+		AssertHelper.notNull(instance, "指定的流程实例[id=" + instanceId + "]已完成或不存在");
+		instance.setLastUpdator(operator);
+		instance.setLastUpdateTime(DateHelper.getTime());
+		ProcessDefinition process = repositoryService.getProcessById(instance.getProcessId());
+		Execution execution = new Execution(engineConfiguration, process, instance, args);
 		execution.setOperator(operator);
 		return createTask(model, execution);
 	}
@@ -615,9 +615,9 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	{
 		Task task = taskEntityService.getTask(taskId);
 
-		ProcessInstance order = processInstanceEntityService.getInstance(task.getInstanceId());
+		ProcessInstance instance = processInstanceEntityService.getInstance(task.getInstanceId());
 
-		ProcessDefinition process = engineConfiguration.getRepositoryService().getProcessById(order.getProcessId());
+		ProcessDefinition process = engineConfiguration.getRepositoryService().getProcessById(instance.getProcessId());
 		ProcessModel model = process.getModel();
 		NodeModel nodeModel = model.getNode(task.getTaskName());
 		AssertHelper.notNull(nodeModel, "任务id无法找到节点模型.");

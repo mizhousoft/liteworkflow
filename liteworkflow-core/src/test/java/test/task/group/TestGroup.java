@@ -40,9 +40,9 @@ public class TestGroup extends TestSpring
 		{
 			Map<String, Object> args = new HashMap<String, Object>();
 			args.put("task1.operator", new String[] { "role1" });
-			ProcessInstance order = engine.getRuntimeService().startInstanceByName("group", 0, "2", args);
-			System.out.println("order=" + order);
-			List<Task> tasks = engine.getTaskService().getActiveTasks(order.getId());
+			ProcessInstance instance = engine.getRuntimeService().startInstanceByName("group", 0, "2", args);
+			System.out.println("instance=" + instance);
+			List<Task> tasks = engine.getTaskService().getActiveTasks(instance.getId());
 			for (Task task : tasks)
 			{
 				// 操作人改为test时，角色对应test，会无权处理

@@ -6,7 +6,7 @@
 	<resultMap type="com.liteworkflow.engine.persistence.entity.HistoricProcessInstance" id="HistoricProcessInstanceMap">
 		<id property="id" column="id" />
 		<result property="processId" column="process_Id" />
-		<result property="orderState" column="order_State" />
+		<result property="state" column="state" />
 		<result property="priority" column="priority" />
 		<result property="creator" column="creator" />
 		<result property="createTime" column="create_Time" />
@@ -18,15 +18,15 @@
 	</resultMap>
 	
 	<insert id="save">
-		insert into wf_hist_process_instance (id, process_Id, order_State, creator, create_Time, end_Time, parent_Id, expire_Time,
+		insert into wf_hist_process_instance (id, process_Id, state, creator, create_Time, end_Time, parent_Id, expire_Time,
 		order_No, variable)
-		values (#{id}, #{processId}, #{orderState}, #{creator}, #{createTime}, #{endTime}, #{parentId}, #{expireTime}, 
+		values (#{id}, #{processId}, #{state}, #{creator}, #{createTime}, #{endTime}, #{parentId}, #{expireTime}, 
 		#{orderNo}, #{variable})
 	</insert>
 	
 	<update id="update">
         update wf_hist_process_instance 
-        set order_State = #{orderState}, 
+        set state = #{state}, 
         end_Time = #{endTime}, 
         variable = #{variable} 
         where id = #{id} 
@@ -37,7 +37,7 @@
 	</delete>
 	
 	<select id="getHistoricInstance" parameterType="java.util.Map" resultMap="HistoricProcessInstanceMap">
-		select o.id, o.process_Id, o.order_State, o.priority, o.creator, o.create_Time, o.end_Time, o.parent_Id, 
+		select o.id, o.process_Id, o.state, o.priority, o.creator, o.create_Time, o.end_Time, o.parent_Id, 
 		o.expire_Time, o.order_No, o.variable 
 		from wf_hist_process_instance o 
 		where id = #{instanceId}
@@ -72,7 +72,7 @@
                 and o.parent_Id = #{request.parentId}
        		</if>
        		<if test="request.state != null">
-                and o.order_State = #{request.state}
+                and o.state = #{request.state}
        		</if>
             <if test="request.createTimeStart != null">
                 and o.create_Time &gt;= #{request.createTimeStart}
@@ -87,7 +87,7 @@
 	</select>
 	
 	<select id="findPageData" parameterType="java.util.Map" resultMap="HistoricProcessInstanceMap">
-		select o.id, o.process_Id, o.order_State, o.priority, o.creator, o.create_Time, o.end_Time, o.parent_Id,
+		select o.id, o.process_Id, o.state, o.priority, o.creator, o.create_Time, o.end_Time, o.parent_Id,
 		o.expire_Time, o.order_No, o.variable 
 		from wf_hist_process_instance o left join wf_process p on p.id = o.process_id
 		<where>
@@ -117,7 +117,7 @@
                 and o.parent_Id = #{request.parentId}
        		</if>
        		<if test="request.state != null">
-                and o.order_State = #{request.state}
+                and o.state = #{request.state}
        		</if>
             <if test="request.createTimeStart != null">
                 and o.create_Time &gt;= #{request.createTimeStart}

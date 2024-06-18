@@ -7,7 +7,6 @@
 		<id property="id" column="id" />
 		<result property="parentId" column="parent_Id" />
 		<result property="processId" column="process_Id" />
-		<result property="orderState" column="order_State" />
 		<result property="creator" column="creator" />
 		<result property="createTime" column="create_Time" />
 		<result property="expireTime" column="expire_Time" />
@@ -37,7 +36,7 @@
         where id = #{id} and version = #{version} 
 	</update>
 	
-	<update id="updateOrderVariable">
+	<update id="updateVariable">
         update wf_process 
         set type = #{type}
         where id = #{id} 
@@ -47,7 +46,7 @@
 		delete from wf_process_instance where id = #{id}
 	</delete>
 		
-	<select id="getOrder" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
+	<select id="getInstance" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
 		select o.id, o.process_Id, o.creator, o.create_Time, o.parent_Id, o.parent_Node_Name, o.expire_Time,
 		o.last_Update_Time, o.last_Updator, o.priority, o.order_No, o.variable, o.version 
 		from wf_process_instance o 

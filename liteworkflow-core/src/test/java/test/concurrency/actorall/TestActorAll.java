@@ -32,9 +32,7 @@ public class TestActorAll extends TestSpring
 	{
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("task1.operator", new String[] { "1", "2" });
-		ProcessInstance order = engine.getRuntimeService().startInstanceById(processId, "2", args);
-		System.out.println(order);
-		// Assert.assertEquals(2, tasks.size());
-		// execute(tasks, args);
+		ProcessInstance instance = engine.getRuntimeService().startInstanceById(processId, "2", args);
+		System.out.println(instance);
 	}
 }

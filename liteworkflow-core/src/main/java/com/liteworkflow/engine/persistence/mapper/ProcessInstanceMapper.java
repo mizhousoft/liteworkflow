@@ -4,7 +4,7 @@ import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.mizhousoft.commons.mapper.PageableMapper;
 
 /**
- * OrderMapper
+ * ProcessInstanceMapper
  *
  * @version
  */
@@ -14,14 +14,14 @@ public interface ProcessInstanceMapper extends PageableMapper<ProcessInstance, S
 	 * 根据流程实例id查询实例对象
 	 * 
 	 * @param instanceId 活动流程实例id
-	 * @return Order 活动流程实例对象
+	 * @return ProcessInstance 活动流程实例对象
 	 */
-	ProcessInstance getOrder(String instanceId);
+	ProcessInstance getInstance(String instanceId);
 
 	/**
 	 * 更新实例变量（包括历史实例表）
 	 * 
-	 * @param order 实例对象
+	 * @param instance 实例对象
 	 */
-	void updateOrderVariable(ProcessInstance order);
+	void updateVariable(ProcessInstance instance);
 }
