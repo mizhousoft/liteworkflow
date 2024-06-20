@@ -24,13 +24,14 @@ import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.helper.DateHelper;
 import com.liteworkflow.engine.helper.JsonHelper;
 import com.liteworkflow.engine.helper.StringHelper;
+import com.liteworkflow.engine.impl.executor.ExecutorBuilder;
 import com.liteworkflow.engine.impl.strategy.GeneralAccessStrategy;
-import com.liteworkflow.engine.model.CustomModel;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.TaskModel;
 import com.liteworkflow.engine.model.TaskModel.PerformType;
 import com.liteworkflow.engine.model.TaskModel.TaskType;
+import com.liteworkflow.engine.model.TransitionModel;
 import com.liteworkflow.engine.persistence.entity.HistoricTask;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
@@ -41,7 +42,6 @@ import com.liteworkflow.engine.persistence.service.HistoricTaskEntityService;
 import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.TaskActorEntityService;
 import com.liteworkflow.engine.persistence.service.TaskEntityService;
-import com.liteworkflow.engine.model.TransitionModel;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
@@ -112,7 +112,8 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		{
 			NodeModel nodeModel = model.getNode(execution.getTask().getTaskName());
 			// 将执行对象交给该任务对应的节点模型执行
-			nodeModel.execute(execution);
+			Executor executor = ExecutorBuilder.build(nodeModel);
+			executor.execute(execution, nodeModel);
 		}
 		return execution.getTasks();
 	}
@@ -143,7 +144,8 @@ public class TaskServiceImpl extends AccessService implements TaskService
 			TransitionModel tm = new TransitionModel();
 			tm.setTarget(nodeModel);
 			tm.setEnabled(true);
-			tm.execute(execution);
+			Executor executor = ExecutorBuilder.build(tm);
+			executor.execute(execution, tm);
 		}
 
 		return execution.getTasks();
@@ -309,34 +311,6 @@ public class TaskServiceImpl extends AccessService implements TaskService
 			completion.complete(historicTask);
 		}
 		return task;
-	}
-
-	/**
-	 * 任务历史记录方法
-	 * 
-	 * @param execution 执行对象
-	 * @param model 自定义节点模型
-	 * @return 历史任务对象
-	 */
-	@Override
-	public HistoricTask history(Execution execution, CustomModel model)
-	{
-		HistoricTask historicTask = new HistoricTask();
-		historicTask.setId(StringHelper.getPrimaryKey());
-		historicTask.setInstanceId(execution.getInstance().getId());
-		String currentTime = DateHelper.getTime();
-		historicTask.setCreateTime(currentTime);
-		historicTask.setFinishTime(currentTime);
-		historicTask.setDisplayName(model.getDisplayName());
-		historicTask.setTaskName(model.getName());
-		historicTask.setTaskState(Constants.STATE_FINISH);
-		historicTask.setTaskType(TaskType.Record.ordinal());
-		historicTask.setParentTaskId(execution.getTask() == null ? START : execution.getTask().getId());
-		historicTask.setVariable(JsonHelper.toJson(execution.getArgs()));
-
-		historicTaskEntityService.saveEntity(historicTask);
-
-		return historicTask;
 	}
 
 	/**
@@ -602,33 +576,6 @@ public class TaskServiceImpl extends AccessService implements TaskService
 			throw new ProcessException("任务对象不支持复制", e.getCause());
 		}
 		return tasks;
-	}
-
-	/**
-	 * 获取任务模型
-	 * 
-	 * @param taskId 任务id
-	 * @return TaskModel
-	 */
-	@Override
-	public TaskModel getTaskModel(String taskId)
-	{
-		Task task = taskEntityService.getTask(taskId);
-
-		ProcessInstance instance = processInstanceEntityService.getInstance(task.getInstanceId());
-
-		ProcessDefinition process = engineConfiguration.getRepositoryService().getProcessById(instance.getProcessId());
-		ProcessModel model = process.getModel();
-		NodeModel nodeModel = model.getNode(task.getTaskName());
-		AssertHelper.notNull(nodeModel, "任务id无法找到节点模型.");
-		if (nodeModel instanceof TaskModel)
-		{
-			return (TaskModel) nodeModel;
-		}
-		else
-		{
-			throw new IllegalArgumentException("任务id找到的节点模型不匹配");
-		}
 	}
 
 	/**

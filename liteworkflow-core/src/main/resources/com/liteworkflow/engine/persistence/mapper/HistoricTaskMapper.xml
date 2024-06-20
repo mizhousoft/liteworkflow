@@ -21,29 +21,29 @@
 	</resultMap>
 	
 	<insert id="save">
-		insert into wf_hist_task (id, instance_Id, task_Name, display_Name, task_Type, perform_Type, task_State,
+		insert into wf_historic_task (id, instance_Id, task_Name, display_Name, task_Type, perform_Type, task_State,
 		operator, create_Time, finish_Time, expire_Time, action_Url, parent_Task_Id, variable) 
 		values(#{id}, #{instanceId}, #{taskName}, #{displayName}, #{taskType}, #{performType}, #{taskState}, 
 		#{operator}, #{createTime}, #{finishTime}, #{expireTime}, #{actionUrl}, #{parentTaskId}, #{variable})
 	</insert>
 		
 	<delete id="delete">
-		delete from wf_hist_task where id = #{id}
+		delete from wf_historic_task where id = #{id}
 	</delete>
 	
 	<select id="getHistTask" parameterType="java.util.Map" resultMap="HistoricTaskMap">
 		select id, instance_Id, task_Name, display_Name, task_Type, perform_Type, task_State, operator, create_Time,
 		finish_Time, expire_Time, action_Url, parent_Task_Id, variable 
-		from wf_hist_task
+		from wf_historic_task
 		where id = #{taskId}
 	</select>
 	
 	<select id="findList" parameterType="java.util.Map" resultMap="HistoricTaskMap">
 		select id, instance_Id, task_Name, display_Name, task_Type, perform_Type, task_State, operator, create_Time,
 		finish_Time, expire_Time, action_Url, parent_Task_Id, variable 
-		from wf_hist_task
+		from wf_historic_task
 		<if test="operators != null and operators.length != 0">
-			left join wf_hist_task_actor ta on ta.task_id = id
+			left join wf_historic_task_actor ta on ta.task_id = id
 		</if>		
 		<where>
 			<if test="instanceId != null">

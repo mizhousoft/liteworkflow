@@ -1,4 +1,4 @@
-package com.liteworkflow.engine.helper;
+package com.liteworkflow.engine.util;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +17,7 @@ import org.w3c.dom.Node;
  * @author yuqs
  * @since 1.0
  */
-public class XmlHelper
+public class XmlUtils
 {
 	/**
 	 * DocumentBuilderFactory实例

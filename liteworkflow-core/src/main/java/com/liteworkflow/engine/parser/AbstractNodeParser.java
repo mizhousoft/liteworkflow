@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import com.liteworkflow.engine.helper.XmlHelper;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.model.TransitionModel;
+import com.liteworkflow.engine.util.XmlUtils;
 
 /**
  * 抽象dom节点解析类
@@ -35,7 +35,7 @@ public abstract class AbstractNodeParser implements NodeParser
 		model.setPreInterceptors(element.getAttribute(ATTR_PREINTERCEPTORS));
 		model.setPostInterceptors(element.getAttribute(ATTR_POSTINTERCEPTORS));
 
-		List<Element> transitions = XmlHelper.elements(element, NODE_TRANSITION);
+		List<Element> transitions = XmlUtils.elements(element, NODE_TRANSITION);
 		for (Element te : transitions)
 		{
 			TransitionModel transition = new TransitionModel();

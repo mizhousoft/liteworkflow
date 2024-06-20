@@ -2,9 +2,6 @@ package com.liteworkflow.engine.model;
 
 import java.io.Serializable;
 
-import com.liteworkflow.engine.IHandler;
-import com.liteworkflow.engine.impl.Execution;
-
 /**
  * 模型元素基类
  * 
@@ -27,17 +24,6 @@ public class BaseModel implements Serializable
 	 * 显示名称
 	 */
 	private String displayName;
-
-	/**
-	 * 将执行对象execution交给具体的处理器处理
-	 * 
-	 * @param handler
-	 * @param execution
-	 */
-	protected void fire(IHandler handler, Execution execution)
-	{
-		handler.handle(execution);
-	}
 
 	public String getName()
 	{

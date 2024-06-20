@@ -7,8 +7,6 @@ import com.liteworkflow.engine.AssignmentHandler;
 import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.helper.ClassHelper;
 import com.liteworkflow.engine.helper.StringHelper;
-import com.liteworkflow.engine.impl.Execution;
-import com.liteworkflow.engine.impl.command.MergeActorHandler;
 import com.liteworkflow.engine.scheduling.JobCallback;
 
 /**
@@ -123,28 +121,6 @@ public class TaskModel extends WorkModel
 	 * 字段模型集合
 	 */
 	private List<FieldModel> fields = null;
-
-	protected void doExecute(Execution execution)
-	{
-		if (performType == null || performType.equalsIgnoreCase(PERFORMTYPE_ANY))
-		{
-			/**
-			 * any方式，直接执行输出变迁
-			 */
-			runOutTransition(execution);
-		}
-		else
-		{
-			/**
-			 * all方式，需要判断是否已全部合并
-			 * 由于all方式分配任务，是每人一个任务
-			 * 那么此时需要判断之前分配的所有任务都执行完成后，才可执行下一步，否则不处理
-			 */
-			fire(new MergeActorHandler(getName()), execution);
-			if (execution.isMerged())
-				runOutTransition(execution);
-		}
-	}
 
 	public boolean isPerformAny()
 	{

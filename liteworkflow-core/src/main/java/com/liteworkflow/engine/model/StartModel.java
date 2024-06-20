@@ -3,8 +3,6 @@ package com.liteworkflow.engine.model;
 import java.util.Collections;
 import java.util.List;
 
-import com.liteworkflow.engine.impl.Execution;
-
 /**
  * 开始节点定义start元素
  * 
@@ -26,8 +24,4 @@ public class StartModel extends NodeModel
 		return Collections.emptyList();
 	}
 
-	protected void doExecute(Execution execution)
-	{
-		runOutTransition(execution);
-	}
 }

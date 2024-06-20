@@ -138,9 +138,9 @@ public interface ProcessInstanceService
 	/**
 	 * 谨慎使用.数据恢复非常痛苦，你懂得~~
 	 * 级联删除指定流程实例的所有数据：
-	 * 1.wf_process_instance,wf_hist_process_instance
-	 * 2.wf_task,wf_hist_task
-	 * 3.wf_task_actor,wf_hist_task_actor
+	 * 1.wf_process_instance,wf_historic_process_instance
+	 * 2.wf_task,wf_historic_task
+	 * 3.wf_task_actor,wf_historic_task_actor
 	 * 4.wf_cc_process_instance
 	 * 
 	 * @param id

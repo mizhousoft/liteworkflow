@@ -1,17 +1,12 @@
 package com.liteworkflow.engine.model;
 
-import com.liteworkflow.engine.Action;
-import com.liteworkflow.engine.impl.Execution;
-import com.liteworkflow.engine.impl.command.CreateTaskHandler;
-import com.liteworkflow.engine.impl.command.StartSubProcessHandler;
-
 /**
  * 变迁定义transition元素
  * 
  * @author yuqs
  * @since 1.0
  */
-public class TransitionModel extends BaseModel implements Action
+public class TransitionModel extends BaseModel
 {
 
 	/**
@@ -53,27 +48,6 @@ public class TransitionModel extends BaseModel implements Action
 	 * 当前变迁路径是否可用
 	 */
 	private boolean enabled = false;
-
-	public void execute(Execution execution)
-	{
-		if (!enabled)
-			return;
-		if (target instanceof TaskModel)
-		{
-			// 如果目标节点模型为TaskModel，则创建task
-			fire(new CreateTaskHandler((TaskModel) target), execution);
-		}
-		else if (target instanceof SubProcessModel)
-		{
-			// 如果目标节点模型为SubProcessModel，则启动子流程
-			fire(new StartSubProcessHandler((SubProcessModel) target), execution);
-		}
-		else
-		{
-			// 如果目标节点模型为其它控制类型，则继续由目标节点执行
-			target.execute(execution);
-		}
-	}
 
 	public NodeModel getSource()
 	{

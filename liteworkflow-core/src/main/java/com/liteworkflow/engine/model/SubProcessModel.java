@@ -1,7 +1,5 @@
 package com.liteworkflow.engine.model;
 
-import com.liteworkflow.engine.impl.Execution;
-
 /**
  * 子流程定义subprocess元素
  * 
@@ -29,11 +27,6 @@ public class SubProcessModel extends WorkModel
 	 * 子流程定义引用
 	 */
 	private ProcessModel subProcess;
-
-	protected void doExecute(Execution execution)
-	{
-		runOutTransition(execution);
-	}
 
 	public ProcessModel getSubProcess()
 	{

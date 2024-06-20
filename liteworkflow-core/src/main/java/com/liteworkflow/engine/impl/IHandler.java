@@ -1,6 +1,4 @@
-package com.liteworkflow.engine;
-
-import com.liteworkflow.engine.impl.Execution;
+package com.liteworkflow.engine.impl;
 
 /**
  * 流程各模型操作处理接口

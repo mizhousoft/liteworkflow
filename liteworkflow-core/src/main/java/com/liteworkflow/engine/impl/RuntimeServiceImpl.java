@@ -11,6 +11,7 @@ import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.RuntimeService;
 import com.liteworkflow.engine.helper.AssertHelper;
+import com.liteworkflow.engine.impl.executor.ExecutorBuilder;
 import com.liteworkflow.engine.model.StartModel;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
@@ -146,7 +147,8 @@ public class RuntimeServiceImpl implements RuntimeService
 		{
 			StartModel start = process.getModel().getStart();
 			AssertHelper.notNull(start, "流程定义[name=" + process.getName() + ", version=" + process.getVersion() + "]没有开始节点");
-			start.execute(execution);
+			Executor executor = ExecutorBuilder.build(start);
+			executor.execute(execution, start);
 		}
 
 		return execution.getInstance();
@@ -164,7 +166,9 @@ public class RuntimeServiceImpl implements RuntimeService
 
 		Execution current = execute(process, execution.getOperator(), execution.getArgs(), execution.getParentInstance().getId(),
 		        execution.getParentNodeName());
-		start.execute(current);
+		Executor executor = ExecutorBuilder.build(start);
+		executor.execute(current, start);
+
 		return current.getInstance();
 	}
 

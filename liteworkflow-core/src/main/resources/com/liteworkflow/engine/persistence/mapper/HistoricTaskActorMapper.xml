@@ -9,17 +9,17 @@
 	</resultMap>
 	
 	<insert id="save">
-		insert into wf_hist_task_actor (task_Id, actor_Id) 
+		insert into wf_historic_task_actor (task_Id, actor_Id) 
 		values (#{taskId}, #{actorId})
 	</insert>
 	
 	<delete id="deleteByTaskId">
-		delete from wf_hist_task where task_Id = #{taskId}
+		delete from wf_historic_task where task_Id = #{taskId}
 	</delete>
 	
 	<select id="getHistTaskActorsByTaskId" parameterType="java.util.Map" resultMap="HistoricTaskActorMap">
 		select task_Id, actor_Id from 
-		wf_hist_task_actor
+		wf_historic_task_actor
 		where task_Id = #{taskId}
 	</select>
 	

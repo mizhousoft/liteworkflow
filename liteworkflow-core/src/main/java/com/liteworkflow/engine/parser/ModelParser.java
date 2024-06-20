@@ -12,11 +12,11 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.liteworkflow.ProcessException;
-import com.liteworkflow.engine.helper.XmlHelper;
 import com.liteworkflow.engine.impl.ServiceContext;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.TransitionModel;
+import com.liteworkflow.engine.util.XmlUtils;
 
 /**
  * 流程定义xml文件的模型解析器
@@ -33,7 +33,7 @@ public class ModelParser
 	 */
 	public static ProcessModel parse(byte[] bytes)
 	{
-		DocumentBuilder documentBuilder = XmlHelper.createDocumentBuilder();
+		DocumentBuilder documentBuilder = XmlUtils.createDocumentBuilder();
 		if (documentBuilder != null)
 		{
 			Document doc = null;

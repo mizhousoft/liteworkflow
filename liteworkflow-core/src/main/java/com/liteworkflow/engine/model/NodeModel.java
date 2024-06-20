@@ -3,14 +3,8 @@ package com.liteworkflow.engine.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.liteworkflow.ProcessException;
-import com.liteworkflow.engine.Action;
 import com.liteworkflow.engine.helper.ClassHelper;
 import com.liteworkflow.engine.helper.StringHelper;
-import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.interceptor.SnakerInterceptor;
 
 /**
@@ -19,14 +13,12 @@ import com.liteworkflow.engine.interceptor.SnakerInterceptor;
  * @author yuqs
  * @since 1.0
  */
-public abstract class NodeModel extends BaseModel implements Action
+public abstract class NodeModel extends BaseModel
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2377317472320109317L;
-
-	private static final Logger log = LoggerFactory.getLogger(NodeModel.class);
 
 	/**
 	 * 输入变迁集合
@@ -62,60 +54,6 @@ public abstract class NodeModel extends BaseModel implements Action
 	 * 后置局部拦截器实例集合
 	 */
 	private List<SnakerInterceptor> postInterceptorList = new ArrayList<SnakerInterceptor>();
-
-	/**
-	 * 具体节点模型需要完成的执行逻辑
-	 * 
-	 * @param execution 执行对象
-	 */
-	protected abstract void doExecute(Execution execution);
-
-	/**
-	 * 对执行逻辑增加前置、后置拦截处理
-	 * 
-	 * @param execution 执行对象
-	 */
-	public void execute(Execution execution)
-	{
-		intercept(preInterceptorList, execution);
-		doExecute(execution);
-		intercept(postInterceptorList, execution);
-	}
-
-	/**
-	 * 运行变迁继续执行
-	 * 
-	 * @param execution 执行对象
-	 */
-	protected void runOutTransition(Execution execution)
-	{
-		for (TransitionModel tm : getOutputs())
-		{
-			tm.setEnabled(true);
-			tm.execute(execution);
-		}
-	}
-
-	/**
-	 * 拦截方法
-	 * 
-	 * @param interceptorList 拦截器列表
-	 * @param execution 执行对象
-	 */
-	private void intercept(List<SnakerInterceptor> interceptorList, Execution execution)
-	{
-		try
-		{
-			for (SnakerInterceptor interceptor : interceptorList)
-			{
-				interceptor.intercept(execution);
-			}
-		}
-		catch (Exception e)
-		{
-			throw new ProcessException(e);
-		}
-	}
 
 	/**
 	 * 根据父节点模型、当前节点模型判断是否可退回。可退回条件：
@@ -240,5 +178,25 @@ public abstract class NodeModel extends BaseModel implements Action
 					this.postInterceptorList.add(instance);
 			}
 		}
+	}
+
+	/**
+	 * 获取preInterceptorList
+	 * 
+	 * @return
+	 */
+	public List<SnakerInterceptor> getPreInterceptorList()
+	{
+		return preInterceptorList;
+	}
+
+	/**
+	 * 获取postInterceptorList
+	 * 
+	 * @return
+	 */
+	public List<SnakerInterceptor> getPostInterceptorList()
+	{
+		return postInterceptorList;
 	}
 }

@@ -17,12 +17,12 @@
 	</resultMap>
 	
 	<insert id="save">
-		insert into wf_process (id, name, display_Name, type, instance_Url, state, content, version, create_Time, creator)
+		insert into wf_process_definition (id, name, display_Name, type, instance_Url, state, content, version, create_Time, creator)
 		values (#{id}, #{name}, #{displayName}, #{type}, #{instanceUrl}, #{state}, #{bytes, typeHandler=org.apache.ibatis.type.BlobTypeHandler}, #{version}, #{createTime}, #{creator})
 	</insert>
 	
 	<update id="update">
-        update wf_process 
+        update wf_process_definition 
         set name= #{name}, 
         display_Name = #{displayName},
         state = #{state},
@@ -33,28 +33,28 @@
 	</update>
 	
 	<update id="updateProcessType">
-        update wf_process 
+        update wf_process_definition 
         set type = #{type}
         where id = #{id} 
 	</update>
 	
 	<delete id="delete">
-		delete from wf_process where id = #{id}
+		delete from wf_process_definition where id = #{id}
 	</delete>
 	
 	<select id="getProcess" parameterType="java.util.Map" resultMap="ProcessDefinitionMap">
 		select id, name, display_Name, type, instance_Url, state, content, version, create_Time, creator 
-		from wf_process 
+		from wf_process_definition 
 		where id = #{id}
 	</select>
 	
 	<select id="getLatestProcessVersion" parameterType="java.util.Map" resultType="Integer">
-		select max(version) from wf_process 
+		select max(version) from wf_process_definition 
 		where name = #{name}
 	</select>
 	
 	<select id="countTotal" resultType="Long">
-		select count(id) from wf_process
+		select count(id) from wf_process_definition
 		<where>
 			<if test="request.names != null and request.names.length != 0">
                 name in
@@ -86,7 +86,7 @@
 	
 	<select id="findPageData" parameterType="java.util.Map" resultMap="ProcessDefinitionMap">
 		select id, name, display_Name, type, instance_Url, state, content, version, create_Time, creator 
-		from wf_process 
+		from wf_process_definition 
 		<where>
 			<if test="request.names != null and request.names.length != 0">
                 name in

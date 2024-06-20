@@ -3,11 +3,13 @@ package com.liteworkflow.engine.impl.command;
 import java.util.List;
 
 import com.liteworkflow.ProcessException;
-import com.liteworkflow.engine.IHandler;
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.impl.Execution;
+import com.liteworkflow.engine.impl.Executor;
+import com.liteworkflow.engine.impl.IHandler;
+import com.liteworkflow.engine.impl.executor.ExecutorBuilder;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.SubProcessModel;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
@@ -57,7 +59,10 @@ public class EndProcessHandler implements IHandler
 			Execution newExecution = new Execution(engine, process, parentInstance, execution.getArgs());
 			newExecution.setChildOrderId(instance.getId());
 			newExecution.setTask(execution.getTask());
-			spm.execute(newExecution);
+
+			Executor executor = ExecutorBuilder.build(spm);
+			executor.execute(newExecution, spm);
+
 			/**
 			 * SubProcessModel执行结果的tasks合并到当前执行对象execution的tasks列表中
 			 */

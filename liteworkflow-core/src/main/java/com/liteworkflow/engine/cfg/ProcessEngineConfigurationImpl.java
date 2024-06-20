@@ -30,7 +30,6 @@ import com.liteworkflow.engine.helper.ClassHelper;
 import com.liteworkflow.engine.helper.ConfigHelper;
 import com.liteworkflow.engine.helper.StreamHelper;
 import com.liteworkflow.engine.helper.StringHelper;
-import com.liteworkflow.engine.helper.XmlHelper;
 import com.liteworkflow.engine.impl.HistoryServiceImpl;
 import com.liteworkflow.engine.impl.ManagerServiceImpl;
 import com.liteworkflow.engine.impl.ProcessEngineImpl;
@@ -70,6 +69,7 @@ import com.liteworkflow.engine.persistence.service.impl.SurrogateEntityServiceIm
 import com.liteworkflow.engine.persistence.service.impl.TaskActorEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.TaskEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.WorkItemEntityServiceImpl;
+import com.liteworkflow.engine.util.XmlUtils;
 
 /**
  * 只允许应用程序存在一个Configuration实例
@@ -456,7 +456,7 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	private void parser(String resource)
 	{
 		// 解析所有配置节点，并实例化class指定的类
-		DocumentBuilder documentBuilder = XmlHelper.createDocumentBuilder();
+		DocumentBuilder documentBuilder = XmlUtils.createDocumentBuilder();
 		try
 		{
 			if (documentBuilder != null)

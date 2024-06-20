@@ -60,7 +60,7 @@
 		select id, instance_Id, task_Name, display_Name, task_Type, perform_Type, operator, create_Time, finish_Time,
 		expire_Time, action_Url, parent_Task_Id, variable, version
 		from wf_task
-		where parent_task_id in ( select ht.id from wf_hist_task ht where ht.instance_Id = #{instanceId} and ht.task_name = #{taskName} and ht.parent_task_id = #{parentTaskId} )
+		where parent_task_id in ( select ht.id from wf_historic_task ht where ht.instance_Id = #{instanceId} and ht.task_name = #{taskName} and ht.parent_task_id = #{parentTaskId} )
 	</select>
 	
 	<select id="countTotal" resultType="Long">

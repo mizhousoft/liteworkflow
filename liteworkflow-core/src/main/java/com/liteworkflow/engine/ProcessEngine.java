@@ -15,9 +15,9 @@ public interface ProcessEngine
 	public static final String ID = "snaker.orderNo";
 
 	/**
-	 * 获取process服务
+	 * 获取RepositoryService服务
 	 * 
-	 * @return IProcessService 流程定义服务
+	 * @return RepositoryService 流程定义服务
 	 */
 	public RepositoryService getRepositoryService();
 
@@ -26,7 +26,7 @@ public interface ProcessEngine
 	/**
 	 * 获取实例服务
 	 * 
-	 * @return IQueryService 流程实例服务
+	 * @return ProcessInstanceService 流程实例服务
 	 */
 	public ProcessInstanceService getProcessInstanceService();
 

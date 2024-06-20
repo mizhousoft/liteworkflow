@@ -7,10 +7,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import com.liteworkflow.ProcessException;
-import com.liteworkflow.engine.IHandler;
 import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.impl.Execution;
+import com.liteworkflow.engine.impl.IHandler;
 import com.liteworkflow.engine.model.SubProcessModel;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
@@ -78,6 +78,7 @@ public class StartSubProcessHandler implements IHandler
 			instance = engineConfiguration.getRuntimeService().startInstanceByExecution(child);
 		}
 		AssertHelper.notNull(instance, "子流程创建失败");
+
 		execution.addTasks(engineConfiguration.getTaskService().getActiveTasks(instance.getId()));
 	}
 

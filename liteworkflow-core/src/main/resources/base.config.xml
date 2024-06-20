@@ -3,7 +3,6 @@
 <config>
 	<bean name="start" class="com.liteworkflow.engine.parser.impl.StartParser"/>
 	<bean name="task" class="com.liteworkflow.engine.parser.impl.TaskParser"/>
-	<bean name="custom" class="com.liteworkflow.engine.parser.impl.CustomParser"/>
 	<bean name="decision" class="com.liteworkflow.engine.parser.impl.DecisionParser"/>
 	<bean name="subprocess" class="com.liteworkflow.engine.parser.impl.SubProcessParser"/>
 	<bean name="fork" class="com.liteworkflow.engine.parser.impl.ForkParser"/>

@@ -37,7 +37,7 @@
 	</update>
 	
 	<update id="updateVariable">
-        update wf_process 
+        update wf_process_definition 
         set type = #{type}
         where id = #{id} 
 	</update>
@@ -54,7 +54,7 @@
 	</select>
 
 	<select id="countTotal" resultType="Long">
-		select count(o.id) from wf_process_instance o left join wf_process p on p.id = o.process_id
+		select count(o.id) from wf_process_instance o left join wf_process_definition p on p.id = o.process_id
 		<where>
        		<if test="request.operators != null and request.operators.length != 0">
                 o.creator in
@@ -102,7 +102,7 @@
 	<select id="findPageData" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
 		select o.id, o.process_Id, o.creator, o.create_Time, o.parent_Id, o.parent_Node_Name, o.expire_Time,
 		o.last_Update_Time, o.last_Updator, o.priority, o.order_No, o.variable, o.version 
-		from wf_process_instance o left join wf_process p on p.id = o.process_id
+		from wf_process_instance o left join wf_process_definition p on p.id = o.process_id
 		<where>
        		<if test="request.operators != null and request.operators.length != 0">
                 o.creator in

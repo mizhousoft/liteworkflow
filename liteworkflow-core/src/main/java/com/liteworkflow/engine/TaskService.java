@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.liteworkflow.engine.impl.Execution;
-import com.liteworkflow.engine.model.CustomModel;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.TaskModel;
-import com.liteworkflow.engine.persistence.entity.HistoricTask;
 import com.liteworkflow.engine.persistence.entity.Task;
 import com.liteworkflow.engine.persistence.request.TaskPageRequest;
 import com.mizhousoft.commons.data.domain.Page;
@@ -148,15 +146,6 @@ public interface TaskService
 	Task complete(String taskId, String operator, Map<String, Object> args);
 
 	/**
-	 * 根据执行对象、自定义节点模型创建历史任务记录
-	 * 
-	 * @param execution 执行对象
-	 * @param model 自定义节点模型
-	 * @return 历史任务
-	 */
-	HistoricTask history(Execution execution, CustomModel model);
-
-	/**
 	 * 根据任务主键ID，操作人ID提取任务
 	 * 提取任务相当于预受理操作，仅仅标识此任务只能由此操作人处理
 	 * 
@@ -246,12 +235,4 @@ public interface TaskService
 	 * @return List<Task> 创建任务集合
 	 */
 	List<Task> createNewTask(String taskId, int taskType, String... actors);
-
-	/**
-	 * 根据任务id获取任务模型
-	 * 
-	 * @param taskId 任务id
-	 * @return
-	 */
-	TaskModel getTaskModel(String taskId);
 }
