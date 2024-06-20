@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * 结束节点end元素
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class EndModel extends NodeModel

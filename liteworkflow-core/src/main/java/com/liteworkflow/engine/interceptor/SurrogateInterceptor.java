@@ -14,7 +14,7 @@ import com.liteworkflow.engine.persistence.entity.Task;
  * 对于运行中且未处理的待办任务，可调用engine.getTaskService().addTaskActor方法
  * {@link TaskService#addTaskActor(String, String...)}
  * 
- * @author yuqs
+ * @author
  * @since 1.4
  */
 public class SurrogateInterceptor implements SnakerInterceptor

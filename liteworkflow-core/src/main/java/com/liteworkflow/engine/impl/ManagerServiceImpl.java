@@ -1,19 +1,20 @@
 package com.liteworkflow.engine.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.liteworkflow.engine.Constants;
 import com.liteworkflow.engine.ManagerService;
-import com.liteworkflow.engine.helper.DateHelper;
 import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.persistence.entity.Surrogate;
 import com.liteworkflow.engine.persistence.request.SurrogateFindRequest;
 import com.liteworkflow.engine.persistence.service.SurrogateEntityService;
+import com.mizhousoft.commons.lang.LocalDateTimeUtils;
 
 /**
  * 管理服务类
  * 
- * @author yuqs
+ * @author
  * @since 1.4
  */
 public class ManagerServiceImpl extends AccessService implements ManagerService
@@ -54,7 +55,7 @@ public class ManagerServiceImpl extends AccessService implements ManagerService
 	{
 		SurrogateFindRequest request = new SurrogateFindRequest();
 		request.setOperators(new String[] { operator });
-		request.setOperateTime(DateHelper.getTime());
+		request.setOperateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
 		if (StringHelper.isNotEmpty(processName))
 		{
 			request.setNames(new String[] { processName });

@@ -6,13 +6,13 @@ import org.w3c.dom.Element;
 
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.model.TransitionModel;
-import com.liteworkflow.engine.util.XmlUtils;
+import com.liteworkflow.engine.util.DomUtils;
 
 /**
  * 抽象dom节点解析类
  * 完成通用的属性、变迁解析
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public abstract class AbstractNodeParser implements NodeParser
@@ -35,7 +35,7 @@ public abstract class AbstractNodeParser implements NodeParser
 		model.setPreInterceptors(element.getAttribute(ATTR_PREINTERCEPTORS));
 		model.setPostInterceptors(element.getAttribute(ATTR_POSTINTERCEPTORS));
 
-		List<Element> transitions = XmlUtils.elements(element, NODE_TRANSITION);
+		List<Element> transitions = DomUtils.elements(element, NODE_TRANSITION);
 		for (Element te : transitions)
 		{
 			TransitionModel transition = new TransitionModel();
@@ -49,7 +49,7 @@ public abstract class AbstractNodeParser implements NodeParser
 			model.getOutputs().add(transition);
 		}
 
-		parseNode(model, element);
+		doParseNode(model, element);
 	}
 
 	/**
@@ -58,7 +58,7 @@ public abstract class AbstractNodeParser implements NodeParser
 	 * @param model
 	 * @param element
 	 */
-	protected void parseNode(NodeModel model, Element element)
+	protected void doParseNode(NodeModel model, Element element)
 	{
 
 	}

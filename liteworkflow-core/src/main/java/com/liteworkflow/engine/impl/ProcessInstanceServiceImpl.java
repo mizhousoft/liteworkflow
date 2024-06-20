@@ -1,13 +1,14 @@
 package com.liteworkflow.engine.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 import com.liteworkflow.engine.Completion;
 import com.liteworkflow.engine.Constants;
-import com.liteworkflow.engine.ProcessInstanceService;
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.ProcessEngineConfiguration;
+import com.liteworkflow.engine.ProcessInstanceService;
 import com.liteworkflow.engine.helper.DateHelper;
 import com.liteworkflow.engine.helper.JsonHelper;
 import com.liteworkflow.engine.helper.StringHelper;
@@ -25,11 +26,12 @@ import com.liteworkflow.engine.persistence.service.HistoricTaskEntityService;
 import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.TaskEntityService;
 import com.mizhousoft.commons.data.domain.Page;
+import com.mizhousoft.commons.lang.LocalDateTimeUtils;
 
 /**
  * 流程实例业务类
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class ProcessInstanceServiceImpl extends AccessService implements ProcessInstanceService
@@ -88,7 +90,7 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 		instance.setId(StringHelper.getPrimaryKey());
 		instance.setParentId(parentId);
 		instance.setParentNodeName(parentNodeName);
-		instance.setCreateTime(DateHelper.getTime());
+		instance.setCreateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
 		instance.setLastUpdateTime(instance.getCreateTime());
 		instance.setCreator(operator);
 		instance.setLastUpdator(instance.getCreator());
@@ -146,7 +148,7 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 			ccInstance.setActorId(actorId);
 			ccInstance.setCreator(creator);
 			ccInstance.setStatus(Constants.STATE_ACTIVE);
-			ccInstance.setCreateTime(DateHelper.getTime());
+			ccInstance.setCreateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
 			ccProcessInstanceEntityService.save(ccInstance);
 		}
 	}
@@ -169,7 +171,7 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 		for (CCProcessInstance ccInstance : ccInstances)
 		{
 			ccInstance.setStatus(Constants.STATE_FINISH);
-			ccInstance.setFinishTime(DateHelper.getTime());
+			ccInstance.setFinishTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
 			ccProcessInstanceEntityService.update(ccInstance);
 		}
 	}
@@ -195,7 +197,7 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 		ProcessInstance instance = processInstanceEntityService.getInstance(instanceId);
 		HistoricProcessInstance historicInstance = historicProcessInstanceEntityService.getHistoricInstance(instanceId);
 		historicInstance.setState(Constants.STATE_FINISH);
-		historicInstance.setEndTime(DateHelper.getTime());
+		historicInstance.setEndTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
 
 		historicProcessInstanceEntityService.update(historicInstance);
 		processInstanceEntityService.deleteInstance(instance);
@@ -231,7 +233,7 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 		ProcessInstance instance = processInstanceEntityService.getInstance(instanceId);
 		HistoricProcessInstance historicInstance = new HistoricProcessInstance(instance);
 		historicInstance.setState(Constants.STATE_TERMINATION);
-		historicInstance.setEndTime(DateHelper.getTime());
+		historicInstance.setEndTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
 
 		historicProcessInstanceEntityService.update(historicInstance);
 		processInstanceEntityService.deleteInstance(instance);

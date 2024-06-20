@@ -15,7 +15,7 @@ import com.mizhousoft.commons.lang.LocalDateTimeUtils;
 import test.TestSpring;
 
 /**
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class TestExpire extends TestSpring

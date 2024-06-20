@@ -7,7 +7,7 @@ import com.liteworkflow.engine.parser.AbstractNodeParser;
 /**
  * 结束节点解析类
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class EndParser extends AbstractNodeParser
@@ -18,5 +18,14 @@ public class EndParser extends AbstractNodeParser
 	protected NodeModel newModel()
 	{
 		return new EndModel();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getNodeName()
+	{
+		return "end";
 	}
 }

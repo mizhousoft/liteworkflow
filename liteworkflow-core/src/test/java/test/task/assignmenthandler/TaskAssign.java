@@ -5,7 +5,7 @@ import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.model.TaskModel;
 
 /**
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class TaskAssign extends Assignment

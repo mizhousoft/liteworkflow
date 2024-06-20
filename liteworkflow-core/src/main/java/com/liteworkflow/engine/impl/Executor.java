@@ -5,7 +5,7 @@ import com.liteworkflow.engine.model.BaseModel;
 /**
  * 所有的模型对象需要实现的接口，需要实现execute方法，每个节点的执行方式不一样
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public interface Executor

@@ -15,7 +15,7 @@ import test.TestSpring;
 /**
  * 测试决策分支流程1：决策节点decision使用expr属性决定后置路线
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class TestDecision1 extends TestSpring

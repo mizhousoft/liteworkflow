@@ -12,7 +12,7 @@ import com.liteworkflow.engine.helper.StreamHelper;
 import test.TestSpring;
 
 /**
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class TestReject extends TestSpring

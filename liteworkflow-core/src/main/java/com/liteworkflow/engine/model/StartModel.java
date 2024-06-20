@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * 开始节点定义start元素
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class StartModel extends NodeModel
@@ -23,5 +23,4 @@ public class StartModel extends NodeModel
 	{
 		return Collections.emptyList();
 	}
-
 }

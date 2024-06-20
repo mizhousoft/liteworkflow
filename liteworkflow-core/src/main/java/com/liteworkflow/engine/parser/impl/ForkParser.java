@@ -7,7 +7,7 @@ import com.liteworkflow.engine.parser.AbstractNodeParser;
 /**
  * 分支节点解析类
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class ForkParser extends AbstractNodeParser
@@ -18,5 +18,14 @@ public class ForkParser extends AbstractNodeParser
 	protected NodeModel newModel()
 	{
 		return new ForkModel();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getNodeName()
+	{
+		return "fork";
 	}
 }

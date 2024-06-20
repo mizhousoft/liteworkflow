@@ -12,7 +12,7 @@ import com.liteworkflow.engine.helper.AssertHelper;
  * 单实例的服务上下文
  * 具体的上下文查找服务交给Context的实现类
  * 
- * @author yuqs
+ * @author
  * @since 1.5
  */
 public abstract class ServiceContext

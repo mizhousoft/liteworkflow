@@ -2,11 +2,9 @@
 <configuration>
 
 	<appenders>
-
 		<console name="Console" target="SYSTEM_OUT">
 			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%t|%c{5}.%L|%msg%xEx%n" />
 		</console>
-
 	</appenders>
 
 	<loggers>
@@ -15,10 +13,6 @@
 		</root>
 		
 		<Logger name="com.liteworkflow.engine" level="debug" additivity="false">
-			<AppenderRef ref="Console" />
-		</Logger>
-		
-		<Logger name="http-outgoing" level="debug" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
 	</loggers>

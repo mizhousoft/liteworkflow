@@ -19,7 +19,7 @@ import test.TestSpring;
  * start->subprocess1----->end
  * |___subprocess2_______|
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class TestSubProcess2 extends TestSpring

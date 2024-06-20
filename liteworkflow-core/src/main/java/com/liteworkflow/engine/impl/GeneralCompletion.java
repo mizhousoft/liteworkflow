@@ -10,7 +10,7 @@ import com.liteworkflow.engine.persistence.entity.HistoricTask;
 /**
  * 默认的任务、实例完成时触发的动作
  * 
- * @author yuqs
+ * @author
  * @since 2.2.0
  */
 public class GeneralCompletion implements Completion

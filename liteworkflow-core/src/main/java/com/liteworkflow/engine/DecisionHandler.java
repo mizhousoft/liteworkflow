@@ -5,7 +5,7 @@ import com.liteworkflow.engine.impl.Execution;
 /**
  * 决策处理器接口
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public interface DecisionHandler

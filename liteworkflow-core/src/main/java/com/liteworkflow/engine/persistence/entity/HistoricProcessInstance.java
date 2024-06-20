@@ -9,7 +9,7 @@ import com.liteworkflow.engine.helper.JsonHelper;
 /**
  * 历史流程实例实体类
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class HistoricProcessInstance implements Serializable

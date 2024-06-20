@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * 委托代理实体类
  * 
- * @author yuqs
+ * @author
  * @since 1.4
  */
 public class Surrogate implements Serializable

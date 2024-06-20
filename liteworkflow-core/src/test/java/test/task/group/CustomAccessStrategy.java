@@ -6,7 +6,7 @@ import java.util.List;
 import com.liteworkflow.engine.impl.strategy.GeneralAccessStrategy;
 
 /**
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class CustomAccessStrategy extends GeneralAccessStrategy

@@ -5,7 +5,7 @@ import com.liteworkflow.engine.Completion;
 /**
  * 作为抽象父类，提供给子类access实现方式
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public abstract class AccessService

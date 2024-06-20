@@ -10,7 +10,7 @@ import com.liteworkflow.engine.interceptor.SnakerInterceptor;
 /**
  * 节点元素（存在输入输出的变迁）
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public abstract class NodeModel extends BaseModel

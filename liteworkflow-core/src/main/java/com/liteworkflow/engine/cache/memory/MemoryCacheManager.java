@@ -11,7 +11,7 @@ import com.liteworkflow.engine.helper.StringHelper;
 /**
  * 基于虚拟机内存的cache管理器
  * 
- * @author yuqs
+ * @author
  * @since 1.3
  */
 public class MemoryCacheManager implements CacheManager

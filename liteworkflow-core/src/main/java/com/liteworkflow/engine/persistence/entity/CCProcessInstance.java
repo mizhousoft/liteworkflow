@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * 抄送实例实体
  * 
- * @author yuqs
+ * @author
  * @since 1.5
  */
 public class CCProcessInstance implements Serializable

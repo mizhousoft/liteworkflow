@@ -11,7 +11,7 @@ import com.liteworkflow.engine.impl.strategy.DefaultNoGenerator;
 /**
  * 流程定义process元素
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class ProcessModel extends BaseModel

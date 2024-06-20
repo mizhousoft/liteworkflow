@@ -1,6 +1,7 @@
 package com.liteworkflow.engine.impl;
 
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -13,7 +14,6 @@ import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.cache.Cache;
 import com.liteworkflow.engine.cache.CacheManager;
 import com.liteworkflow.engine.helper.AssertHelper;
-import com.liteworkflow.engine.helper.DateHelper;
 import com.liteworkflow.engine.helper.StreamHelper;
 import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.model.ProcessModel;
@@ -25,11 +25,12 @@ import com.liteworkflow.engine.persistence.request.ProcessDefPageRequest;
 import com.liteworkflow.engine.persistence.service.HistoricProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.ProcessDefinitionEntityService;
 import com.mizhousoft.commons.data.domain.Page;
+import com.mizhousoft.commons.lang.LocalDateTimeUtils;
 
 /**
  * 流程定义业务类
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class RepositoryServiceImpl extends AccessService implements RepositoryService
@@ -228,7 +229,7 @@ public class RepositoryServiceImpl extends AccessService implements RepositorySe
 			entity.setState(Constants.STATE_ACTIVE);
 			entity.setModel(model);
 			entity.setBytes(bytes);
-			entity.setCreateTime(DateHelper.getTime());
+			entity.setCreateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
 			entity.setCreator(creator);
 			saveProcess(entity);
 			cache(entity);

@@ -10,7 +10,7 @@ import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import test.TestSpring;
 
 /**
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class TestConfig extends TestSpring

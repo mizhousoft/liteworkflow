@@ -9,7 +9,7 @@ import com.liteworkflow.engine.helper.JsonHelper;
 /**
  * 工作项（待办、已处理任务的查询结果实体）
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class WorkItem implements Serializable

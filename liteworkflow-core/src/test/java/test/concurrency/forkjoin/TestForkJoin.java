@@ -15,7 +15,7 @@ import com.liteworkflow.engine.persistence.entity.Task;
 import test.TestSpring;
 
 /**
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class TestForkJoin extends TestSpring

@@ -1,15 +1,18 @@
 package com.liteworkflow.engine.parser.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Element;
 
+import com.liteworkflow.engine.DecisionHandler;
 import com.liteworkflow.engine.model.DecisionModel;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.parser.AbstractNodeParser;
+import com.mizhousoft.commons.lang.ClassUtils;
 
 /**
  * 决策节点解析类
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class DecisionParser extends AbstractNodeParser
@@ -23,12 +26,36 @@ public class DecisionParser extends AbstractNodeParser
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getNodeName()
+	{
+		return "decision";
+	}
+
+	/**
 	 * 解析decisition节点的特有属性expr
 	 */
-	protected void parseNode(NodeModel node, Element element)
+	protected void doParseNode(NodeModel node, Element element)
 	{
 		DecisionModel decision = (DecisionModel) node;
 		decision.setExpr(element.getAttribute(ATTR_EXPR));
-		decision.setHandleClass(element.getAttribute(ATTR_HANDLECLASS));
+
+		String handleClass = element.getAttribute(ATTR_HANDLECLASS);
+		decision.setHandleClass(handleClass);
+		if (!StringUtils.isBlank(handleClass))
+		{
+			try
+			{
+				DecisionHandler decisionHandler = (DecisionHandler) ClassUtils.newInstance(handleClass, this.getClass().getClassLoader());
+				decision.setDecisionHandler(decisionHandler);
+			}
+			catch (Exception e)
+			{
+				throw new IllegalArgumentException(handleClass + " is not implment DecisionHandler.", e);
+			}
+		}
 	}
+
 }

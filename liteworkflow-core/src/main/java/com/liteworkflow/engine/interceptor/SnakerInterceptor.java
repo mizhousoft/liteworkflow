@@ -5,7 +5,7 @@ import com.liteworkflow.engine.impl.Execution;
 /**
  * 任务拦截器，对产生的任务结果进行拦截
  * 
- * @author yuqs
+ * @author
  * @since 1.2
  */
 public interface SnakerInterceptor

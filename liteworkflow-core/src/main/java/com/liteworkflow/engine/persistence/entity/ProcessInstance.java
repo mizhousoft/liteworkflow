@@ -9,7 +9,7 @@ import com.liteworkflow.engine.helper.JsonHelper;
 /**
  * 流程工作单实体类（一般称为流程实例）
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class ProcessInstance implements Serializable

@@ -7,7 +7,7 @@ import com.liteworkflow.engine.parser.AbstractNodeParser;
 /**
  * 合并节点解析类
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class JoinParser extends AbstractNodeParser
@@ -18,5 +18,14 @@ public class JoinParser extends AbstractNodeParser
 	protected NodeModel newModel()
 	{
 		return new JoinModel();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getNodeName()
+	{
+		return "join";
 	}
 }

@@ -20,7 +20,7 @@ import com.liteworkflow.engine.scheduling.JobEntity.JobType;
  * 主要拦截任务的expireDate(期望完成时间)
  * 再交给具体的调度器完成调度处理
  * 
- * @author yuqs
+ * @author
  * @since 1.4
  */
 public class SchedulerInterceptor implements SnakerInterceptor

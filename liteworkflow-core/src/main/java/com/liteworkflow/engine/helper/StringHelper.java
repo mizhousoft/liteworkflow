@@ -7,7 +7,7 @@ import com.liteworkflow.ProcessException;
 /**
  * 字符串处理帮助类
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class StringHelper

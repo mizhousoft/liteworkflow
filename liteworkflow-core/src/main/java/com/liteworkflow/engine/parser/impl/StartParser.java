@@ -7,7 +7,7 @@ import com.liteworkflow.engine.parser.AbstractNodeParser;
 /**
  * 开始节点解析类
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class StartParser extends AbstractNodeParser
@@ -18,5 +18,14 @@ public class StartParser extends AbstractNodeParser
 	protected NodeModel newModel()
 	{
 		return new StartModel();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getNodeName()
+	{
+		return "start";
 	}
 }

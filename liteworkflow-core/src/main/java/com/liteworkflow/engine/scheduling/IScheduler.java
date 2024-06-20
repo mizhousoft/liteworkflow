@@ -3,7 +3,7 @@ package com.liteworkflow.engine.scheduling;
 /**
  * 调度器接口，与具体的定时调度框架无关
  * 
- * @author yuqs
+ * @author
  * @since 1.4
  */
 public interface IScheduler

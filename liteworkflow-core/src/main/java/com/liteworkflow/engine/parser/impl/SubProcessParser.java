@@ -3,7 +3,6 @@ package com.liteworkflow.engine.parser.impl;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.w3c.dom.Element;
 
-import com.liteworkflow.engine.helper.ConfigHelper;
 import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.model.SubProcessModel;
@@ -12,7 +11,7 @@ import com.liteworkflow.engine.parser.AbstractNodeParser;
 /**
  * 子流程节点解析类
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class SubProcessParser extends AbstractNodeParser
@@ -26,9 +25,18 @@ public class SubProcessParser extends AbstractNodeParser
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getNodeName()
+	{
+		return "subprocess";
+	}
+
+	/**
 	 * 解析decisition节点的特有属性expr
 	 */
-	protected void parseNode(NodeModel node, Element element)
+	protected void doParseNode(NodeModel node, Element element)
 	{
 		SubProcessModel model = (SubProcessModel) node;
 		model.setProcessName(element.getAttribute(ATTR_PROCESSNAME));
@@ -43,10 +51,6 @@ public class SubProcessParser extends AbstractNodeParser
 		if (StringHelper.isNotEmpty(form))
 		{
 			model.setForm(form);
-		}
-		else
-		{
-			model.setForm(ConfigHelper.getProperty("subprocessurl"));
 		}
 	}
 }

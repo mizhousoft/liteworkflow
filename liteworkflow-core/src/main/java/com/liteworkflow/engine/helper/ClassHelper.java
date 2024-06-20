@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 类操作帮助类
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class ClassHelper

@@ -14,7 +14,7 @@ import test.TestSpring;
 /**
  * 流程定义查询测试
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class TestQueryProcess extends TestSpring

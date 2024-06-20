@@ -4,7 +4,7 @@ import com.liteworkflow.engine.DecisionHandler;
 import com.liteworkflow.engine.impl.Execution;
 
 /**
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class TaskHandler implements DecisionHandler

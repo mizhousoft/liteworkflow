@@ -10,10 +10,10 @@ import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.RepositoryService;
 
 /**
- * @author yuqs
+ * @author
  */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = { "classpath:applicationContext.xml", "classpath:applicationContext-snaker.xml" })
+@ContextConfiguration(locations = { "classpath:applicationContext.xml" })
 public class TestSpring extends AbstractJUnit4SpringContextTests
 {
 	protected String processId;

@@ -9,7 +9,7 @@ import com.liteworkflow.engine.persistence.entity.Task;
 import com.liteworkflow.engine.scheduling.JobCallback;
 
 /**
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class TestCallback implements JobCallback

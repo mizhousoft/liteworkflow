@@ -39,17 +39,18 @@ public class DecisionExecutor extends NodeExecutor
 		log.info(execution.getInstance().getId() + "->decision execution.getArgs():" + execution.getArgs());
 
 		DecisionModel decisionModel = (DecisionModel) nodeModel;
-		DecisionHandler decide = decisionModel.getDecide();
+		DecisionHandler decideHandler = decisionModel.getDecisionHandler();
 
 		String next = null;
 		if (StringHelper.isNotEmpty(decisionModel.getExpr()))
 		{
 			next = expression.eval(String.class, decisionModel.getExpr(), execution.getArgs());
 		}
-		else if (decide != null)
+		else if (decideHandler != null)
 		{
-			next = decide.decide(execution);
+			next = decideHandler.decide(execution);
 		}
+
 		log.info(execution.getInstance().getId() + "->decision expression[expr=" + decisionModel.getExpr() + "] return result:" + next);
 		boolean isfound = false;
 
@@ -80,9 +81,11 @@ public class DecisionExecutor extends NodeExecutor
 				}
 			}
 		}
-		if (!isfound)
-			throw new ProcessException(execution.getInstance().getId() + "->decision节点无法确定下一步执行路线");
 
+		if (!isfound)
+		{
+			throw new ProcessException(execution.getInstance().getId() + "->decision节点无法确定下一步执行路线");
+		}
 	}
 
 }

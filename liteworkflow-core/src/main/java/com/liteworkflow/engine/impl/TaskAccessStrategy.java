@@ -8,7 +8,7 @@ import com.liteworkflow.engine.persistence.entity.TaskActor;
  * 任务访问策略类
  * 用于判断给定的操作人员是否允许执行某个任务
  * 
- * @author yuqs
+ * @author
  * @since 1.4
  */
 public interface TaskAccessStrategy

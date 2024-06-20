@@ -6,7 +6,7 @@ import com.liteworkflow.engine.impl.Execution;
  * 分配参与者的处理接口
  * 建议使用Assignment接口
  * 
- * @author yuqs
+ * @author
  * @since 1.2.1
  * @see com.liteworkflow.engine.Assignment
  */

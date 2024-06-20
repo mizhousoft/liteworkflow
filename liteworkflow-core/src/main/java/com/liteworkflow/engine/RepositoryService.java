@@ -10,7 +10,7 @@ import com.mizhousoft.commons.data.domain.Page;
 /**
  * 流程定义业务类
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public interface RepositoryService

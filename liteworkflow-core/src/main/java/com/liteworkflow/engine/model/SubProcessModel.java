@@ -3,7 +3,7 @@ package com.liteworkflow.engine.model;
 /**
  * 子流程定义subprocess元素
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class SubProcessModel extends WorkModel

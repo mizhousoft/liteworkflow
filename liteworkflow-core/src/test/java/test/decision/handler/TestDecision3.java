@@ -15,7 +15,7 @@ import test.TestSpring;
 /**
  * 测试决策分支流程2：使用transition的expr属性决定后置路线
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class TestDecision3 extends TestSpring

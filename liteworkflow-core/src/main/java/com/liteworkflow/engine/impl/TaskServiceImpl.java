@@ -1,5 +1,6 @@
 package com.liteworkflow.engine.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -43,11 +44,12 @@ import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.TaskActorEntityService;
 import com.liteworkflow.engine.persistence.service.TaskEntityService;
 import com.mizhousoft.commons.data.domain.Page;
+import com.mizhousoft.commons.lang.LocalDateTimeUtils;
 
 /**
  * 任务执行业务类
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class TaskServiceImpl extends AccessService implements TaskService
@@ -160,7 +162,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		ProcessInstance instance = processInstanceService.getInstance(instanceId);
 		AssertHelper.notNull(instance, "指定的流程实例[id=" + instanceId + "]已完成或不存在");
 		instance.setLastUpdator(operator);
-		instance.setLastUpdateTime(DateHelper.getTime());
+		instance.setLastUpdateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
 		ProcessDefinition process = repositoryService.getProcessById(instance.getProcessId());
 		Execution execution = new Execution(engineConfiguration, process, instance, args);
 		execution.setOperator(operator);
@@ -186,7 +188,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		ProcessInstance instance = processInstanceService.getInstance(task.getInstanceId());
 		AssertHelper.notNull(instance, "指定的流程实例[id=" + task.getInstanceId() + "]已完成或不存在");
 		instance.setLastUpdator(operator);
-		instance.setLastUpdateTime(DateHelper.getTime());
+		instance.setLastUpdateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
 		processInstanceService.updateInstance(instance);
 		// 协办任务完成不产生执行对象
 		if (!task.isMajor())
@@ -286,7 +288,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 			throw new ProcessException("当前参与者[" + operator + "]不允许执行任务[taskId=" + taskId + "]");
 		}
 		HistoricTask historicTask = new HistoricTask(task);
-		historicTask.setFinishTime(DateHelper.getTime());
+		historicTask.setFinishTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
 		historicTask.setTaskState(Constants.STATE_FINISH);
 		historicTask.setOperator(operator);
 		if (historicTask.getActorIds() == null)
@@ -326,7 +328,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 			throw new ProcessException("当前参与者[" + operator + "]不允许提取任务[taskId=" + taskId + "]");
 		}
 		task.setOperator(operator);
-		task.setFinishTime(DateHelper.getTime());
+		task.setFinishTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
 
 		taskEntityService.update(task);
 
@@ -350,7 +352,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		{
 			Task task = histTask.undoTask();
 			task.setId(StringHelper.getPrimaryKey());
-			task.setCreateTime(DateHelper.getTime());
+			task.setCreateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
 
 			taskEntityService.save(task);
 
@@ -404,7 +406,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 					{
 						Task newTask = (Task) task.clone();
 						newTask.setId(StringHelper.getPrimaryKey());
-						newTask.setCreateTime(DateHelper.getTime());
+						newTask.setCreateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
 						newTask.setOperator(actor);
 						Map<String, Object> taskData = task.getVariableMap();
 						taskData.put(Task.KEY_ACTOR, actor);
@@ -496,7 +498,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 
 		Task task = hist.undoTask();
 		task.setId(StringHelper.getPrimaryKey());
-		task.setCreateTime(DateHelper.getTime());
+		task.setCreateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
 		taskEntityService.save(task);
 		assignTask(task.getId(), task.getOperator());
 		return task;
@@ -523,7 +525,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 
 		Task task = historicTask.undoTask();
 		task.setId(StringHelper.getPrimaryKey());
-		task.setCreateTime(DateHelper.getTime());
+		task.setCreateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
 		task.setOperator(historicTask.getOperator());
 		taskEntityService.save(task);
 		assignTask(task.getId(), task.getOperator());
@@ -567,7 +569,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		{
 			Task newTask = (Task) task.clone();
 			newTask.setTaskType(taskType);
-			newTask.setCreateTime(DateHelper.getTime());
+			newTask.setCreateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
 			newTask.setParentTaskId(taskId);
 			tasks.add(saveTask(newTask, actors));
 		}
@@ -648,7 +650,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		task.setInstanceId(execution.getInstance().getId());
 		task.setTaskName(model.getName());
 		task.setDisplayName(model.getDisplayName());
-		task.setCreateTime(DateHelper.getTime());
+		task.setCreateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
 		if (model.isMajor())
 		{
 			task.setTaskType(TaskType.Major.ordinal());

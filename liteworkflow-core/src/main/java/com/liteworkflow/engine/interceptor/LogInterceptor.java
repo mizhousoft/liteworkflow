@@ -9,7 +9,7 @@ import com.liteworkflow.engine.persistence.entity.Task;
 /**
  * 日志拦截器
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class LogInterceptor implements SnakerInterceptor

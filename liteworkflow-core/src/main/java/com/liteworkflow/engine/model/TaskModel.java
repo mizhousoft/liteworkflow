@@ -12,7 +12,7 @@ import com.liteworkflow.engine.scheduling.JobCallback;
 /**
  * 任务定义task元素
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class TaskModel extends WorkModel
@@ -116,11 +116,6 @@ public class TaskModel extends WorkModel
 	 * 分配参与者处理对象
 	 */
 	private AssignmentHandler assignmentHandlerObject;
-
-	/**
-	 * 字段模型集合
-	 */
-	private List<FieldModel> fields = null;
 
 	public boolean isPerformAny()
 	{
@@ -245,16 +240,6 @@ public class TaskModel extends WorkModel
 			callbackObject = (JobCallback) ClassHelper.newInstance(callbackStr);
 			AssertHelper.notNull(callbackObject, "回调处理类实例化失败");
 		}
-	}
-
-	public List<FieldModel> getFields()
-	{
-		return fields;
-	}
-
-	public void setFields(List<FieldModel> fields)
-	{
-		this.fields = fields;
 	}
 
 	/**

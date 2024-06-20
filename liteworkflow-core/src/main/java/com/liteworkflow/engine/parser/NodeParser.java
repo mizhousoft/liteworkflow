@@ -7,7 +7,7 @@ import com.liteworkflow.engine.model.NodeModel;
 /**
  * 节点解析接口
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public interface NodeParser
@@ -33,14 +33,6 @@ public interface NodeParser
 	public static final String ATTR_HANDLECLASS = "handleClass";
 
 	public static final String ATTR_FORM = "form";
-
-	public static final String ATTR_FIELD = "field";
-
-	public static final String ATTR_VALUE = "value";
-
-	public static final String ATTR_ATTR = "attr";
-
-	public static final String ATTR_TYPE = "type";
 
 	public static final String ATTR_ASSIGNEE = "assignee";
 
@@ -97,4 +89,11 @@ public interface NodeParser
 	 * @return 节点模型
 	 */
 	public NodeModel getModel();
+
+	/**
+	 * 获取节点名称
+	 * 
+	 * @return
+	 */
+	public String getNodeName();
 }

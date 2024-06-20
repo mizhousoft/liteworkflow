@@ -7,7 +7,7 @@ import com.liteworkflow.engine.persistence.entity.Task;
 /**
  * 任务job执行后的回调类
  * 
- * @author yuqs
+ * @author
  * @since 1.4
  */
 public interface JobCallback

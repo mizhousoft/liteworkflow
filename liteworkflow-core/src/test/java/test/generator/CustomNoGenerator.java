@@ -4,7 +4,7 @@ import com.liteworkflow.engine.impl.NoGenerator;
 import com.liteworkflow.engine.model.ProcessModel;
 
 /**
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class CustomNoGenerator implements NoGenerator

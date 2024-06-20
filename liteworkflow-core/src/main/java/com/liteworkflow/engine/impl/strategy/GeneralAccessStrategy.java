@@ -10,7 +10,7 @@ import com.liteworkflow.engine.persistence.entity.TaskActor;
  * 基于用户或组（角色、部门等）的访问策略类
  * 该策略类适合组作为参与者的情况
  * 
- * @author yuqs
+ * @author
  * @since 1.4
  */
 public class GeneralAccessStrategy implements TaskAccessStrategy

@@ -16,7 +16,7 @@ import com.liteworkflow.ProcessException;
 /**
  * 流数据帮助类
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class StreamHelper

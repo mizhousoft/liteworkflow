@@ -10,7 +10,7 @@ import com.liteworkflow.engine.persistence.request.WorkItemPageRequest;
 import test.TestSpring;
 
 /**
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class TestQueryHistTask extends TestSpring

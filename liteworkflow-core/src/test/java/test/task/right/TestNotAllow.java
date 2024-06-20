@@ -17,7 +17,7 @@ import test.TestSpring;
 /**
  * 测试无权限执行任务
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class TestNotAllow extends TestSpring

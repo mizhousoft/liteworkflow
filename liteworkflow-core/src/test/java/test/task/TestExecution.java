@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import test.TestSpring;
 
 /**
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class TestExecution extends TestSpring

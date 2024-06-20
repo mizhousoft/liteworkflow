@@ -3,7 +3,7 @@ package com.liteworkflow.engine.helper;
 /**
  * 断言帮助类
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public abstract class AssertHelper

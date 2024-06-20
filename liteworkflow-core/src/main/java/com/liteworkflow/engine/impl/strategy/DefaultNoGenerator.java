@@ -11,7 +11,7 @@ import com.mizhousoft.commons.lang.LocalDateTimeUtils;
  * 默认的流程实例编号生成器
  * 编号生成规则为:yyyyMMdd-HH:mm:ss-SSS-random
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class DefaultNoGenerator implements NoGenerator

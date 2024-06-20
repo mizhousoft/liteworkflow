@@ -7,7 +7,7 @@ import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 /**
  * 服务查找接口，由{@link ProcessEngineConfigurationImpl}设置
  * 
- * @author yuqs
+ * @author
  * @since 1.5
  */
 public interface Context

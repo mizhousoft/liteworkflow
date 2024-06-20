@@ -8,7 +8,7 @@ import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 /**
  * 提醒接口
  * 
- * @author yuqs
+ * @author
  * @since 2.0
  */
 public interface IReminder

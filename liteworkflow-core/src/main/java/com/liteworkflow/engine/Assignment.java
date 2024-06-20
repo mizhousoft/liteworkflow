@@ -6,7 +6,7 @@ import com.liteworkflow.engine.model.TaskModel;
 /**
  * 分配参与者的处理抽象类
  * 
- * @author yuqs
+ * @author
  * @since 2.1.0
  */
 public abstract class Assignment implements AssignmentHandler

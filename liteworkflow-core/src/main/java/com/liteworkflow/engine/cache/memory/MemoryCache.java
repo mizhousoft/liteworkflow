@@ -8,7 +8,7 @@ import com.liteworkflow.engine.cache.CacheException;
 /**
  * 基于内存管理cache
  * 
- * @author yuqs
+ * @author
  * @since 1.3
  */
 public class MemoryCache<K, V> implements Cache<K, V>

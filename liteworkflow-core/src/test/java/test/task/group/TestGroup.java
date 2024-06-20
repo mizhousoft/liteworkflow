@@ -19,7 +19,7 @@ import test.TestSpring;
 /**
  * 测试该类时，确认是否配置了自定义的访问策略，请检查snaker.xml中的配置
  * 
- * @author yuqs
+ * @author
  * @since 1.4
  */
 public class TestGroup extends TestSpring

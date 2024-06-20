@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * 模型元素基类
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class BaseModel implements Serializable
@@ -25,21 +25,41 @@ public class BaseModel implements Serializable
 	 */
 	private String displayName;
 
+	/**
+	 * 获取name
+	 * 
+	 * @return
+	 */
 	public String getName()
 	{
 		return name;
 	}
 
+	/**
+	 * 设置name
+	 * 
+	 * @param name
+	 */
 	public void setName(String name)
 	{
 		this.name = name;
 	}
 
+	/**
+	 * 获取displayName
+	 * 
+	 * @return
+	 */
 	public String getDisplayName()
 	{
 		return displayName;
 	}
 
+	/**
+	 * 设置displayName
+	 * 
+	 * @param displayName
+	 */
 	public void setDisplayName(String displayName)
 	{
 		this.displayName = displayName;

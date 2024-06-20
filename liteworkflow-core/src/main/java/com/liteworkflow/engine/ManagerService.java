@@ -7,7 +7,7 @@ import com.liteworkflow.engine.persistence.entity.Surrogate;
  * 委托管理
  * 时限控制
  * 
- * @author yuqs
+ * @author
  * @since 1.4
  */
 public interface ManagerService

@@ -18,7 +18,7 @@ import test.TestSpring;
  * 测试简单的子流程
  * start->task1->subprocess1->end
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class TestSubProcess1 extends TestSpring

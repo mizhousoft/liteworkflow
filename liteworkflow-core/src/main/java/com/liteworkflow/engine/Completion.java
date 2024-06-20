@@ -6,7 +6,7 @@ import com.liteworkflow.engine.persistence.entity.HistoricTask;
 /**
  * 任务、实例完成时触发动作的接口
  * 
- * @author yuqs
+ * @author
  * @since 2.2.0
  */
 public interface Completion

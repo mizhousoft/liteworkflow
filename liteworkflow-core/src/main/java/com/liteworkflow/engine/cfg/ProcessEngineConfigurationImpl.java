@@ -1,21 +1,12 @@
 package com.liteworkflow.engine.cfg;
 
-import java.io.InputStream;
-
-import javax.xml.parsers.DocumentBuilder;
-
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.HistoryService;
 import com.liteworkflow.engine.ManagerService;
 import com.liteworkflow.engine.ProcessEngine;
@@ -26,10 +17,6 @@ import com.liteworkflow.engine.RuntimeService;
 import com.liteworkflow.engine.TaskService;
 import com.liteworkflow.engine.cache.CacheManager;
 import com.liteworkflow.engine.cache.memory.MemoryCacheManager;
-import com.liteworkflow.engine.helper.ClassHelper;
-import com.liteworkflow.engine.helper.ConfigHelper;
-import com.liteworkflow.engine.helper.StreamHelper;
-import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.impl.HistoryServiceImpl;
 import com.liteworkflow.engine.impl.ManagerServiceImpl;
 import com.liteworkflow.engine.impl.ProcessEngineImpl;
@@ -69,22 +56,17 @@ import com.liteworkflow.engine.persistence.service.impl.SurrogateEntityServiceIm
 import com.liteworkflow.engine.persistence.service.impl.TaskActorEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.TaskEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.WorkItemEntityServiceImpl;
-import com.liteworkflow.engine.util.XmlUtils;
 
 /**
  * 只允许应用程序存在一个Configuration实例
  * 初始化服务上下文，查找流程引擎实现类并初始化依赖的服务
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguration, ApplicationContextAware
 {
 	private static final Logger log = LoggerFactory.getLogger(ProcessEngineConfigurationImpl.class);
-
-	private static final String BASE_CONFIG_FILE = "base.config.xml";
-
-	private final static String USER_CONFIG_FILE = "snaker.xml";
 
 	/**
 	 * Spring上下文
@@ -127,8 +109,6 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		ServiceContext.setContext(new SpringContext(applicationContext));
 
 		initServices();
-
-		parser();
 
 		this.processEngine = new ProcessEngineImpl(this);
 
@@ -424,79 +404,6 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		workItemEntityService.setWorkItemMapper(workItemMapper);
 
 		return workItemEntityService;
-	}
-
-	/**
-	 * 依次解析框架固定的配置及用户自定义的配置
-	 * 固定配置文件:base.config.xml
-	 * 扩展配置文件:ext.config.xml
-	 * 用户自定义配置文件:snaker.xml
-	 */
-	public void parser()
-	{
-		log.debug("Service parsing start......");
-
-		// 默认使用snaker.xml配置自定义的bean
-		String config = ConfigHelper.getProperty("config");
-		if (StringHelper.isEmpty(config))
-		{
-			config = USER_CONFIG_FILE;
-		}
-		parser(config);
-		parser(BASE_CONFIG_FILE);
-
-		log.debug("Service parsing finish......");
-	}
-
-	/**
-	 * 解析给定resource配置，并注册到ServiceContext上下文中
-	 * 
-	 * @param resource 资源
-	 */
-	private void parser(String resource)
-	{
-		// 解析所有配置节点，并实例化class指定的类
-		DocumentBuilder documentBuilder = XmlUtils.createDocumentBuilder();
-		try
-		{
-			if (documentBuilder != null)
-			{
-				InputStream input = StreamHelper.openStream(resource);
-				if (input == null)
-					return;
-				Document doc = documentBuilder.parse(input);
-				Element configElement = doc.getDocumentElement();
-				NodeList nodeList = configElement.getChildNodes();
-				int nodeSize = nodeList.getLength();
-				for (int i = 0; i < nodeSize; i++)
-				{
-					Node node = nodeList.item(i);
-					if (node.getNodeType() == Node.ELEMENT_NODE)
-					{
-						Element element = (Element) node;
-						String name = element.getAttribute("name");
-						String className = element.getAttribute("class");
-
-						if (StringHelper.isEmpty(name))
-						{
-							name = className;
-						}
-						if (ServiceContext.exist(name))
-						{
-							log.warn("Duplicate name is:" + name);
-							continue;
-						}
-
-						Class<?> clazz = ClassHelper.loadClass(className);
-						ServiceContext.put(name, clazz);
-					}
-				}
-			}
-		}
-		catch (Exception e)
-		{
-			throw new ProcessException("资源解析失败，请检查配置文件[" + resource + "]", e.getCause());
-		}
 	}
 
 	/**

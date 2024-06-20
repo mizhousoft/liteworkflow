@@ -3,7 +3,7 @@ package com.liteworkflow.engine.model;
 /**
  * 工作元素
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public abstract class WorkModel extends NodeModel

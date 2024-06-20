@@ -8,7 +8,7 @@ import com.liteworkflow.engine.interceptor.SnakerInterceptor;
 import com.liteworkflow.engine.persistence.entity.Task;
 
 /**
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class LocalTaskInterceptor implements SnakerInterceptor

@@ -22,7 +22,7 @@ import test.TestSpring;
 /**
  * 测试模型操作
  * 
- * @author yuqs
+ * @author
  * @since 2.0
  */
 public class TestModel extends TestSpring

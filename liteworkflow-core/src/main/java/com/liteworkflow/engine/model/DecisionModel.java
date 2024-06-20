@@ -1,13 +1,11 @@
 package com.liteworkflow.engine.model;
 
 import com.liteworkflow.engine.DecisionHandler;
-import com.liteworkflow.engine.helper.ClassHelper;
-import com.liteworkflow.engine.helper.StringHelper;
 
 /**
  * 决策定义decision元素
  * 
- * @author yuqs
+ * @author
  * @since 1.0
  */
 public class DecisionModel extends NodeModel
@@ -30,7 +28,7 @@ public class DecisionModel extends NodeModel
 	/**
 	 * 决策处理类实例
 	 */
-	private DecisionHandler decide;
+	private DecisionHandler decisionHandler;
 
 	public String getExpr()
 	{
@@ -50,19 +48,25 @@ public class DecisionModel extends NodeModel
 	public void setHandleClass(String handleClass)
 	{
 		this.handleClass = handleClass;
-		if (StringHelper.isNotEmpty(handleClass))
-		{
-			decide = (DecisionHandler) ClassHelper.newInstance(handleClass);
-		}
 	}
 
 	/**
-	 * 获取decide
+	 * 获取decisionHandler
 	 * 
 	 * @return
 	 */
-	public DecisionHandler getDecide()
+	public DecisionHandler getDecisionHandler()
 	{
-		return decide;
+		return decisionHandler;
+	}
+
+	/**
+	 * 设置decisionHandler
+	 * 
+	 * @param decisionHandler
+	 */
+	public void setDecisionHandler(DecisionHandler decisionHandler)
+	{
+		this.decisionHandler = decisionHandler;
 	}
 }

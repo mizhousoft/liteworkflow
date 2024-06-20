@@ -13,7 +13,7 @@ import com.liteworkflow.engine.impl.Context;
 /**
  * 简单的服务查找实现类，由 {@link ProcessEngineConfigurationImpl}设置
  * 
- * @author yuqs
+ * @author
  * @since 1.5
  */
 public class SimpleContext implements Context
