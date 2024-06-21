@@ -3,11 +3,6 @@ package com.liteworkflow.engine.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.liteworkflow.engine.helper.ClassHelper;
-import com.liteworkflow.engine.helper.StringHelper;
-import com.liteworkflow.engine.impl.NoGenerator;
-import com.liteworkflow.engine.impl.strategy.DefaultNoGenerator;
-
 /**
  * 流程定义process元素
  * 
@@ -24,8 +19,11 @@ public class ProcessModel extends BaseModel
 	/**
 	 * 节点元素集合
 	 */
-	private List<NodeModel> nodes = new ArrayList<NodeModel>();
+	private List<NodeModel> nodeModels = new ArrayList<NodeModel>();
 
+	/**
+	 * 任务元素集合
+	 */
 	private List<TaskModel> taskModels = new ArrayList<TaskModel>();
 
 	/**
@@ -39,38 +37,9 @@ public class ProcessModel extends BaseModel
 	private String expireTime;
 
 	/**
-	 * 实例编号生成的class
-	 */
-	private String instanceNoClass;
-
-	/**
-	 * 实例编号生成器对象
-	 */
-	private NoGenerator generator;
-
-	/**
 	 * lock
 	 */
 	private final Object lock = new Object();
-
-	/**
-	 * 返回当前流程定义的所有工作任务节点模型
-	 * 
-	 * @return
-	 * @deprecated
-	 */
-	public List<WorkModel> getWorkModels()
-	{
-		List<WorkModel> models = new ArrayList<WorkModel>();
-		for (NodeModel node : nodes)
-		{
-			if (node instanceof WorkModel)
-			{
-				models.add((WorkModel) node);
-			}
-		}
-		return models;
-	}
 
 	/**
 	 * 获取所有的有序任务模型集合
@@ -84,9 +53,12 @@ public class ProcessModel extends BaseModel
 			synchronized (lock)
 			{
 				if (taskModels.isEmpty())
-					buildModels(taskModels, getStart().getNextModels(TaskModel.class), TaskModel.class);
+				{
+					buildModels(taskModels, getStartModel().getNextModels(TaskModel.class), TaskModel.class);
+				}
 			}
 		}
+
 		return taskModels;
 	}
 
@@ -100,7 +72,7 @@ public class ProcessModel extends BaseModel
 	public <T> List<T> getModels(Class<T> clazz)
 	{
 		List<T> models = new ArrayList<T>();
-		buildModels(models, getStart().getNextModels(clazz), clazz);
+		buildModels(models, getStartModel().getNextModels(clazz), clazz);
 		return models;
 	}
 
@@ -121,15 +93,16 @@ public class ProcessModel extends BaseModel
 	 * 
 	 * @return
 	 */
-	public StartModel getStart()
+	public StartModel getStartModel()
 	{
-		for (NodeModel node : nodes)
+		for (NodeModel node : nodeModels)
 		{
 			if (node instanceof StartModel)
 			{
 				return (StartModel) node;
 			}
 		}
+
 		return null;
 	}
 
@@ -141,13 +114,14 @@ public class ProcessModel extends BaseModel
 	 */
 	public NodeModel getNode(String nodeName)
 	{
-		for (NodeModel node : nodes)
+		for (NodeModel node : nodeModels)
 		{
 			if (node.getName().equals(nodeName))
 			{
 				return node;
 			}
 		}
+
 		return null;
 	}
 
@@ -159,7 +133,7 @@ public class ProcessModel extends BaseModel
 	 */
 	public <T> boolean containsNodeNames(Class<T> T, String... nodeNames)
 	{
-		for (NodeModel node : nodes)
+		for (NodeModel node : nodeModels)
 		{
 			if (!T.isInstance(node))
 			{
@@ -173,17 +147,18 @@ public class ProcessModel extends BaseModel
 				}
 			}
 		}
+
 		return false;
 	}
 
 	public List<NodeModel> getNodes()
 	{
-		return nodes;
+		return nodeModels;
 	}
 
 	public void setNodes(List<NodeModel> nodes)
 	{
-		this.nodes = nodes;
+		this.nodeModels = nodes;
 	}
 
 	public String getExpireTime()
@@ -204,29 +179,5 @@ public class ProcessModel extends BaseModel
 	public void setInstanceUrl(String instanceUrl)
 	{
 		this.instanceUrl = instanceUrl;
-	}
-
-	public String getInstanceNoClass()
-	{
-		return instanceNoClass;
-	}
-
-	public void setInstanceNoClass(String instanceNoClass)
-	{
-		this.instanceNoClass = instanceNoClass;
-		if (StringHelper.isNotEmpty(instanceNoClass))
-		{
-			generator = (NoGenerator) ClassHelper.newInstance(instanceNoClass);
-		}
-	}
-
-	public NoGenerator getGenerator()
-	{
-		return generator == null ? new DefaultNoGenerator() : generator;
-	}
-
-	public void setGenerator(NoGenerator generator)
-	{
-		this.generator = generator;
 	}
 }

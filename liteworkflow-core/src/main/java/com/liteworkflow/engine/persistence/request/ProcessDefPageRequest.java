@@ -1,7 +1,8 @@
 package com.liteworkflow.engine.persistence.request;
 
-import com.liteworkflow.engine.Constants;
 import com.mizhousoft.commons.data.domain.PageRequest;
+import com.mizhousoft.commons.data.domain.Sort;
+import com.mizhousoft.commons.data.domain.Sort.Direction;
 
 /**
  * ProcessFindRequest
@@ -42,11 +43,16 @@ public class ProcessDefPageRequest extends PageRequest
 	 */
 	private String processType;
 
-	// 排序字段
-	private String orderBy = "name";
+	/**
+	 * 构造函数
+	 *
+	 */
+	public ProcessDefPageRequest()
+	{
+		super();
 
-	// 排序类型ASC/DESC
-	private String order = Constants.ASC;
+		this.setSort(Sort.create(Direction.ASC, "name"));
+	}
 
 	/**
 	 * 获取names
@@ -166,45 +172,5 @@ public class ProcessDefPageRequest extends PageRequest
 	public void setProcessType(String processType)
 	{
 		this.processType = processType;
-	}
-
-	/**
-	 * 获取orderBy
-	 * 
-	 * @return
-	 */
-	public String getOrderBy()
-	{
-		return orderBy;
-	}
-
-	/**
-	 * 设置orderBy
-	 * 
-	 * @param orderBy
-	 */
-	public void setOrderBy(String orderBy)
-	{
-		this.orderBy = orderBy;
-	}
-
-	/**
-	 * 获取order
-	 * 
-	 * @return
-	 */
-	public String getOrder()
-	{
-		return order;
-	}
-
-	/**
-	 * 设置order
-	 * 
-	 * @param order
-	 */
-	public void setOrder(String order)
-	{
-		this.order = order;
 	}
 }

@@ -75,11 +75,6 @@ public class ProcessInstance implements Serializable
 	private Integer priority;
 
 	/**
-	 * 流程实例编号
-	 */
-	private String orderNo;
-
-	/**
 	 * 流程实例附属变量
 	 */
 	private String variable;
@@ -203,16 +198,6 @@ public class ProcessInstance implements Serializable
 		this.variable = variable;
 	}
 
-	public String getOrderNo()
-	{
-		return orderNo;
-	}
-
-	public void setOrderNo(String orderNo)
-	{
-		this.orderNo = orderNo;
-	}
-
 	public Integer getVersion()
 	{
 		return version;
@@ -226,11 +211,10 @@ public class ProcessInstance implements Serializable
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append("Order(id=").append(this.id);
+		sb.append("ProcessInstance(id=").append(this.id);
 		sb.append(",processId=").append(this.processId);
 		sb.append(",creator=").append(this.creator);
-		sb.append(",createTime").append(this.createTime);
-		sb.append(",orderNo=").append(this.orderNo).append(")");
+		sb.append(",createTime").append(this.createTime).append(")");
 		return sb.toString();
 	}
 }

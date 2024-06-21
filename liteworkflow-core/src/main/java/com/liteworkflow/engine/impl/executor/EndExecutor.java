@@ -66,7 +66,7 @@ public class EndExecutor extends NodeExecutor
 
 			SubProcessModel spm = (SubProcessModel) pm.getNode(instance.getParentNodeName());
 			Execution newExecution = new Execution(engine, process, parentInstance, execution.getArgs());
-			newExecution.setChildOrderId(instance.getId());
+			newExecution.setChildInstanceId(instance.getId());
 			newExecution.setTask(execution.getTask());
 
 			Executor executor = ExecutorBuilder.build(spm);

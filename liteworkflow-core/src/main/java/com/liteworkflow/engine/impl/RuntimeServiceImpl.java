@@ -6,8 +6,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.liteworkflow.engine.ProcessInstanceService;
 import com.liteworkflow.engine.ProcessEngineConfiguration;
+import com.liteworkflow.engine.ProcessInstanceService;
 import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.RuntimeService;
 import com.liteworkflow.engine.helper.AssertHelper;
@@ -15,10 +15,6 @@ import com.liteworkflow.engine.impl.executor.ExecutorBuilder;
 import com.liteworkflow.engine.model.StartModel;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
-import com.liteworkflow.engine.persistence.entity.WorkItem;
-import com.liteworkflow.engine.persistence.request.WorkItemPageRequest;
-import com.liteworkflow.engine.persistence.service.WorkItemEntityService;
-import com.mizhousoft.commons.data.domain.Page;
 
 /**
  * TODO
@@ -44,21 +40,18 @@ public class RuntimeServiceImpl implements RuntimeService
 	 */
 	protected ProcessInstanceService processInstanceService;
 
-	private WorkItemEntityService workItemEntityService;
-
 	/**
 	 * 构造函数
 	 *
 	 * @param configuration
 	 */
-	public RuntimeServiceImpl(ProcessEngineConfiguration configuration, WorkItemEntityService workItemEntityService)
+	public RuntimeServiceImpl(ProcessEngineConfiguration configuration)
 	{
 		super();
 		this.configuration = configuration;
 
 		this.repositoryService = configuration.getRepositoryService();
 		this.processInstanceService = configuration.getProcessInstanceService();
-		this.workItemEntityService = workItemEntityService;
 	}
 
 	/**
@@ -145,7 +138,7 @@ public class RuntimeServiceImpl implements RuntimeService
 		Execution execution = execute(process, operator, args, null, null);
 		if (process.getModel() != null)
 		{
-			StartModel start = process.getModel().getStart();
+			StartModel start = process.getModel().getStartModel();
 			AssertHelper.notNull(start, "流程定义[name=" + process.getName() + ", version=" + process.getVersion() + "]没有开始节点");
 			Executor executor = ExecutorBuilder.build(start);
 			executor.execute(execution, start);
@@ -161,7 +154,7 @@ public class RuntimeServiceImpl implements RuntimeService
 	public ProcessInstance startInstanceByExecution(Execution execution)
 	{
 		ProcessDefinition process = execution.getProcess();
-		StartModel start = process.getModel().getStart();
+		StartModel start = process.getModel().getStartModel();
 		AssertHelper.notNull(start, "流程定义[id=" + process.getId() + "]没有开始节点");
 
 		Execution current = execute(process, execution.getOperator(), execution.getArgs(), execution.getParentInstance().getId(),
@@ -170,12 +163,6 @@ public class RuntimeServiceImpl implements RuntimeService
 		executor.execute(current, start);
 
 		return current.getInstance();
-	}
-
-	@Override
-	public Page<WorkItem> getWorkItems(WorkItemPageRequest request)
-	{
-		return workItemEntityService.queryPageData(request);
 	}
 
 	/**

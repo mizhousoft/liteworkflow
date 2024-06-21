@@ -114,7 +114,9 @@
                 </foreach>
             </if>
 		</where>
-		order by #{request.orderBy} #{request.order}
+		<if test="request.sortString != null">
+            order by #{request.sortString}
+   		</if>
 		limit #{rowOffset}, #{request.pageSize}
 	</select>
 	

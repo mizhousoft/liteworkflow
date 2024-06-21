@@ -59,7 +59,9 @@
         <if test="operateTime != null">
 			and sdate &lt;= #{operateTime} and edate &gt;= #{operateTime}
    		</if>
-		order by #{orderBy} #{order}
+		<if test="sortString != null">
+            order by #{sortString}
+   		</if>
 	</select>
 	
 </mapper>

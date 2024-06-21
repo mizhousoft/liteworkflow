@@ -26,8 +26,6 @@ public interface NodeParser
 
 	public static final String ATTR_INSTANCEURL = "instanceUrl";
 
-	public static final String ATTR_INSTANCENOCLASS = "instanceNoClass";
-
 	public static final String ATTR_EXPR = "expr";
 
 	public static final String ATTR_HANDLECLASS = "handleClass";

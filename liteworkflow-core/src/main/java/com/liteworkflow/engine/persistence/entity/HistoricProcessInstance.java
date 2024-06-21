@@ -66,11 +66,6 @@ public class HistoricProcessInstance implements Serializable
 	private Integer priority;
 
 	/**
-	 * 流程实例编号
-	 */
-	private String orderNo;
-
-	/**
 	 * 流程实例附属变量
 	 */
 	private String variable;
@@ -89,7 +84,6 @@ public class HistoricProcessInstance implements Serializable
 		this.creator = instance.getCreator();
 		this.parentId = instance.getParentId();
 		this.priority = instance.getPriority();
-		this.orderNo = instance.getOrderNo();
 		this.variable = instance.getVariable();
 	}
 
@@ -109,7 +103,6 @@ public class HistoricProcessInstance implements Serializable
 		instance.setLastUpdator(this.creator);
 		instance.setLastUpdateTime(this.endTime);
 		instance.setExpireTime(this.expireTime);
-		instance.setOrderNo(this.orderNo);
 		instance.setPriority(this.priority);
 		instance.setVariable(this.variable);
 		instance.setVersion(0);
@@ -216,16 +209,6 @@ public class HistoricProcessInstance implements Serializable
 		this.id = id;
 	}
 
-	public String getOrderNo()
-	{
-		return orderNo;
-	}
-
-	public void setOrderNo(String orderNo)
-	{
-		this.orderNo = orderNo;
-	}
-
 	public String getVariable()
 	{
 		return variable;
@@ -251,8 +234,7 @@ public class HistoricProcessInstance implements Serializable
 		sb.append("HistoricProcessInstance(id=").append(this.id);
 		sb.append(",processId=").append(this.processId);
 		sb.append(",creator=").append(this.creator);
-		sb.append(",createTime").append(this.createTime);
-		sb.append(",orderNo=").append(this.orderNo).append(")");
+		sb.append(",createTime").append(this.createTime).append(")");
 		return sb.toString();
 	}
 }

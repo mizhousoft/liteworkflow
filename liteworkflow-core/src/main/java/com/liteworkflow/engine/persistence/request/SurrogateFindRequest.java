@@ -1,14 +1,18 @@
 package com.liteworkflow.engine.persistence.request;
 
-import com.liteworkflow.engine.Constants;
+import com.mizhousoft.commons.data.domain.PageRequest;
+import com.mizhousoft.commons.data.domain.Sort;
+import com.mizhousoft.commons.data.domain.Sort.Direction;
 
 /**
  * SurrogateFindRequest
  *
  * @version
  */
-public class SurrogateFindRequest
+public class SurrogateFindRequest extends PageRequest
 {
+	private static final long serialVersionUID = -2654740274375364249L;
+
 	/**
 	 * 名称
 	 */
@@ -21,11 +25,16 @@ public class SurrogateFindRequest
 
 	private String operateTime;
 
-	// 排序字段
-	private String orderBy = "sdate";
+	/**
+	 * 构造函数
+	 *
+	 */
+	public SurrogateFindRequest()
+	{
+		super();
 
-	// 排序类型ASC/DESC
-	private String order = Constants.DESC;
+		this.setSort(Sort.create(Direction.DESC, "sdate"));
+	}
 
 	/**
 	 * 获取names
@@ -87,43 +96,4 @@ public class SurrogateFindRequest
 		this.operateTime = operateTime;
 	}
 
-	/**
-	 * 获取orderBy
-	 * 
-	 * @return
-	 */
-	public String getOrderBy()
-	{
-		return orderBy;
-	}
-
-	/**
-	 * 设置orderBy
-	 * 
-	 * @param orderBy
-	 */
-	public void setOrderBy(String orderBy)
-	{
-		this.orderBy = orderBy;
-	}
-
-	/**
-	 * 获取order
-	 * 
-	 * @return
-	 */
-	public String getOrder()
-	{
-		return order;
-	}
-
-	/**
-	 * 设置order
-	 * 
-	 * @param order
-	 */
-	public void setOrder(String order)
-	{
-		this.order = order;
-	}
 }

@@ -68,15 +68,12 @@
             <if test="request.createTimeEnd != null">
                 and cc.create_Time &lt;= #{request.createTimeEnd}
        		</if>
-       		<if test="request.orderNo != null">
-                and order_No = #{request.orderNo}
-       		</if>
 		</where>
 	</select>
 	
 	<select id="findPageData" parameterType="java.util.Map" resultMap="com.liteworkflow.engine.persistence.mapper.HistoricProcessInstanceMapper.HistoricProcessInstanceMap">
 		select id, process_Id, state, priority, cc.creator, cc.create_Time, end_Time, parent_Id, expire_Time,
-		order_No, variable
+		variable
 		from wf_cc_process_instance cc left join wf_historic_process_instance o on cc.instance_Id = o.id
 		<where>
        		<if test="request.operators != null and request.operators.length != 0">
@@ -100,11 +97,10 @@
             <if test="request.createTimeEnd != null">
                 and cc.create_Time &lt;= #{request.createTimeEnd}
        		</if>
-       		<if test="request.orderNo != null">
-                and order_No = #{request.orderNo}
-       		</if>
 		</where>
-		order by #{request.orderBy} #{request.order}
+		<if test="request.sortString != null">
+            order by #{request.sortString}
+   		</if>
 		limit #{rowOffset}, #{request.pageSize}
 	</select>
 	

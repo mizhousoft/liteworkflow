@@ -4,9 +4,6 @@ import java.util.Map;
 
 import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
-import com.liteworkflow.engine.persistence.entity.WorkItem;
-import com.liteworkflow.engine.persistence.request.WorkItemPageRequest;
-import com.mizhousoft.commons.data.domain.Page;
 
 /**
  * TODO
@@ -90,14 +87,4 @@ public interface RuntimeService
 	 * @return ProcessInstance 流程实例
 	 */
 	public ProcessInstance startInstanceByExecution(Execution execution);
-
-	/**
-	 * 根据filter分页查询工作项（包含process、ProcessInstance、task三个实体的字段集合）
-	 * 
-	 * @param page 分页对象
-	 * @param filter 查询过滤器
-	 * @return List<WorkItem> 活动工作项集合
-	 */
-	Page<WorkItem> getWorkItems(WorkItemPageRequest request);
-
 }

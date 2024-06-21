@@ -35,7 +35,6 @@ import com.liteworkflow.engine.persistence.mapper.ProcessInstanceMapper;
 import com.liteworkflow.engine.persistence.mapper.SurrogateMapper;
 import com.liteworkflow.engine.persistence.mapper.TaskActorMapper;
 import com.liteworkflow.engine.persistence.mapper.TaskMapper;
-import com.liteworkflow.engine.persistence.mapper.WorkItemMapper;
 import com.liteworkflow.engine.persistence.service.CCProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricTaskActorEntityService;
@@ -45,7 +44,6 @@ import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.SurrogateEntityService;
 import com.liteworkflow.engine.persistence.service.TaskActorEntityService;
 import com.liteworkflow.engine.persistence.service.TaskEntityService;
-import com.liteworkflow.engine.persistence.service.WorkItemEntityService;
 import com.liteworkflow.engine.persistence.service.impl.CCProcessInstanceEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.HistoricProcessInstanceEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.HistoricTaskActorEntityServiceImpl;
@@ -55,7 +53,6 @@ import com.liteworkflow.engine.persistence.service.impl.ProcessInstanceEntitySer
 import com.liteworkflow.engine.persistence.service.impl.SurrogateEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.TaskActorEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.TaskEntityServiceImpl;
-import com.liteworkflow.engine.persistence.service.impl.WorkItemEntityServiceImpl;
 
 /**
  * 只允许应用程序存在一个Configuration实例
@@ -206,8 +203,6 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		ProcessInstanceEntityService processInstanceEntityService = initProcessInstanceEntityService(sqlSessionFactory,
 		        historicProcessInstanceEntityService);
 
-		WorkItemEntityService workItemEntityService = initWorkItemEntityService(sqlSessionFactory);
-
 		RepositoryServiceImpl repositoryService = new RepositoryServiceImpl();
 		repositoryService.setCacheManager(cacheManager);
 		repositoryService.setHistoricProcessInstanceEntityService(historicProcessInstanceEntityService);
@@ -220,7 +215,6 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		historyService.setHistoricProcessInstanceEntityService(historicProcessInstanceEntityService);
 		historyService.setHistoricTaskEntityService(historicTaskEntityService);
 		historyService.setHistoricTaskActorEntityService(historicTaskActorEntityService);
-		historyService.setWorkItemEntityService(workItemEntityService);
 		this.historyService = historyService;
 
 		ProcessInstanceServiceImpl processInstanceService = new ProcessInstanceServiceImpl();
@@ -246,7 +240,7 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		managerService.setSurrogateEntityService(surrogateEntityService);
 		this.managerService = managerService;
 
-		RuntimeServiceImpl runtimeService = new RuntimeServiceImpl(this, workItemEntityService);
+		RuntimeServiceImpl runtimeService = new RuntimeServiceImpl(this);
 		this.runtimeService = runtimeService;
 	}
 
@@ -389,21 +383,6 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		surrogateEntityService.setSurrogateMapper(surrogateMapper);
 
 		return surrogateEntityService;
-	}
-
-	private WorkItemEntityService initWorkItemEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
-	{
-		MapperFactoryBean<WorkItemMapper> factoryBean = new MapperFactoryBean<WorkItemMapper>();
-		factoryBean.setMapperInterface(WorkItemMapper.class);
-		factoryBean.setAddToConfig(true);
-		factoryBean.setSqlSessionFactory(sqlSessionFactory);
-		factoryBean.afterPropertiesSet();
-		WorkItemMapper workItemMapper = (WorkItemMapper) factoryBean.getObject();
-
-		WorkItemEntityServiceImpl workItemEntityService = new WorkItemEntityServiceImpl();
-		workItemEntityService.setWorkItemMapper(workItemMapper);
-
-		return workItemEntityService;
 	}
 
 	/**

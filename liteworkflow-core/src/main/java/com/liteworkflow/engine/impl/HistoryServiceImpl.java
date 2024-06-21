@@ -6,16 +6,13 @@ import com.liteworkflow.engine.HistoryService;
 import com.liteworkflow.engine.persistence.entity.HistoricProcessInstance;
 import com.liteworkflow.engine.persistence.entity.HistoricTask;
 import com.liteworkflow.engine.persistence.entity.HistoricTaskActor;
-import com.liteworkflow.engine.persistence.entity.WorkItem;
 import com.liteworkflow.engine.persistence.request.CCInstancePageRequest;
 import com.liteworkflow.engine.persistence.request.HistoricProcessInstPageRequest;
 import com.liteworkflow.engine.persistence.request.TaskPageRequest;
-import com.liteworkflow.engine.persistence.request.WorkItemPageRequest;
 import com.liteworkflow.engine.persistence.service.CCProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricTaskActorEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricTaskEntityService;
-import com.liteworkflow.engine.persistence.service.WorkItemEntityService;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
@@ -30,8 +27,6 @@ public class HistoryServiceImpl implements HistoryService
 	private HistoricProcessInstanceEntityService historicProcessInstanceEntityService;
 
 	private CCProcessInstanceEntityService ccProcessInstanceEntityService;
-
-	private WorkItemEntityService workItemEntityService;
 
 	private HistoricTaskActorEntityService historicTaskActorEntityService;
 
@@ -92,12 +87,6 @@ public class HistoryServiceImpl implements HistoryService
 		return ccProcessInstanceEntityService.queryPageData(request);
 	}
 
-	@Override
-	public Page<WorkItem> getHistoricWorkItems(WorkItemPageRequest request)
-	{
-		return workItemEntityService.queryHistoric(request);
-	}
-
 	/**
 	 * 设置historicTaskEntityService
 	 * 
@@ -126,16 +115,6 @@ public class HistoryServiceImpl implements HistoryService
 	public void setCcProcessInstanceEntityService(CCProcessInstanceEntityService ccProcessInstanceEntityService)
 	{
 		this.ccProcessInstanceEntityService = ccProcessInstanceEntityService;
-	}
-
-	/**
-	 * 设置workItemEntityService
-	 * 
-	 * @param workItemEntityService
-	 */
-	public void setWorkItemEntityService(WorkItemEntityService workItemEntityService)
-	{
-		this.workItemEntityService = workItemEntityService;
 	}
 
 	/**

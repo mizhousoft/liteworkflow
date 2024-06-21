@@ -4,11 +4,9 @@ import java.util.List;
 
 import com.liteworkflow.engine.persistence.entity.HistoricProcessInstance;
 import com.liteworkflow.engine.persistence.entity.HistoricTask;
-import com.liteworkflow.engine.persistence.entity.WorkItem;
 import com.liteworkflow.engine.persistence.request.CCInstancePageRequest;
 import com.liteworkflow.engine.persistence.request.HistoricProcessInstPageRequest;
 import com.liteworkflow.engine.persistence.request.TaskPageRequest;
-import com.liteworkflow.engine.persistence.request.WorkItemPageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
@@ -83,13 +81,4 @@ public interface HistoryService
 	 * @return List<WorkItem> 抄送工作项集合
 	 */
 	Page<HistoricProcessInstance> getCCWorks(CCInstancePageRequest request);
-
-	/**
-	 * 根据filter分页查询已完成的历史任务项
-	 * 
-	 * @param page 分页对象
-	 * @param filter 查询过滤器
-	 * @return List<WorkItem> 历史工作项集合
-	 */
-	Page<WorkItem> getHistoricWorkItems(WorkItemPageRequest request);
 }

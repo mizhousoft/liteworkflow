@@ -1,7 +1,8 @@
 package com.liteworkflow.engine.persistence.request;
 
-import com.liteworkflow.engine.Constants;
 import com.mizhousoft.commons.data.domain.PageRequest;
+import com.mizhousoft.commons.data.domain.Sort;
+import com.mizhousoft.commons.data.domain.Sort.Direction;
 
 /**
  * HistoricProcessInstPageRequest
@@ -55,15 +56,15 @@ public class HistoricProcessInstPageRequest extends PageRequest
 	private String createTimeEnd;
 
 	/**
-	 * 实例编号
+	 * 构造函数
+	 *
 	 */
-	private String orderNo;
+	public HistoricProcessInstPageRequest()
+	{
+		super();
 
-	// 排序字段
-	private String orderBy = "o.create_Time";
-
-	// 排序类型ASC/DESC
-	private String order = Constants.DESC;
+		this.setSort(Sort.create(Direction.DESC, "o.create_Time"));
+	}
 
 	/**
 	 * 获取processId
@@ -243,65 +244,5 @@ public class HistoricProcessInstPageRequest extends PageRequest
 	public void setCreateTimeEnd(String createTimeEnd)
 	{
 		this.createTimeEnd = createTimeEnd;
-	}
-
-	/**
-	 * 获取orderNo
-	 * 
-	 * @return
-	 */
-	public String getOrderNo()
-	{
-		return orderNo;
-	}
-
-	/**
-	 * 设置orderNo
-	 * 
-	 * @param orderNo
-	 */
-	public void setOrderNo(String orderNo)
-	{
-		this.orderNo = orderNo;
-	}
-
-	/**
-	 * 获取orderBy
-	 * 
-	 * @return
-	 */
-	public String getOrderBy()
-	{
-		return orderBy;
-	}
-
-	/**
-	 * 设置orderBy
-	 * 
-	 * @param orderBy
-	 */
-	public void setOrderBy(String orderBy)
-	{
-		this.orderBy = orderBy;
-	}
-
-	/**
-	 * 获取order
-	 * 
-	 * @return
-	 */
-	public String getOrder()
-	{
-		return order;
-	}
-
-	/**
-	 * 设置order
-	 * 
-	 * @param order
-	 */
-	public void setOrder(String order)
-	{
-		this.order = order;
 	}
 }

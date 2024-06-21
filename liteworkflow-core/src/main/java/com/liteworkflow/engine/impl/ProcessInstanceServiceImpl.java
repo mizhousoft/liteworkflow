@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.liteworkflow.engine.Completion;
 import com.liteworkflow.engine.Constants;
-import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.ProcessInstanceService;
 import com.liteworkflow.engine.helper.DateHelper;
@@ -102,15 +101,6 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 			{
 				String expireTime = DateHelper.parseTime(args.get(model.getExpireTime()));
 				instance.setExpireTime(expireTime);
-			}
-			String orderNo = (String) args.get(ProcessEngine.ID);
-			if (StringHelper.isNotEmpty(orderNo))
-			{
-				instance.setOrderNo(orderNo);
-			}
-			else
-			{
-				instance.setOrderNo(model.getGenerator().generate(model));
 			}
 		}
 

@@ -13,15 +13,14 @@
 		<result property="endTime" column="end_Time" />
 		<result property="parentId" column="parent_Id" />
 		<result property="expireTime" column="expire_Time" />
-		<result property="orderNo" column="order_No" />
 		<result property="variable" column="variable" />
 	</resultMap>
 	
 	<insert id="save">
 		insert into wf_historic_process_instance (id, process_Id, state, creator, create_Time, end_Time, parent_Id, expire_Time,
-		order_No, variable)
+		variable)
 		values (#{id}, #{processId}, #{state}, #{creator}, #{createTime}, #{endTime}, #{parentId}, #{expireTime}, 
-		#{orderNo}, #{variable})
+		#{variable})
 	</insert>
 	
 	<update id="update">
@@ -38,7 +37,7 @@
 	
 	<select id="getHistoricInstance" parameterType="java.util.Map" resultMap="HistoricProcessInstanceMap">
 		select o.id, o.process_Id, o.state, o.priority, o.creator, o.create_Time, o.end_Time, o.parent_Id, 
-		o.expire_Time, o.order_No, o.variable 
+		o.expire_Time, o.variable 
 		from wf_historic_process_instance o 
 		where id = #{instanceId}
 	</select>
@@ -80,15 +79,12 @@
             <if test="request.createTimeEnd != null">
                 and o.create_Time &lt;= #{request.createTimeEnd}
        		</if>
-       		<if test="request.orderNo != null">
-                and o.order_No = #{request.orderNo}
-       		</if>
 		</where>
 	</select>
 	
 	<select id="findPageData" parameterType="java.util.Map" resultMap="HistoricProcessInstanceMap">
 		select o.id, o.process_Id, o.state, o.priority, o.creator, o.create_Time, o.end_Time, o.parent_Id,
-		o.expire_Time, o.order_No, o.variable 
+		o.expire_Time, o.variable 
 		from wf_historic_process_instance o left join wf_process_definition p on p.id = o.process_id
 		<where>
        		<if test="request.operators != null and request.operators.length != 0">
@@ -125,11 +121,10 @@
             <if test="request.createTimeEnd != null">
                 and o.create_Time &lt;= #{request.createTimeEnd}
        		</if>
-       		<if test="request.orderNo != null">
-                and o.order_No = #{request.orderNo}
-       		</if>
 		</where>
-		order by #{request.orderBy} #{request.order}
+		<if test="request.sortString != null">
+            order by #{request.sortString}
+   		</if>
 		limit #{rowOffset}, #{request.pageSize}
 	</select>
 	

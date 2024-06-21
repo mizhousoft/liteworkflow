@@ -22,7 +22,6 @@ CREATE TABLE wf_process_instance (
     last_Updator      VARCHAR(50) comment '上次更新人',
     priority          TINYINT(1) comment '优先级',
     parent_Node_Name  VARCHAR(100) comment '父流程依赖的节点名称',
-    order_No          VARCHAR(50) comment '流程实例编号',
     variable          VARCHAR(2000) comment '附属变量json存储',
     version           INT(3) comment '版本'
 )comment='流程实例表';
@@ -59,7 +58,6 @@ create table wf_historic_process_instance (
     expire_Time       VARCHAR(50) comment '期望完成时间',
     priority          TINYINT(1) comment '优先级',
     parent_Id         VARCHAR(32) comment '父流程ID',
-    order_No          VARCHAR(50) comment '流程实例编号',
     variable          VARCHAR(2000) comment '附属变量json存储'
 )comment='历史流程实例表';
 
@@ -109,13 +107,11 @@ create index IDX_CCINSTANCE_INSTANCE_ID on wf_cc_process_instance (instance_Id);
 
 create index IDX_PROCESS_NAME on wf_process_definition (name);
 create index IDX_INSTANCE_PROCESSID on wf_process_instance (process_Id);
-create index IDX_ORDER_NO on wf_process_instance (order_No);
 create index IDX_TASK_INSTANCE_ID on wf_task (instance_Id);
 create index IDX_TASK_TASKNAME on wf_task (task_Name);
 create index IDX_TASK_PARENTTASK on wf_task (parent_Task_Id);
 create index IDX_TASKACTOR_TASK on wf_task_actor (task_Id);
 create index IDX_HISTORIC_INSTANCE_PROCESSID on wf_historic_process_instance (process_Id);
-create index IDX_HISTORIC_ORDER_NO on wf_historic_process_instance (order_No);
 create index IDX_HISTORIC_TASK_INSTANCE_ID on wf_historic_task (instance_Id);
 create index IDX_HISTORIC_TASK_TASKNAME on wf_historic_task (task_Name);
 create index IDX_HISTORIC_TASK_PARENTTASK on wf_historic_task (parent_Task_Id);

@@ -62,7 +62,7 @@ public class JoinExecutor extends NodeExecutor
 		{
 			ProcessInstPageRequest request = new ProcessInstPageRequest();
 			request.setParentId(instance.getId());
-			request.setExcludedIds(new String[] { execution.getChildOrderId() });
+			request.setExcludedIds(new String[] { execution.getChildInstanceId() });
 			List<ProcessInstance> instances = processInstanceService.getActiveInstances(request);
 			// 如果所有子流程都已完成，则表示可合并
 			if (instances == null || instances.isEmpty())

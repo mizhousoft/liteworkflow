@@ -77,7 +77,6 @@ public class ModelParser
 			process.setDisplayName(processE.getAttribute(NodeParser.ATTR_DISPLAYNAME));
 			process.setExpireTime(processE.getAttribute(NodeParser.ATTR_EXPIRETIME));
 			process.setInstanceUrl(processE.getAttribute(NodeParser.ATTR_INSTANCEURL));
-			process.setInstanceNoClass(processE.getAttribute(NodeParser.ATTR_INSTANCENOCLASS));
 
 			NodeList nodeList = processE.getChildNodes();
 			int nodeSize = nodeList.getLength();

@@ -1,7 +1,8 @@
 package com.liteworkflow.engine.persistence.request;
 
-import com.liteworkflow.engine.Constants;
 import com.mizhousoft.commons.data.domain.PageRequest;
+import com.mizhousoft.commons.data.domain.Sort;
+import com.mizhousoft.commons.data.domain.Sort.Direction;
 
 /**
  * TaskFindRequest
@@ -39,12 +40,6 @@ public class TaskPageRequest extends PageRequest
 
 	private String createTimeEnd;
 
-	// 排序字段
-	private String orderBy = "create_Time";
-
-	// 排序类型ASC/DESC
-	private String order = Constants.DESC;
-
 	/**
 	 * 构造函数
 	 *
@@ -52,6 +47,8 @@ public class TaskPageRequest extends PageRequest
 	public TaskPageRequest()
 	{
 		super();
+
+		this.setSort(Sort.create(Direction.DESC, "create_Time"));
 	}
 
 	/**
@@ -198,45 +195,5 @@ public class TaskPageRequest extends PageRequest
 	public void setCreateTimeEnd(String createTimeEnd)
 	{
 		this.createTimeEnd = createTimeEnd;
-	}
-
-	/**
-	 * 获取orderBy
-	 * 
-	 * @return
-	 */
-	public String getOrderBy()
-	{
-		return orderBy;
-	}
-
-	/**
-	 * 设置orderBy
-	 * 
-	 * @param orderBy
-	 */
-	public void setOrderBy(String orderBy)
-	{
-		this.orderBy = orderBy;
-	}
-
-	/**
-	 * 获取order
-	 * 
-	 * @return
-	 */
-	public String getOrder()
-	{
-		return order;
-	}
-
-	/**
-	 * 设置order
-	 * 
-	 * @param order
-	 */
-	public void setOrder(String order)
-	{
-		this.order = order;
 	}
 }

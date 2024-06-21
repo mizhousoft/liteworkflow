@@ -12,8 +12,6 @@ public interface ProcessEngine
 
 	public static final String AUTO = "snaker.auto";
 
-	public static final String ID = "snaker.orderNo";
-
 	/**
 	 * 获取RepositoryService服务
 	 * 

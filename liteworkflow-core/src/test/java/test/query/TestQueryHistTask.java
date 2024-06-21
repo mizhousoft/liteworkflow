@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.persistence.request.TaskPageRequest;
-import com.liteworkflow.engine.persistence.request.WorkItemPageRequest;
 
 import test.TestSpring;
 
@@ -28,9 +27,5 @@ public class TestQueryHistTask extends TestSpring
 		TaskPageRequest request = new TaskPageRequest();
 		request.setOperators(new String[] { "admin" });
 		System.out.println(engine.getHistoryService().getHistoricTasks(request));
-
-		WorkItemPageRequest wRequest = new WorkItemPageRequest();
-		wRequest.setOperators(new String[] { "admin" });
-		System.out.println(engine.getHistoryService().getHistoricWorkItems(wRequest));
 	}
 }

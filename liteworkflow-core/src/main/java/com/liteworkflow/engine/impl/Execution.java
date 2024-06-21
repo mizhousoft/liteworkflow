@@ -53,7 +53,7 @@ public class Execution implements Serializable
 	/**
 	 * 子流程实例节点名称
 	 */
-	private String childOrderId;
+	private String childInstanceId;
 
 	/**
 	 * 执行参数
@@ -114,7 +114,7 @@ public class Execution implements Serializable
 	{
 		if (process == null || instance == null)
 		{
-			throw new ProcessException("构造Execution对象失败，请检查process、order是否为空");
+			throw new ProcessException("构造Execution对象失败，请检查process、instance是否为空");
 		}
 		this.engineConfiguration = engineConfiguration;
 		this.process = process;
@@ -290,13 +290,23 @@ public class Execution implements Serializable
 		return parentNodeName;
 	}
 
-	public String getChildOrderId()
+	/**
+	 * 获取childInstanceId
+	 * 
+	 * @return
+	 */
+	public String getChildInstanceId()
 	{
-		return childOrderId;
+		return childInstanceId;
 	}
 
-	public void setChildOrderId(String childOrderId)
+	/**
+	 * 设置childInstanceId
+	 * 
+	 * @param childInstanceId
+	 */
+	public void setChildInstanceId(String childInstanceId)
 	{
-		this.childOrderId = childOrderId;
+		this.childInstanceId = childInstanceId;
 	}
 }
