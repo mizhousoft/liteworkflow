@@ -23,7 +23,7 @@ public class TaskEntityServiceImpl implements TaskEntityService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void save(Task task)
+	public void addEntity(Task task)
 	{
 		taskMapper.save(task);
 	}
@@ -32,7 +32,7 @@ public class TaskEntityServiceImpl implements TaskEntityService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void update(Task task)
+	public void modifyEntity(Task task)
 	{
 		taskMapper.update(task);
 	}
@@ -41,7 +41,7 @@ public class TaskEntityServiceImpl implements TaskEntityService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void delete(Task task)
+	public void deleteEntity(Task task)
 	{
 		taskMapper.delete(task.getId());
 	}

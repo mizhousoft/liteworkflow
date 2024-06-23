@@ -24,7 +24,7 @@ public class CCProcessInstanceEntityServiceImpl implements CCProcessInstanceEnti
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void save(CCProcessInstance ccInstance)
+	public void addEntity(CCProcessInstance ccInstance)
 	{
 		ccProcessInstanceMapper.save(ccInstance);
 	}
@@ -33,7 +33,7 @@ public class CCProcessInstanceEntityServiceImpl implements CCProcessInstanceEnti
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void update(CCProcessInstance ccInstance)
+	public void modifyEntity(CCProcessInstance ccInstance)
 	{
 		ccProcessInstanceMapper.update(ccInstance);
 	}
@@ -42,7 +42,7 @@ public class CCProcessInstanceEntityServiceImpl implements CCProcessInstanceEnti
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void delete(CCProcessInstance ccInstance)
+	public void deleteEntity(CCProcessInstance ccInstance)
 	{
 		ccProcessInstanceMapper.delete(ccInstance);
 	}
@@ -51,7 +51,7 @@ public class CCProcessInstanceEntityServiceImpl implements CCProcessInstanceEnti
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<CCProcessInstance> getCCInstance(String instanceId, String... actorIds)
+	public List<CCProcessInstance> queryList(String instanceId, String... actorIds)
 	{
 		return ccProcessInstanceMapper.findByInstanceId(instanceId, actorIds);
 	}

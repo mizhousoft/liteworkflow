@@ -28,21 +28,37 @@ public class MemoryCache<K, V> implements Cache<K, V>
 		this.map = backingMap;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public V get(K key) throws CacheException
 	{
 		return map.get(key);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public V put(K key, V value) throws CacheException
 	{
 		return map.put(key, value);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public V remove(K key) throws CacheException
 	{
 		return map.remove(key);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void clear() throws CacheException
 	{
 		map.clear();

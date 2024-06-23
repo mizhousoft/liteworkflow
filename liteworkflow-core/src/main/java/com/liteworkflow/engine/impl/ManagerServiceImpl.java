@@ -3,6 +3,8 @@ package com.liteworkflow.engine.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.liteworkflow.engine.Constants;
 import com.liteworkflow.engine.ManagerService;
 import com.liteworkflow.engine.helper.StringHelper;
@@ -25,14 +27,14 @@ public class ManagerServiceImpl extends AccessService implements ManagerService
 	public void saveOrUpdate(Surrogate surrogate)
 	{
 		surrogate.setState(Constants.STATE_ACTIVE);
-		if (StringHelper.isEmpty(surrogate.getId()))
+		if (StringUtils.isBlank(surrogate.getId()))
 		{
 			surrogate.setId(StringHelper.getPrimaryKey());
-			surrogateEntityService.save(surrogate);
+			surrogateEntityService.addEntity(surrogate);
 		}
 		else
 		{
-			surrogateEntityService.update(surrogate);
+			surrogateEntityService.modifyEntity(surrogate);
 		}
 	}
 
@@ -41,13 +43,13 @@ public class ManagerServiceImpl extends AccessService implements ManagerService
 	{
 		Surrogate surrogate = getSurrogate(id);
 
-		surrogateEntityService.delete(surrogate);
+		surrogateEntityService.deleteEntity(surrogate);
 	}
 
 	@Override
 	public Surrogate getSurrogate(String id)
 	{
-		return surrogateEntityService.getSurrogate(id);
+		return surrogateEntityService.getById(id);
 	}
 
 	@Override
@@ -56,7 +58,7 @@ public class ManagerServiceImpl extends AccessService implements ManagerService
 		SurrogateFindRequest request = new SurrogateFindRequest();
 		request.setOperators(new String[] { operator });
 		request.setOperateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
-		if (StringHelper.isNotEmpty(processName))
+		if (!StringUtils.isBlank(processName))
 		{
 			request.setNames(new String[] { processName });
 		}

@@ -4,26 +4,26 @@
 <mapper namespace="com.liteworkflow.engine.persistence.mapper.TaskActorMapper">
 	
 	<resultMap type="com.liteworkflow.engine.persistence.entity.TaskActor" id="TaskActorMap">
-		<result property="taskId" column="task_Id" />
-		<result property="actorId" column="actor_Id" />
+		<result property="taskId" column="task_id" />
+		<result property="actorId" column="actor_id" />
 	</resultMap>
 	
 	<insert id="save">
-		insert into wf_task_actor (task_Id, actor_Id)
+		insert into wf_task_actor (task_id, actor_id)
 		values (#{taskId}, #{actorId})
 	</insert>
 	
 	<delete id="delete">
-		delete from wf_task_actor where task_Id = #{taskId} and actor_Id = #{actorId}
+		delete from wf_task_actor where task_id = #{taskId} and actor_id = #{actorId}
 	</delete>
 	
 	<delete id="deleteByTaskId">
-		delete from wf_task_actor where task_Id = #{taskId}
+		delete from wf_task_actor where task_id = #{taskId}
 	</delete>
 	
 	<select id="getTaskActorsByTaskId" parameterType="java.util.Map" resultMap="TaskActorMap">
-		select task_Id, actor_Id from wf_task_actor 
-		where task_Id = #{taskId}
+		select task_id, actor_id from wf_task_actor 
+		where task_id = #{taskId}
 	</select>
 	
 </mapper>

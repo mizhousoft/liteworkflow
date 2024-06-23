@@ -16,72 +16,6 @@ import com.mizhousoft.commons.data.domain.Page;
 public interface RepositoryService
 {
 	/**
-	 * 检查流程定义对象
-	 * 
-	 * @param process 流程定义对象
-	 * @param idOrName 流程定义id/name
-	 */
-	void check(ProcessDefinition process, String idOrName);
-
-	/**
-	 * 保存流程定义
-	 * 
-	 * @param process 流程定义对象
-	 */
-	void saveProcess(ProcessDefinition process);
-
-	/**
-	 * 更新流程定义的类别
-	 * 
-	 * @param id 流程定义id
-	 * @param type 类别
-	 * @since 1.5
-	 */
-	void updateType(String id, String type);
-
-	/**
-	 * 根据主键ID获取流程定义对象
-	 * 
-	 * @param id 流程定义id
-	 * @return Process 流程定义对象
-	 */
-	ProcessDefinition getProcessById(String id);
-
-	/**
-	 * 根据流程name获取流程定义对象
-	 * 
-	 * @param name 流程定义名称
-	 * @return Process 流程定义对象
-	 */
-	ProcessDefinition getProcessByName(String name);
-
-	/**
-	 * 根据流程name、version获取流程定义对象
-	 * 
-	 * @param name 流程定义名称
-	 * @param version 版本号
-	 * @return Process 流程定义对象
-	 */
-	ProcessDefinition getProcessByVersion(String name, Integer version);
-
-	/**
-	 * 根据给定的参数列表args查询process
-	 * 
-	 * @param filter 查询过滤器
-	 * @return List<Process> 流程定义对象集合
-	 */
-	List<ProcessDefinition> getProcesss(ProcessDefPageRequest request);
-
-	/**
-	 * 根据给定的参数列表args分页查询process
-	 * 
-	 * @param page 分页对象
-	 * @param filter 查询过滤器
-	 * @return List<Process> 流程定义对象集合
-	 */
-	Page<ProcessDefinition> queryPageData(ProcessDefPageRequest request);
-
-	/**
 	 * 根據InputStream輸入流，部署流程定义
 	 * 
 	 * @param input 流程定义输入流
@@ -125,4 +59,46 @@ public interface RepositoryService
 	 * @param id
 	 */
 	void cascadeRemove(String id);
+
+	/**
+	 * 根据主键ID获取流程定义对象
+	 * 
+	 * @param id 流程定义id
+	 * @return Process 流程定义对象
+	 */
+	ProcessDefinition getProcessById(String id);
+
+	/**
+	 * 根据流程name获取流程定义对象
+	 * 
+	 * @param name 流程定义名称
+	 * @return Process 流程定义对象
+	 */
+	ProcessDefinition getProcessByName(String name);
+
+	/**
+	 * 根据流程name、version获取流程定义对象
+	 * 
+	 * @param name 流程定义名称
+	 * @param version 版本号
+	 * @return Process 流程定义对象
+	 */
+	ProcessDefinition getProcessByVersion(String name, Integer version);
+
+	/**
+	 * 根据给定的参数列表args查询process
+	 * 
+	 * @param filter 查询过滤器
+	 * @return List<Process> 流程定义对象集合
+	 */
+	List<ProcessDefinition> queryByName(String name);
+
+	/**
+	 * 根据给定的参数列表args分页查询process
+	 * 
+	 * @param page 分页对象
+	 * @param filter 查询过滤器
+	 * @return List<Process> 流程定义对象集合
+	 */
+	Page<ProcessDefinition> queryPageData(ProcessDefPageRequest request);
 }

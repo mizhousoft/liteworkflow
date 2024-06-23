@@ -5,24 +5,24 @@
 	
 	<resultMap type="com.liteworkflow.engine.persistence.entity.HistoricTask" id="HistoricTaskMap">
 		<id property="id" column="id" />
-		<result property="instanceId" column="instance_Id" />
-		<result property="taskName" column="task_Name" />
-		<result property="displayName" column="display_Name" />
-		<result property="taskType" column="task_Type" />
-		<result property="performType" column="perform_Type" />
-		<result property="taskState" column="task_State" />
+		<result property="instanceId" column="instance_id" />
+		<result property="taskName" column="task_name" />
+		<result property="displayName" column="display_name" />
+		<result property="taskType" column="task_type" />
+		<result property="performType" column="perform_type" />
+		<result property="taskState" column="task_state" />
 		<result property="operator" column="operator" />
-		<result property="createTime" column="create_Time" />
+		<result property="createTime" column="create_time" />
 		<result property="finishTime" column="finish_Time" />
-		<result property="expireTime" column="expire_Time" />
-		<result property="actionUrl" column="action_Url" />
-		<result property="parentTaskId" column="parent_Task_Id" />
+		<result property="expireTime" column="expire_time" />
+		<result property="actionUrl" column="action_url" />
+		<result property="parentTaskId" column="parent_task_id" />
 		<result property="variable" column="variable" />
 	</resultMap>
 	
 	<insert id="save">
-		insert into wf_historic_task (id, instance_Id, task_Name, display_Name, task_Type, perform_Type, task_State,
-		operator, create_Time, finish_Time, expire_Time, action_Url, parent_Task_Id, variable) 
+		insert into wf_historic_task (id, instance_id, task_name, display_name, task_type, perform_type, task_state,
+		operator, create_time, finish_Time, expire_time, action_url, parent_task_id, variable) 
 		values(#{id}, #{instanceId}, #{taskName}, #{displayName}, #{taskType}, #{performType}, #{taskState}, 
 		#{operator}, #{createTime}, #{finishTime}, #{expireTime}, #{actionUrl}, #{parentTaskId}, #{variable})
 	</insert>
@@ -32,40 +32,40 @@
 	</delete>
 	
 	<select id="getHistTask" parameterType="java.util.Map" resultMap="HistoricTaskMap">
-		select id, instance_Id, task_Name, display_Name, task_Type, perform_Type, task_State, operator, create_Time,
-		finish_Time, expire_Time, action_Url, parent_Task_Id, variable 
+		select id, instance_id, task_name, display_name, task_type, perform_type, task_state, operator, create_time,
+		finish_Time, expire_time, action_url, parent_task_id, variable 
 		from wf_historic_task
 		where id = #{taskId}
 	</select>
 	
 	<select id="findList" parameterType="java.util.Map" resultMap="HistoricTaskMap">
-		select id, instance_Id, task_Name, display_Name, task_Type, perform_Type, task_State, operator, create_Time,
-		finish_Time, expire_Time, action_Url, parent_Task_Id, variable 
+		select id, instance_id, task_name, display_name, task_type, perform_type, task_state, operator, create_time,
+		finish_Time, expire_time, action_url, parent_task_id, variable 
 		from wf_historic_task
 		<if test="operators != null and operators.length != 0">
 			left join wf_historic_task_actor ta on ta.task_id = id
 		</if>		
 		<where>
 			<if test="instanceId != null">
-                instance_Id = #{instanceId}
+                instance_id = #{instanceId}
        		</if>
        		<if test="operators != null and operators.length != 0">
-                and ta.actor_Id in
+                and ta.actor_id in
                 <foreach collection="operators" item="operator" index="index" open="(" close=")" separator=",">
                     #{operator}
                 </foreach>
             </if>
             <if test="names != null and names.length != 0">
-                and task_Name in
+                and task_name in
                 <foreach collection="names" item="name" index="index" open="(" close=")" separator=",">
                     #{name}
                 </foreach>
             </if>
             <if test="createTimeStart != null">
-                and create_Time &gt;= #{createTimeStart}
+                and create_time &gt;= #{createTimeStart}
        		</if>
             <if test="createTimeEnd != null">
-                and create_Time &lt;= #{createTimeEnd}
+                and create_time &lt;= #{createTimeEnd}
        		</if>
 		</where>
 		<if test="sortString != null">

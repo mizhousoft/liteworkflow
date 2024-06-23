@@ -26,7 +26,7 @@ public class TestFreeFlow extends TestSpring
 		engine = applicationContext.getBean(ProcessEngine.class);
 		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/freeflow/free.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/freeflow/free.xml"));
 	}
 
 	// @Test

@@ -4,14 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.liteworkflow.engine.impl.Execution;
-import com.liteworkflow.engine.interceptor.SnakerInterceptor;
+import com.liteworkflow.engine.interceptor.FlowInterceptor;
 import com.liteworkflow.engine.persistence.entity.Task;
 
 /**
  * @author
  * @since 1.0
  */
-public class LocalTaskInterceptor implements SnakerInterceptor
+public class LocalTaskInterceptor implements FlowInterceptor
 {
 	private static final Logger log = LoggerFactory.getLogger(LocalTaskInterceptor.class);
 

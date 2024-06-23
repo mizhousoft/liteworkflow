@@ -24,7 +24,7 @@ public class TestSurrogate extends TestSpring
 		engine = applicationContext.getBean(ProcessEngine.class);
 		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/surrogate/process.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/surrogate/process.xml"));
 	}
 
 	@Test

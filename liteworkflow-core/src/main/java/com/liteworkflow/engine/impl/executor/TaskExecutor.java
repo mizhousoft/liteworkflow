@@ -63,8 +63,8 @@ public class TaskExecutor extends NodeExecutor
 		ProcessInstanceService processInstanceService = execution.getEngineConfiguration().getProcessInstanceService();
 		TaskService taskService = execution.getEngineConfiguration().getTaskService();
 
-		ProcessInstance instance = execution.getInstance();
-		ProcessModel model = execution.getModel();
+		ProcessInstance instance = execution.getProcessInstance();
+		ProcessModel model = execution.getProcessModel();
 		String[] activeNodes = findActiveNodes(taskModel);
 		boolean isSubProcessMerged = false;
 		boolean isTaskMerged = false;

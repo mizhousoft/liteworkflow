@@ -18,21 +18,21 @@ public interface HistoricProcessInstanceEntityService
 	 * 
 	 * @param historicInstance 历史流程实例对象
 	 */
-	void save(HistoricProcessInstance historicInstance);
+	void addEntity(HistoricProcessInstance historicInstance);
 
 	/**
 	 * 更新历史流程实例状态
 	 * 
 	 * @param historicInstance 历史流程实例对象
 	 */
-	void update(HistoricProcessInstance historicInstance);
+	void modifyEntity(HistoricProcessInstance historicInstance);
 
 	/**
 	 * 删除历史实例记录
 	 * 
 	 * @param historicInstance 历史实例
 	 */
-	void delete(HistoricProcessInstance historicInstance);
+	void deleteEntity(HistoricProcessInstance historicInstance);
 
 	/**
 	 * 根据流程实例ID获取历史流程实例对象
@@ -40,7 +40,7 @@ public interface HistoricProcessInstanceEntityService
 	 * @param instanceId 历史流程实例id
 	 * @return HistoricProcessInstance 历史流程实例对象
 	 */
-	HistoricProcessInstance getHistoricInstance(String instanceId);
+	HistoricProcessInstance getByInstanceId(String instanceId);
 
 	/**
 	 * 

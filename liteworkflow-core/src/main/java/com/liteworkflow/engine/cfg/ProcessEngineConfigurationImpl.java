@@ -89,10 +89,10 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	private ProcessEngine processEngine;
 
 	/**
-	 * 构造SnakerEngine对象，用于api集成
+	 * 构造ProcessEngine对象，用于api集成
 	 * 通过SpringHelper调用
 	 * 
-	 * @return SnakerEngine
+	 * @return ProcessEngine
 	 * @throws WorkflowException
 	 */
 	/**
@@ -101,7 +101,7 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	@Override
 	public ProcessEngine buildProcessEngine() throws Exception
 	{
-		log.info("SnakerEngine start......");
+		log.info("ProcessEngine start......");
 
 		ServiceContext.setContext(new SpringContext(applicationContext));
 
@@ -254,8 +254,7 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 
 		ProcessDefinitionMapper processDefinitionMapper = (ProcessDefinitionMapper) factoryBean.getObject();
 
-		ProcessDefinitionEntityServiceImpl processDefinitionEntityService = new ProcessDefinitionEntityServiceImpl();
-		processDefinitionEntityService.setprocessDefinitionMapper(processDefinitionMapper);
+		ProcessDefinitionEntityServiceImpl processDefinitionEntityService = new ProcessDefinitionEntityServiceImpl(processDefinitionMapper);
 
 		return processDefinitionEntityService;
 	}

@@ -1,10 +1,13 @@
 package com.liteworkflow.engine.parser.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Element;
 
+import com.liteworkflow.engine.AssignmentHandler;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.model.TaskModel;
 import com.liteworkflow.engine.parser.AbstractNodeParser;
+import com.mizhousoft.commons.lang.ClassUtils;
 
 /**
  * 任务节点解析类
@@ -17,6 +20,14 @@ public class TaskParser extends AbstractNodeParser
 	/**
 	 * {@inheritDoc}
 	 */
+	protected NodeModel newModel()
+	{
+		return new TaskModel();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getNodeName()
 	{
@@ -24,7 +35,7 @@ public class TaskParser extends AbstractNodeParser
 	}
 
 	/**
-	 * 由于任务节点需要解析form、assignee属性，这里覆盖抽象类方法实现
+	 * {@inheritDoc}
 	 */
 	protected void doParseNode(NodeModel node, Element element)
 	{
@@ -33,19 +44,24 @@ public class TaskParser extends AbstractNodeParser
 		task.setAssignee(element.getAttribute(ATTR_ASSIGNEE));
 		task.setExpireTime(element.getAttribute(ATTR_EXPIRETIME));
 		task.setAutoExecute(element.getAttribute(ATTR_AUTOEXECUTE));
-		task.setCallback(element.getAttribute(ATTR_CALLBACK));
 		task.setReminderTime(element.getAttribute(ATTR_REMINDERTIME));
 		task.setReminderRepeat(element.getAttribute(ATTR_REMINDERREPEAT));
 		task.setPerformType(element.getAttribute(ATTR_PERFORMTYPE));
 		task.setTaskType(element.getAttribute(ATTR_TASKTYPE));
 		task.setAssignmentHandler(element.getAttribute(ATTR_ASSIGNEE_HANDLER));
-	}
 
-	/**
-	 * 产生TaskModel模型对象
-	 */
-	protected NodeModel newModel()
-	{
-		return new TaskModel();
+		if (!StringUtils.isBlank(task.getAssignmentHandler()))
+		{
+			try
+			{
+				AssignmentHandler assignmentHandler = (AssignmentHandler) ClassUtils.newInstance(task.getAssignmentHandler(),
+				        this.getClass().getClassLoader());
+				task.setAssignmentHandlerObject(assignmentHandler);
+			}
+			catch (Exception e)
+			{
+				throw new IllegalArgumentException(task.getAssignmentHandler() + " is not implment AssignmentHandler.", e);
+			}
+		}
 	}
 }

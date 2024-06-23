@@ -23,7 +23,7 @@ public class HistoricProcessInstanceEntityServiceImpl implements HistoricProcess
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void save(HistoricProcessInstance historicInstance)
+	public void addEntity(HistoricProcessInstance historicInstance)
 	{
 		historicProcessInstanceMapper.save(historicInstance);
 	}
@@ -32,7 +32,7 @@ public class HistoricProcessInstanceEntityServiceImpl implements HistoricProcess
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void update(HistoricProcessInstance historicInstance)
+	public void modifyEntity(HistoricProcessInstance historicInstance)
 	{
 		historicProcessInstanceMapper.update(historicInstance);
 	}
@@ -41,7 +41,7 @@ public class HistoricProcessInstanceEntityServiceImpl implements HistoricProcess
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void delete(HistoricProcessInstance historicInstance)
+	public void deleteEntity(HistoricProcessInstance historicInstance)
 	{
 		historicProcessInstanceMapper.delete(historicInstance.getId());
 	}
@@ -50,7 +50,7 @@ public class HistoricProcessInstanceEntityServiceImpl implements HistoricProcess
 	 * {@inheritDoc}
 	 */
 	@Override
-	public HistoricProcessInstance getHistoricInstance(String instanceId)
+	public HistoricProcessInstance getByInstanceId(String instanceId)
 	{
 		return historicProcessInstanceMapper.getHistoricInstance(instanceId);
 	}

@@ -18,11 +18,21 @@ public abstract class WorkModel extends NodeModel
 	 */
 	private String form;
 
+	/**
+	 * 获取form
+	 * 
+	 * @return
+	 */
 	public String getForm()
 	{
 		return form;
 	}
 
+	/**
+	 * 设置form
+	 * 
+	 * @param form
+	 */
 	public void setForm(String form)
 	{
 		this.form = form;

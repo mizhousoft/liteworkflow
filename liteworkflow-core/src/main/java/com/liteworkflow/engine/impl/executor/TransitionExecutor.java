@@ -8,7 +8,7 @@ import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.impl.Executor;
 import com.liteworkflow.engine.impl.ServiceContext;
-import com.liteworkflow.engine.interceptor.SnakerInterceptor;
+import com.liteworkflow.engine.interceptor.FlowInterceptor;
 import com.liteworkflow.engine.model.BaseModel;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.model.SubProcessModel;
@@ -65,11 +65,11 @@ public class TransitionExecutor implements Executor
 		/**
 		 * 从服务上下文中查找任务拦截器列表，依次对task集合进行拦截处理
 		 */
-		List<SnakerInterceptor> interceptors = ServiceContext.getContext().findList(SnakerInterceptor.class);
+		List<FlowInterceptor> interceptors = ServiceContext.getContext().findList(FlowInterceptor.class);
 
 		try
 		{
-			for (SnakerInterceptor interceptor : interceptors)
+			for (FlowInterceptor interceptor : interceptors)
 			{
 				interceptor.intercept(execution);
 			}
@@ -84,10 +84,10 @@ public class TransitionExecutor implements Executor
 	{
 		// 根据子流程模型名称获取子流程定义对象
 		ProcessEngineConfiguration engineConfiguration = execution.getEngineConfiguration();
-		ProcessDefinition process = engineConfiguration.getRepositoryService().getProcessByVersion(subProcessModel.getProcessName(),
+		ProcessDefinition processDefinition = engineConfiguration.getRepositoryService().getProcessByVersion(subProcessModel.getProcessName(),
 		        subProcessModel.getVersion());
 
-		Execution child = execution.createSubExecution(execution, process, subProcessModel.getName());
+		Execution child = execution.createSubExecution(execution, processDefinition, subProcessModel.getName());
 		ProcessInstance instance = engineConfiguration.getRuntimeService().startInstanceByExecution(child);
 
 		AssertHelper.notNull(instance, "子流程创建失败");

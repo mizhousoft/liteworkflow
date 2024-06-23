@@ -1,6 +1,7 @@
 package com.liteworkflow.engine.persistence.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
 
@@ -64,17 +65,17 @@ public class HistoricTask implements Serializable
 	/**
 	 * 任务创建时间
 	 */
-	private String createTime;
+	private LocalDateTime createTime;
 
 	/**
 	 * 任务完成时间
 	 */
-	private String finishTime;
+	private LocalDateTime finishTime;
 
 	/**
 	 * 期望任务完成时间
 	 */
-	private String expireTime;
+	private LocalDateTime expireTime;
 
 	/**
 	 * 任务关联的表单url
@@ -204,32 +205,62 @@ public class HistoricTask implements Serializable
 		this.operator = operator;
 	}
 
-	public String getCreateTime()
+	/**
+	 * 获取createTime
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getCreateTime()
 	{
 		return createTime;
 	}
 
-	public void setCreateTime(String createTime)
+	/**
+	 * 设置createTime
+	 * 
+	 * @param createTime
+	 */
+	public void setCreateTime(LocalDateTime createTime)
 	{
 		this.createTime = createTime;
 	}
 
-	public String getFinishTime()
+	/**
+	 * 获取finishTime
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getFinishTime()
 	{
 		return finishTime;
 	}
 
-	public void setFinishTime(String finishTime)
+	/**
+	 * 设置finishTime
+	 * 
+	 * @param finishTime
+	 */
+	public void setFinishTime(LocalDateTime finishTime)
 	{
 		this.finishTime = finishTime;
 	}
 
-	public String getExpireTime()
+	/**
+	 * 获取expireTime
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getExpireTime()
 	{
 		return expireTime;
 	}
 
-	public void setExpireTime(String expireTime)
+	/**
+	 * 设置expireTime
+	 * 
+	 * @param expireTime
+	 */
+	public void setExpireTime(LocalDateTime expireTime)
 	{
 		this.expireTime = expireTime;
 	}

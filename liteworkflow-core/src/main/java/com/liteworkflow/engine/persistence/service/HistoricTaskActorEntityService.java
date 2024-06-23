@@ -16,7 +16,7 @@ public interface HistoricTaskActorEntityService
 	 * 
 	 * @param task 历史任务对象
 	 */
-	void save(HistoricTaskActor taskActor);
+	void addEntity(HistoricTaskActor taskActor);
 
 	/**
 	 * 
@@ -31,5 +31,5 @@ public interface HistoricTaskActorEntityService
 	 * @param taskId 历史任务id
 	 * @return List<HistoricTaskActor> 历史任务参与者集合
 	 */
-	List<HistoricTaskActor> getHistTaskActorsByTaskId(String taskId);
+	List<HistoricTaskActor> queryByTaskId(String taskId);
 }

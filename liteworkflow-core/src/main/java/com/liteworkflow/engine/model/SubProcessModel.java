@@ -28,33 +28,64 @@ public class SubProcessModel extends WorkModel
 	 */
 	private ProcessModel subProcess;
 
-	public ProcessModel getSubProcess()
-	{
-		return subProcess;
-	}
-
-	public void setSubProcess(ProcessModel subProcess)
-	{
-		this.subProcess = subProcess;
-	}
-
+	/**
+	 * 获取processName
+	 * 
+	 * @return
+	 */
 	public String getProcessName()
 	{
 		return processName;
 	}
 
+	/**
+	 * 设置processName
+	 * 
+	 * @param processName
+	 */
 	public void setProcessName(String processName)
 	{
 		this.processName = processName;
 	}
 
+	/**
+	 * 获取version
+	 * 
+	 * @return
+	 */
 	public Integer getVersion()
 	{
 		return version;
 	}
 
+	/**
+	 * 设置version
+	 * 
+	 * @param version
+	 */
 	public void setVersion(Integer version)
 	{
 		this.version = version;
 	}
+
+	/**
+	 * 获取subProcess
+	 * 
+	 * @return
+	 */
+	public ProcessModel getSubProcess()
+	{
+		return subProcess;
+	}
+
+	/**
+	 * 设置subProcess
+	 * 
+	 * @param subProcess
+	 */
+	public void setSubProcess(ProcessModel subProcess)
+	{
+		this.subProcess = subProcess;
+	}
+
 }

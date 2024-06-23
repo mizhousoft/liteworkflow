@@ -1,6 +1,7 @@
 package com.liteworkflow.engine.persistence.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
 
@@ -42,7 +43,7 @@ public class ProcessInstance implements Serializable
 	/**
 	 * 流程实例创建时间
 	 */
-	private String createTime;
+	private LocalDateTime createTime;
 
 	/**
 	 * 流程实例为子流程时，该字段标识父流程实例ID
@@ -57,12 +58,12 @@ public class ProcessInstance implements Serializable
 	/**
 	 * 流程实例期望完成时间
 	 */
-	private String expireTime;
+	private LocalDateTime expireTime;
 
 	/**
 	 * 流程实例上一次更新时间
 	 */
-	private String lastUpdateTime;
+	private LocalDateTime lastUpdateTime;
 
 	/**
 	 * 流程实例上一次更新人员ID
@@ -99,16 +100,6 @@ public class ProcessInstance implements Serializable
 		this.creator = creator;
 	}
 
-	public String getCreateTime()
-	{
-		return createTime;
-	}
-
-	public void setCreateTime(String createTime)
-	{
-		this.createTime = createTime;
-	}
-
 	public String getParentId()
 	{
 		return parentId;
@@ -117,26 +108,6 @@ public class ProcessInstance implements Serializable
 	public void setParentId(String parentId)
 	{
 		this.parentId = parentId;
-	}
-
-	public String getExpireTime()
-	{
-		return expireTime;
-	}
-
-	public void setExpireTime(String expireTime)
-	{
-		this.expireTime = expireTime;
-	}
-
-	public String getLastUpdateTime()
-	{
-		return lastUpdateTime;
-	}
-
-	public void setLastUpdateTime(String lastUpdateTime)
-	{
-		this.lastUpdateTime = lastUpdateTime;
 	}
 
 	public String getLastUpdator()
@@ -206,6 +177,66 @@ public class ProcessInstance implements Serializable
 	public void setVersion(Integer version)
 	{
 		this.version = version;
+	}
+
+	/**
+	 * 获取createTime
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getCreateTime()
+	{
+		return createTime;
+	}
+
+	/**
+	 * 设置createTime
+	 * 
+	 * @param createTime
+	 */
+	public void setCreateTime(LocalDateTime createTime)
+	{
+		this.createTime = createTime;
+	}
+
+	/**
+	 * 获取lastUpdateTime
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getLastUpdateTime()
+	{
+		return lastUpdateTime;
+	}
+
+	/**
+	 * 设置lastUpdateTime
+	 * 
+	 * @param lastUpdateTime
+	 */
+	public void setLastUpdateTime(LocalDateTime lastUpdateTime)
+	{
+		this.lastUpdateTime = lastUpdateTime;
+	}
+
+	/**
+	 * 获取expireTime
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getExpireTime()
+	{
+		return expireTime;
+	}
+
+	/**
+	 * 设置expireTime
+	 * 
+	 * @param expireTime
+	 */
+	public void setExpireTime(LocalDateTime expireTime)
+	{
+		this.expireTime = expireTime;
 	}
 
 	public String toString()

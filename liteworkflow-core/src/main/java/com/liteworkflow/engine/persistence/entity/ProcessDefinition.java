@@ -3,6 +3,7 @@ package com.liteworkflow.engine.persistence.entity;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.Blob;
+import java.time.LocalDateTime;
 
 import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.helper.StreamHelper;
@@ -61,7 +62,7 @@ public class ProcessDefinition implements Serializable
 	/**
 	 * 创建时间
 	 */
-	private String createTime;
+	private LocalDateTime createTime;
 
 	/**
 	 * 创建人
@@ -227,12 +228,22 @@ public class ProcessDefinition implements Serializable
 		return sb.toString();
 	}
 
-	public String getCreateTime()
+	/**
+	 * 获取createTime
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getCreateTime()
 	{
 		return createTime;
 	}
 
-	public void setCreateTime(String createTime)
+	/**
+	 * 设置createTime
+	 * 
+	 * @param createTime
+	 */
+	public void setCreateTime(LocalDateTime createTime)
 	{
 		this.createTime = createTime;
 	}

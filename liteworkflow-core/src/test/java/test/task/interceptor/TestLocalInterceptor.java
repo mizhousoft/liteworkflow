@@ -24,7 +24,7 @@ public class TestLocalInterceptor extends TestSpring
 		engine = applicationContext.getBean(ProcessEngine.class);
 		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/task/interceptor/process.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/task/interceptor/process.xml"));
 	}
 
 	@Test

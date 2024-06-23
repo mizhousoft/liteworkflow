@@ -20,21 +20,21 @@ public interface CCProcessInstanceEntityService
 	 * @param ccInstance 抄送实体
 	 * @since 1.5
 	 */
-	void save(CCProcessInstance ccInstance);
+	void addEntity(CCProcessInstance ccInstance);
 
 	/**
 	 * 更新抄送状态
 	 * 
 	 * @param ccInstance 抄送实体对象
 	 */
-	void update(CCProcessInstance ccInstance);
+	void modifyEntity(CCProcessInstance ccInstance);
 
 	/**
 	 * 删除抄送记录
 	 * 
 	 * @param ccInstance 抄送实体对象
 	 */
-	void delete(CCProcessInstance ccInstance);
+	void deleteEntity(CCProcessInstance ccInstance);
 
 	/**
 	 * 根据流程实例id、参与者id获取抄送记录
@@ -43,7 +43,7 @@ public interface CCProcessInstanceEntityService
 	 * @param actorIds 参与者id
 	 * @return 传送记录列表
 	 */
-	List<CCProcessInstance> getCCInstance(String instanceId, String... actorIds);
+	List<CCProcessInstance> queryList(String instanceId, String... actorIds);
 
 	/**
 	 * 分页查询

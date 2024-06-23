@@ -1,13 +1,8 @@
 package com.liteworkflow.engine.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 import com.liteworkflow.engine.AssignmentHandler;
-import com.liteworkflow.engine.helper.AssertHelper;
-import com.liteworkflow.engine.helper.ClassHelper;
-import com.liteworkflow.engine.helper.StringHelper;
-import com.liteworkflow.engine.scheduling.JobCallback;
 
 /**
  * 任务定义task元素
@@ -98,19 +93,9 @@ public class TaskModel extends WorkModel
 	private String autoExecute;
 
 	/**
-	 * 任务执行后回调类
-	 */
-	private String callback;
-
-	/**
 	 * 分配参与者处理类型
 	 */
 	private String assignmentHandler;
-
-	/**
-	 * 任务执行后回调对象
-	 */
-	private JobCallback callbackObject;
 
 	/**
 	 * 分配参与者处理对象
@@ -159,7 +144,7 @@ public class TaskModel extends WorkModel
 
 	public void setTaskType(String taskType)
 	{
-		this.taskType = (StringHelper.isEmpty(taskType) ? TASKTYPE_MAJOR : taskType);
+		this.taskType = (StringUtils.isBlank(taskType) ? TASKTYPE_MAJOR : taskType);
 	}
 
 	public String getPerformType()
@@ -169,7 +154,7 @@ public class TaskModel extends WorkModel
 
 	public void setPerformType(String performType)
 	{
-		this.performType = (StringHelper.isEmpty(performType) ? PERFORMTYPE_ANY : performType);
+		this.performType = (StringUtils.isBlank(performType) ? PERFORMTYPE_ANY : performType);
 	}
 
 	public String getReminderTime()
@@ -207,54 +192,23 @@ public class TaskModel extends WorkModel
 		return assignmentHandlerObject;
 	}
 
+	/**
+	 * 设置assignmentHandlerObject
+	 * 
+	 * @param assignmentHandlerObject
+	 */
+	public void setAssignmentHandlerObject(AssignmentHandler assignmentHandlerObject)
+	{
+		this.assignmentHandlerObject = assignmentHandlerObject;
+	}
+
 	public void setAssignmentHandler(String assignmentHandlerStr)
 	{
-		if (StringHelper.isNotEmpty(assignmentHandlerStr))
-		{
-			this.assignmentHandler = assignmentHandlerStr;
-			assignmentHandlerObject = (AssignmentHandler) ClassHelper.newInstance(assignmentHandlerStr);
-			AssertHelper.notNull(assignmentHandlerObject, "分配参与者处理类实例化失败");
-		}
+		this.assignmentHandler = assignmentHandlerStr;
 	}
 
 	public String getAssignmentHandler()
 	{
 		return assignmentHandler;
-	}
-
-	public String getCallback()
-	{
-		return callback;
-	}
-
-	public JobCallback getCallbackObject()
-	{
-		return callbackObject;
-	}
-
-	public void setCallback(String callbackStr)
-	{
-		if (StringHelper.isNotEmpty(callbackStr))
-		{
-			this.callback = callbackStr;
-			callbackObject = (JobCallback) ClassHelper.newInstance(callbackStr);
-			AssertHelper.notNull(callbackObject, "回调处理类实例化失败");
-		}
-	}
-
-	/**
-	 * 获取后续任务模型集合（方便预处理）
-	 * 
-	 * @return 模型集合
-	 * @deprecated
-	 */
-	public List<TaskModel> getNextTaskModels()
-	{
-		List<TaskModel> models = new ArrayList<TaskModel>();
-		for (TransitionModel tm : this.getOutputs())
-		{
-			addNextModels(models, tm, TaskModel.class);
-		}
-		return models;
 	}
 }

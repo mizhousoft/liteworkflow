@@ -1,8 +1,9 @@
 package com.liteworkflow.engine.persistence.entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Map;
 
 import com.liteworkflow.engine.helper.JsonHelper;
@@ -67,27 +68,27 @@ public class Task implements Serializable, Cloneable
 	/**
 	 * 任务创建时间
 	 */
-	private String createTime;
+	private LocalDateTime createTime;
 
 	/**
 	 * 任务完成时间
 	 */
-	private String finishTime;
+	private LocalDateTime finishTime;
 
 	/**
 	 * 期望任务完成时间
 	 */
-	private String expireTime;
+	private LocalDateTime expireTime;
 
 	/**
 	 * 期望的完成时间date类型
 	 */
-	private Date expireDate;
+	private LocalDate expireDate;
 
 	/**
 	 * 提醒时间date类型
 	 */
-	private Date remindDate;
+	private LocalDate remindDate;
 
 	/**
 	 * 任务关联的表单url
@@ -179,32 +180,62 @@ public class Task implements Serializable, Cloneable
 		this.operator = operator;
 	}
 
-	public String getCreateTime()
+	/**
+	 * 获取createTime
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getCreateTime()
 	{
 		return createTime;
 	}
 
-	public void setCreateTime(String createTime)
+	/**
+	 * 设置createTime
+	 * 
+	 * @param createTime
+	 */
+	public void setCreateTime(LocalDateTime createTime)
 	{
 		this.createTime = createTime;
 	}
 
-	public String getFinishTime()
+	/**
+	 * 获取finishTime
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getFinishTime()
 	{
 		return finishTime;
 	}
 
-	public void setFinishTime(String finishTime)
+	/**
+	 * 设置finishTime
+	 * 
+	 * @param finishTime
+	 */
+	public void setFinishTime(LocalDateTime finishTime)
 	{
 		this.finishTime = finishTime;
 	}
 
-	public String getExpireTime()
+	/**
+	 * 获取expireTime
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getExpireTime()
 	{
 		return expireTime;
 	}
 
-	public void setExpireTime(String expireTime)
+	/**
+	 * 设置expireTime
+	 * 
+	 * @param expireTime
+	 */
+	public void setExpireTime(LocalDateTime expireTime)
 	{
 		this.expireTime = expireTime;
 	}
@@ -297,22 +328,42 @@ public class Task implements Serializable, Cloneable
 		this.version = version;
 	}
 
-	public Date getExpireDate()
+	/**
+	 * 获取expireDate
+	 * 
+	 * @return
+	 */
+	public LocalDate getExpireDate()
 	{
 		return expireDate;
 	}
 
-	public void setExpireDate(Date expireDate)
+	/**
+	 * 设置expireDate
+	 * 
+	 * @param expireDate
+	 */
+	public void setExpireDate(LocalDate expireDate)
 	{
 		this.expireDate = expireDate;
 	}
 
-	public Date getRemindDate()
+	/**
+	 * 获取remindDate
+	 * 
+	 * @return
+	 */
+	public LocalDate getRemindDate()
 	{
 		return remindDate;
 	}
 
-	public void setRemindDate(Date remindDate)
+	/**
+	 * 设置remindDate
+	 * 
+	 * @param remindDate
+	 */
+	public void setRemindDate(LocalDate remindDate)
 	{
 		this.remindDate = remindDate;
 	}

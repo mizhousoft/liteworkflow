@@ -12,7 +12,7 @@ import com.liteworkflow.engine.persistence.entity.Task;
  * @author
  * @since 1.0
  */
-public class LogInterceptor implements SnakerInterceptor
+public class LogInterceptor implements FlowInterceptor
 {
 	private static final Logger log = LoggerFactory.getLogger(LogInterceptor.class);
 

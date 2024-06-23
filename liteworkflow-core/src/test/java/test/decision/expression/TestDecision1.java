@@ -26,7 +26,7 @@ public class TestDecision1 extends TestSpring
 		engine = applicationContext.getBean(ProcessEngine.class);
 		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/decision/expression/process.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/decision/expression/process.xml"));
 	}
 
 	@Test

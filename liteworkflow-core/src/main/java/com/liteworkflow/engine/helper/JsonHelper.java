@@ -1,5 +1,6 @@
 package com.liteworkflow.engine.helper;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +51,7 @@ public class JsonHelper
 	 */
 	public static <T> T fromJson(String jsonString, Class<T> clazz)
 	{
-		if (StringHelper.isEmpty(jsonString))
+		if (StringUtils.isBlank(jsonString))
 		{
 			return null;
 		}

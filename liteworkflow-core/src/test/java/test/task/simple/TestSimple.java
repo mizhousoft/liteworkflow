@@ -26,8 +26,7 @@ public class TestSimple extends TestSpring
 		engine = applicationContext.getBean(ProcessEngine.class);
 		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
-		engine.getRepositoryService().updateType(processId, "预算管理流程");
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.xml"));
 	}
 
 	@Test

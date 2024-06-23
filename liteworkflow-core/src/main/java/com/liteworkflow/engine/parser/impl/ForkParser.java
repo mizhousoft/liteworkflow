@@ -13,7 +13,7 @@ import com.liteworkflow.engine.parser.AbstractNodeParser;
 public class ForkParser extends AbstractNodeParser
 {
 	/**
-	 * 产生ForkModel模型对象
+	 * {@inheritDoc}
 	 */
 	protected NodeModel newModel()
 	{

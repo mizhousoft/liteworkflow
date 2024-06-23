@@ -42,7 +42,7 @@ public class ProcessInstanceEntityServiceImpl implements ProcessInstanceEntitySe
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void saveInstance(ProcessInstance instance)
+	public void addEntity(ProcessInstance instance)
 	{
 		processInstanceMapper.save(instance);
 	}
@@ -56,14 +56,14 @@ public class ProcessInstanceEntityServiceImpl implements ProcessInstanceEntitySe
 		HistoricProcessInstance historicInstance = new HistoricProcessInstance(instance);
 		historicInstance.setState(STATE_ACTIVE);
 		processInstanceMapper.save(instance);
-		historicProcessInstanceEntityService.save(historicInstance);
+		historicProcessInstanceEntityService.addEntity(historicInstance);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void updateInstance(ProcessInstance instance)
+	public void modifyEntity(ProcessInstance instance)
 	{
 		processInstanceMapper.update(instance);
 	}
@@ -72,7 +72,19 @@ public class ProcessInstanceEntityServiceImpl implements ProcessInstanceEntitySe
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void deleteInstance(ProcessInstance instance)
+	public void modifyVariable(ProcessInstance instance)
+	{
+		modifyEntity(instance);
+		HistoricProcessInstance historicInstance = historicProcessInstanceEntityService.getByInstanceId(instance.getId());
+		historicInstance.setVariable(instance.getVariable());
+		historicProcessInstanceEntityService.modifyEntity(historicInstance);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void deleteEntity(ProcessInstance instance)
 	{
 		processInstanceMapper.delete(instance.getId());
 	}
@@ -81,21 +93,9 @@ public class ProcessInstanceEntityServiceImpl implements ProcessInstanceEntitySe
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessInstance getInstance(String instanceId)
+	public ProcessInstance getByInstanceId(String instanceId)
 	{
 		return processInstanceMapper.getInstance(instanceId);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void updateVariable(ProcessInstance instance)
-	{
-		updateInstance(instance);
-		HistoricProcessInstance historicInstance = historicProcessInstanceEntityService.getHistoricInstance(instance.getId());
-		historicInstance.setVariable(instance.getVariable());
-		historicProcessInstanceEntityService.update(historicInstance);
 	}
 
 	/**

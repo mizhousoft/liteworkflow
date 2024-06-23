@@ -19,7 +19,7 @@ public class HistoricTaskActorEntityServiceImpl implements HistoricTaskActorEnti
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void save(HistoricTaskActor taskActor)
+	public void addEntity(HistoricTaskActor taskActor)
 	{
 		historicTaskActorMapper.save(taskActor);
 	}
@@ -37,7 +37,7 @@ public class HistoricTaskActorEntityServiceImpl implements HistoricTaskActorEnti
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<HistoricTaskActor> getHistTaskActorsByTaskId(String taskId)
+	public List<HistoricTaskActor> queryByTaskId(String taskId)
 	{
 		return historicTaskActorMapper.getHistTaskActorsByTaskId(taskId);
 	}

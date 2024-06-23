@@ -1,6 +1,6 @@
 package com.liteworkflow.engine.interceptor;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Map;
 
 import org.apache.commons.lang3.math.NumberUtils;
@@ -23,7 +23,7 @@ import com.liteworkflow.engine.scheduling.JobEntity.JobType;
  * @author
  * @since 1.4
  */
-public class SchedulerInterceptor implements SnakerInterceptor
+public class SchedulerInterceptor implements FlowInterceptor
 {
 	private static final Logger log = LoggerFactory.getLogger(SchedulerInterceptor.class);
 
@@ -46,13 +46,13 @@ public class SchedulerInterceptor implements SnakerInterceptor
 			return;
 		for (Task task : execution.getTasks())
 		{
-			String id = execution.getProcess().getId() + "-" + execution.getInstance().getId() + "-" + task.getId();
-			Date expireDate = task.getExpireDate();
+			String id = execution.getProcessDefinition().getId() + "-" + execution.getProcessInstance().getId() + "-" + task.getId();
+			LocalDate expireDate = task.getExpireDate();
 			if (expireDate != null)
 			{
 				schedule(id, task, expireDate, JobType.EXECUTER.ordinal(), execution.getArgs());
 			}
-			Date remindDate = task.getRemindDate();
+			LocalDate remindDate = task.getRemindDate();
 			if (remindDate != null)
 			{
 				schedule(id, task, remindDate, JobType.REMINDER.ordinal(), execution.getArgs());
@@ -60,7 +60,7 @@ public class SchedulerInterceptor implements SnakerInterceptor
 		}
 	}
 
-	public void schedule(String id, Task task, Date startDate, int jobType, Map<String, Object> args)
+	public void schedule(String id, Task task, LocalDate startDate, int jobType, Map<String, Object> args)
 	{
 		try
 		{

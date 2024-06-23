@@ -1,6 +1,7 @@
 package com.liteworkflow.engine.persistence.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 抄送实例实体
@@ -18,9 +19,9 @@ public class CCProcessInstance implements Serializable
 
 	private String creator;
 
-	private String createTime;
+	private LocalDateTime createTime;
 
-	private String finishTime;
+	private LocalDateTime finishTime;
 
 	private Integer status;
 
@@ -74,22 +75,42 @@ public class CCProcessInstance implements Serializable
 		this.status = status;
 	}
 
-	public String getCreateTime()
+	/**
+	 * 获取createTime
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getCreateTime()
 	{
 		return createTime;
 	}
 
-	public void setCreateTime(String createTime)
+	/**
+	 * 设置createTime
+	 * 
+	 * @param createTime
+	 */
+	public void setCreateTime(LocalDateTime createTime)
 	{
 		this.createTime = createTime;
 	}
 
-	public String getFinishTime()
+	/**
+	 * 获取finishTime
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getFinishTime()
 	{
 		return finishTime;
 	}
 
-	public void setFinishTime(String finishTime)
+	/**
+	 * 设置finishTime
+	 * 
+	 * @param finishTime
+	 */
+	public void setFinishTime(LocalDateTime finishTime)
 	{
 		this.finishTime = finishTime;
 	}

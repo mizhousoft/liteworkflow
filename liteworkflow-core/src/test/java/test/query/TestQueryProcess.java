@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
-import com.liteworkflow.engine.persistence.request.ProcessDefPageRequest;
 
 import test.TestSpring;
 
@@ -29,13 +28,7 @@ public class TestQueryProcess extends TestSpring
 	@Test
 	public void test()
 	{
-		ProcessDefPageRequest request = new ProcessDefPageRequest();
-
-		List<ProcessDefinition> list = engine.getRepositoryService().getProcesss(request);
-		System.out.println(list.size());
-
-		request.setNames(new String[] { "subprocess1" });
-		list = engine.getRepositoryService().getProcesss(request);
+		List<ProcessDefinition> list = engine.getRepositoryService().queryByName("subprocess1");
 		System.out.println(list.size());
 
 		ProcessDefinition process = engine.getRepositoryService().getProcessByVersion("subprocess1", 0);

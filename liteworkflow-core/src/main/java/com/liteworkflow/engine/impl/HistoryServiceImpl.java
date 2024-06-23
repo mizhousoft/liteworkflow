@@ -33,7 +33,7 @@ public class HistoryServiceImpl implements HistoryService
 	@Override
 	public HistoricProcessInstance getHistoricInstance(String instanceId)
 	{
-		return historicProcessInstanceEntityService.getHistoricInstance(instanceId);
+		return historicProcessInstanceEntityService.getByInstanceId(instanceId);
 	}
 
 	@Override
@@ -51,13 +51,13 @@ public class HistoryServiceImpl implements HistoryService
 	@Override
 	public HistoricTask getHistTask(String taskId)
 	{
-		return historicTaskEntityService.getHistTask(taskId);
+		return historicTaskEntityService.getByTaskId(taskId);
 	}
 
 	@Override
 	public String[] getHistoricTaskActorsByTaskId(String taskId)
 	{
-		List<HistoricTaskActor> actors = historicTaskActorEntityService.getHistTaskActorsByTaskId(taskId);
+		List<HistoricTaskActor> actors = historicTaskActorEntityService.queryByTaskId(taskId);
 		if (actors == null || actors.isEmpty())
 			return null;
 		String[] actorIds = new String[actors.size()];

@@ -2,6 +2,8 @@ package com.liteworkflow.engine.impl.executor;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.ProcessEngineConfiguration;
@@ -30,7 +32,7 @@ public class EndExecutor extends NodeExecutor
 	protected void doExecute(Execution execution, NodeModel nodeModel)
 	{
 		ProcessEngineConfiguration engine = execution.getEngineConfiguration();
-		ProcessInstance instance = execution.getInstance();
+		ProcessInstance instance = execution.getProcessInstance();
 		List<Task> tasks = engine.getTaskService().getActiveTasks(instance.getId());
 		for (Task task : tasks)
 		{
@@ -49,7 +51,7 @@ public class EndExecutor extends NodeExecutor
 		/**
 		 * 如果存在父流程，则重新构造Execution执行对象，交给父流程的SubProcessModel模型execute
 		 */
-		if (StringHelper.isNotEmpty(instance.getParentId()))
+		if (!StringUtils.isBlank(instance.getParentId()))
 		{
 			ProcessInstance parentInstance = engine.getProcessInstanceService().getInstance(instance.getParentId());
 			if (parentInstance == null)
@@ -64,7 +66,7 @@ public class EndExecutor extends NodeExecutor
 				return;
 			}
 
-			SubProcessModel spm = (SubProcessModel) pm.getNode(instance.getParentNodeName());
+			SubProcessModel spm = (SubProcessModel) pm.getNodeModel(instance.getParentNodeName());
 			Execution newExecution = new Execution(engine, process, parentInstance, execution.getArgs());
 			newExecution.setChildInstanceId(instance.getId());
 			newExecution.setTask(execution.getTask());

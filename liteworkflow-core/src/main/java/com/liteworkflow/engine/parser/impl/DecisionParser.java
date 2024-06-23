@@ -18,7 +18,7 @@ import com.mizhousoft.commons.lang.ClassUtils;
 public class DecisionParser extends AbstractNodeParser
 {
 	/**
-	 * 产生DecisionModel模型对象
+	 * {@inheritDoc}
 	 */
 	protected NodeModel newModel()
 	{
@@ -35,7 +35,7 @@ public class DecisionParser extends AbstractNodeParser
 	}
 
 	/**
-	 * 解析decisition节点的特有属性expr
+	 * {@inheritDoc}
 	 */
 	protected void doParseNode(NodeModel node, Element element)
 	{

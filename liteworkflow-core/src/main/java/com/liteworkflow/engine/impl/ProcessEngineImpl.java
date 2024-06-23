@@ -18,7 +18,7 @@ import com.liteworkflow.engine.TaskService;
 public class ProcessEngineImpl implements ProcessEngine
 {
 	/**
-	 * Snaker配置对象
+	 * ProcessEngineConfiguration
 	 */
 	protected ProcessEngineConfiguration configuration;
 

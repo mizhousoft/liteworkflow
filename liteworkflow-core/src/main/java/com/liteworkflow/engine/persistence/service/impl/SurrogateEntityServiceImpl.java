@@ -20,7 +20,7 @@ public class SurrogateEntityServiceImpl implements SurrogateEntityService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void save(Surrogate surrogate)
+	public void addEntity(Surrogate surrogate)
 	{
 		surrogateMapper.save(surrogate);
 	}
@@ -29,7 +29,7 @@ public class SurrogateEntityServiceImpl implements SurrogateEntityService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void update(Surrogate surrogate)
+	public void modifyEntity(Surrogate surrogate)
 	{
 		surrogateMapper.update(surrogate);
 	}
@@ -38,7 +38,7 @@ public class SurrogateEntityServiceImpl implements SurrogateEntityService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void delete(Surrogate surrogate)
+	public void deleteEntity(Surrogate surrogate)
 	{
 		surrogateMapper.delete(surrogate);
 	}
@@ -47,7 +47,7 @@ public class SurrogateEntityServiceImpl implements SurrogateEntityService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Surrogate getSurrogate(String id)
+	public Surrogate getById(String id)
 	{
 		return surrogateMapper.getSurrogate(id);
 	}

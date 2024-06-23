@@ -5,32 +5,32 @@
 	
 	<resultMap type="com.liteworkflow.engine.persistence.entity.ProcessInstance" id="ProcessInstanceMap">
 		<id property="id" column="id" />
-		<result property="parentId" column="parent_Id" />
-		<result property="processId" column="process_Id" />
+		<result property="parentId" column="parent_id" />
+		<result property="processId" column="process_id" />
 		<result property="creator" column="creator" />
-		<result property="createTime" column="create_Time" />
-		<result property="expireTime" column="expire_Time" />
-		<result property="lastUpdateTime" column="last_Update_Time" />
-		<result property="lastUpdator" column="last_Updator" />
+		<result property="createTime" column="create_time" />
+		<result property="expireTime" column="expire_time" />
+		<result property="lastUpdateTime" column="last_update_time" />
+		<result property="lastUpdator" column="last_updator" />
 		<result property="priority" column="priority" />
-		<result property="parentNodeName" column="parent_Node_Name" />
+		<result property="parentNodeName" column="parent_node_name" />
 		<result property="variable" column="variable" />
 		<result property="version" column="version" />
 	</resultMap>
 	
 	<insert id="save">
-		insert into wf_process_instance (id, process_Id, creator, create_Time, parent_Id, parent_Node_Name, expire_Time,
-		last_Update_Time, last_Updator, variable, version)
+		insert into wf_process_instance (id, process_id, creator, create_time, parent_id, parent_node_name, expire_time,
+		last_update_time, last_updator, variable, version)
 		values (#{id}, #{processId}, #{creator}, #{createTime}, #{parentId}, #{parentNodeName}, #{expireTime}, 
 		#{lastUpdateTime}, #{lastUpdator}, #{variable}, #{version})
 	</insert>
 	
 	<update id="update">
         update wf_process_instance 
-        set last_Updator = #{lastUpdator},  
-        last_Update_Time = #{lastUpdateTime},  
+        set last_updator = #{lastUpdator},  
+        last_update_time = #{lastUpdateTime},  
         variable = #{variable},  
-        expire_Time = #{expireTime}, 
+        expire_time = #{expireTime}, 
         version = version + 1 
         where id = #{id} and version = #{version} 
 	</update>
@@ -46,8 +46,8 @@
 	</delete>
 		
 	<select id="getInstance" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
-		select o.id, o.process_Id, o.creator, o.create_Time, o.parent_Id, o.parent_Node_Name, o.expire_Time,
-		o.last_Update_Time, o.last_Updator, o.priority, o.variable, o.version 
+		select o.id, o.process_id, o.creator, o.create_time, o.parent_id, o.parent_node_name, o.expire_time,
+		o.last_update_time, o.last_updator, o.priority, o.variable, o.version 
 		from wf_process_instance o 
 		where id = #{instanceId}
 	</select>
@@ -68,17 +68,17 @@
                 </foreach>
             </if>
             <if test="request.processId != null">
-                and o.process_Id = #{request.processId}
+                and o.process_id = #{request.processId}
        		</if>
             <if test="request.displayName != null">
 				<bind name="pattern" value="'%' + request.displayName + '%'" />
-				and p.display_Name like #{pattern} 
+				and p.display_name like #{pattern} 
 			</if>
 			<if test="request.processType != null">
                 and p.type = #{request.processType}
        		</if>
 			<if test="request.parentId != null">
-                and o.parent_Id = #{request.parentId}
+                and o.parent_id = #{request.parentId}
        		</if>
        		<if test="request.excludedIds != null and request.excludedIds.length != 0">
                 and o.id not in
@@ -87,17 +87,17 @@
                 </foreach>
             </if>
             <if test="request.createTimeStart != null">
-                and o.create_Time &gt;= #{request.createTimeStart}
+                and o.create_time &gt;= #{request.createTimeStart}
        		</if>
             <if test="request.createTimeEnd != null">
-                and o.create_Time &lt;= #{request.createTimeEnd}
+                and o.create_time &lt;= #{request.createTimeEnd}
        		</if>
 		</where>
 	</select>
 	
 	<select id="findPageData" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
-		select o.id, o.process_Id, o.creator, o.create_Time, o.parent_Id, o.parent_Node_Name, o.expire_Time,
-		o.last_Update_Time, o.last_Updator, o.priority, o.variable, o.version 
+		select o.id, o.process_id, o.creator, o.create_time, o.parent_id, o.parent_node_name, o.expire_time,
+		o.last_update_time, o.last_updator, o.priority, o.variable, o.version 
 		from wf_process_instance o left join wf_process_definition p on p.id = o.process_id
 		<where>
        		<if test="request.operators != null and request.operators.length != 0">
@@ -113,17 +113,17 @@
                 </foreach>
             </if>
             <if test="request.processId != null">
-                and o.process_Id = #{request.processId}
+                and o.process_id = #{request.processId}
        		</if>
             <if test="request.displayName != null">
 				<bind name="pattern" value="'%' + request.displayName + '%'" />
-				and p.display_Name like #{pattern} 
+				and p.display_name like #{pattern} 
 			</if>
 			<if test="request.processType != null">
                 and p.type = #{request.processType}
        		</if>
 			<if test="request.parentId != null">
-                and o.parent_Id = #{request.parentId}
+                and o.parent_id = #{request.parentId}
        		</if>
        		<if test="request.excludedIds != null and request.excludedIds.length != 0">
                 and o.id not in
@@ -132,10 +132,10 @@
                 </foreach>
             </if>
             <if test="request.createTimeStart != null">
-                and o.create_Time &gt;= #{request.createTimeStart}
+                and o.create_time &gt;= #{request.createTimeStart}
        		</if>
             <if test="request.createTimeEnd != null">
-                and o.create_Time &lt;= #{request.createTimeEnd}
+                and o.create_time &lt;= #{request.createTimeEnd}
        		</if>
 		</where>
 		<if test="request.sortString != null">

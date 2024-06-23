@@ -30,21 +30,41 @@ public class DecisionModel extends NodeModel
 	 */
 	private DecisionHandler decisionHandler;
 
+	/**
+	 * 获取expr
+	 * 
+	 * @return
+	 */
 	public String getExpr()
 	{
 		return expr;
 	}
 
+	/**
+	 * 设置expr
+	 * 
+	 * @param expr
+	 */
 	public void setExpr(String expr)
 	{
 		this.expr = expr;
 	}
 
+	/**
+	 * 获取handleClass
+	 * 
+	 * @return
+	 */
 	public String getHandleClass()
 	{
 		return handleClass;
 	}
 
+	/**
+	 * 设置handleClass
+	 * 
+	 * @param handleClass
+	 */
 	public void setHandleClass(String handleClass)
 	{
 		this.handleClass = handleClass;
@@ -69,4 +89,5 @@ public class DecisionModel extends NodeModel
 	{
 		this.decisionHandler = decisionHandler;
 	}
+
 }

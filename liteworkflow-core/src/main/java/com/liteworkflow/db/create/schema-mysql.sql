@@ -1,91 +1,91 @@
 CREATE TABLE wf_process_definition (
     id                VARCHAR(32) PRIMARY KEY NOT NULL comment '主键ID',
     name              VARCHAR(100) comment '流程名称',
-    display_Name      VARCHAR(200) comment '流程显示名称',
+    display_name      VARCHAR(200) comment '流程显示名称',
     type              VARCHAR(100) comment '流程类型',
-    instance_Url      VARCHAR(200) comment '实例url',
+    instance_url      VARCHAR(200) comment '实例url',
     state             TINYINT(1) comment '流程是否可用',
     content           LONGBLOB comment '流程模型定义',
     version           INT(2) comment '版本',
-    create_Time       VARCHAR(50) comment '创建时间',
+    create_time       DATETIME comment '创建时间',
     creator           VARCHAR(50) comment '创建人'
 )comment='流程定义表';
 
 CREATE TABLE wf_process_instance (
     id                VARCHAR(32) NOT NULL PRIMARY KEY comment '主键ID',
-    parent_Id         VARCHAR(32) comment '父流程ID',
-    process_Id        VARCHAR(32) NOT NULL comment '流程定义ID',
+    parent_id         VARCHAR(32) comment '父流程ID',
+    process_id        VARCHAR(32) NOT NULL comment '流程定义ID',
     creator           VARCHAR(50) comment '发起人',
-    create_Time       VARCHAR(50) NOT NULL comment '发起时间',
-    expire_Time       VARCHAR(50) comment '期望完成时间',
-    last_Update_Time  VARCHAR(50) comment '上次更新时间',
-    last_Updator      VARCHAR(50) comment '上次更新人',
+    create_time       DATETIME NOT NULL comment '发起时间',
+    expire_time       DATETIME comment '期望完成时间',
+    last_update_time  DATETIME comment '上次更新时间',
+    last_updator      VARCHAR(50) comment '上次更新人',
     priority          TINYINT(1) comment '优先级',
-    parent_Node_Name  VARCHAR(100) comment '父流程依赖的节点名称',
+    parent_node_name  VARCHAR(100) comment '父流程依赖的节点名称',
     variable          VARCHAR(2000) comment '附属变量json存储',
     version           INT(3) comment '版本'
 )comment='流程实例表';
 
 CREATE TABLE wf_task (
     id                VARCHAR(32) NOT NULL PRIMARY KEY comment '主键ID',
-    instance_Id          VARCHAR(32) NOT NULL comment '流程实例ID',
-    task_Name         VARCHAR(100) NOT NULL comment '任务名称',
-    display_Name      VARCHAR(200) NOT NULL comment '任务显示名称',
-    task_Type         TINYINT(1) NOT NULL comment '任务类型',
-    perform_Type      TINYINT(1) comment '参与类型',
+    instance_id       VARCHAR(32) NOT NULL comment '流程实例ID',
+    task_name         VARCHAR(100) NOT NULL comment '任务名称',
+    display_name      VARCHAR(200) NOT NULL comment '任务显示名称',
+    task_type         TINYINT(1) NOT NULL comment '任务类型',
+    perform_type      TINYINT(1) comment '参与类型',
     operator          VARCHAR(50) comment '任务处理人',
-    create_Time       VARCHAR(50) comment '任务创建时间',
-    finish_Time       VARCHAR(50) comment '任务完成时间',
-    expire_Time       VARCHAR(50) comment '任务期望完成时间',
-    action_Url        VARCHAR(200) comment '任务处理的url',
-    parent_Task_Id    VARCHAR(32) comment '父任务ID',
+    create_time       DATETIME comment '任务创建时间',
+    finish_Time       DATETIME comment '任务完成时间',
+    expire_time       DATETIME comment '任务期望完成时间',
+    action_url        VARCHAR(200) comment '任务处理的url',
+    parent_task_id    VARCHAR(32) comment '父任务ID',
     variable          VARCHAR(2000) comment '附属变量json存储',
     version           TINYINT(1) comment '版本'
 )comment='任务表';
 
 CREATE TABLE wf_task_actor (
-    task_Id           VARCHAR(32) not null comment '任务ID',
-    actor_Id          VARCHAR(50) not null comment '参与者ID'
+    task_id           VARCHAR(32) not null comment '任务ID',
+    actor_id          VARCHAR(50) not null comment '参与者ID'
 )comment='任务参与者表';
 
 create table wf_historic_process_instance (
     id                VARCHAR(32) not null primary key comment '主键ID',
-    process_Id        VARCHAR(32) not null comment '流程定义ID',
+    process_id        VARCHAR(32) not null comment '流程定义ID',
     state       	  TINYINT(1) not null comment '状态',
     creator           VARCHAR(50) comment '发起人',
-    create_Time       VARCHAR(50) not null comment '发起时间',
-    end_Time          VARCHAR(50) comment '完成时间',
-    expire_Time       VARCHAR(50) comment '期望完成时间',
+    create_time       DATETIME not null comment '发起时间',
+    end_time          DATETIME comment '完成时间',
+    expire_time       DATETIME comment '期望完成时间',
     priority          TINYINT(1) comment '优先级',
-    parent_Id         VARCHAR(32) comment '父流程ID',
+    parent_id         VARCHAR(32) comment '父流程ID',
     variable          VARCHAR(2000) comment '附属变量json存储'
 )comment='历史流程实例表';
 
 create table wf_historic_task (
     id                VARCHAR(32) not null primary key comment '主键ID',
-    instance_Id          VARCHAR(32) not null comment '流程实例ID',
-    task_Name         VARCHAR(100) not null comment '任务名称',
-    display_Name      VARCHAR(200) not null comment '任务显示名称',
-    task_Type         TINYINT(1) not null comment '任务类型',
-    perform_Type      TINYINT(1) comment '参与类型',
-    task_State        TINYINT(1) not null comment '任务状态',
+    instance_id       VARCHAR(32) not null comment '流程实例ID',
+    task_name         VARCHAR(100) not null comment '任务名称',
+    display_name      VARCHAR(200) not null comment '任务显示名称',
+    task_type         TINYINT(1) not null comment '任务类型',
+    perform_type      TINYINT(1) comment '参与类型',
+    task_state        TINYINT(1) not null comment '任务状态',
     operator          VARCHAR(50) comment '任务处理人',
-    create_Time       VARCHAR(50) not null comment '任务创建时间',
-    finish_Time       VARCHAR(50) comment '任务完成时间',
-    expire_Time       VARCHAR(50) comment '任务期望完成时间',
-    action_Url        VARCHAR(200) comment '任务处理url',
-    parent_Task_Id    VARCHAR(32) comment '父任务ID',
+    create_time       DATETIME not null comment '任务创建时间',
+    finish_Time       DATETIME comment '任务完成时间',
+    expire_time       DATETIME comment '任务期望完成时间',
+    action_url        VARCHAR(200) comment '任务处理url',
+    parent_task_id    VARCHAR(32) comment '父任务ID',
     variable          VARCHAR(2000) comment '附属变量json存储'
 )comment='历史任务表';
 
 create table wf_historic_task_actor (
-    task_Id           VARCHAR(32) not null comment '任务ID',
-    actor_Id          VARCHAR(50) not null comment '参与者ID'
+    task_id           VARCHAR(32) not null comment '任务ID',
+    actor_id          VARCHAR(50) not null comment '参与者ID'
 )comment='历史任务参与者表';
 
 create table wf_surrogate (
     id                VARCHAR(32) PRIMARY KEY NOT NULL COMMENT '主键ID',
-    process_Name       VARCHAR(100) COMMENT '流程名称',
+    process_name      VARCHAR(100) COMMENT '流程名称',
     operator          VARCHAR(50) COMMENT '授权人',
     surrogate         VARCHAR(50) COMMENT '代理人',
     odate             VARCHAR(64) COMMENT '操作时间',
@@ -96,48 +96,48 @@ create table wf_surrogate (
 create index IDX_SURROGATE_OPERATOR on wf_surrogate (operator);
 
 create table wf_cc_process_instance (
-    instance_Id        varchar(32) COMMENT '流程实例ID',
-    actor_Id        varchar(50) COMMENT '参与者ID',
-    creator         varchar(50) COMMENT '发起人',
-    create_Time     varchar(50) COMMENT '抄送时间',
-    finish_Time     varchar(50) COMMENT '完成时间',
-    status          TINYINT(1)  COMMENT '状态'
+    instance_id       varchar(32) COMMENT '流程实例ID',
+    actor_id       	  varchar(50) COMMENT '参与者ID',
+    creator           varchar(50) COMMENT '发起人',
+    create_time       DATETIME COMMENT '抄送时间',
+    finish_Time       DATETIME COMMENT '完成时间',
+    status            TINYINT(1)  COMMENT '状态'
 )comment='抄送实例表';
-create index IDX_CCINSTANCE_INSTANCE_ID on wf_cc_process_instance (instance_Id);
+create index IDX_CCINSTANCE_instance_id on wf_cc_process_instance (instance_id);
 
-create index IDX_PROCESS_NAME on wf_process_definition (name);
-create index IDX_INSTANCE_PROCESSID on wf_process_instance (process_Id);
-create index IDX_TASK_INSTANCE_ID on wf_task (instance_Id);
-create index IDX_TASK_TASKNAME on wf_task (task_Name);
-create index IDX_TASK_PARENTTASK on wf_task (parent_Task_Id);
-create index IDX_TASKACTOR_TASK on wf_task_actor (task_Id);
-create index IDX_HISTORIC_INSTANCE_PROCESSID on wf_historic_process_instance (process_Id);
-create index IDX_HISTORIC_TASK_INSTANCE_ID on wf_historic_task (instance_Id);
-create index IDX_HISTORIC_TASK_TASKNAME on wf_historic_task (task_Name);
-create index IDX_HISTORIC_TASK_PARENTTASK on wf_historic_task (parent_Task_Id);
-create index IDX_HISTORIC_TASKACTOR_TASK on wf_historic_task_actor (task_Id);
+create index IDX_process_name on wf_process_definition (name);
+create index IDX_INSTANCE_PROCESSID on wf_process_instance (process_id);
+create index IDX_TASK_instance_id on wf_task (instance_id);
+create index IDX_TASK_TASKNAME on wf_task (task_name);
+create index IDX_TASK_PARENTTASK on wf_task (parent_task_id);
+create index IDX_TASKACTOR_TASK on wf_task_actor (task_id);
+create index IDX_HISTORIC_INSTANCE_PROCESSID on wf_historic_process_instance (process_id);
+create index IDX_HISTORIC_TASK_instance_id on wf_historic_task (instance_id);
+create index IDX_HISTORIC_TASK_TASKNAME on wf_historic_task (task_name);
+create index IDX_HISTORIC_TASK_PARENTTASK on wf_historic_task (parent_task_id);
+create index IDX_HISTORIC_TASKACTOR_TASK on wf_historic_task_actor (task_id);
 
 alter table wf_task_actor
-  add constraint FK_TASK_ACTOR_TASKID foreign key (task_Id)
+  add constraint FK_TASK_ACTOR_TASKID foreign key (task_id)
   references wf_task (id);
 alter table wf_task
-  add constraint FK_TASK_INSTANCEID foreign key (instance_Id)
+  add constraint FK_TASK_INSTANCEID foreign key (instance_id)
   references wf_process_instance (id);
 alter table wf_process_instance
-  add constraint FK_INSTANCE_PARENTID foreign key (parent_Id)
+  add constraint FK_INSTANCE_PARENTID foreign key (parent_id)
   references wf_process_instance (id);
 alter table wf_process_instance
-  add constraint FK_INSTANCE_PROCESSID foreign key (process_Id)
+  add constraint FK_INSTANCE_PROCESSID foreign key (process_id)
   references wf_process_definition (id);
 alter table wf_historic_task_actor
-  add constraint FK_HISTORIC_TASKACTOR foreign key (task_Id)
+  add constraint FK_HISTORIC_TASKACTOR foreign key (task_id)
   references wf_historic_task (id);
 alter table wf_historic_task
-  add constraint FK_HISTORIC_TASK_INSTANCEID foreign key (instance_Id)
+  add constraint FK_HISTORIC_TASK_INSTANCEID foreign key (instance_id)
   references wf_historic_process_instance (id);
 alter table wf_historic_process_instance
-  add constraint FK_HISTORIC_INSTANCE_PARENTID foreign key (parent_Id)
+  add constraint FK_HISTORIC_INSTANCE_PARENTID foreign key (parent_id)
   references wf_historic_process_instance (id);
 alter table wf_historic_process_instance
-  add constraint FK_HISTORIC_INSTANCE_PROCESSID foreign key (process_Id)
+  add constraint FK_HISTORIC_INSTANCE_PROCESSID foreign key (process_id)
   references wf_process_definition (id);

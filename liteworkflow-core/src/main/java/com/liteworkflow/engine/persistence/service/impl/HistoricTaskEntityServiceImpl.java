@@ -2,7 +2,8 @@ package com.liteworkflow.engine.persistence.service.impl;
 
 import java.util.List;
 
-import com.liteworkflow.engine.helper.StringHelper;
+import org.apache.commons.lang3.StringUtils;
+
 import com.liteworkflow.engine.persistence.entity.HistoricTask;
 import com.liteworkflow.engine.persistence.entity.HistoricTaskActor;
 import com.liteworkflow.engine.persistence.mapper.HistoricTaskMapper;
@@ -25,20 +26,20 @@ public class HistoricTaskEntityServiceImpl implements HistoricTaskEntityService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void saveEntity(HistoricTask task)
+	public void addEntity(HistoricTask task)
 	{
 		historicTaskMapper.save(task);
 		if (task.getActorIds() != null)
 		{
 			for (String actorId : task.getActorIds())
 			{
-				if (StringHelper.isEmpty(actorId))
+				if (StringUtils.isBlank(actorId))
 					continue;
 
 				HistoricTaskActor taskActor = new HistoricTaskActor();
 				taskActor.setTaskId(task.getId());
 				taskActor.setActorId(actorId);
-				historicTaskActorEntityService.save(taskActor);
+				historicTaskActorEntityService.addEntity(taskActor);
 			}
 		}
 	}
@@ -58,7 +59,7 @@ public class HistoricTaskEntityServiceImpl implements HistoricTaskEntityService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public HistoricTask getHistTask(String taskId)
+	public HistoricTask getByTaskId(String taskId)
 	{
 		return historicTaskMapper.getHistTask(taskId);
 	}

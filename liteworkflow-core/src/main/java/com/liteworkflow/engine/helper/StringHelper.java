@@ -19,28 +19,6 @@ public class StringHelper
 	}
 
 	/**
-	 * 判断字符串是否为空
-	 * 
-	 * @param str 字符串
-	 * @return 是否为空标识
-	 */
-	public static boolean isEmpty(String str)
-	{
-		return str == null || str.length() == 0;
-	}
-
-	/**
-	 * 判断字符串是否为非空
-	 * 
-	 * @param str 字符串
-	 * @return 是否为非空标识
-	 */
-	public static boolean isNotEmpty(String str)
-	{
-		return !isEmpty(str);
-	}
-
-	/**
 	 * 根据字符串数组返回逗号分隔的字符串值
 	 * 
 	 * @param strArray 字符串数组

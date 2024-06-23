@@ -3,9 +3,7 @@ package com.liteworkflow.engine.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.liteworkflow.engine.helper.ClassHelper;
-import com.liteworkflow.engine.helper.StringHelper;
-import com.liteworkflow.engine.interceptor.SnakerInterceptor;
+import com.liteworkflow.engine.interceptor.FlowInterceptor;
 
 /**
  * 节点元素（存在输入输出的变迁）
@@ -23,12 +21,12 @@ public abstract class NodeModel extends BaseModel
 	/**
 	 * 输入变迁集合
 	 */
-	private List<TransitionModel> inputs = new ArrayList<TransitionModel>();
+	private List<TransitionModel> inputs = new ArrayList<TransitionModel>(0);
 
 	/**
 	 * 输出变迁集合
 	 */
-	private List<TransitionModel> outputs = new ArrayList<TransitionModel>();
+	private List<TransitionModel> outputs = new ArrayList<TransitionModel>(0);
 
 	/**
 	 * layout
@@ -48,12 +46,12 @@ public abstract class NodeModel extends BaseModel
 	/**
 	 * 前置局部拦截器实例集合
 	 */
-	private List<SnakerInterceptor> preInterceptorList = new ArrayList<SnakerInterceptor>();
+	private List<FlowInterceptor> preInterceptorList = new ArrayList<FlowInterceptor>();
 
 	/**
 	 * 后置局部拦截器实例集合
 	 */
-	private List<SnakerInterceptor> postInterceptorList = new ArrayList<SnakerInterceptor>();
+	private List<FlowInterceptor> postInterceptorList = new ArrayList<FlowInterceptor>();
 
 	/**
 	 * 根据父节点模型、当前节点模型判断是否可退回。可退回条件：
@@ -112,72 +110,104 @@ public abstract class NodeModel extends BaseModel
 		}
 	}
 
+	/**
+	 * 获取inputs
+	 * 
+	 * @return
+	 */
 	public List<TransitionModel> getInputs()
 	{
 		return inputs;
 	}
 
+	/**
+	 * 设置inputs
+	 * 
+	 * @param inputs
+	 */
 	public void setInputs(List<TransitionModel> inputs)
 	{
 		this.inputs = inputs;
 	}
 
+	/**
+	 * 获取outputs
+	 * 
+	 * @return
+	 */
 	public List<TransitionModel> getOutputs()
 	{
 		return outputs;
 	}
 
+	/**
+	 * 设置outputs
+	 * 
+	 * @param outputs
+	 */
 	public void setOutputs(List<TransitionModel> outputs)
 	{
 		this.outputs = outputs;
 	}
 
+	/**
+	 * 获取layout
+	 * 
+	 * @return
+	 */
 	public String getLayout()
 	{
 		return layout;
 	}
 
+	/**
+	 * 设置layout
+	 * 
+	 * @param layout
+	 */
 	public void setLayout(String layout)
 	{
 		this.layout = layout;
 	}
 
+	/**
+	 * 获取preInterceptors
+	 * 
+	 * @return
+	 */
 	public String getPreInterceptors()
 	{
 		return preInterceptors;
 	}
 
+	/**
+	 * 设置preInterceptors
+	 * 
+	 * @param preInterceptors
+	 */
 	public void setPreInterceptors(String preInterceptors)
 	{
 		this.preInterceptors = preInterceptors;
-		if (StringHelper.isNotEmpty(preInterceptors))
-		{
-			for (String interceptor : preInterceptors.split(","))
-			{
-				SnakerInterceptor instance = (SnakerInterceptor) ClassHelper.newInstance(interceptor);
-				if (instance != null)
-					this.preInterceptorList.add(instance);
-			}
-		}
 	}
 
+	/**
+	 * 获取postInterceptors
+	 * 
+	 * @return
+	 */
 	public String getPostInterceptors()
 	{
 		return postInterceptors;
 	}
 
+	/**
+	 * 设置postInterceptors
+	 * 
+	 * @param postInterceptors
+	 */
 	public void setPostInterceptors(String postInterceptors)
 	{
 		this.postInterceptors = postInterceptors;
-		if (StringHelper.isNotEmpty(postInterceptors))
-		{
-			for (String interceptor : postInterceptors.split(","))
-			{
-				SnakerInterceptor instance = (SnakerInterceptor) ClassHelper.newInstance(interceptor);
-				if (instance != null)
-					this.postInterceptorList.add(instance);
-			}
-		}
 	}
 
 	/**
@@ -185,9 +215,19 @@ public abstract class NodeModel extends BaseModel
 	 * 
 	 * @return
 	 */
-	public List<SnakerInterceptor> getPreInterceptorList()
+	public List<FlowInterceptor> getPreInterceptorList()
 	{
 		return preInterceptorList;
+	}
+
+	/**
+	 * 设置preInterceptorList
+	 * 
+	 * @param preInterceptorList
+	 */
+	public void setPreInterceptorList(List<FlowInterceptor> preInterceptorList)
+	{
+		this.preInterceptorList = preInterceptorList;
 	}
 
 	/**
@@ -195,8 +235,19 @@ public abstract class NodeModel extends BaseModel
 	 * 
 	 * @return
 	 */
-	public List<SnakerInterceptor> getPostInterceptorList()
+	public List<FlowInterceptor> getPostInterceptorList()
 	{
 		return postInterceptorList;
 	}
+
+	/**
+	 * 设置postInterceptorList
+	 * 
+	 * @param postInterceptorList
+	 */
+	public void setPostInterceptorList(List<FlowInterceptor> postInterceptorList)
+	{
+		this.postInterceptorList = postInterceptorList;
+	}
+
 }

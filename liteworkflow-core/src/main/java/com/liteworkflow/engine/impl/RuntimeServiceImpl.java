@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.ProcessInstanceService;
@@ -26,7 +27,7 @@ public class RuntimeServiceImpl implements RuntimeService
 	private static final Logger log = LoggerFactory.getLogger(RuntimeServiceImpl.class);
 
 	/**
-	 * Snaker配置对象
+	 * ProcessEngineConfiguration
 	 */
 	protected ProcessEngineConfiguration configuration;
 
@@ -79,9 +80,13 @@ public class RuntimeServiceImpl implements RuntimeService
 	public ProcessInstance startInstanceById(String id, String operator, Map<String, Object> args)
 	{
 		if (args == null)
-			args = new HashMap<String, Object>();
+		{
+			args = new HashMap<String, Object>(0);
+		}
+
 		ProcessDefinition process = repositoryService.getProcessById(id);
-		repositoryService.check(process, id);
+		Assert.notNull(process, "Process definition not found, id is " + id);
+
 		return startProcess(process, operator, args);
 	}
 
@@ -127,9 +132,13 @@ public class RuntimeServiceImpl implements RuntimeService
 	public ProcessInstance startInstanceByName(String name, Integer version, String operator, Map<String, Object> args)
 	{
 		if (args == null)
-			args = new HashMap<String, Object>();
+		{
+			args = new HashMap<String, Object>(0);
+		}
+
 		ProcessDefinition process = repositoryService.getProcessByVersion(name, version);
-		repositoryService.check(process, name);
+		Assert.notNull(process, "Process definition not found, name is " + name);
+
 		return startProcess(process, operator, args);
 	}
 
@@ -144,7 +153,7 @@ public class RuntimeServiceImpl implements RuntimeService
 			executor.execute(execution, start);
 		}
 
-		return execution.getInstance();
+		return execution.getProcessInstance();
 	}
 
 	/**
@@ -153,7 +162,7 @@ public class RuntimeServiceImpl implements RuntimeService
 	@Override
 	public ProcessInstance startInstanceByExecution(Execution execution)
 	{
-		ProcessDefinition process = execution.getProcess();
+		ProcessDefinition process = execution.getProcessDefinition();
 		StartModel start = process.getModel().getStartModel();
 		AssertHelper.notNull(start, "流程定义[id=" + process.getId() + "]没有开始节点");
 
@@ -162,7 +171,7 @@ public class RuntimeServiceImpl implements RuntimeService
 		Executor executor = ExecutorBuilder.build(start);
 		executor.execute(current, start);
 
-		return current.getInstance();
+		return current.getProcessInstance();
 	}
 
 	/**

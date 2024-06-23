@@ -1,5 +1,6 @@
 package com.liteworkflow.engine.parser.impl;
 
+import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.model.EndModel;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.parser.AbstractNodeParser;
@@ -13,7 +14,7 @@ import com.liteworkflow.engine.parser.AbstractNodeParser;
 public class EndParser extends AbstractNodeParser
 {
 	/**
-	 * 产生EndModel模型对象
+	 * {@inheritDoc}
 	 */
 	protected NodeModel newModel()
 	{
@@ -28,4 +29,19 @@ public class EndParser extends AbstractNodeParser
 	{
 		return "end";
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void checkModel()
+	{
+		super.checkModel();
+
+		if (!model.getOutputs().isEmpty())
+		{
+			throw new ProcessException("End node can not config transition child element.");
+		}
+	}
+
 }

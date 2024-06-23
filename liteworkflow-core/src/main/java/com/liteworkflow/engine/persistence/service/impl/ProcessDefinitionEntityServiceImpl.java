@@ -17,13 +17,27 @@ import com.mizhousoft.commons.data.util.PageUtils;
  */
 public class ProcessDefinitionEntityServiceImpl implements ProcessDefinitionEntityService
 {
+	/**
+	 * ProcessDefinitionMapper
+	 */
 	private ProcessDefinitionMapper processDefinitionMapper;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param processDefinitionMapper
+	 */
+	public ProcessDefinitionEntityServiceImpl(ProcessDefinitionMapper processDefinitionMapper)
+	{
+		super();
+		this.processDefinitionMapper = processDefinitionMapper;
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void save(ProcessDefinition process)
+	public void addEntity(ProcessDefinition process)
 	{
 		processDefinitionMapper.save(process);
 	}
@@ -32,7 +46,7 @@ public class ProcessDefinitionEntityServiceImpl implements ProcessDefinitionEnti
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void update(ProcessDefinition process)
+	public void modifyEntity(ProcessDefinition process)
 	{
 		processDefinitionMapper.update(process);
 	}
@@ -50,27 +64,27 @@ public class ProcessDefinitionEntityServiceImpl implements ProcessDefinitionEnti
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void delete(ProcessDefinition process)
+	public void deleteEntity(ProcessDefinition processDefinition)
 	{
-		processDefinitionMapper.delete(process.getId());
+		processDefinitionMapper.delete(processDefinition.getId());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessDefinition getProcess(String id)
+	public ProcessDefinition getById(String id)
 	{
-		return processDefinitionMapper.getProcess(id);
+		return processDefinitionMapper.findById(id);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Integer getLatestProcessVersion(String name)
+	public Integer getLatestVersion(String name)
 	{
-		Integer ver = processDefinitionMapper.getLatestProcessVersion(name);
+		Integer ver = processDefinitionMapper.findLatestVersion(name);
 
 		return (ver != null ? ver.intValue() : -1);
 	}
@@ -79,11 +93,9 @@ public class ProcessDefinitionEntityServiceImpl implements ProcessDefinitionEnti
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<ProcessDefinition> queryList(ProcessDefPageRequest request)
+	public List<ProcessDefinition> queryByName(String name, Integer version)
 	{
-		request.setPageSize(10000);
-
-		return processDefinitionMapper.findPageData(0, request);
+		return processDefinitionMapper.findByProcessName(name, version);
 	}
 
 	/**
@@ -102,13 +114,4 @@ public class ProcessDefinitionEntityServiceImpl implements ProcessDefinitionEnti
 		return page;
 	}
 
-	/**
-	 * 设置processDefinitionMapper
-	 * 
-	 * @param processDefinitionMapper
-	 */
-	public void setprocessDefinitionMapper(ProcessDefinitionMapper processDefinitionMapper)
-	{
-		this.processDefinitionMapper = processDefinitionMapper;
-	}
 }

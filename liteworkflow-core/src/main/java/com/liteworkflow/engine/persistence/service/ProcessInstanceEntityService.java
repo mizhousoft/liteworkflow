@@ -18,7 +18,7 @@ public interface ProcessInstanceEntityService
 	 * 
 	 * @param instance 流程实例对象
 	 */
-	void saveInstance(ProcessInstance instance);
+	void addEntity(ProcessInstance instance);
 
 	/**
 	 * 保存流程实例
@@ -32,14 +32,21 @@ public interface ProcessInstanceEntityService
 	 * 
 	 * @param instance 流程实例对象
 	 */
-	void updateInstance(ProcessInstance instance);
+	void modifyEntity(ProcessInstance instance);
+
+	/**
+	 * 更新实例变量（包括历史实例表）
+	 * 
+	 * @param instance 实例对象
+	 */
+	void modifyVariable(ProcessInstance instance);
 
 	/**
 	 * 删除流程实例对象
 	 * 
 	 * @param instance 流程实例对象
 	 */
-	void deleteInstance(ProcessInstance instance);
+	void deleteEntity(ProcessInstance instance);
 
 	/**
 	 * 根据流程实例id查询实例对象
@@ -47,14 +54,7 @@ public interface ProcessInstanceEntityService
 	 * @param instanceId 活动流程实例id
 	 * @return ProcessInstance 活动流程实例对象
 	 */
-	ProcessInstance getInstance(String instanceId);
-
-	/**
-	 * 更新实例变量（包括历史实例表）
-	 * 
-	 * @param instance 实例对象
-	 */
-	void updateVariable(ProcessInstance instance);
+	ProcessInstance getByInstanceId(String instanceId);
 
 	/**
 	 * 

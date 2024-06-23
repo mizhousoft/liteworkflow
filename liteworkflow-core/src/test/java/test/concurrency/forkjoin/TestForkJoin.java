@@ -26,7 +26,7 @@ public class TestForkJoin extends TestSpring
 		engine = applicationContext.getBean(ProcessEngine.class);
 		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/concurrency/forkjoin/process.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/concurrency/forkjoin/process.xml"));
 	}
 
 	@Test

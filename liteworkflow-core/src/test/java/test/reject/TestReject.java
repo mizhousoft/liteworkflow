@@ -23,7 +23,7 @@ public class TestReject extends TestSpring
 		engine = applicationContext.getBean(ProcessEngine.class);
 		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/reject/reject.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/reject/reject.xml"));
 		engine.getRuntimeService().startInstanceById(processId);
 	}
 

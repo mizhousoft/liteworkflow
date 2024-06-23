@@ -9,6 +9,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.springframework.util.Assert;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -78,34 +79,10 @@ public class ModelParser
 			process.setExpireTime(processE.getAttribute(NodeParser.ATTR_EXPIRETIME));
 			process.setInstanceUrl(processE.getAttribute(NodeParser.ATTR_INSTANCEURL));
 
-			NodeList nodeList = processE.getChildNodes();
-			int nodeSize = nodeList.getLength();
-			for (int i = 0; i < nodeSize; i++)
-			{
-				Node node = nodeList.item(i);
-				if (node.getNodeType() == Node.ELEMENT_NODE)
-				{
-					NodeModel model = parseModel(node);
-					process.getNodes().add(model);
-				}
-			}
+			List<NodeModel> nodeModels = parseNodeList(processE.getChildNodes());
+			process.setNodeModels(nodeModels);
 
-			// 循环节点模型，构造变迁输入、输出的source、target
-			for (NodeModel node : process.getNodes())
-			{
-				for (TransitionModel transition : node.getOutputs())
-				{
-					String to = transition.getTo();
-					for (NodeModel node2 : process.getNodes())
-					{
-						if (to.equalsIgnoreCase(node2.getName()))
-						{
-							node2.getInputs().add(transition);
-							transition.setTarget(node2);
-						}
-					}
-				}
-			}
+			checkProcessModel(process);
 
 			return process;
 		}
@@ -116,23 +93,72 @@ public class ModelParser
 	}
 
 	/**
+	 * 解析节点元素列表
+	 * 
+	 * @param nodeElementList
+	 * @return
+	 */
+	private static List<NodeModel> parseNodeList(NodeList nodeElementList)
+	{
+		List<NodeModel> nodeModels = new ArrayList<NodeModel>(10);
+
+		for (int i = 0; i < nodeElementList.getLength(); i++)
+		{
+			Node node = nodeElementList.item(i);
+			if (node.getNodeType() == Node.ELEMENT_NODE)
+			{
+				NodeModel nodeModel = parseNodeElement((Element) node);
+				nodeModels.add(nodeModel);
+			}
+		}
+
+		// 循环节点模型，构造变迁输入、输出的source、target
+		for (NodeModel node : nodeModels)
+		{
+			for (TransitionModel transition : node.getOutputs())
+			{
+				String to = transition.getTo();
+
+				for (NodeModel node2 : nodeModels)
+				{
+					if (to.equalsIgnoreCase(node2.getName()))
+					{
+						List<TransitionModel> inputs = new ArrayList<>(node2.getInputs());
+						inputs.add(transition);
+						node2.setInputs(inputs);
+
+						transition.setTarget(node2);
+					}
+				}
+			}
+		}
+
+		return nodeModels;
+	}
+
+	/**
 	 * 对流程定义xml的节点，根据其节点对应的解析器解析节点内容
 	 * 
 	 * @param node
 	 * @return
 	 */
-	private static NodeModel parseModel(Node node)
+	private static NodeModel parseNodeElement(Element element)
 	{
-		String nodeName = node.getNodeName();
+		String nodeName = element.getNodeName();
 		NodeParser nodeParser = getNodeParser(nodeName);
 
-		Element element = (Element) node;
 		nodeParser.parse(element);
 
 		return nodeParser.getModel();
 	}
 
-	public static NodeParser getNodeParser(String nodeName)
+	/**
+	 * 根据节点名称获取节点解析器
+	 * 
+	 * @param nodeName
+	 * @return
+	 */
+	private static NodeParser getNodeParser(String nodeName)
 	{
 		for (NodeParser nodeParser : NODE_PARSER_LIST)
 		{
@@ -143,5 +169,31 @@ public class ModelParser
 		}
 
 		throw new ProcessException(nodeName + " NodeParser not found.");
+	}
+
+	/**
+	 * 校验模型是否正确
+	 * 
+	 * @param process
+	 */
+	private static void checkProcessModel(ProcessModel process)
+	{
+		Assert.notNull(process.getName(), "Process name is null.");
+		Assert.notNull(process.getDisplayName(), "Process display name is null.");
+		Assert.notNull(process.getStartModel(), "Process start node not exist.");
+		Assert.notNull(process.getEndModel(), "Process end node not exist.");
+
+		List<NodeModel> nodeModels = process.getNodeModels();
+		for (NodeModel nodeModel : nodeModels)
+		{
+			List<TransitionModel> outputs = nodeModel.getOutputs();
+			for (TransitionModel output : outputs)
+			{
+				if (!nodeModels.stream().anyMatch(nm -> nm.getName().equals(output.getTo())))
+				{
+					throw new ProcessException("Transition to is wrong, can not associate node.");
+				}
+			}
+		}
 	}
 }

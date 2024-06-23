@@ -1,13 +1,14 @@
 package com.liteworkflow.engine.impl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +45,6 @@ import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.TaskActorEntityService;
 import com.liteworkflow.engine.persistence.service.TaskEntityService;
 import com.mizhousoft.commons.data.domain.Page;
-import com.mizhousoft.commons.lang.LocalDateTimeUtils;
 
 /**
  * 任务执行业务类
@@ -109,10 +109,10 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		Execution execution = execute(taskId, operator, args);
 		if (execution == null)
 			return Collections.emptyList();
-		ProcessModel model = execution.getProcess().getModel();
+		ProcessModel model = execution.getProcessDefinition().getModel();
 		if (model != null)
 		{
-			NodeModel nodeModel = model.getNode(execution.getTask().getTaskName());
+			NodeModel nodeModel = model.getNodeModel(execution.getTask().getTaskName());
 			// 将执行对象交给该任务对应的节点模型执行
 			Executor executor = ExecutorBuilder.build(nodeModel);
 			executor.execute(execution, nodeModel);
@@ -131,16 +131,16 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		Execution execution = execute(taskId, operator, args);
 		if (execution == null)
 			return Collections.emptyList();
-		ProcessModel model = execution.getProcess().getModel();
+		ProcessModel model = execution.getProcessDefinition().getModel();
 		AssertHelper.notNull(model, "当前任务未找到流程定义模型");
-		if (StringHelper.isEmpty(nodeName))
+		if (StringUtils.isBlank(nodeName))
 		{
 			Task newTask = rejectTask(model, execution.getTask());
 			execution.addTask(newTask);
 		}
 		else
 		{
-			NodeModel nodeModel = model.getNode(nodeName);
+			NodeModel nodeModel = model.getNodeModel(nodeName);
 			AssertHelper.notNull(nodeModel, "根据节点名称[" + nodeName + "]无法找到节点模型");
 			// 动态创建转移对象，由转移对象执行execution实例
 			TransitionModel tm = new TransitionModel();
@@ -162,7 +162,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		ProcessInstance instance = processInstanceService.getInstance(instanceId);
 		AssertHelper.notNull(instance, "指定的流程实例[id=" + instanceId + "]已完成或不存在");
 		instance.setLastUpdator(operator);
-		instance.setLastUpdateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
+		instance.setLastUpdateTime(LocalDateTime.now());
 		ProcessDefinition process = repositoryService.getProcessById(instance.getProcessId());
 		Execution execution = new Execution(engineConfiguration, process, instance, args);
 		execution.setOperator(operator);
@@ -188,7 +188,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		ProcessInstance instance = processInstanceService.getInstance(task.getInstanceId());
 		AssertHelper.notNull(instance, "指定的流程实例[id=" + task.getInstanceId() + "]已完成或不存在");
 		instance.setLastUpdator(operator);
-		instance.setLastUpdateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
+		instance.setLastUpdateTime(LocalDateTime.now());
 		processInstanceService.updateInstance(instance);
 		// 协办任务完成不产生执行对象
 		if (!task.isMajor())
@@ -223,7 +223,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	@Override
 	public String[] getTaskActorsByTaskId(String taskId)
 	{
-		List<TaskActor> actors = taskActorEntityService.getTaskActorsByTaskId(taskId);
+		List<TaskActor> actors = taskActorEntityService.queryByTaskId(taskId);
 		if (actors == null || actors.isEmpty())
 			return null;
 		String[] actorIds = new String[actors.size()];
@@ -288,12 +288,12 @@ public class TaskServiceImpl extends AccessService implements TaskService
 			throw new ProcessException("当前参与者[" + operator + "]不允许执行任务[taskId=" + taskId + "]");
 		}
 		HistoricTask historicTask = new HistoricTask(task);
-		historicTask.setFinishTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
+		historicTask.setFinishTime(LocalDateTime.now());
 		historicTask.setTaskState(Constants.STATE_FINISH);
 		historicTask.setOperator(operator);
 		if (historicTask.getActorIds() == null)
 		{
-			List<TaskActor> actors = taskActorEntityService.getTaskActorsByTaskId(task.getId());
+			List<TaskActor> actors = taskActorEntityService.queryByTaskId(task.getId());
 			String[] actorIds = new String[actors.size()];
 			for (int i = 0; i < actors.size(); i++)
 			{
@@ -302,10 +302,10 @@ public class TaskServiceImpl extends AccessService implements TaskService
 			historicTask.setActorIds(actorIds);
 		}
 
-		historicTaskEntityService.saveEntity(historicTask);
+		historicTaskEntityService.addEntity(historicTask);
 
 		taskActorEntityService.deleteByTaskId(task.getId());
-		taskEntityService.delete(task);
+		taskEntityService.deleteEntity(task);
 
 		Completion completion = getCompletion();
 		if (completion != null)
@@ -328,9 +328,9 @@ public class TaskServiceImpl extends AccessService implements TaskService
 			throw new ProcessException("当前参与者[" + operator + "]不允许提取任务[taskId=" + taskId + "]");
 		}
 		task.setOperator(operator);
-		task.setFinishTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
+		task.setFinishTime(LocalDateTime.now());
 
-		taskEntityService.update(task);
+		taskEntityService.modifyEntity(task);
 
 		return task;
 	}
@@ -341,10 +341,10 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	@Override
 	public Task resume(String taskId, String operator)
 	{
-		HistoricTask histTask = historicTaskEntityService.getHistTask(taskId);
+		HistoricTask histTask = historicTaskEntityService.getByTaskId(taskId);
 		AssertHelper.notNull(histTask, "指定的历史任务[id=" + taskId + "]不存在");
 		boolean isAllowed = true;
-		if (StringHelper.isNotEmpty(histTask.getOperator()))
+		if (!StringUtils.isBlank(histTask.getOperator()))
 		{
 			isAllowed = histTask.getOperator().equals(operator);
 		}
@@ -352,9 +352,9 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		{
 			Task task = histTask.undoTask();
 			task.setId(StringHelper.getPrimaryKey());
-			task.setCreateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
+			task.setCreateTime(LocalDateTime.now());
 
-			taskEntityService.save(task);
+			taskEntityService.addEntity(task);
 
 			assignTask(task.getId(), task.getOperator());
 			return task;
@@ -397,7 +397,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 				String oldActor = (String) data.get(Task.KEY_ACTOR);
 				data.put(Task.KEY_ACTOR, oldActor + "," + StringHelper.getStringByArray(actors));
 				task.setVariable(JsonHelper.toJson(data));
-				taskEntityService.update(task);
+				taskEntityService.modifyEntity(task);
 				break;
 			case 1:
 				try
@@ -406,12 +406,12 @@ public class TaskServiceImpl extends AccessService implements TaskService
 					{
 						Task newTask = (Task) task.clone();
 						newTask.setId(StringHelper.getPrimaryKey());
-						newTask.setCreateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
+						newTask.setCreateTime(LocalDateTime.now());
 						newTask.setOperator(actor);
 						Map<String, Object> taskData = task.getVariableMap();
 						taskData.put(Task.KEY_ACTOR, actor);
 						task.setVariable(JsonHelper.toJson(taskData));
-						taskEntityService.save(newTask);
+						taskEntityService.addEntity(newTask);
 						assignTask(newTask.getId(), actor);
 					}
 				}
@@ -440,7 +440,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 			taskActorEntityService.removeTaskActor(task.getId(), actors);
 			Map<String, Object> taskData = task.getVariableMap();
 			String actorStr = (String) taskData.get(Task.KEY_ACTOR);
-			if (StringHelper.isNotEmpty(actorStr))
+			if (!StringUtils.isBlank(actorStr))
 			{
 				String[] actorArray = actorStr.split(",");
 				StringBuilder newActor = new StringBuilder(actorStr.length());
@@ -448,7 +448,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 				for (String actor : actorArray)
 				{
 					isMatch = false;
-					if (StringHelper.isEmpty(actor))
+					if (StringUtils.isBlank(actor))
 						continue;
 					for (String removeActor : actors)
 					{
@@ -465,7 +465,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 				newActor.deleteCharAt(newActor.length() - 1);
 				taskData.put(Task.KEY_ACTOR, newActor.toString());
 				task.setVariable(JsonHelper.toJson(taskData));
-				taskEntityService.update(task);
+				taskEntityService.modifyEntity(task);
 			}
 		}
 	}
@@ -476,7 +476,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	@Override
 	public Task withdrawTask(String taskId, String operator)
 	{
-		HistoricTask hist = historicTaskEntityService.getHistTask(taskId);
+		HistoricTask hist = historicTaskEntityService.getByTaskId(taskId);
 		AssertHelper.notNull(hist, "指定的历史任务[id=" + taskId + "]不存在");
 		List<Task> tasks;
 		if (hist.isPerformAny())
@@ -493,13 +493,13 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		}
 		for (Task task : tasks)
 		{
-			taskEntityService.delete(task);
+			taskEntityService.deleteEntity(task);
 		}
 
 		Task task = hist.undoTask();
 		task.setId(StringHelper.getPrimaryKey());
-		task.setCreateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
-		taskEntityService.save(task);
+		task.setCreateTime(LocalDateTime.now());
+		taskEntityService.addEntity(task);
 		assignTask(task.getId(), task.getOperator());
 		return task;
 	}
@@ -511,13 +511,13 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	public Task rejectTask(ProcessModel model, Task currentTask)
 	{
 		String parentTaskId = currentTask.getParentTaskId();
-		if (StringHelper.isEmpty(parentTaskId) || parentTaskId.equals(START))
+		if (StringUtils.isBlank(parentTaskId) || parentTaskId.equals(START))
 		{
 			throw new ProcessException("上一步任务ID为空，无法驳回至上一步处理");
 		}
-		NodeModel current = model.getNode(currentTask.getTaskName());
-		HistoricTask historicTask = historicTaskEntityService.getHistTask(parentTaskId);
-		NodeModel parent = model.getNode(historicTask.getTaskName());
+		NodeModel current = model.getNodeModel(currentTask.getTaskName());
+		HistoricTask historicTask = historicTaskEntityService.getByTaskId(parentTaskId);
+		NodeModel parent = model.getNodeModel(historicTask.getTaskName());
 		if (!NodeModel.canRejected(current, parent))
 		{
 			throw new ProcessException("无法驳回至上一步处理，请确认上一步骤并非fork、join、suprocess以及会签任务");
@@ -525,9 +525,9 @@ public class TaskServiceImpl extends AccessService implements TaskService
 
 		Task task = historicTask.undoTask();
 		task.setId(StringHelper.getPrimaryKey());
-		task.setCreateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
+		task.setCreateTime(LocalDateTime.now());
 		task.setOperator(historicTask.getOperator());
-		taskEntityService.save(task);
+		taskEntityService.addEntity(task);
 		assignTask(task.getId(), task.getOperator());
 		return task;
 	}
@@ -545,13 +545,13 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		for (String actorId : actorIds)
 		{
 			// 修复当actorId为null的bug
-			if (StringHelper.isEmpty(actorId))
+			if (StringUtils.isBlank(actorId))
 				continue;
 			TaskActor taskActor = new TaskActor();
 			taskActor.setTaskId(taskId);
 			taskActor.setActorId(actorId);
 
-			taskActorEntityService.save(taskActor);
+			taskActorEntityService.addEntity(taskActor);
 		}
 	}
 
@@ -569,7 +569,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		{
 			Task newTask = (Task) task.clone();
 			newTask.setTaskType(taskType);
-			newTask.setCreateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
+			newTask.setCreateTime(LocalDateTime.now());
 			newTask.setParentTaskId(taskId);
 			tasks.add(saveTask(newTask, actors));
 		}
@@ -595,17 +595,20 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		Map<String, Object> args = execution.getArgs();
 		if (args == null)
 			args = new HashMap<String, Object>();
-		Date expireDate = DateHelper.processTime(args, taskModel.getExpireTime());
-		Date remindDate = DateHelper.processTime(args, taskModel.getReminderTime());
+		LocalDate expireDate = DateHelper.processTime(args, taskModel.getExpireTime());
+		LocalDate remindDate = DateHelper.processTime(args, taskModel.getReminderTime());
 		String form = (String) args.get(taskModel.getForm());
-		String actionUrl = StringHelper.isEmpty(form) ? taskModel.getForm() : form;
+		String actionUrl = StringUtils.isBlank(form) ? taskModel.getForm() : form;
 
 		String[] actors = getTaskActors(taskModel, execution);
 		args.put(Task.KEY_ACTOR, StringHelper.getStringByArray(actors));
 		Task task = createTaskBase(taskModel, execution);
 		task.setActionUrl(actionUrl);
 		task.setExpireDate(expireDate);
-		task.setExpireTime(DateHelper.parseTime(expireDate));
+		if (null != expireDate)
+		{
+			task.setExpireTime(expireDate.atStartOfDay());
+		}
 		task.setVariable(JsonHelper.toJson(args));
 
 		if (taskModel.isPerformAny())
@@ -647,10 +650,10 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	private Task createTaskBase(TaskModel model, Execution execution)
 	{
 		Task task = new Task();
-		task.setInstanceId(execution.getInstance().getId());
+		task.setInstanceId(execution.getProcessInstance().getId());
 		task.setTaskName(model.getName());
 		task.setDisplayName(model.getDisplayName());
-		task.setCreateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
+		task.setCreateTime(LocalDateTime.now());
 		if (model.isMajor())
 		{
 			task.setTaskType(TaskType.Major.ordinal());
@@ -671,7 +674,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	{
 		task.setId(StringHelper.getPrimaryKey());
 		task.setPerformType(PerformType.ANY.ordinal());
-		taskEntityService.save(task);
+		taskEntityService.addEntity(task);
 		assignTask(task.getId(), actors);
 		task.setActorIds(actors);
 		return task;
@@ -688,7 +691,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	{
 		Object assigneeObject = null;
 		AssignmentHandler handler = model.getAssignmentHandlerObject();
-		if (StringHelper.isNotEmpty(model.getAssignee()))
+		if (!StringUtils.isBlank(model.getAssignee()))
 		{
 			assigneeObject = execution.getArgs().get(model.getAssignee());
 		}
@@ -766,21 +769,21 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	@Override
 	public boolean isAllowed(Task task, String operator)
 	{
-		if (StringHelper.isNotEmpty(operator))
+		if (!StringUtils.isBlank(operator))
 		{
 			if (ProcessEngine.ADMIN.equalsIgnoreCase(operator) || ProcessEngine.AUTO.equalsIgnoreCase(operator))
 			{
 				return true;
 			}
-			if (StringHelper.isNotEmpty(task.getOperator()))
+			if (!StringUtils.isBlank(task.getOperator()))
 			{
 				return operator.equals(task.getOperator());
 			}
 		}
-		List<TaskActor> actors = taskActorEntityService.getTaskActorsByTaskId(task.getId());
+		List<TaskActor> actors = taskActorEntityService.queryByTaskId(task.getId());
 		if (actors == null || actors.isEmpty())
 			return true;
-		return !StringHelper.isEmpty(operator) && getStrategy().isAllowed(operator, actors);
+		return !StringUtils.isBlank(operator) && getStrategy().isAllowed(operator, actors);
 	}
 
 	public void setStrategy(TaskAccessStrategy strategy)

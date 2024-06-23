@@ -26,19 +26,19 @@ public class Execution implements Serializable
 	private static final long serialVersionUID = 3730741790729624400L;
 
 	/**
-	 * SnakerEngine holder
+	 * ProcessEngineConfiguration
 	 */
-	private ProcessEngineConfiguration engineConfiguration;;
+	private ProcessEngineConfiguration engineConfiguration;
 
 	/**
 	 * 流程定义对象
 	 */
-	private ProcessDefinition process;
+	private ProcessDefinition processDefinition;
 
 	/**
 	 * 流程实例对象
 	 */
-	private ProcessInstance instance;
+	private ProcessInstance processInstance;
 
 	/**
 	 * 父流程实例
@@ -85,19 +85,19 @@ public class Execution implements Serializable
 	 * 用于产生子流程执行对象使用
 	 * 
 	 * @param execution
-	 * @param process
+	 * @param processDefinition
 	 * @param parentNodeName
 	 */
-	Execution(Execution execution, ProcessDefinition process, String parentNodeName)
+	Execution(Execution execution, ProcessDefinition processDefinition, String parentNodeName)
 	{
-		if (execution == null || process == null || parentNodeName == null)
+		if (execution == null || processDefinition == null || parentNodeName == null)
 		{
 			throw new ProcessException("构造Execution对象失败，请检查execution、process、parentNodeName是否为空");
 		}
 		this.engineConfiguration = execution.getEngineConfiguration();
-		this.process = process;
+		this.processDefinition = processDefinition;
 		this.args = execution.getArgs();
-		this.parentInstance = execution.getInstance();
+		this.parentInstance = execution.getProcessInstance();
 		this.parentNodeName = parentNodeName;
 		this.operator = execution.getOperator();
 	}
@@ -106,19 +106,19 @@ public class Execution implements Serializable
 	 * 构造函数，接收流程定义、流程实例对象、执行参数
 	 * 
 	 * @param process
-	 * @param instance
+	 * @param processInstance
 	 * @param args
 	 */
-	public Execution(ProcessEngineConfiguration engineConfiguration, ProcessDefinition process, ProcessInstance instance,
+	public Execution(ProcessEngineConfiguration engineConfiguration, ProcessDefinition processDefinition, ProcessInstance processInstance,
 	        Map<String, Object> args)
 	{
-		if (process == null || instance == null)
+		if (processDefinition == null || processInstance == null)
 		{
 			throw new ProcessException("构造Execution对象失败，请检查process、instance是否为空");
 		}
 		this.engineConfiguration = engineConfiguration;
-		this.process = process;
-		this.instance = instance;
+		this.processDefinition = processDefinition;
+		this.processInstance = processInstance;
 		this.args = args;
 	}
 
@@ -130,9 +130,9 @@ public class Execution implements Serializable
 	 * @param parentNodeName
 	 * @return
 	 */
-	public Execution createSubExecution(Execution execution, ProcessDefinition process, String parentNodeName)
+	public Execution createSubExecution(Execution execution, ProcessDefinition processDefinition, String parentNodeName)
 	{
-		return new Execution(execution, process, parentNodeName);
+		return new Execution(execution, processDefinition, parentNodeName);
 	}
 
 	/**
@@ -140,9 +140,9 @@ public class Execution implements Serializable
 	 * 
 	 * @return
 	 */
-	public ProcessDefinition getProcess()
+	public ProcessDefinition getProcessDefinition()
 	{
-		return process;
+		return processDefinition;
 	}
 
 	/**
@@ -150,9 +150,9 @@ public class Execution implements Serializable
 	 * 
 	 * @return
 	 */
-	public ProcessModel getModel()
+	public ProcessModel getProcessModel()
 	{
-		return process.getModel();
+		return processDefinition.getModel();
 	}
 
 	/**
@@ -160,9 +160,9 @@ public class Execution implements Serializable
 	 * 
 	 * @return
 	 */
-	public ProcessInstance getInstance()
+	public ProcessInstance getProcessInstance()
 	{
-		return instance;
+		return processInstance;
 	}
 
 	/**

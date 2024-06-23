@@ -95,11 +95,29 @@ public class ProcessModel extends BaseModel
 	 */
 	public StartModel getStartModel()
 	{
-		for (NodeModel node : nodeModels)
+		for (NodeModel nodeModel : nodeModels)
 		{
-			if (node instanceof StartModel)
+			if (nodeModel instanceof StartModel)
 			{
-				return (StartModel) node;
+				return (StartModel) nodeModel;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * 获取结束节点模型
+	 * 
+	 * @return
+	 */
+	public EndModel getEndModel()
+	{
+		for (NodeModel nodeModel : nodeModels)
+		{
+			if (nodeModel instanceof EndModel)
+			{
+				return (EndModel) nodeModel;
 			}
 		}
 
@@ -112,13 +130,13 @@ public class ProcessModel extends BaseModel
 	 * @param nodeName 节点名称
 	 * @return
 	 */
-	public NodeModel getNode(String nodeName)
+	public NodeModel getNodeModel(String nodeName)
 	{
-		for (NodeModel node : nodeModels)
+		for (NodeModel nodeModel : nodeModels)
 		{
-			if (node.getName().equals(nodeName))
+			if (nodeModel.getName().equals(nodeName))
 			{
-				return node;
+				return nodeModel;
 			}
 		}
 
@@ -139,6 +157,7 @@ public class ProcessModel extends BaseModel
 			{
 				continue;
 			}
+
 			for (String nodeName : nodeNames)
 			{
 				if (node.getName().equals(nodeName))
@@ -151,33 +170,74 @@ public class ProcessModel extends BaseModel
 		return false;
 	}
 
-	public List<NodeModel> getNodes()
+	/**
+	 * 获取nodeModels
+	 * 
+	 * @return
+	 */
+	public List<NodeModel> getNodeModels()
 	{
 		return nodeModels;
 	}
 
-	public void setNodes(List<NodeModel> nodes)
+	/**
+	 * 设置nodeModels
+	 * 
+	 * @param nodeModels
+	 */
+	public void setNodeModels(List<NodeModel> nodeModels)
 	{
-		this.nodeModels = nodes;
+		this.nodeModels = nodeModels;
 	}
 
-	public String getExpireTime()
-	{
-		return expireTime;
-	}
-
-	public void setExpireTime(String expireTime)
-	{
-		this.expireTime = expireTime;
-	}
-
+	/**
+	 * 获取instanceUrl
+	 * 
+	 * @return
+	 */
 	public String getInstanceUrl()
 	{
 		return instanceUrl;
 	}
 
+	/**
+	 * 设置instanceUrl
+	 * 
+	 * @param instanceUrl
+	 */
 	public void setInstanceUrl(String instanceUrl)
 	{
 		this.instanceUrl = instanceUrl;
 	}
+
+	/**
+	 * 获取expireTime
+	 * 
+	 * @return
+	 */
+	public String getExpireTime()
+	{
+		return expireTime;
+	}
+
+	/**
+	 * 设置expireTime
+	 * 
+	 * @param expireTime
+	 */
+	public void setExpireTime(String expireTime)
+	{
+		this.expireTime = expireTime;
+	}
+
+	/**
+	 * 设置taskModels
+	 * 
+	 * @param taskModels
+	 */
+	public void setTaskModels(List<TaskModel> taskModels)
+	{
+		this.taskModels = taskModels;
+	}
+
 }

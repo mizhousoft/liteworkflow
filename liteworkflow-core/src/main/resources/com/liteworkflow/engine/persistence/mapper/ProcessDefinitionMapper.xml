@@ -6,49 +6,58 @@
 	<resultMap type="com.liteworkflow.engine.persistence.entity.ProcessDefinition" id="ProcessDefinitionMap">
 		<id property="id" column="id" />
 		<result property="name" column="name" />
-		<result property="displayName" column="display_Name" />
+		<result property="displayName" column="display_name" />
 		<result property="type" column="type" />
-		<result property="instanceUrl" column="instance_Url" />
+		<result property="instanceUrl" column="instance_url" />
 		<result property="state" column="state" />
 		<result property="version" column="version" />
-		<result property="createTime" column="create_Time" />
+		<result property="createTime" column="create_time" />
 		<result property="creator" column="creator" />
 		<result property="bytes" column="content" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
 	</resultMap>
-	
+
 	<insert id="save">
-		insert into wf_process_definition (id, name, display_Name, type, instance_Url, state, content, version, create_Time, creator)
+		insert into wf_process_definition (id, name, display_name, type, instance_url, state, content, version, create_time, creator)
 		values (#{id}, #{name}, #{displayName}, #{type}, #{instanceUrl}, #{state}, #{bytes, typeHandler=org.apache.ibatis.type.BlobTypeHandler}, #{version}, #{createTime}, #{creator})
 	</insert>
-	
+
 	<update id="update">
         update wf_process_definition 
         set name= #{name}, 
-        display_Name = #{displayName},
+        display_name = #{displayName},
         state = #{state},
-        instance_Url = #{instanceUrl},
-        create_Time = #{createTime},
+        instance_url = #{instanceUrl},
+        create_time = #{createTime},
         creator = #{creator} 
         where id = #{id} 
 	</update>
-	
+
 	<update id="updateProcessType">
         update wf_process_definition 
         set type = #{type}
         where id = #{id} 
 	</update>
-	
+
 	<delete id="delete">
 		delete from wf_process_definition where id = #{id}
 	</delete>
 	
-	<select id="getProcess" parameterType="java.util.Map" resultMap="ProcessDefinitionMap">
-		select id, name, display_Name, type, instance_Url, state, content, version, create_Time, creator 
+	<select id="findById" parameterType="java.util.Map" resultMap="ProcessDefinitionMap">
+		select id, name, display_name, type, instance_url, state, content, version, create_time, creator 
 		from wf_process_definition 
 		where id = #{id}
 	</select>
 	
-	<select id="getLatestProcessVersion" parameterType="java.util.Map" resultType="Integer">
+	<select id="findByProcessName" parameterType="java.util.Map" resultMap="ProcessDefinitionMap">
+		select id, name, display_name, type, instance_url, state, content, version, create_time, creator 
+		from wf_process_definition 
+		where name = #{name}
+		<if test="version != null">
+        	and version = #{version}
+       	</if>
+	</select>
+	
+	<select id="findLatestVersion" parameterType="java.util.Map" resultType="Integer">
 		select max(version) from wf_process_definition 
 		where name = #{name}
 	</select>
@@ -70,7 +79,7 @@
        		</if>
        		<if test="request.displayName != null">
 				<bind name="pattern" value="'%' + request.displayName + '%'" />
-				and display_Name like #{pattern} 
+				and display_name like #{pattern} 
 			</if>
             <if test="request.processType != null">
                 and type = #{request.processType}
@@ -85,7 +94,7 @@
 	</select>
 	
 	<select id="findPageData" parameterType="java.util.Map" resultMap="ProcessDefinitionMap">
-		select id, name, display_Name, type, instance_Url, state, content, version, create_Time, creator 
+		select id, name, display_name, type, instance_url, state, content, version, create_time, creator 
 		from wf_process_definition 
 		<where>
 			<if test="request.names != null and request.names.length != 0">
@@ -102,7 +111,7 @@
        		</if>
        		<if test="request.displayName != null">
 				<bind name="pattern" value="'%' + request.displayName + '%'" />
-				and display_Name like #{pattern} 
+				and display_name like #{pattern} 
 			</if>
             <if test="request.processType != null">
                 and type = #{request.processType}

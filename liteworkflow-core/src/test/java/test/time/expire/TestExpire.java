@@ -28,7 +28,7 @@ public class TestExpire extends TestSpring
 		engine = applicationContext.getBean(ProcessEngine.class);
 		repositoryService = engine.getRepositoryService();
 
-		engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/time/expire/process.snaker"));
+		engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/time/expire/process.xml"));
 	}
 
 	@Test

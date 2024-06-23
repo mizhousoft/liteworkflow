@@ -5,7 +5,7 @@
 	
 	<resultMap type="com.liteworkflow.engine.persistence.entity.Surrogate" id="SurrogateMap">
 		<id property="id" column="id" />
-		<result property="processName" column="process_Name" />
+		<result property="processName" column="process_name" />
 		<result property="operator" column="operator" />
 		<result property="surrogate" column="surrogate" />
 		<result property="odate" column="odate" />
@@ -15,13 +15,13 @@
 	</resultMap>
 	
 	<insert id="save">
-		insert into wf_surrogate (id, process_Name, operator, surrogate, odate, sdate, edate, state)
+		insert into wf_surrogate (id, process_name, operator, surrogate, odate, sdate, edate, state)
 		values (#{id}, #{processName}, #{operator}, #{surrogate}, #{odate}, #{sdate}, #{edate}, #{state})
 	</insert>
 	
 	<update id="update">
         update wf_surrogate 
-        set process_Name = #{processName}, 
+        set process_name = #{processName}, 
         surrogate = #{operator}, 
         odate = #{odate}, 
         sdate = #{sdate}, 
@@ -35,13 +35,13 @@
 	</delete>
 	
 	<select id="getSurrogate" parameterType="java.util.Map" resultMap="SurrogateMap">
-		select id, process_Name, operator, surrogate, odate, sdate, edate, state 
+		select id, process_name, operator, surrogate, odate, sdate, edate, state 
 		from wf_surrogate
 		where id = #{id}
 	</select>
 	
 	<select id="queryList" parameterType="java.util.Map" resultMap="SurrogateMap">
-		select id, process_Name, operator, surrogate, odate, sdate, edate, state 
+		select id, process_name, operator, surrogate, odate, sdate, edate, state 
 		from wf_surrogate
 		where state = 1
    		<if test="operators != null and operators.length != 0">
@@ -51,7 +51,7 @@
             </foreach>
         </if>
         <if test="names != null and names.length != 0">
-            and process_Name in
+            and process_name in
             <foreach collection="names" item="name" index="index" open="(" close=")" separator=",">
                 #{name}
             </foreach>

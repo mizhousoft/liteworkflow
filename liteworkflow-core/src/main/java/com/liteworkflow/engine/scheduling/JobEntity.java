@@ -1,7 +1,7 @@
 package com.liteworkflow.engine.scheduling;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Map;
 
 import com.liteworkflow.engine.persistence.entity.Task;
@@ -57,7 +57,7 @@ public class JobEntity implements Serializable
 	/**
 	 * 启动时间
 	 */
-	private Date startTime;
+	private LocalDate startTime;
 
 	/**
 	 * 间隔时间(分钟)
@@ -69,12 +69,12 @@ public class JobEntity implements Serializable
 	 */
 	private Map<String, Object> args;
 
-	public JobEntity(String id, Task task, Date startTime)
+	public JobEntity(String id, Task task, LocalDate startTime)
 	{
 		this(id, task, startTime, 0);
 	}
 
-	public JobEntity(String id, Task task, Date startTime, int period)
+	public JobEntity(String id, Task task, LocalDate startTime, int period)
 	{
 		this.id = id;
 		this.task = task;
@@ -82,12 +82,12 @@ public class JobEntity implements Serializable
 		this.period = period;
 	}
 
-	public JobEntity(String id, Task task, Date startTime, Map<String, Object> args)
+	public JobEntity(String id, Task task, LocalDate startTime, Map<String, Object> args)
 	{
 		this(id, task, startTime, args, 0);
 	}
 
-	public JobEntity(String id, Task task, Date startTime, Map<String, Object> args, int period)
+	public JobEntity(String id, Task task, LocalDate startTime, Map<String, Object> args, int period)
 	{
 		this.id = id;
 		this.task = task;
@@ -106,12 +106,22 @@ public class JobEntity implements Serializable
 		this.task = task;
 	}
 
-	public Date getStartTime()
+	/**
+	 * 获取startTime
+	 * 
+	 * @return
+	 */
+	public LocalDate getStartTime()
 	{
 		return startTime;
 	}
 
-	public void setStartTime(Date startTime)
+	/**
+	 * 设置startTime
+	 * 
+	 * @param startTime
+	 */
+	public void setStartTime(LocalDate startTime)
 	{
 		this.startTime = startTime;
 	}

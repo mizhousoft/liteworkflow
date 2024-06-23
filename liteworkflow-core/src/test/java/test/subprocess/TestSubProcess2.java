@@ -30,8 +30,8 @@ public class TestSubProcess2 extends TestSpring
 		engine = applicationContext.getBean(ProcessEngine.class);
 		repositoryService = engine.getRepositoryService();
 
-		engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/subprocess/child.snaker"));
-		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/subprocess/subprocess2.snaker"));
+		engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/subprocess/child.xml"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/subprocess/subprocess2.xml"));
 	}
 
 	@Test

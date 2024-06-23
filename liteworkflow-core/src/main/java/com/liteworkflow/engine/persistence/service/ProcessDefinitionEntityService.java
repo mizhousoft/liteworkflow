@@ -7,7 +7,7 @@ import com.liteworkflow.engine.persistence.request.ProcessDefPageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
- * ProcessDefinitionEntityService
+ * 流程定义服务
  *
  * @version
  */
@@ -16,16 +16,16 @@ public interface ProcessDefinitionEntityService
 	/**
 	 * 保存流程定义对象
 	 * 
-	 * @param process 流程定义对象
+	 * @param processDefinition 流程定义对象
 	 */
-	void save(ProcessDefinition process);
+	void addEntity(ProcessDefinition processDefinition);
 
 	/**
 	 * 更新流程定义对象
 	 * 
-	 * @param process 流程定义对象
+	 * @param processDefinition 流程定义对象
 	 */
-	void update(ProcessDefinition process);
+	void modifyEntity(ProcessDefinition processDefinition);
 
 	/**
 	 * 更新流程定义类别
@@ -38,9 +38,9 @@ public interface ProcessDefinitionEntityService
 	/**
 	 * 删除流程定义对象
 	 * 
-	 * @param process 流程定义对象
+	 * @param processDefinition 流程定义对象
 	 */
-	void delete(ProcessDefinition process);
+	void deleteEntity(ProcessDefinition processDefinition);
 
 	/**
 	 * 根据流程定义id查询流程定义对象
@@ -48,7 +48,7 @@ public interface ProcessDefinitionEntityService
 	 * @param id 流程定义id
 	 * @return Process 流程定义对象
 	 */
-	ProcessDefinition getProcess(String id);
+	ProcessDefinition getById(String id);
 
 	/**
 	 * 根据流程名称查询最近的版本号
@@ -56,15 +56,16 @@ public interface ProcessDefinitionEntityService
 	 * @param name 流程名称
 	 * @return Integer 流程定义版本号
 	 */
-	Integer getLatestProcessVersion(String name);
+	Integer getLatestVersion(String name);
 
 	/**
+	 * 根据名称及版本号查询
 	 * 
-	 * 
-	 * @param request
+	 * @param name
+	 * @param version
 	 * @return
 	 */
-	List<ProcessDefinition> queryList(ProcessDefPageRequest request);
+	List<ProcessDefinition> queryByName(String name, Integer version);
 
 	/**
 	 * 分页查询

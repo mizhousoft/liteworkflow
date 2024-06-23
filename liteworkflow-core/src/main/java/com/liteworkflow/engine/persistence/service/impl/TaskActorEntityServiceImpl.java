@@ -19,7 +19,7 @@ public class TaskActorEntityServiceImpl implements TaskActorEntityService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void save(TaskActor taskActor)
+	public void addEntity(TaskActor taskActor)
 	{
 		taskActorMapper.save(taskActor);
 	}
@@ -49,7 +49,7 @@ public class TaskActorEntityServiceImpl implements TaskActorEntityService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<TaskActor> getTaskActorsByTaskId(String taskId)
+	public List<TaskActor> queryByTaskId(String taskId)
 	{
 		return taskActorMapper.getTaskActorsByTaskId(taskId);
 	}

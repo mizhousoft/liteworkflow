@@ -1,9 +1,9 @@
 package com.liteworkflow.engine.interceptor;
 
-import com.liteworkflow.engine.ProcessEngine;
+import org.apache.commons.lang3.StringUtils;
+
 import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.TaskService;
-import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.persistence.entity.Task;
 
@@ -17,7 +17,7 @@ import com.liteworkflow.engine.persistence.entity.Task;
  * @author
  * @since 1.4
  */
-public class SurrogateInterceptor implements SnakerInterceptor
+public class SurrogateInterceptor implements FlowInterceptor
 {
 	public void intercept(Execution execution)
 	{
@@ -28,10 +28,10 @@ public class SurrogateInterceptor implements SnakerInterceptor
 				continue;
 			for (String actor : task.getActorIds())
 			{
-				if (StringHelper.isEmpty(actor))
+				if (StringUtils.isBlank(actor))
 					continue;
-				String agent = engine.getManagerService().getSurrogate(actor, execution.getProcess().getName());
-				if (StringHelper.isNotEmpty(agent) && !actor.equals(agent))
+				String agent = engine.getManagerService().getSurrogate(actor, execution.getProcessDefinition().getName());
+				if (!StringUtils.isBlank(agent) && !actor.equals(agent))
 				{
 					engine.getTaskService().addTaskActor(task.getId(), agent);
 				}

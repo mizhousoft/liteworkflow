@@ -21,8 +21,4 @@ public interface Constants
 	 * 状态：终止状态
 	 */
 	public static final Integer STATE_TERMINATION = 2;
-
-	public static final String ASC = "asc";
-
-	public static final String DESC = "desc";
 }

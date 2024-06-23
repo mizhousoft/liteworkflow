@@ -17,7 +17,7 @@ public interface HistoricTaskEntityService
 	 * 
 	 * @param historicTask 历史任务对象
 	 */
-	void saveEntity(HistoricTask historicTask);
+	void addEntity(HistoricTask historicTask);
 
 	/**
 	 * 删除历史任务记录
@@ -32,7 +32,7 @@ public interface HistoricTaskEntityService
 	 * @param taskId 历史任务id
 	 * @return 历史任务对象
 	 */
-	HistoricTask getHistTask(String taskId);
+	HistoricTask getByTaskId(String taskId);
 
 	/**
 	 * 

@@ -5,19 +5,19 @@
 	
 	<resultMap type="com.liteworkflow.engine.persistence.entity.HistoricProcessInstance" id="HistoricProcessInstanceMap">
 		<id property="id" column="id" />
-		<result property="processId" column="process_Id" />
+		<result property="processId" column="process_id" />
 		<result property="state" column="state" />
 		<result property="priority" column="priority" />
 		<result property="creator" column="creator" />
-		<result property="createTime" column="create_Time" />
-		<result property="endTime" column="end_Time" />
-		<result property="parentId" column="parent_Id" />
-		<result property="expireTime" column="expire_Time" />
+		<result property="createTime" column="create_time" />
+		<result property="endTime" column="end_time" />
+		<result property="parentId" column="parent_id" />
+		<result property="expireTime" column="expire_time" />
 		<result property="variable" column="variable" />
 	</resultMap>
 	
 	<insert id="save">
-		insert into wf_historic_process_instance (id, process_Id, state, creator, create_Time, end_Time, parent_Id, expire_Time,
+		insert into wf_historic_process_instance (id, process_id, state, creator, create_time, end_time, parent_id, expire_time,
 		variable)
 		values (#{id}, #{processId}, #{state}, #{creator}, #{createTime}, #{endTime}, #{parentId}, #{expireTime}, 
 		#{variable})
@@ -26,7 +26,7 @@
 	<update id="update">
         update wf_historic_process_instance 
         set state = #{state}, 
-        end_Time = #{endTime}, 
+        end_time = #{endTime}, 
         variable = #{variable} 
         where id = #{id} 
 	</update>
@@ -36,8 +36,8 @@
 	</delete>
 	
 	<select id="getHistoricInstance" parameterType="java.util.Map" resultMap="HistoricProcessInstanceMap">
-		select o.id, o.process_Id, o.state, o.priority, o.creator, o.create_Time, o.end_Time, o.parent_Id, 
-		o.expire_Time, o.variable 
+		select o.id, o.process_id, o.state, o.priority, o.creator, o.create_time, o.end_time, o.parent_id, 
+		o.expire_time, o.variable 
 		from wf_historic_process_instance o 
 		where id = #{instanceId}
 	</select>
@@ -58,33 +58,33 @@
                 </foreach>
             </if>
             <if test="request.processId != null">
-                and o.process_Id = #{request.processId}
+                and o.process_id = #{request.processId}
        		</if>
 			<if test="request.processType != null">
                 and p.type = #{request.processType}
        		</if>
             <if test="request.displayName != null">
 				<bind name="pattern" value="'%' + request.displayName + '%'" />
-				and p.display_Name like #{pattern} 
+				and p.display_name like #{pattern} 
 			</if>
 			<if test="request.parentId != null">
-                and o.parent_Id = #{request.parentId}
+                and o.parent_id = #{request.parentId}
        		</if>
        		<if test="request.state != null">
                 and o.state = #{request.state}
        		</if>
             <if test="request.createTimeStart != null">
-                and o.create_Time &gt;= #{request.createTimeStart}
+                and o.create_time &gt;= #{request.createTimeStart}
        		</if>
             <if test="request.createTimeEnd != null">
-                and o.create_Time &lt;= #{request.createTimeEnd}
+                and o.create_time &lt;= #{request.createTimeEnd}
        		</if>
 		</where>
 	</select>
 	
 	<select id="findPageData" parameterType="java.util.Map" resultMap="HistoricProcessInstanceMap">
-		select o.id, o.process_Id, o.state, o.priority, o.creator, o.create_Time, o.end_Time, o.parent_Id,
-		o.expire_Time, o.variable 
+		select o.id, o.process_id, o.state, o.priority, o.creator, o.create_time, o.end_time, o.parent_id,
+		o.expire_time, o.variable 
 		from wf_historic_process_instance o left join wf_process_definition p on p.id = o.process_id
 		<where>
        		<if test="request.operators != null and request.operators.length != 0">
@@ -100,26 +100,26 @@
                 </foreach>
             </if>
             <if test="request.processId != null">
-                and o.process_Id = #{request.processId}
+                and o.process_id = #{request.processId}
        		</if>
 			<if test="request.processType != null">
                 and p.type = #{request.processType}
        		</if>
             <if test="request.displayName != null">
 				<bind name="pattern" value="'%' + request.displayName + '%'" />
-				and p.display_Name like #{pattern} 
+				and p.display_name like #{pattern} 
 			</if>
 			<if test="request.parentId != null">
-                and o.parent_Id = #{request.parentId}
+                and o.parent_id = #{request.parentId}
        		</if>
        		<if test="request.state != null">
                 and o.state = #{request.state}
        		</if>
             <if test="request.createTimeStart != null">
-                and o.create_Time &gt;= #{request.createTimeStart}
+                and o.create_time &gt;= #{request.createTimeStart}
        		</if>
             <if test="request.createTimeEnd != null">
-                and o.create_Time &lt;= #{request.createTimeEnd}
+                and o.create_time &lt;= #{request.createTimeEnd}
        		</if>
 		</where>
 		<if test="request.sortString != null">

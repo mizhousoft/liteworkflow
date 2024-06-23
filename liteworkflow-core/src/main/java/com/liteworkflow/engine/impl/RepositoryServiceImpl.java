@@ -4,16 +4,18 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.Constants;
 import com.liteworkflow.engine.ProcessEngineConfiguration;
+import com.liteworkflow.engine.ProcessInstanceService;
 import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.cache.Cache;
 import com.liteworkflow.engine.cache.CacheManager;
-import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.helper.StreamHelper;
 import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.model.ProcessModel;
@@ -25,7 +27,6 @@ import com.liteworkflow.engine.persistence.request.ProcessDefPageRequest;
 import com.liteworkflow.engine.persistence.service.HistoricProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.ProcessDefinitionEntityService;
 import com.mizhousoft.commons.data.domain.Page;
-import com.mizhousoft.commons.lang.LocalDateTimeUtils;
 
 /**
  * 流程定义业务类
@@ -70,35 +71,126 @@ public class RepositoryServiceImpl extends AccessService implements RepositorySe
 
 	private HistoricProcessInstanceEntityService historicProcessInstanceEntityService;
 
+	/**
+	 * 根据流程定义xml的输入流解析为字节数组，保存至数据库中，并且put到缓存中
+	 * 
+	 * @param input 定义输入流
+	 */
 	@Override
-	public void check(ProcessDefinition process, String idOrName)
+	public String deploy(InputStream input)
 	{
-		AssertHelper.notNull(process, "指定的流程定义[id/name=" + idOrName + "]不存在");
-		if (process.getState() != null && process.getState() == 0)
+		return deploy(input, null);
+	}
+
+	/**
+	 * 根据流程定义xml的输入流解析为字节数组，保存至数据库中，并且put到缓存中
+	 * 
+	 * @param input 定义输入流
+	 * @param creator 创建人
+	 */
+	@Override
+	public String deploy(InputStream input, String creator)
+	{
+		try
 		{
-			throw new IllegalArgumentException("指定的流程定义[id/name=" + idOrName + ",version=" + process.getVersion() + "]为非活动状态");
+			byte[] bytes = StreamHelper.readBytes(input);
+			ProcessModel model = ModelParser.parse(bytes);
+			Integer version = processDefinitionEntityService.getLatestVersion(model.getName());
+			ProcessDefinition entity = new ProcessDefinition();
+			entity.setId(StringHelper.getPrimaryKey());
+			if (version == null || version < 0)
+			{
+				entity.setVersion(0);
+			}
+			else
+			{
+				entity.setVersion(version + 1);
+			}
+			entity.setState(Constants.STATE_ACTIVE);
+			entity.setModel(model);
+			entity.setBytes(bytes);
+			entity.setCreateTime(LocalDateTime.now());
+			entity.setCreator(creator);
+
+			processDefinitionEntityService.addEntity(entity);
+
+			cache(entity);
+			return entity.getId();
+		}
+		catch (Exception e)
+		{
+			throw new ProcessException(e.getMessage(), e.getCause());
 		}
 	}
 
 	/**
-	 * 保存process实体对象
+	 * 根据流程定义id、xml的输入流解析为字节数组，保存至数据库中，并且重新put到缓存中
+	 * 
+	 * @param input 定义输入流
 	 */
 	@Override
-	public void saveProcess(ProcessDefinition process)
+	public void redeploy(String id, InputStream input)
 	{
-		processDefinitionEntityService.save(process);
+		ProcessDefinition entity = processDefinitionEntityService.getById(id);
+
+		try
+		{
+			byte[] bytes = StreamHelper.readBytes(input);
+			ProcessModel model = ModelParser.parse(bytes);
+			String oldProcessName = entity.getName();
+			entity.setModel(model);
+			entity.setBytes(bytes);
+			processDefinitionEntityService.modifyEntity(entity);
+			if (!oldProcessName.equalsIgnoreCase(entity.getName()))
+			{
+				Cache<String, ProcessDefinition> entityCache = ensureAvailableEntityCache();
+				if (entityCache != null)
+				{
+					entityCache.remove(oldProcessName + DEFAULT_SEPARATOR + entity.getVersion());
+				}
+			}
+			cache(entity);
+		}
+		catch (Exception e)
+		{
+			throw new ProcessException(e.getMessage(), e.getCause());
+		}
 	}
 
 	/**
-	 * 更新process的类别
+	 * 根据processId卸载流程
 	 */
 	@Override
-	public void updateType(String id, String type)
+	public void undeploy(String id)
 	{
-		ProcessDefinition entity = getProcessById(id);
-		entity.setType(type);
-		processDefinitionEntityService.updateProcessType(id, type);
+		ProcessDefinition entity = processDefinitionEntityService.getById(id);
+		entity.setState(Constants.STATE_FINISH);
+		processDefinitionEntityService.modifyEntity(entity);
 		cache(entity);
+	}
+
+	/**
+	 * 级联删除指定流程定义的所有数据
+	 */
+	@Override
+	public void cascadeRemove(String id)
+	{
+		ProcessDefinition processDefinition = processDefinitionEntityService.getById(id);
+
+		HistoricProcessInstPageRequest request = new HistoricProcessInstPageRequest();
+		request.setProcessId(id);
+		List<HistoricProcessInstance> historicInstances = historicProcessInstanceEntityService.queryList(request);
+
+		ProcessInstanceService processInstanceService = engineConfiguration.getProcessInstanceService();
+
+		for (HistoricProcessInstance historicInstance : historicInstances)
+		{
+			processInstanceService.cascadeRemove(historicInstance.getId());
+		}
+
+		processDefinitionEntityService.deleteEntity(processDefinition);
+
+		clear(processDefinition);
 	}
 
 	/**
@@ -108,7 +200,8 @@ public class RepositoryServiceImpl extends AccessService implements RepositorySe
 	@Override
 	public ProcessDefinition getProcessById(String id)
 	{
-		AssertHelper.notEmpty(id);
+		Assert.notNull(id, "Process definition id is null.");
+
 		ProcessDefinition entity = null;
 		String processName;
 		Cache<String, String> nameCache = ensureAvailableNameCache();
@@ -116,7 +209,7 @@ public class RepositoryServiceImpl extends AccessService implements RepositorySe
 		if (nameCache != null && entityCache != null)
 		{
 			processName = nameCache.get(id);
-			if (StringHelper.isNotEmpty(processName))
+			if (!StringUtils.isBlank(processName))
 			{
 				entity = entityCache.get(processName);
 			}
@@ -127,7 +220,7 @@ public class RepositoryServiceImpl extends AccessService implements RepositorySe
 
 			return entity;
 		}
-		entity = processDefinitionEntityService.getProcess(id);
+		entity = processDefinitionEntityService.getById(id);
 		if (entity != null)
 		{
 			log.debug("obtain process[id={}] from database.", id);
@@ -154,10 +247,11 @@ public class RepositoryServiceImpl extends AccessService implements RepositorySe
 	@Override
 	public ProcessDefinition getProcessByVersion(String name, Integer version)
 	{
-		AssertHelper.notEmpty(name);
+		Assert.notNull(name, "Process definition name is null.");
+
 		if (version == null)
 		{
-			version = processDefinitionEntityService.getLatestProcessVersion(name);
+			version = processDefinitionEntityService.getLatestVersion(name);
 		}
 		if (version == null)
 		{
@@ -180,7 +274,7 @@ public class RepositoryServiceImpl extends AccessService implements RepositorySe
 		ProcessDefPageRequest request = new ProcessDefPageRequest();
 		request.setNames(new String[] { name });
 		request.setVersion(version);
-		List<ProcessDefinition> processs = processDefinitionEntityService.queryList(request);
+		List<ProcessDefinition> processs = processDefinitionEntityService.queryByName(name, version);
 		if (processs != null && !processs.isEmpty())
 		{
 			log.debug("obtain process[name={}] from database.", processName);
@@ -192,128 +286,12 @@ public class RepositoryServiceImpl extends AccessService implements RepositorySe
 	}
 
 	/**
-	 * 根据流程定义xml的输入流解析为字节数组，保存至数据库中，并且put到缓存中
-	 * 
-	 * @param input 定义输入流
-	 */
-	@Override
-	public String deploy(InputStream input)
-	{
-		return deploy(input, null);
-	}
-
-	/**
-	 * 根据流程定义xml的输入流解析为字节数组，保存至数据库中，并且put到缓存中
-	 * 
-	 * @param input 定义输入流
-	 * @param creator 创建人
-	 */
-	@Override
-	public String deploy(InputStream input, String creator)
-	{
-		try
-		{
-			byte[] bytes = StreamHelper.readBytes(input);
-			ProcessModel model = ModelParser.parse(bytes);
-			Integer version = processDefinitionEntityService.getLatestProcessVersion(model.getName());
-			ProcessDefinition entity = new ProcessDefinition();
-			entity.setId(StringHelper.getPrimaryKey());
-			if (version == null || version < 0)
-			{
-				entity.setVersion(0);
-			}
-			else
-			{
-				entity.setVersion(version + 1);
-			}
-			entity.setState(Constants.STATE_ACTIVE);
-			entity.setModel(model);
-			entity.setBytes(bytes);
-			entity.setCreateTime(LocalDateTimeUtils.formatYmdhms(LocalDateTime.now()));
-			entity.setCreator(creator);
-			saveProcess(entity);
-			cache(entity);
-			return entity.getId();
-		}
-		catch (Exception e)
-		{
-			throw new ProcessException(e.getMessage(), e.getCause());
-		}
-	}
-
-	/**
-	 * 根据流程定义id、xml的输入流解析为字节数组，保存至数据库中，并且重新put到缓存中
-	 * 
-	 * @param input 定义输入流
-	 */
-	@Override
-	public void redeploy(String id, InputStream input)
-	{
-		ProcessDefinition entity = processDefinitionEntityService.getProcess(id);
-
-		try
-		{
-			byte[] bytes = StreamHelper.readBytes(input);
-			ProcessModel model = ModelParser.parse(bytes);
-			String oldProcessName = entity.getName();
-			entity.setModel(model);
-			entity.setBytes(bytes);
-			processDefinitionEntityService.update(entity);
-			if (!oldProcessName.equalsIgnoreCase(entity.getName()))
-			{
-				Cache<String, ProcessDefinition> entityCache = ensureAvailableEntityCache();
-				if (entityCache != null)
-				{
-					entityCache.remove(oldProcessName + DEFAULT_SEPARATOR + entity.getVersion());
-				}
-			}
-			cache(entity);
-		}
-		catch (Exception e)
-		{
-			throw new ProcessException(e.getMessage(), e.getCause());
-		}
-	}
-
-	/**
-	 * 根据processId卸载流程
-	 */
-	@Override
-	public void undeploy(String id)
-	{
-		ProcessDefinition entity = processDefinitionEntityService.getProcess(id);
-		entity.setState(Constants.STATE_FINISH);
-		processDefinitionEntityService.update(entity);
-		cache(entity);
-	}
-
-	/**
-	 * 级联删除指定流程定义的所有数据
-	 */
-	@Override
-	public void cascadeRemove(String id)
-	{
-		ProcessDefinition entity = processDefinitionEntityService.getProcess(id);
-
-		HistoricProcessInstPageRequest request = new HistoricProcessInstPageRequest();
-		request.setProcessId(id);
-		List<HistoricProcessInstance> historicInstances = historicProcessInstanceEntityService.queryList(request);
-
-		for (HistoricProcessInstance historicInstance : historicInstances)
-		{
-			engineConfiguration.getProcessInstanceService().cascadeRemove(historicInstance.getId());
-		}
-		processDefinitionEntityService.delete(entity);
-		clear(entity);
-	}
-
-	/**
 	 * 查询流程定义
 	 */
 	@Override
-	public List<ProcessDefinition> getProcesss(ProcessDefPageRequest request)
+	public List<ProcessDefinition> queryByName(String name)
 	{
-		return processDefinitionEntityService.queryList(request);
+		return processDefinitionEntityService.queryByName(name, null);
 	}
 
 	/**
@@ -411,6 +389,7 @@ public class RepositoryServiceImpl extends AccessService implements RepositorySe
 
 	/**
 	 * 设置engineConfiguration
+	 * 
 	 * @param engineConfiguration
 	 */
 	public void setEngineConfiguration(ProcessEngineConfiguration engineConfiguration)
@@ -430,6 +409,7 @@ public class RepositoryServiceImpl extends AccessService implements RepositorySe
 
 	/**
 	 * 设置historicProcessInstanceEntityService
+	 * 
 	 * @param historicProcessInstanceEntityService
 	 */
 	public void setHistoricProcessInstanceEntityService(HistoricProcessInstanceEntityService historicProcessInstanceEntityService)

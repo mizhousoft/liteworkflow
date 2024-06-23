@@ -5,7 +5,7 @@ import java.util.List;
 import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.impl.Executor;
-import com.liteworkflow.engine.interceptor.SnakerInterceptor;
+import com.liteworkflow.engine.interceptor.FlowInterceptor;
 import com.liteworkflow.engine.model.BaseModel;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.model.TransitionModel;
@@ -26,12 +26,12 @@ public abstract class NodeExecutor implements Executor
 	{
 		NodeModel nodeModel = (NodeModel) model;
 
-		List<SnakerInterceptor> preInterceptorList = nodeModel.getPreInterceptorList();
+		List<FlowInterceptor> preInterceptorList = nodeModel.getPreInterceptorList();
 		intercept(preInterceptorList, execution);
 
 		doExecute(execution, nodeModel);
 
-		List<SnakerInterceptor> postInterceptorList = nodeModel.getPostInterceptorList();
+		List<FlowInterceptor> postInterceptorList = nodeModel.getPostInterceptorList();
 		intercept(postInterceptorList, execution);
 	}
 
@@ -41,11 +41,11 @@ public abstract class NodeExecutor implements Executor
 	 * @param interceptorList 拦截器列表
 	 * @param execution 执行对象
 	 */
-	private void intercept(List<SnakerInterceptor> interceptorList, Execution execution)
+	private void intercept(List<FlowInterceptor> interceptorList, Execution execution)
 	{
 		try
 		{
-			for (SnakerInterceptor interceptor : interceptorList)
+			for (FlowInterceptor interceptor : interceptorList)
 			{
 				interceptor.intercept(execution);
 			}
@@ -59,12 +59,12 @@ public abstract class NodeExecutor implements Executor
 	protected void runOutTransition(Execution execution, NodeModel nodeModel)
 	{
 		List<TransitionModel> outputs = nodeModel.getOutputs();
-		for (TransitionModel tm : outputs)
+		for (TransitionModel transition : outputs)
 		{
-			tm.setEnabled(true);
+			transition.setEnabled(true);
 
-			Executor executor = ExecutorBuilder.build(tm);
-			executor.execute(execution, tm);
+			Executor executor = ExecutorBuilder.build(transition);
+			executor.execute(execution, transition);
 		}
 	}
 

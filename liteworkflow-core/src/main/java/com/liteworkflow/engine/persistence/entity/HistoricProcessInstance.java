@@ -1,6 +1,7 @@
 package com.liteworkflow.engine.persistence.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
 
@@ -43,12 +44,12 @@ public class HistoricProcessInstance implements Serializable
 	/**
 	 * 流程实例创建时间
 	 */
-	private String createTime;
+	private LocalDateTime createTime;
 
 	/**
 	 * 流程实例结束时间
 	 */
-	private String endTime;
+	private LocalDateTime endTime;
 
 	/**
 	 * 流程实例为子流程时，该字段标识父流程实例ID
@@ -58,7 +59,7 @@ public class HistoricProcessInstance implements Serializable
 	/**
 	 * 流程实例期望完成时间
 	 */
-	private String expireTime;
+	private LocalDateTime expireTime;
 
 	/**
 	 * 流程实例优先级
@@ -149,26 +150,6 @@ public class HistoricProcessInstance implements Serializable
 		this.creator = creator;
 	}
 
-	public String getCreateTime()
-	{
-		return createTime;
-	}
-
-	public void setCreateTime(String createTime)
-	{
-		this.createTime = createTime;
-	}
-
-	public String getEndTime()
-	{
-		return endTime;
-	}
-
-	public void setEndTime(String endTime)
-	{
-		this.endTime = endTime;
-	}
-
 	public String getParentId()
 	{
 		return parentId;
@@ -179,12 +160,62 @@ public class HistoricProcessInstance implements Serializable
 		this.parentId = parentId;
 	}
 
-	public String getExpireTime()
+	/**
+	 * 获取createTime
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getCreateTime()
+	{
+		return createTime;
+	}
+
+	/**
+	 * 设置createTime
+	 * 
+	 * @param createTime
+	 */
+	public void setCreateTime(LocalDateTime createTime)
+	{
+		this.createTime = createTime;
+	}
+
+	/**
+	 * 获取endTime
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getEndTime()
+	{
+		return endTime;
+	}
+
+	/**
+	 * 设置endTime
+	 * 
+	 * @param endTime
+	 */
+	public void setEndTime(LocalDateTime endTime)
+	{
+		this.endTime = endTime;
+	}
+
+	/**
+	 * 获取expireTime
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getExpireTime()
 	{
 		return expireTime;
 	}
 
-	public void setExpireTime(String expireTime)
+	/**
+	 * 设置expireTime
+	 * 
+	 * @param expireTime
+	 */
+	public void setExpireTime(LocalDateTime expireTime)
 	{
 		this.expireTime = expireTime;
 	}

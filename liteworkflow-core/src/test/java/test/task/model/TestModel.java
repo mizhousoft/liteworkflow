@@ -33,7 +33,7 @@ public class TestModel extends TestSpring
 		engine = applicationContext.getBean(ProcessEngine.class);
 		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.snaker"));
+		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.xml"));
 	}
 
 	@Test
@@ -67,7 +67,7 @@ public class TestModel extends TestSpring
 
 	public TaskModel getTaskModel(String taskName, ProcessModel processModel)
 	{
-		NodeModel nodeModel = processModel.getNode(taskName);
+		NodeModel nodeModel = processModel.getNodeModel(taskName);
 		AssertHelper.notNull(nodeModel, "任务id无法找到节点模型.");
 		if (nodeModel instanceof TaskModel)
 		{

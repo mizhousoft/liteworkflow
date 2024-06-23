@@ -18,21 +18,21 @@ public interface TaskEntityService
 	 * 
 	 * @param task 任务对象
 	 */
-	void save(Task task);
+	void addEntity(Task task);
 
 	/**
 	 * 更新任务对象
 	 * 
 	 * @param task 任务对象
 	 */
-	void update(Task task);
+	void modifyEntity(Task task);
 
 	/**
 	 * 删除任务、任务参与者对象
 	 * 
 	 * @param task 任务对象
 	 */
-	void delete(Task task);
+	void deleteEntity(Task task);
 
 	/**
 	 * 根据任务id查询任务对象

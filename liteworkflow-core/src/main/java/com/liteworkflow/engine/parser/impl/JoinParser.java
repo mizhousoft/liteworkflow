@@ -13,7 +13,7 @@ import com.liteworkflow.engine.parser.AbstractNodeParser;
 public class JoinParser extends AbstractNodeParser
 {
 	/**
-	 * 产生JoinModel模型对象
+	 * {@inheritDoc}
 	 */
 	protected NodeModel newModel()
 	{

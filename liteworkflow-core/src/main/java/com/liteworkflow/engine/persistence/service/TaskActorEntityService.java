@@ -16,7 +16,7 @@ public interface TaskActorEntityService
 	 * 
 	 * @param taskActor 任务参与者对象
 	 */
-	void save(TaskActor taskActor);
+	void addEntity(TaskActor taskActor);
 
 	/**
 	 * 
@@ -40,5 +40,5 @@ public interface TaskActorEntityService
 	 * @param taskId 活动任务id
 	 * @return List<TaskActor> 活动任务参与者集合
 	 */
-	List<TaskActor> getTaskActorsByTaskId(String taskId);
+	List<TaskActor> queryByTaskId(String taskId);
 }

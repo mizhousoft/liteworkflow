@@ -1,10 +1,14 @@
 package com.liteworkflow.engine.helper;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.mizhousoft.commons.lang.LocalDateTimeUtils;
+import com.mizhousoft.commons.lang.LocalDateUtils;
 
 /**
  * 日期帮助类
@@ -58,22 +62,22 @@ public class DateHelper
 	 * @param parameter 模型参数
 	 * @return Date类型
 	 */
-	public static Date processTime(Map<String, Object> args, String parameter)
+	public static LocalDate processTime(Map<String, Object> args, String parameter)
 	{
-		if (StringHelper.isEmpty(parameter))
+		if (StringUtils.isBlank(parameter))
 			return null;
 		Object data = args.get(parameter);
 		if (data == null)
 			data = parameter;
 
-		Date result = null;
-		if (data instanceof Date)
+		LocalDate result = null;
+		if (data instanceof LocalDate)
 		{
-			return (Date) data;
+			return (LocalDate) data;
 		}
 		else if (data instanceof Long)
 		{
-			return new Date((Long) data);
+			return LocalDateUtils.toLocalDate(new Date((Long) data));
 		}
 		else if (data instanceof String)
 		{

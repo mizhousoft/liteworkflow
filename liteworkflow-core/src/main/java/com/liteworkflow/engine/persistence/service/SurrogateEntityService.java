@@ -17,21 +17,21 @@ public interface SurrogateEntityService
 	 * 
 	 * @param surrogate 委托代理对象
 	 */
-	void save(Surrogate surrogate);
+	void addEntity(Surrogate surrogate);
 
 	/**
 	 * 更新委托代理对象
 	 * 
 	 * @param surrogate 委托代理对象
 	 */
-	void update(Surrogate surrogate);
+	void modifyEntity(Surrogate surrogate);
 
 	/**
 	 * 删除委托代理对象
 	 * 
 	 * @param surrogate 委托代理对象
 	 */
-	void delete(Surrogate surrogate);
+	void deleteEntity(Surrogate surrogate);
 
 	/**
 	 * 根据主键id查询委托代理对象
@@ -39,7 +39,7 @@ public interface SurrogateEntityService
 	 * @param id 主键id
 	 * @return surrogate 委托代理对象
 	 */
-	Surrogate getSurrogate(String id);
+	Surrogate getById(String id);
 
 	/**
 	 * 
