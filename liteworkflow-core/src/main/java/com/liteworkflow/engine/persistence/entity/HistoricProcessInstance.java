@@ -106,7 +106,7 @@ public class HistoricProcessInstance implements Serializable
 		instance.setExpireTime(this.expireTime);
 		instance.setPriority(this.priority);
 		instance.setVariable(this.variable);
-		instance.setVersion(0);
+		instance.setRevision(0);
 		return instance;
 	}
 

@@ -1,10 +1,11 @@
 package com.liteworkflow.engine.impl;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -16,7 +17,6 @@ import com.liteworkflow.engine.ProcessInstanceService;
 import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.cache.Cache;
 import com.liteworkflow.engine.cache.CacheManager;
-import com.liteworkflow.engine.helper.StreamHelper;
 import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.parser.ModelParser;
@@ -38,17 +38,10 @@ public class RepositoryServiceImpl extends AccessService implements RepositorySe
 {
 	private static final Logger log = LoggerFactory.getLogger(RepositoryServiceImpl.class);
 
-	private static final String DEFAULT_SEPARATOR = ".";
-
 	/**
-	 * 流程定义对象cache名称
+	 * ProcessEngineConfiguration
 	 */
-	private static final String CACHE_ENTITY = "snaker.process.entity";
-
-	/**
-	 * 流程id、name的cache名称
-	 */
-	private static final String CACHE_NAME = "snaker.process.name";
+	private ProcessEngineConfiguration engineConfiguration;
 
 	/**
 	 * cache manager
@@ -56,25 +49,49 @@ public class RepositoryServiceImpl extends AccessService implements RepositorySe
 	private CacheManager cacheManager;
 
 	/**
-	 * 实体cache(key=name,value=entity对象)
+	 * ProcessDefinitionEntityService
+	 */
+	private ProcessDefinitionEntityService processDefinitionEntityService;
+
+	/**
+	 * HistoricProcessInstanceEntityService
+	 */
+	private HistoricProcessInstanceEntityService historicProcessInstanceEntityService;
+
+	/**
+	 * 实体cache(key=name + - + version, value=entity对象)
 	 */
 	private Cache<String, ProcessDefinition> entityCache;
 
 	/**
-	 * 名称cache(key=id,value=name对象)
+	 * 名称cache(key=id, value=name对象)
 	 */
 	private Cache<String, String> nameCache;
 
-	private ProcessEngineConfiguration engineConfiguration;
+	/**
+	 * 构造函数
+	 *
+	 * @param engineConfiguration
+	 * @param cacheManager
+	 * @param processDefinitionEntityService
+	 * @param historicProcessInstanceEntityService
+	 */
+	public RepositoryServiceImpl(ProcessEngineConfiguration engineConfiguration, CacheManager cacheManager,
+	        ProcessDefinitionEntityService processDefinitionEntityService,
+	        HistoricProcessInstanceEntityService historicProcessInstanceEntityService)
+	{
+		super();
+		this.engineConfiguration = engineConfiguration;
+		this.cacheManager = cacheManager;
+		this.processDefinitionEntityService = processDefinitionEntityService;
+		this.historicProcessInstanceEntityService = historicProcessInstanceEntityService;
 
-	private ProcessDefinitionEntityService processDefinitionEntityService;
-
-	private HistoricProcessInstanceEntityService historicProcessInstanceEntityService;
+		this.nameCache = this.cacheManager.getCache("process-name");
+		this.entityCache = this.cacheManager.getCache("process-entity");
+	}
 
 	/**
-	 * 根据流程定义xml的输入流解析为字节数组，保存至数据库中，并且put到缓存中
-	 * 
-	 * @param input 定义输入流
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String deploy(InputStream input)
@@ -83,82 +100,92 @@ public class RepositoryServiceImpl extends AccessService implements RepositorySe
 	}
 
 	/**
-	 * 根据流程定义xml的输入流解析为字节数组，保存至数据库中，并且put到缓存中
-	 * 
-	 * @param input 定义输入流
-	 * @param creator 创建人
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String deploy(InputStream input, String creator)
 	{
 		try
 		{
-			byte[] bytes = StreamHelper.readBytes(input);
-			ProcessModel model = ModelParser.parse(bytes);
-			Integer version = processDefinitionEntityService.getLatestVersion(model.getName());
-			ProcessDefinition entity = new ProcessDefinition();
-			entity.setId(StringHelper.getPrimaryKey());
-			if (version == null || version < 0)
+			byte[] bytes = IOUtils.toByteArray(input);
+			ProcessModel processModel = ModelParser.parse(bytes);
+
+			Integer version = processDefinitionEntityService.getLatestVersion(processModel.getName());
+			if (version == null)
 			{
-				entity.setVersion(0);
+				version = 0;
 			}
 			else
 			{
-				entity.setVersion(version + 1);
+				version = version + 1;
 			}
-			entity.setState(Constants.STATE_ACTIVE);
-			entity.setModel(model);
-			entity.setBytes(bytes);
-			entity.setCreateTime(LocalDateTime.now());
-			entity.setCreator(creator);
 
-			processDefinitionEntityService.addEntity(entity);
+			ProcessDefinition processDefinition = new ProcessDefinition();
+			processDefinition.setId(StringHelper.getPrimaryKey());
+			processDefinition.setName(processModel.getName());
+			processDefinition.setDisplayName(processModel.getDisplayName());
+			processDefinition.setCategory(processModel.getCategory());
+			processDefinition.setState(Constants.STATE_ACTIVE);
+			processDefinition.setVersion(version);
+			processDefinition.setBytes(bytes);
+			processDefinition.setInstanceUrl(processModel.getInstanceUrl());
+			processDefinition.setCreateTime(LocalDateTime.now());
+			processDefinition.setCreator(creator);
+			processDefinition.setModel(processModel);
 
-			cache(entity);
-			return entity.getId();
+			processDefinitionEntityService.addEntity(processDefinition);
+
+			putCache(processDefinition);
+
+			return processDefinition.getId();
 		}
-		catch (Exception e)
+		catch (IOException e)
 		{
-			throw new ProcessException(e.getMessage(), e.getCause());
+			throw new ProcessException("Parse process model failed.", e);
 		}
 	}
 
 	/**
-	 * 根据流程定义id、xml的输入流解析为字节数组，保存至数据库中，并且重新put到缓存中
-	 * 
-	 * @param input 定义输入流
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void redeploy(String id, InputStream input)
 	{
-		ProcessDefinition entity = processDefinitionEntityService.getById(id);
+		ProcessDefinition processDefinition = processDefinitionEntityService.getById(id);
+		Assert.notNull(processDefinition, "Process definition not found, id is " + id);
 
 		try
 		{
-			byte[] bytes = StreamHelper.readBytes(input);
-			ProcessModel model = ModelParser.parse(bytes);
-			String oldProcessName = entity.getName();
-			entity.setModel(model);
-			entity.setBytes(bytes);
-			processDefinitionEntityService.modifyEntity(entity);
-			if (!oldProcessName.equalsIgnoreCase(entity.getName()))
+			String oldProcessName = processDefinition.getName();
+
+			byte[] bytes = IOUtils.toByteArray(input);
+			ProcessModel processModel = ModelParser.parse(bytes);
+
+			processDefinition.setName(processModel.getName());
+			processDefinition.setDisplayName(processModel.getDisplayName());
+			processDefinition.setCategory(processModel.getCategory());
+			processDefinition.setBytes(bytes);
+			processDefinition.setInstanceUrl(processModel.getInstanceUrl());
+			processDefinition.setModel(processModel);
+
+			processDefinitionEntityService.modifyEntity(processDefinition);
+
+			if (!oldProcessName.equalsIgnoreCase(processDefinition.getName()))
 			{
-				Cache<String, ProcessDefinition> entityCache = ensureAvailableEntityCache();
-				if (entityCache != null)
-				{
-					entityCache.remove(oldProcessName + DEFAULT_SEPARATOR + entity.getVersion());
-				}
+				String key = buildEntityCacheKey(oldProcessName, processDefinition.getVersion());
+				entityCache.remove(key);
 			}
-			cache(entity);
+
+			putCache(processDefinition);
 		}
-		catch (Exception e)
+		catch (IOException e)
 		{
-			throw new ProcessException(e.getMessage(), e.getCause());
+			throw new ProcessException("Parse process model failed.", e);
 		}
 	}
 
 	/**
-	 * 根据processId卸载流程
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void undeploy(String id)
@@ -166,11 +193,11 @@ public class RepositoryServiceImpl extends AccessService implements RepositorySe
 		ProcessDefinition entity = processDefinitionEntityService.getById(id);
 		entity.setState(Constants.STATE_FINISH);
 		processDefinitionEntityService.modifyEntity(entity);
-		cache(entity);
+		putCache(entity);
 	}
 
 	/**
-	 * 级联删除指定流程定义的所有数据
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void cascadeRemove(String id)
@@ -190,112 +217,88 @@ public class RepositoryServiceImpl extends AccessService implements RepositorySe
 
 		processDefinitionEntityService.deleteEntity(processDefinition);
 
-		clear(processDefinition);
+		removeCache(processDefinition);
 	}
 
 	/**
-	 * 根据id获取process对象
-	 * 先通过cache获取，如果返回空，就从数据库读取并put
+	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessDefinition getProcessById(String id)
+	public ProcessDefinition getById(String id)
 	{
 		Assert.notNull(id, "Process definition id is null.");
 
-		ProcessDefinition entity = null;
-		String processName;
-		Cache<String, String> nameCache = ensureAvailableNameCache();
-		Cache<String, ProcessDefinition> entityCache = ensureAvailableEntityCache();
-		if (nameCache != null && entityCache != null)
+		String processName = nameCache.get(id);
+		if (null != processName)
 		{
-			processName = nameCache.get(id);
-			if (!StringUtils.isBlank(processName))
+			ProcessDefinition processDefinition = entityCache.get(processName);
+			if (processDefinition != null)
 			{
-				entity = entityCache.get(processName);
+				return processDefinition;
 			}
 		}
-		if (entity != null)
-		{
-			log.debug("obtain process[id={}] from cache.", id);
 
-			return entity;
-		}
-		entity = processDefinitionEntityService.getById(id);
-		if (entity != null)
+		ProcessDefinition processDefinition = processDefinitionEntityService.getById(id);
+		if (processDefinition != null)
 		{
-			log.debug("obtain process[id={}] from database.", id);
-
-			cache(entity);
+			putCache(processDefinition);
 		}
-		return entity;
+
+		return processDefinition;
 	}
 
 	/**
-	 * 根据name获取process对象
-	 * 先通过cache获取，如果返回空，就从数据库读取并put
+	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessDefinition getProcessByName(String name)
+	public ProcessDefinition getLatestByName(String name)
 	{
-		return getProcessByVersion(name, null);
+		return getByVersion(name, null);
 	}
 
 	/**
-	 * 根据name获取process对象
-	 * 先通过cache获取，如果返回空，就从数据库读取并put
+	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessDefinition getProcessByVersion(String name, Integer version)
+	public ProcessDefinition getByVersion(String name, Integer version)
 	{
 		Assert.notNull(name, "Process definition name is null.");
 
-		if (version == null)
+		if (null == version)
 		{
 			version = processDefinitionEntityService.getLatestVersion(name);
 		}
-		if (version == null)
-		{
-			version = 0;
-		}
-		ProcessDefinition entity = null;
-		String processName = name + DEFAULT_SEPARATOR + version;
-		Cache<String, ProcessDefinition> entityCache = ensureAvailableEntityCache();
-		if (entityCache != null)
-		{
-			entity = entityCache.get(processName);
-		}
-		if (entity != null)
-		{
-			log.debug("obtain process[name={}] from cache.", processName);
+		Assert.notNull(version, "Process definition version is null.");
 
-			return entity;
+		String cacheKey = buildEntityCacheKey(name, version);
+		ProcessDefinition processDefinition = entityCache.get(cacheKey);
+		if (processDefinition != null)
+		{
+			return processDefinition;
 		}
 
-		ProcessDefPageRequest request = new ProcessDefPageRequest();
-		request.setNames(new String[] { name });
-		request.setVersion(version);
-		List<ProcessDefinition> processs = processDefinitionEntityService.queryByName(name, version);
-		if (processs != null && !processs.isEmpty())
+		List<ProcessDefinition> list = processDefinitionEntityService.queryByName(name, version);
+		if (!list.isEmpty())
 		{
-			log.debug("obtain process[name={}] from database.", processName);
+			processDefinition = list.get(0);
 
-			entity = processs.get(0);
-			cache(entity);
+			putCache(processDefinition);
 		}
-		return entity;
+
+		return processDefinition;
 	}
 
 	/**
-	 * 查询流程定义
+	 * {@inheritDoc}
 	 */
 	@Override
-	public List<ProcessDefinition> queryByName(String name)
+	public List<ProcessDefinition> queryListByName(String name)
 	{
 		return processDefinitionEntityService.queryByName(name, null);
 	}
 
 	/**
-	 * 分页查询流程定义
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Page<ProcessDefinition> queryPageData(ProcessDefPageRequest request)
@@ -304,121 +307,50 @@ public class RepositoryServiceImpl extends AccessService implements RepositorySe
 	}
 
 	/**
-	 * 缓存实体
+	 * 加入缓存
 	 * 
-	 * @param entity 流程定义对象
+	 * @param processDefinition
 	 */
-	private void cache(ProcessDefinition entity)
+	private void putCache(ProcessDefinition processDefinition)
 	{
-		Cache<String, String> nameCache = ensureAvailableNameCache();
-		Cache<String, ProcessDefinition> entityCache = ensureAvailableEntityCache();
-		if (entity.getModel() == null && entity.getDBContent() != null)
+		if (processDefinition.getModel() == null)
 		{
-			entity.setModel(ModelParser.parse(entity.getDBContent()));
+			ProcessModel processModel = ModelParser.parse(processDefinition.getBytes());
+			processDefinition.setModel(processModel);
 		}
-		String processName = entity.getName() + DEFAULT_SEPARATOR + entity.getVersion();
-		if (nameCache != null && entityCache != null)
-		{
-			log.debug("cache process id is[{}],name is[{}]", entity.getId(), processName);
 
-			entityCache.put(processName, entity);
-			nameCache.put(entity.getId(), processName);
-		}
-		else
-		{
-			log.debug("no cache implementation class");
-		}
+		String cacheKey = buildEntityCacheKey(processDefinition.getName(), processDefinition.getVersion());
+		entityCache.put(cacheKey, processDefinition);
+
+		nameCache.put(processDefinition.getId(), cacheKey);
+
+		log.info("Put process definition cache, id is {}, name is {}.", processDefinition.getId(), cacheKey);
 	}
 
 	/**
-	 * 清除实体
+	 * 清除缓存
 	 * 
-	 * @param entity 流程定义对象
+	 * @param processDefinition
 	 */
-	private void clear(ProcessDefinition entity)
+	private void removeCache(ProcessDefinition processDefinition)
 	{
-		Cache<String, String> nameCache = ensureAvailableNameCache();
-		Cache<String, ProcessDefinition> entityCache = ensureAvailableEntityCache();
-		String processName = entity.getName() + DEFAULT_SEPARATOR + entity.getVersion();
-		if (nameCache != null && entityCache != null)
-		{
-			nameCache.remove(entity.getId());
-			entityCache.remove(processName);
-		}
-	}
+		String cacheKey = buildEntityCacheKey(processDefinition.getName(), processDefinition.getVersion());
+		entityCache.remove(cacheKey);
 
-	private Cache<String, ProcessDefinition> ensureAvailableEntityCache()
-	{
-		Cache<String, ProcessDefinition> entityCache = ensureEntityCache();
-		if (entityCache == null && this.cacheManager != null)
-		{
-			entityCache = this.cacheManager.getCache(CACHE_ENTITY);
-		}
-		return entityCache;
-	}
+		nameCache.remove(processDefinition.getId());
 
-	private Cache<String, String> ensureAvailableNameCache()
-	{
-		Cache<String, String> nameCache = ensureNameCache();
-		if (nameCache == null && this.cacheManager != null)
-		{
-			nameCache = this.cacheManager.getCache(CACHE_NAME);
-		}
-		return nameCache;
-	}
-
-	public Cache<String, ProcessDefinition> ensureEntityCache()
-	{
-		return entityCache;
-	}
-
-	public void setEntityCache(Cache<String, ProcessDefinition> entityCache)
-	{
-		this.entityCache = entityCache;
-	}
-
-	public Cache<String, String> ensureNameCache()
-	{
-		return nameCache;
-	}
-
-	public void setNameCache(Cache<String, String> nameCache)
-	{
-		this.nameCache = nameCache;
+		log.info("Remove process definition cache, id is {}, name is {}.", processDefinition.getId(), cacheKey);
 	}
 
 	/**
-	 * 设置engineConfiguration
+	 * 构建缓存KEY
 	 * 
-	 * @param engineConfiguration
+	 * @param processName
+	 * @param version
+	 * @return
 	 */
-	public void setEngineConfiguration(ProcessEngineConfiguration engineConfiguration)
+	private String buildEntityCacheKey(String processName, int version)
 	{
-		this.engineConfiguration = engineConfiguration;
-	}
-
-	/**
-	 * 设置processDefinitionEntityService
-	 * 
-	 * @param processDefinitionEntityService
-	 */
-	public void setProcessDefinitionEntityService(ProcessDefinitionEntityService processDefinitionEntityService)
-	{
-		this.processDefinitionEntityService = processDefinitionEntityService;
-	}
-
-	/**
-	 * 设置historicProcessInstanceEntityService
-	 * 
-	 * @param historicProcessInstanceEntityService
-	 */
-	public void setHistoricProcessInstanceEntityService(HistoricProcessInstanceEntityService historicProcessInstanceEntityService)
-	{
-		this.historicProcessInstanceEntityService = historicProcessInstanceEntityService;
-	}
-
-	public void setCacheManager(CacheManager cacheManager)
-	{
-		this.cacheManager = cacheManager;
+		return processName + "-" + version;
 	}
 }

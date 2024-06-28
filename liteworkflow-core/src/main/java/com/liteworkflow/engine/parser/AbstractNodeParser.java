@@ -9,12 +9,12 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.interceptor.FlowInterceptor;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.model.TransitionModel;
+import com.liteworkflow.engine.util.DomUtils;
 import com.mizhousoft.commons.lang.ClassUtils;
 
 /**
@@ -115,7 +115,7 @@ public abstract class AbstractNodeParser implements NodeParser
 	 */
 	protected List<TransitionModel> parseTransitionModel(Element element)
 	{
-		List<Element> transitionElements = listChildElements(element, NODE_TRANSITION);
+		List<Element> transitionElements = DomUtils.listChildElements(element, NODE_TRANSITION);
 		List<TransitionModel> outputs = new ArrayList<TransitionModel>(transitionElements.size());
 
 		for (Element transitionElement : transitionElements)
@@ -132,38 +132,6 @@ public abstract class AbstractNodeParser implements NodeParser
 		}
 
 		return outputs;
-	}
-
-	/**
-	 * 从element元素查找所有tagName指定的子节点元素集合
-	 * 
-	 * @param element
-	 * @param tagName
-	 * @return
-	 */
-	protected List<Element> listChildElements(Element element, String tagName)
-	{
-		if (element == null || !element.hasChildNodes())
-		{
-			return Collections.emptyList();
-		}
-
-		List<Element> childElements = new ArrayList<Element>(5);
-
-		for (Node child = element.getFirstChild(); child != null; child = child.getNextSibling())
-		{
-			if (child.getNodeType() == Node.ELEMENT_NODE)
-			{
-				Element childElement = (Element) child;
-				String childTagName = childElement.getNodeName();
-				if (tagName.equals(childTagName))
-				{
-					childElements.add(childElement);
-				}
-			}
-		}
-
-		return childElements;
 	}
 
 	/**

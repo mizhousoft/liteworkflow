@@ -5,7 +5,7 @@ import com.mizhousoft.commons.data.domain.Sort;
 import com.mizhousoft.commons.data.domain.Sort.Direction;
 
 /**
- * ProcessFindRequest
+ * ProcessDefPageRequest
  *
  * @version
  */
@@ -16,7 +16,7 @@ public class ProcessDefPageRequest extends PageRequest
 	/**
 	 * 名称
 	 */
-	private String[] names;
+	private String name;
 
 	/**
 	 * 流程定义版本号
@@ -29,19 +29,9 @@ public class ProcessDefPageRequest extends PageRequest
 	private String displayName;
 
 	/**
-	 * 操作人员id
+	 * 流程分类
 	 */
-	private String[] operators;
-
-	/**
-	 * 状态
-	 */
-	private Integer state;
-
-	/**
-	 * 流程类型
-	 */
-	private String processType;
+	private String category;
 
 	/**
 	 * 构造函数
@@ -55,23 +45,23 @@ public class ProcessDefPageRequest extends PageRequest
 	}
 
 	/**
-	 * 获取names
+	 * 获取name
 	 * 
 	 * @return
 	 */
-	public String[] getNames()
+	public String getName()
 	{
-		return names;
+		return name;
 	}
 
 	/**
-	 * 设置names
+	 * 设置name
 	 * 
-	 * @param names
+	 * @param name
 	 */
-	public void setNames(String[] names)
+	public void setName(String name)
 	{
-		this.names = names;
+		this.name = name;
 	}
 
 	/**
@@ -115,62 +105,22 @@ public class ProcessDefPageRequest extends PageRequest
 	}
 
 	/**
-	 * 获取operators
+	 * 获取category
 	 * 
 	 * @return
 	 */
-	public String[] getOperators()
+	public String getCategory()
 	{
-		return operators;
+		return category;
 	}
 
 	/**
-	 * 设置operators
+	 * 设置category
 	 * 
-	 * @param operators
+	 * @param category
 	 */
-	public void setOperators(String[] operators)
+	public void setCategory(String category)
 	{
-		this.operators = operators;
-	}
-
-	/**
-	 * 获取state
-	 * 
-	 * @return
-	 */
-	public Integer getState()
-	{
-		return state;
-	}
-
-	/**
-	 * 设置state
-	 * 
-	 * @param state
-	 */
-	public void setState(Integer state)
-	{
-		this.state = state;
-	}
-
-	/**
-	 * 获取processType
-	 * 
-	 * @return
-	 */
-	public String getProcessType()
-	{
-		return processType;
-	}
-
-	/**
-	 * 设置processType
-	 * 
-	 * @param processType
-	 */
-	public void setProcessType(String processType)
-	{
-		this.processType = processType;
+		this.category = category;
 	}
 }

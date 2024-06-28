@@ -11,7 +11,6 @@ import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.ProcessInstanceService;
 import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.RuntimeService;
-import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.impl.executor.ExecutorBuilder;
 import com.liteworkflow.engine.model.StartModel;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
@@ -84,7 +83,7 @@ public class RuntimeServiceImpl implements RuntimeService
 			args = new HashMap<String, Object>(0);
 		}
 
-		ProcessDefinition process = repositoryService.getProcessById(id);
+		ProcessDefinition process = repositoryService.getById(id);
 		Assert.notNull(process, "Process definition not found, id is " + id);
 
 		return startProcess(process, operator, args);
@@ -136,7 +135,7 @@ public class RuntimeServiceImpl implements RuntimeService
 			args = new HashMap<String, Object>(0);
 		}
 
-		ProcessDefinition process = repositoryService.getProcessByVersion(name, version);
+		ProcessDefinition process = repositoryService.getByVersion(name, version);
 		Assert.notNull(process, "Process definition not found, name is " + name);
 
 		return startProcess(process, operator, args);
@@ -148,7 +147,7 @@ public class RuntimeServiceImpl implements RuntimeService
 		if (process.getModel() != null)
 		{
 			StartModel start = process.getModel().getStartModel();
-			AssertHelper.notNull(start, "流程定义[name=" + process.getName() + ", version=" + process.getVersion() + "]没有开始节点");
+
 			Executor executor = ExecutorBuilder.build(start);
 			executor.execute(execution, start);
 		}
@@ -162,11 +161,10 @@ public class RuntimeServiceImpl implements RuntimeService
 	@Override
 	public ProcessInstance startInstanceByExecution(Execution execution)
 	{
-		ProcessDefinition process = execution.getProcessDefinition();
-		StartModel start = process.getModel().getStartModel();
-		AssertHelper.notNull(start, "流程定义[id=" + process.getId() + "]没有开始节点");
+		ProcessDefinition processDefinition = execution.getProcessDefinition();
+		StartModel start = processDefinition.getModel().getStartModel();
 
-		Execution current = execute(process, execution.getOperator(), execution.getArgs(), execution.getParentInstance().getId(),
+		Execution current = execute(processDefinition, execution.getOperator(), execution.getArgs(), execution.getParentInstance().getId(),
 		        execution.getParentNodeName());
 		Executor executor = ExecutorBuilder.build(start);
 		executor.execute(current, start);

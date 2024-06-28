@@ -2,9 +2,9 @@ package com.liteworkflow.engine.impl;
 
 import com.liteworkflow.engine.HistoryService;
 import com.liteworkflow.engine.ManagerService;
-import com.liteworkflow.engine.ProcessInstanceService;
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.ProcessEngineConfiguration;
+import com.liteworkflow.engine.ProcessInstanceService;
 import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.RuntimeService;
 import com.liteworkflow.engine.TaskService;
@@ -18,36 +18,34 @@ import com.liteworkflow.engine.TaskService;
 public class ProcessEngineImpl implements ProcessEngine
 {
 	/**
-	 * ProcessEngineConfiguration
-	 */
-	protected ProcessEngineConfiguration configuration;
-
-	/**
 	 * 流程定义业务类
 	 */
-	protected RepositoryService repositoryService;
+	private RepositoryService repositoryService;
 
 	/**
 	 * 流程实例业务类
 	 */
-	protected ProcessInstanceService processInstanceService;
+	private ProcessInstanceService processInstanceService;
 
 	/**
 	 * 任务业务类
 	 */
-	protected TaskService taskService;
+	private TaskService taskService;
 
 	/**
 	 * 查询业务类
 	 */
-	protected HistoryService historyService;
+	private HistoryService historyService;
 
 	/**
 	 * 管理业务类
 	 */
-	protected ManagerService managerService;
+	private ManagerService managerService;
 
-	protected RuntimeService runtimeService;
+	/**
+	 * 运行服务类
+	 */
+	private RuntimeService runtimeService;
 
 	/**
 	 * 构造函数
@@ -57,18 +55,17 @@ public class ProcessEngineImpl implements ProcessEngine
 	public ProcessEngineImpl(ProcessEngineConfiguration configuration)
 	{
 		super();
-		this.configuration = configuration;
 
-		this.managerService = configuration.getManagerService();
-		this.processInstanceService = configuration.getProcessInstanceService();
 		this.repositoryService = configuration.getRepositoryService();
-		this.historyService = configuration.getHistoryService();
-		this.taskService = configuration.getTaskService();
+		this.processInstanceService = configuration.getProcessInstanceService();
 		this.runtimeService = configuration.getRuntimeService();
+		this.taskService = configuration.getTaskService();
+		this.historyService = configuration.getHistoryService();
+		this.managerService = configuration.getManagerService();
 	}
 
 	/**
-	 * 获取流程定义服务
+	 * {@inheritDoc}
 	 */
 	@Override
 	public RepositoryService getRepositoryService()
@@ -76,43 +73,13 @@ public class ProcessEngineImpl implements ProcessEngine
 		return repositoryService;
 	}
 
-	@Override
-	public HistoryService getHistoryService()
-	{
-		return historyService;
-	}
-
 	/**
-	 * 获取实例服务
-	 * 
-	 * @since 1.2.2
+	 * {@inheritDoc}
 	 */
 	@Override
 	public ProcessInstanceService getProcessInstanceService()
 	{
 		return processInstanceService;
-	}
-
-	/**
-	 * 获取任务服务
-	 * 
-	 * @since 1.2.2
-	 */
-	@Override
-	public TaskService getTaskService()
-	{
-		return taskService;
-	}
-
-	/**
-	 * 获取管理服务
-	 * 
-	 * @since 1.4
-	 */
-	@Override
-	public ManagerService getManagerService()
-	{
-		return managerService;
 	}
 
 	/**
@@ -122,5 +89,32 @@ public class ProcessEngineImpl implements ProcessEngine
 	public RuntimeService getRuntimeService()
 	{
 		return runtimeService;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public TaskService getTaskService()
+	{
+		return taskService;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public HistoryService getHistoryService()
+	{
+		return historyService;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ManagerService getManagerService()
+	{
+		return managerService;
 	}
 }

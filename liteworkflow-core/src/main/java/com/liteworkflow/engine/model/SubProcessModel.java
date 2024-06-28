@@ -6,7 +6,7 @@ package com.liteworkflow.engine.model;
  * @author
  * @since 1.0
  */
-public class SubProcessModel extends WorkModel
+public class SubProcessModel extends ActivityModel
 {
 	/**
 	 * 

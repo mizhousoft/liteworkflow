@@ -15,14 +15,6 @@ import com.mizhousoft.commons.mapper.PageableMapper;
 public interface ProcessDefinitionMapper extends PageableMapper<ProcessDefinition, String>
 {
 	/**
-	 * 更新流程定义类别
-	 * 
-	 * @param type 类别
-	 * @since 1.5
-	 */
-	void updateProcessType(@Param("id") String id, @Param("type") String type);
-
-	/**
 	 * 根据流程名称查询
 	 * 
 	 * @param name

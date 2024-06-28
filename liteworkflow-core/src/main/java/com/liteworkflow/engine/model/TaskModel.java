@@ -1,5 +1,7 @@
 package com.liteworkflow.engine.model;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.liteworkflow.engine.AssignmentHandler;
@@ -10,7 +12,7 @@ import com.liteworkflow.engine.AssignmentHandler;
  * @author
  * @since 1.0
  */
-public class TaskModel extends WorkModel
+public class TaskModel extends ActivityModel
 {
 	/**
 	 * 
@@ -101,6 +103,11 @@ public class TaskModel extends WorkModel
 	 * 分配参与者处理对象
 	 */
 	private AssignmentHandler assignmentHandlerObject;
+
+	/**
+	 * 监听器模型
+	 */
+	private List<ListenerModel> listenerModels;
 
 	public boolean isPerformAny()
 	{
@@ -210,5 +217,25 @@ public class TaskModel extends WorkModel
 	public String getAssignmentHandler()
 	{
 		return assignmentHandler;
+	}
+
+	/**
+	 * 获取listenerModels
+	 * 
+	 * @return
+	 */
+	public List<ListenerModel> getListenerModels()
+	{
+		return listenerModels;
+	}
+
+	/**
+	 * 设置listenerModels
+	 * 
+	 * @param listenerModels
+	 */
+	public void setListenerModels(List<ListenerModel> listenerModels)
+	{
+		this.listenerModels = listenerModels;
 	}
 }

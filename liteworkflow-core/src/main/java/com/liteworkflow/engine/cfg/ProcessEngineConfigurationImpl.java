@@ -63,51 +63,118 @@ import com.liteworkflow.engine.persistence.service.impl.TaskEntityServiceImpl;
  */
 public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguration, ApplicationContextAware
 {
-	private static final Logger log = LoggerFactory.getLogger(ProcessEngineConfigurationImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ProcessEngineConfigurationImpl.class);
 
 	/**
 	 * Spring上下文
 	 */
 	private ApplicationContext applicationContext;
 
+	/**
+	 * CacheManager
+	 */
 	private CacheManager cacheManager = new MemoryCacheManager();
 
+	/**
+	 * SqlSessionFactory
+	 */
 	private SqlSessionFactory sqlSessionFactory;
 
+	/**
+	 * RepositoryService
+	 */
 	private RepositoryService repositoryService;
 
+	/**
+	 * ProcessInstanceService
+	 */
 	private ProcessInstanceService processInstanceService;
 
+	/**
+	 * TaskService
+	 */
 	private TaskService taskService;
 
+	/**
+	 * HistoryService
+	 */
 	private HistoryService historyService;
 
+	/**
+	 * ManagerService
+	 */
 	private ManagerService managerService;
 
+	/**
+	 * RuntimeService
+	 */
 	private RuntimeService runtimeService;
 
+	/**
+	 * ProcessEngine
+	 */
 	private ProcessEngine processEngine;
 
 	/**
-	 * 构造ProcessEngine对象，用于api集成
-	 * 通过SpringHelper调用
-	 * 
-	 * @return ProcessEngine
-	 * @throws WorkflowException
+	 * ProcessDefinitionEntityService
 	 */
+	private ProcessDefinitionEntityService processDefinitionEntityService;
+
+	/**
+	 * HistoricTaskActorEntityService
+	 */
+	private HistoricTaskActorEntityService historicTaskActorEntityService;
+
+	/**
+	 * HistoricTaskEntityService
+	 */
+	private HistoricTaskEntityService historicTaskEntityService;
+
+	/**
+	 * TaskActorEntityService
+	 */
+	private TaskActorEntityService taskActorEntityService;
+
+	/**
+	 * TaskEntityService
+	 */
+	private TaskEntityService taskEntityService;
+
+	/**
+	 * SurrogateEntityService
+	 */
+	private SurrogateEntityService surrogateEntityService;
+
+	/**
+	 * HistoricProcessInstanceEntityService
+	 */
+	private HistoricProcessInstanceEntityService historicProcessInstanceEntityService;
+
+	/**
+	 * CCProcessInstanceEntityService
+	 */
+	private CCProcessInstanceEntityService ccProcessInstanceEntityService;
+
+	/**
+	 * ProcessInstanceEntityService
+	 */
+	private ProcessInstanceEntityService processInstanceEntityService;
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public ProcessEngine buildProcessEngine() throws Exception
 	{
-		log.info("ProcessEngine start......");
+		LOG.info("Start to build ProcessEngine.");
 
 		ServiceContext.setContext(new SpringContext(applicationContext));
 
 		initServices();
 
 		this.processEngine = new ProcessEngineImpl(this);
+
+		LOG.info("Build ProcessEngine successfully.");
 
 		return this.processEngine;
 	}
@@ -140,9 +207,7 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	}
 
 	/**
-	 * 获取processInstanceService
-	 * 
-	 * @return
+	 * {@inheritDoc}
 	 */
 	@Override
 	public ProcessInstanceService getProcessInstanceService()
@@ -186,28 +251,27 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		return runtimeService;
 	}
 
+	/**
+	 * 初始化服务
+	 * 
+	 * @throws Exception
+	 */
 	private void initServices() throws Exception
 	{
-		ProcessDefinitionEntityService processDefinitionEntityService = initProcessDefinitionEntityService(sqlSessionFactory);
+		this.processDefinitionEntityService = initProcessDefinitionEntityService(sqlSessionFactory);
 
-		HistoricTaskActorEntityService historicTaskActorEntityService = initHistoricTaskActorEntityService(sqlSessionFactory);
-		HistoricTaskEntityService historicTaskEntityService = initHistoricTaskEntityService(sqlSessionFactory,
-		        historicTaskActorEntityService);
-		TaskActorEntityService taskActorEntityService = initTaskActorEntityService(sqlSessionFactory);
-		TaskEntityService taskEntityService = initTaskEntityService(sqlSessionFactory);
-		SurrogateEntityService surrogateEntityService = initSurrogateEntityService(sqlSessionFactory);
+		this.historicTaskActorEntityService = initHistoricTaskActorEntityService(sqlSessionFactory);
+		this.historicTaskEntityService = initHistoricTaskEntityService(sqlSessionFactory, historicTaskActorEntityService);
+		this.taskActorEntityService = initTaskActorEntityService(sqlSessionFactory);
+		this.taskEntityService = initTaskEntityService(sqlSessionFactory);
+		this.surrogateEntityService = initSurrogateEntityService(sqlSessionFactory);
 
-		HistoricProcessInstanceEntityService historicProcessInstanceEntityService = initHistoricProcessInstanceEntityService(
-		        sqlSessionFactory);
-		CCProcessInstanceEntityService ccProcessInstanceEntityService = initCCProcessInstanceEntityService(sqlSessionFactory);
-		ProcessInstanceEntityService processInstanceEntityService = initProcessInstanceEntityService(sqlSessionFactory,
+		this.historicProcessInstanceEntityService = initHistoricProcessInstanceEntityService(sqlSessionFactory);
+		this.ccProcessInstanceEntityService = initCCProcessInstanceEntityService(sqlSessionFactory);
+		this.processInstanceEntityService = initProcessInstanceEntityService(sqlSessionFactory, historicProcessInstanceEntityService);
+
+		RepositoryServiceImpl repositoryService = new RepositoryServiceImpl(this, cacheManager, processDefinitionEntityService,
 		        historicProcessInstanceEntityService);
-
-		RepositoryServiceImpl repositoryService = new RepositoryServiceImpl();
-		repositoryService.setCacheManager(cacheManager);
-		repositoryService.setHistoricProcessInstanceEntityService(historicProcessInstanceEntityService);
-		repositoryService.setProcessDefinitionEntityService(processDefinitionEntityService);
-		repositoryService.setEngineConfiguration(this);
 		this.repositoryService = repositoryService;
 
 		HistoryServiceImpl historyService = new HistoryServiceImpl();
@@ -382,6 +446,96 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		surrogateEntityService.setSurrogateMapper(surrogateMapper);
 
 		return surrogateEntityService;
+	}
+
+	/**
+	 * 获取processDefinitionEntityService
+	 * 
+	 * @return
+	 */
+	public ProcessDefinitionEntityService getProcessDefinitionEntityService()
+	{
+		return processDefinitionEntityService;
+	}
+
+	/**
+	 * 获取historicTaskActorEntityService
+	 * 
+	 * @return
+	 */
+	public HistoricTaskActorEntityService getHistoricTaskActorEntityService()
+	{
+		return historicTaskActorEntityService;
+	}
+
+	/**
+	 * 获取historicTaskEntityService
+	 * 
+	 * @return
+	 */
+	public HistoricTaskEntityService getHistoricTaskEntityService()
+	{
+		return historicTaskEntityService;
+	}
+
+	/**
+	 * 获取taskActorEntityService
+	 * 
+	 * @return
+	 */
+	public TaskActorEntityService getTaskActorEntityService()
+	{
+		return taskActorEntityService;
+	}
+
+	/**
+	 * 获取taskEntityService
+	 * 
+	 * @return
+	 */
+	public TaskEntityService getTaskEntityService()
+	{
+		return taskEntityService;
+	}
+
+	/**
+	 * 获取surrogateEntityService
+	 * 
+	 * @return
+	 */
+	public SurrogateEntityService getSurrogateEntityService()
+	{
+		return surrogateEntityService;
+	}
+
+	/**
+	 * 获取historicProcessInstanceEntityService
+	 * 
+	 * @return
+	 */
+	public HistoricProcessInstanceEntityService getHistoricProcessInstanceEntityService()
+	{
+		return historicProcessInstanceEntityService;
+	}
+
+	/**
+	 * 获取ccProcessInstanceEntityService
+	 * 
+	 * @return
+	 */
+	public CCProcessInstanceEntityService getCcProcessInstanceEntityService()
+	{
+		return ccProcessInstanceEntityService;
+	}
+
+	/**
+	 * 获取processInstanceEntityService
+	 * 
+	 * @return
+	 */
+	public ProcessInstanceEntityService getProcessInstanceEntityService()
+	{
+		return processInstanceEntityService;
 	}
 
 	/**

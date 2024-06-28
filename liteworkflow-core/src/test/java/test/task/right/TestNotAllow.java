@@ -1,5 +1,7 @@
 package test.task.right;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.engine.helper.StreamHelper;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.persistence.entity.Task;
 
@@ -23,12 +24,15 @@ import test.TestSpring;
 public class TestNotAllow extends TestSpring
 {
 	@BeforeEach
-	public void before()
+	public void before() throws IOException
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/task/right/process.xml"));
+		try (InputStream istream = TestNotAllow.class.getClassLoader().getResourceAsStream("test/task/right/process.xml"))
+		{
+			processId = engine.getRepositoryService().deploy(istream);
+		}
 	}
 
 	@Test

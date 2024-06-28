@@ -18,6 +18,21 @@ public interface NodeParser
 	public static final String NODE_TRANSITION = "transition";
 
 	/**
+	 * 扩展元素节点名称
+	 */
+	public static final String NODE_EXTENSION_ELEMENTS = "extensionElements";
+
+	/**
+	 * 执行监听器节点名称
+	 */
+	public static final String NODE_EXECUTION_LISTENER = "executionListener";
+
+	/**
+	 * 任务监听器节点名称
+	 */
+	public static final String NODE_TASK_LISTENER = "taskListener";
+
+	/**
 	 * 节点属性名称
 	 */
 	public static final String ATTR_NAME = "name";
@@ -26,6 +41,11 @@ public interface NodeParser
 	 * 节点显示名称
 	 */
 	public static final String ATTR_DISPLAYNAME = "displayName";
+
+	/**
+	 * 分类属性名称
+	 */
+	public static final String ATTR_CATEGORY = "category";
 
 	/**
 	 * 流程实例URL
@@ -116,6 +136,21 @@ public interface NodeParser
 	 * 
 	 */
 	public static final String ATTR_METHODNAME = "methodName";
+
+	/**
+	 * 
+	 */
+	public static final String ATTR_EVENT = "event";
+
+	/**
+	 * 
+	 */
+	public static final String ATTR_CLASS = "class";
+
+	/**
+	 * 
+	 */
+	public static final String ATTR_DELEGATE_EXPRESSION = "delegateExpression";
 
 	/**
 	 * 

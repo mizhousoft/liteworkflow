@@ -1,15 +1,16 @@
 package test.task.model;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.util.Assert;
 
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.engine.helper.AssertHelper;
-import com.liteworkflow.engine.helper.StreamHelper;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.TaskModel;
@@ -28,12 +29,15 @@ import test.TestSpring;
 public class TestModel extends TestSpring
 {
 	@BeforeEach
-	public void before()
+	public void before() throws IOException
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/task/simple/process.xml"));
+		try (InputStream istream = TestModel.class.getClassLoader().getResourceAsStream("test/task/simple/process.xml"))
+		{
+			processId = engine.getRepositoryService().deploy(istream);
+		}
 	}
 
 	@Test
@@ -44,7 +48,7 @@ public class TestModel extends TestSpring
 		ProcessInstance instance = engine.getRuntimeService().startInstanceByName("simple", null, "2", args);
 		System.out.println("instance=" + instance);
 
-		ProcessDefinition process = engine.getRepositoryService().getProcessById(instance.getProcessId());
+		ProcessDefinition process = engine.getRepositoryService().getById(instance.getProcessId());
 		ProcessModel processModel = process.getModel();
 
 		List<Task> tasks = engine.getTaskService().getActiveTasks(instance.getId());
@@ -58,7 +62,7 @@ public class TestModel extends TestSpring
 				System.out.println(tm.getName());
 			}
 		}
-		List<TaskModel> models = engine.getRepositoryService().getProcessById(processId).getModel().getModels(TaskModel.class);
+		List<TaskModel> models = engine.getRepositoryService().getById(processId).getModel().getModels(TaskModel.class);
 		for (TaskModel tm : models)
 		{
 			System.out.println(tm.getName());
@@ -68,7 +72,8 @@ public class TestModel extends TestSpring
 	public TaskModel getTaskModel(String taskName, ProcessModel processModel)
 	{
 		NodeModel nodeModel = processModel.getNodeModel(taskName);
-		AssertHelper.notNull(nodeModel, "任务id无法找到节点模型.");
+		Assert.notNull(nodeModel, "任务id无法找到节点模型.");
+
 		if (nodeModel instanceof TaskModel)
 		{
 			return (TaskModel) nodeModel;

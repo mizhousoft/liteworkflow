@@ -27,6 +27,11 @@ public class ProcessModel extends BaseModel
 	private List<TaskModel> taskModels = new ArrayList<TaskModel>();
 
 	/**
+	 * 流程分类
+	 */
+	private String category;
+
+	/**
 	 * 流程实例启动url
 	 */
 	private String instanceUrl;
@@ -37,26 +42,20 @@ public class ProcessModel extends BaseModel
 	private String expireTime;
 
 	/**
-	 * lock
+	 * 监听器模型
 	 */
-	private final Object lock = new Object();
+	private List<ListenerModel> listenerModels;
 
 	/**
 	 * 获取所有的有序任务模型集合
 	 * 
 	 * @return List<TaskModel> 任务模型集合
 	 */
-	public List<TaskModel> getTaskModels()
+	public synchronized List<TaskModel> getTaskModels()
 	{
 		if (taskModels.isEmpty())
 		{
-			synchronized (lock)
-			{
-				if (taskModels.isEmpty())
-				{
-					buildModels(taskModels, getStartModel().getNextModels(TaskModel.class), TaskModel.class);
-				}
-			}
+			buildModels(taskModels, getStartModel().getNextModels(TaskModel.class), TaskModel.class);
 		}
 
 		return taskModels;
@@ -191,6 +190,26 @@ public class ProcessModel extends BaseModel
 	}
 
 	/**
+	 * 获取category
+	 * 
+	 * @return
+	 */
+	public String getCategory()
+	{
+		return category;
+	}
+
+	/**
+	 * 设置category
+	 * 
+	 * @param category
+	 */
+	public void setCategory(String category)
+	{
+		this.category = category;
+	}
+
+	/**
 	 * 获取instanceUrl
 	 * 
 	 * @return
@@ -240,4 +259,23 @@ public class ProcessModel extends BaseModel
 		this.taskModels = taskModels;
 	}
 
+	/**
+	 * 获取listenerModels
+	 * 
+	 * @return
+	 */
+	public List<ListenerModel> getListenerModels()
+	{
+		return listenerModels;
+	}
+
+	/**
+	 * 设置listenerModels
+	 * 
+	 * @param listenerModels
+	 */
+	public void setListenerModels(List<ListenerModel> listenerModels)
+	{
+		this.listenerModels = listenerModels;
+	}
 }

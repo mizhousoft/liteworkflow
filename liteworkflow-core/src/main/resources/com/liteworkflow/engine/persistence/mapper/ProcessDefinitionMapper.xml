@@ -7,34 +7,32 @@
 		<id property="id" column="id" />
 		<result property="name" column="name" />
 		<result property="displayName" column="display_name" />
-		<result property="type" column="type" />
-		<result property="instanceUrl" column="instance_url" />
+		<result property="category" column="category" />
 		<result property="state" column="state" />
 		<result property="version" column="version" />
+		<result property="bytes" column="content" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+		<result property="instanceUrl" column="instance_url" />
 		<result property="createTime" column="create_time" />
 		<result property="creator" column="creator" />
-		<result property="bytes" column="content" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
 	</resultMap>
-
+	
+	<sql id="Column_List">
+        id, name, display_name, category, state, version, content, instance_url, create_time, creator
+    </sql>
+	
 	<insert id="save">
-		insert into wf_process_definition (id, name, display_name, type, instance_url, state, content, version, create_time, creator)
-		values (#{id}, #{name}, #{displayName}, #{type}, #{instanceUrl}, #{state}, #{bytes, typeHandler=org.apache.ibatis.type.BlobTypeHandler}, #{version}, #{createTime}, #{creator})
+		insert into wf_process_definition (id, name, display_name, category, state, version, content, instance_url, create_time, creator)
+		values (#{id}, #{name}, #{displayName}, #{category}, #{state}, #{version}, #{bytes, typeHandler=org.apache.ibatis.type.BlobTypeHandler}, #{instanceUrl}, #{createTime}, #{creator})
 	</insert>
 
 	<update id="update">
         update wf_process_definition 
-        set name= #{name}, 
+        set name = #{name},
         display_name = #{displayName},
+        category = #{category},
         state = #{state},
-        instance_url = #{instanceUrl},
-        create_time = #{createTime},
-        creator = #{creator} 
-        where id = #{id} 
-	</update>
-
-	<update id="updateProcessType">
-        update wf_process_definition 
-        set type = #{type}
+        content = #{bytes, typeHandler=org.apache.ibatis.type.BlobTypeHandler},
+        instance_url = #{instanceUrl}
         where id = #{id} 
 	</update>
 
@@ -43,13 +41,13 @@
 	</delete>
 	
 	<select id="findById" parameterType="java.util.Map" resultMap="ProcessDefinitionMap">
-		select id, name, display_name, type, instance_url, state, content, version, create_time, creator 
+		select <include refid="Column_List"/>
 		from wf_process_definition 
 		where id = #{id}
 	</select>
 	
 	<select id="findByProcessName" parameterType="java.util.Map" resultMap="ProcessDefinitionMap">
-		select id, name, display_name, type, instance_url, state, content, version, create_time, creator 
+		select <include refid="Column_List"/>
 		from wf_process_definition 
 		where name = #{name}
 		<if test="version != null">
@@ -65,63 +63,39 @@
 	<select id="countTotal" resultType="Long">
 		select count(id) from wf_process_definition
 		<where>
-			<if test="request.names != null and request.names.length != 0">
-                name in
-                <foreach collection="request.names" item="name" index="index" open="(" close=")" separator=",">
-                    #{name}
-                </foreach>
-            </if>
+			<if test="request.name != null">
+                name = #{request.name}
+       		</if>
             <if test="request.version != null">
                 and version = #{request.version}
-       		</if>
-            <if test="request.state != null">
-                and state = #{request.state}
        		</if>
        		<if test="request.displayName != null">
 				<bind name="pattern" value="'%' + request.displayName + '%'" />
 				and display_name like #{pattern} 
 			</if>
-            <if test="request.processType != null">
-                and type = #{request.processType}
+            <if test="request.category != null">
+                and category = #{request.category}
        		</if>
-       		<if test="request.operators != null and request.operators.length != 0">
-                and creator in
-                <foreach collection="request.operators" item="operator" index="index" open="(" close=")" separator=",">
-                    #{operator}
-                </foreach>
-            </if>
 		</where>
 	</select>
 	
 	<select id="findPageData" parameterType="java.util.Map" resultMap="ProcessDefinitionMap">
-		select id, name, display_name, type, instance_url, state, content, version, create_time, creator 
+		select <include refid="Column_List"/>
 		from wf_process_definition 
 		<where>
-			<if test="request.names != null and request.names.length != 0">
-                name in
-                <foreach collection="request.names" item="name" index="index" open="(" close=")" separator=",">
-                    #{name}
-                </foreach>
-            </if>
+			<if test="request.name != null">
+                name = #{request.name}
+       		</if>
             <if test="request.version != null">
                 and version = #{request.version}
-       		</if>
-            <if test="request.state != null">
-                and state = #{request.state}
        		</if>
        		<if test="request.displayName != null">
 				<bind name="pattern" value="'%' + request.displayName + '%'" />
 				and display_name like #{pattern} 
 			</if>
-            <if test="request.processType != null">
-                and type = #{request.processType}
+            <if test="request.category != null">
+                and category = #{request.category}
        		</if>
-       		<if test="request.operators != null and request.operators.length != 0">
-                and creator in
-                <foreach collection="request.operators" item="operator" index="index" open="(" close=")" separator=",">
-                    #{operator}
-                </foreach>
-            </if>
 		</where>
 		<if test="request.sortString != null">
             order by #{request.sortString}

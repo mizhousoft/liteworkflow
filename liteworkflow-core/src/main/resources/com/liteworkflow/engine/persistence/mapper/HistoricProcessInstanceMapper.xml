@@ -60,8 +60,8 @@
             <if test="request.processId != null">
                 and o.process_id = #{request.processId}
        		</if>
-			<if test="request.processType != null">
-                and p.type = #{request.processType}
+			<if test="request.category != null">
+                and p.category = #{request.category}
        		</if>
             <if test="request.displayName != null">
 				<bind name="pattern" value="'%' + request.displayName + '%'" />
@@ -102,8 +102,8 @@
             <if test="request.processId != null">
                 and o.process_id = #{request.processId}
        		</if>
-			<if test="request.processType != null">
-                and p.type = #{request.processType}
+			<if test="request.category != null">
+                and p.category = #{request.category}
        		</if>
             <if test="request.displayName != null">
 				<bind name="pattern" value="'%' + request.displayName + '%'" />

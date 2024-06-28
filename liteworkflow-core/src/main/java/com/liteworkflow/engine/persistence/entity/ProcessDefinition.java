@@ -1,12 +1,8 @@
 package com.liteworkflow.engine.persistence.entity;
 
-import java.io.InputStream;
 import java.io.Serializable;
-import java.sql.Blob;
 import java.time.LocalDateTime;
 
-import com.liteworkflow.ProcessException;
-import com.liteworkflow.engine.helper.StreamHelper;
 import com.liteworkflow.engine.model.ProcessModel;
 
 /**
@@ -17,7 +13,6 @@ import com.liteworkflow.engine.model.ProcessModel;
  */
 public class ProcessDefinition implements Serializable
 {
-
 	/**
 	 * 
 	 */
@@ -27,11 +22,6 @@ public class ProcessDefinition implements Serializable
 	 * 主键ID
 	 */
 	private String id;
-
-	/**
-	 * 版本
-	 */
-	private Integer version;
 
 	/**
 	 * 流程定义名称
@@ -44,20 +34,30 @@ public class ProcessDefinition implements Serializable
 	private String displayName;
 
 	/**
-	 * 流程定义类型（预留字段）
+	 * 流程定义分类
 	 */
-	private String type;
+	private String category;
+
+	/**
+	 * 是否可用的开关
+	 */
+	private Integer state;
+
+	/**
+	 * 版本
+	 */
+	private Integer version;
+
+	/**
+	 * 流程定义字节数组
+	 */
+	private byte[] bytes;
 
 	/**
 	 * 当前流程的实例url（一般为流程第一步的url）
 	 * 该字段可以直接打开流程申请的表单
 	 */
 	private String instanceUrl;
-
-	/**
-	 * 是否可用的开关
-	 */
-	private Integer state;
 
 	/**
 	 * 创建时间
@@ -73,16 +73,6 @@ public class ProcessDefinition implements Serializable
 	 * 流程定义模型
 	 */
 	private ProcessModel model;
-
-	/**
-	 * 流程定义xml
-	 */
-	private Blob content;
-
-	/**
-	 * 流程定义字节数组
-	 */
-	private byte[] bytes;
 
 	public String getName()
 	{
@@ -104,14 +94,24 @@ public class ProcessDefinition implements Serializable
 		this.displayName = displayName;
 	}
 
-	public String getType()
+	/**
+	 * 获取category
+	 * 
+	 * @return
+	 */
+	public String getCategory()
 	{
-		return type;
+		return category;
 	}
 
-	public void setType(String type)
+	/**
+	 * 设置category
+	 * 
+	 * @param category
+	 */
+	public void setCategory(String category)
 	{
-		this.type = type;
+		this.category = category;
 	}
 
 	public Integer getState()
@@ -148,6 +148,7 @@ public class ProcessDefinition implements Serializable
 	{
 		this.model = processModel;
 		this.name = processModel.getName();
+		this.category = processModel.getCategory();
 		this.displayName = processModel.getDisplayName();
 		this.instanceUrl = processModel.getInstanceUrl();
 	}
@@ -160,41 +161,6 @@ public class ProcessDefinition implements Serializable
 	public void setInstanceUrl(String instanceUrl)
 	{
 		this.instanceUrl = instanceUrl;
-	}
-
-	public byte[] getDBContent()
-	{
-		if (this.content != null)
-		{
-			try
-			{
-				return this.content.getBytes(1L, Long.valueOf(this.content.length()).intValue());
-			}
-			catch (Exception e)
-			{
-				try
-				{
-					InputStream is = content.getBinaryStream();
-					return StreamHelper.readBytes(is);
-				}
-				catch (Exception e1)
-				{
-					throw new ProcessException("couldn't extract stream out of blob", e1);
-				}
-			}
-		}
-
-		return bytes;
-	}
-
-	public Blob getContent()
-	{
-		return content;
-	}
-
-	public void setContent(Blob content)
-	{
-		this.content = content;
 	}
 
 	public byte[] getBytes()

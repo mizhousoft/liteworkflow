@@ -1,12 +1,17 @@
 package com.liteworkflow.engine.parser.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Element;
 
 import com.liteworkflow.engine.AssignmentHandler;
+import com.liteworkflow.engine.model.ListenerModel;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.model.TaskModel;
 import com.liteworkflow.engine.parser.AbstractNodeParser;
+import com.liteworkflow.engine.util.DomUtils;
 import com.mizhousoft.commons.lang.ClassUtils;
 
 /**
@@ -63,5 +68,49 @@ public class TaskParser extends AbstractNodeParser
 				throw new IllegalArgumentException(task.getAssignmentHandler() + " is not implment AssignmentHandler.", e);
 			}
 		}
+
+		List<ListenerModel> listenerModels = parseExtensionElements(element);
+		task.setListenerModels(listenerModels);
+	}
+
+	/**
+	 * 解析扩展元素
+	 * 
+	 * @param taskElement
+	 * @return
+	 */
+	private List<ListenerModel> parseExtensionElements(Element taskElement)
+	{
+		List<ListenerModel> listenerModels = new ArrayList<>(5);
+
+		Element extensionElement = DomUtils.listFirstChildElement(taskElement, NODE_EXTENSION_ELEMENTS);
+		if (null != extensionElement)
+		{
+			List<Element> listenerElements = DomUtils.listChildElements(extensionElement, NODE_TASK_LISTENER);
+			for (Element listenerElement : listenerElements)
+			{
+				String event = listenerElement.getAttribute(ATTR_EVENT);
+				String clazz = listenerElement.getAttribute(ATTR_CLASS);
+				String delegateExpression = listenerElement.getAttribute(ATTR_DELEGATE_EXPRESSION);
+
+				ListenerModel listenerModel = new ListenerModel();
+				listenerModel.setEvent(event);
+
+				if (!StringUtils.isBlank(clazz))
+				{
+					listenerModel.setImplementationType(ListenerModel.IMPLEMENTATION_TYPE_CLASS);
+					listenerModel.setImplementation(clazz);
+				}
+				else if (!StringUtils.isBlank(delegateExpression))
+				{
+					listenerModel.setImplementationType(ListenerModel.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION);
+					listenerModel.setImplementation(delegateExpression);
+				}
+
+				listenerModels.add(listenerModel);
+			}
+		}
+
+		return listenerModels;
 	}
 }

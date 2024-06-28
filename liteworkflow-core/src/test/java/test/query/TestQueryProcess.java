@@ -28,13 +28,13 @@ public class TestQueryProcess extends TestSpring
 	@Test
 	public void test()
 	{
-		List<ProcessDefinition> list = engine.getRepositoryService().queryByName("subprocess1");
+		List<ProcessDefinition> list = engine.getRepositoryService().queryListByName("subprocess1");
 		System.out.println(list.size());
 
-		ProcessDefinition process = engine.getRepositoryService().getProcessByVersion("subprocess1", 0);
+		ProcessDefinition process = engine.getRepositoryService().getByVersion("subprocess1", 0);
 		System.out.println(process);
 
-		process = engine.getRepositoryService().getProcessByName("subprocess1");
+		process = engine.getRepositoryService().getLatestByName("subprocess1");
 		System.out.println(process);
 	}
 }

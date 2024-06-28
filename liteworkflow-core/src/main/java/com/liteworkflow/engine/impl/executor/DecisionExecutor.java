@@ -51,7 +51,8 @@ public class DecisionExecutor extends NodeExecutor
 			next = decideHandler.decide(execution);
 		}
 
-		log.info(execution.getProcessInstance().getId() + "->decision expression[expr=" + decisionModel.getExpr() + "] return result:" + next);
+		log.info(execution.getProcessInstance().getId() + "->decision expression[expr=" + decisionModel.getExpr() + "] return result:"
+		        + next);
 		boolean isfound = false;
 
 		List<TransitionModel> outputs = nodeModel.getOutputs();

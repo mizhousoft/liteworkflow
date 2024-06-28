@@ -16,34 +16,34 @@ import com.mizhousoft.commons.data.domain.Page;
 public interface RepositoryService
 {
 	/**
-	 * 根據InputStream輸入流，部署流程定义
+	 * 根据InputStream輸入流，部署流程定义
 	 * 
-	 * @param input 流程定义输入流
-	 * @return String 流程定义id
+	 * @param input
+	 * @return
 	 */
 	String deploy(InputStream input);
 
 	/**
-	 * 根據InputStream輸入流，部署流程定义
+	 * 根据InputStream輸入流，部署流程定义
 	 * 
-	 * @param input 流程定义输入流
-	 * @param creator 创建人
-	 * @return String 流程定义id
+	 * @param input
+	 * @param creator
+	 * @return
 	 */
 	String deploy(InputStream input, String creator);
 
 	/**
-	 * 根據InputStream輸入流，部署流程定义
+	 * 根据InputStream輸入流，部署流程定义
 	 * 
-	 * @param id 流程定义id
-	 * @param input 流程定义输入流
+	 * @param id
+	 * @param input
 	 */
 	void redeploy(String id, InputStream input);
 
 	/**
 	 * 卸载指定的流程定义，只更新状态
 	 * 
-	 * @param id 流程定义id
+	 * @param id
 	 */
 	void undeploy(String id);
 
@@ -63,42 +63,41 @@ public interface RepositoryService
 	/**
 	 * 根据主键ID获取流程定义对象
 	 * 
-	 * @param id 流程定义id
-	 * @return Process 流程定义对象
+	 * @param id
+	 * @return
 	 */
-	ProcessDefinition getProcessById(String id);
+	ProcessDefinition getById(String id);
 
 	/**
 	 * 根据流程name获取流程定义对象
 	 * 
-	 * @param name 流程定义名称
-	 * @return Process 流程定义对象
+	 * @param name
+	 * @return
 	 */
-	ProcessDefinition getProcessByName(String name);
+	ProcessDefinition getLatestByName(String name);
 
 	/**
 	 * 根据流程name、version获取流程定义对象
 	 * 
-	 * @param name 流程定义名称
-	 * @param version 版本号
-	 * @return Process 流程定义对象
+	 * @param name
+	 * @param version
+	 * @return
 	 */
-	ProcessDefinition getProcessByVersion(String name, Integer version);
+	ProcessDefinition getByVersion(String name, Integer version);
 
 	/**
-	 * 根据给定的参数列表args查询process
+	 * 根据名称查询
 	 * 
-	 * @param filter 查询过滤器
-	 * @return List<Process> 流程定义对象集合
+	 * @param name
+	 * @return
 	 */
-	List<ProcessDefinition> queryByName(String name);
+	List<ProcessDefinition> queryListByName(String name);
 
 	/**
-	 * 根据给定的参数列表args分页查询process
+	 * 分页查询数据
 	 * 
-	 * @param page 分页对象
-	 * @param filter 查询过滤器
-	 * @return List<Process> 流程定义对象集合
+	 * @param request
+	 * @return
 	 */
 	Page<ProcessDefinition> queryPageData(ProcessDefPageRequest request);
 }

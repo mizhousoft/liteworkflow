@@ -50,6 +50,7 @@ public class TransitionModel extends BaseModel
 
 	/**
 	 * 获取source
+	 * 
 	 * @return
 	 */
 	public NodeModel getSource()
@@ -59,6 +60,7 @@ public class TransitionModel extends BaseModel
 
 	/**
 	 * 设置source
+	 * 
 	 * @param source
 	 */
 	public void setSource(NodeModel source)
@@ -68,6 +70,7 @@ public class TransitionModel extends BaseModel
 
 	/**
 	 * 获取target
+	 * 
 	 * @return
 	 */
 	public NodeModel getTarget()
@@ -77,6 +80,7 @@ public class TransitionModel extends BaseModel
 
 	/**
 	 * 设置target
+	 * 
 	 * @param target
 	 */
 	public void setTarget(NodeModel target)
@@ -86,6 +90,7 @@ public class TransitionModel extends BaseModel
 
 	/**
 	 * 获取to
+	 * 
 	 * @return
 	 */
 	public String getTo()
@@ -95,6 +100,7 @@ public class TransitionModel extends BaseModel
 
 	/**
 	 * 设置to
+	 * 
 	 * @param to
 	 */
 	public void setTo(String to)
@@ -104,6 +110,7 @@ public class TransitionModel extends BaseModel
 
 	/**
 	 * 获取expr
+	 * 
 	 * @return
 	 */
 	public String getExpr()
@@ -113,6 +120,7 @@ public class TransitionModel extends BaseModel
 
 	/**
 	 * 设置expr
+	 * 
 	 * @param expr
 	 */
 	public void setExpr(String expr)
@@ -122,6 +130,7 @@ public class TransitionModel extends BaseModel
 
 	/**
 	 * 获取g
+	 * 
 	 * @return
 	 */
 	public String getG()
@@ -131,6 +140,7 @@ public class TransitionModel extends BaseModel
 
 	/**
 	 * 设置g
+	 * 
 	 * @param g
 	 */
 	public void setG(String g)
@@ -140,6 +150,7 @@ public class TransitionModel extends BaseModel
 
 	/**
 	 * 获取offset
+	 * 
 	 * @return
 	 */
 	public String getOffset()
@@ -149,6 +160,7 @@ public class TransitionModel extends BaseModel
 
 	/**
 	 * 设置offset
+	 * 
 	 * @param offset
 	 */
 	public void setOffset(String offset)
@@ -158,6 +170,7 @@ public class TransitionModel extends BaseModel
 
 	/**
 	 * 获取enabled
+	 * 
 	 * @return
 	 */
 	public boolean isEnabled()
@@ -167,6 +180,7 @@ public class TransitionModel extends BaseModel
 
 	/**
 	 * 设置enabled
+	 * 
 	 * @param enabled
 	 */
 	public void setEnabled(boolean enabled)

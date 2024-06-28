@@ -1,5 +1,7 @@
 package test.subprocess;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.engine.helper.StreamHelper;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.persistence.entity.Task;
 
@@ -24,13 +25,17 @@ import test.TestSpring;
 public class TestSubProcess1 extends TestSpring
 {
 	@BeforeEach
-	public void before()
+	public void before() throws IOException
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		repositoryService = engine.getRepositoryService();
 
-		engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/subprocess/child.xml"));
-		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/subprocess/subprocess1.xml"));
+		try (InputStream istream1 = TestSubProcess1.class.getClassLoader().getResourceAsStream("test/subprocess/child.xml");
+		        InputStream istream2 = TestSubProcess1.class.getClassLoader().getResourceAsStream("test/subprocess/subprocess1.xml"))
+		{
+			engine.getRepositoryService().deploy(istream1);
+			processId = engine.getRepositoryService().deploy(istream2);
+		}
 	}
 
 	@Test

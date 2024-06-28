@@ -17,14 +17,14 @@
 		<result property="actionUrl" column="action_url" />
 		<result property="parentTaskId" column="parent_task_id" />
 		<result property="variable" column="variable" />
-		<result property="version" column="version" />
+		<result property="revision" column="revision" />
 	</resultMap>
 	
 	<insert id="save">
 		insert into wf_task (id, instance_id, task_name, display_name, task_type, perform_type, operator, create_time,
-		finish_Time, expire_time, action_url, parent_task_id, variable, version)
+		finish_Time, expire_time, action_url, parent_task_id, variable, revision)
 		values (#{id}, #{instanceId}, #{taskName}, #{displayName}, #{taskType}, #{performType}, #{operator}, #{createTime}, 
-		#{finishTime}, #{expireTime}, #{actionUrl}, #{parentTaskId}, #{variable}, #{version})
+		#{finishTime}, #{expireTime}, #{actionUrl}, #{parentTaskId}, #{variable}, #{revision})
 	</insert>
 	
 	<update id="update">
@@ -34,8 +34,8 @@
         variable= #{variable}, 
         expire_time= #{expireTime}, 
         action_url= #{actionUrl}, 
-        version = version + 1 
-        where id = #{id} and version = #{version}
+        revision = revision + 1 
+        where id = #{id} and revision = #{revision}
 	</update>
 	
 	<delete id="delete">
@@ -44,21 +44,21 @@
 		
 	<select id="getTask" parameterType="java.util.Map" resultMap="TaskMap">
 		select id, instance_id, task_name, display_name, task_type, perform_type, operator, create_time, finish_Time,
-		expire_time, action_url, parent_task_id, variable, version
+		expire_time, action_url, parent_task_id, variable, revision
 		from wf_task
 		where id = #{taskId}
 	</select>
 		
 	<select id="getNextActiveTasks" parameterType="java.util.Map" resultMap="TaskMap">
 		select id, instance_id, task_name, display_name, task_type, perform_type, operator, create_time, finish_Time,
-		expire_time, action_url, parent_task_id, variable, version
+		expire_time, action_url, parent_task_id, variable, revision
 		from wf_task
 		where parent_task_id = #{parentTaskId}
 	</select>
 		
 	<select id="getNextActiveTaskList" parameterType="java.util.Map" resultMap="TaskMap">
 		select id, instance_id, task_name, display_name, task_type, perform_type, operator, create_time, finish_Time,
-		expire_time, action_url, parent_task_id, variable, version
+		expire_time, action_url, parent_task_id, variable, revision
 		from wf_task
 		where parent_task_id in ( select ht.id from wf_historic_task ht where ht.instance_id = #{instanceId} and ht.task_name = #{taskName} and ht.parent_task_id = #{parentTaskId} )
 	</select>
@@ -101,7 +101,7 @@
 	
 	<select id="findPageData" parameterType="java.util.Map" resultMap="TaskMap">
 		select id, instance_id, task_name, display_name, task_type, perform_type, operator, create_time, finish_Time,
-		expire_time, action_url, parent_task_id, variable, version 
+		expire_time, action_url, parent_task_id, variable, revision 
 		from wf_task 
 		<if test="request.operators != null and request.operators.length != 0">
 			left join wf_task_actor ta on ta.task_id = id

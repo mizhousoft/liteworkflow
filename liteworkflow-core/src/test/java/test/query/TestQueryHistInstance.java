@@ -30,7 +30,7 @@ public class TestQueryHistInstance extends TestSpring
 		request.setCreateTimeStart("2014-01-01");
 		request.setNames(new String[] { "simple" });
 		request.setState(0);
-		request.setProcessType("预算管理流程1");
+		request.setCategory("预算管理流程1");
 
 		System.out.println(engine.getHistoryService().getHistoricInstances(request));
 		System.out.println(engine.getHistoryService().getHistoricInstances(new HistoricProcessInstPageRequest()));

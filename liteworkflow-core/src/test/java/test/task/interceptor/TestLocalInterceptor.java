@@ -1,12 +1,13 @@
 package test.task.interceptor;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.engine.helper.StreamHelper;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.persistence.entity.Task;
 
@@ -19,12 +20,15 @@ import test.TestSpring;
 public class TestLocalInterceptor extends TestSpring
 {
 	@BeforeEach
-	public void before()
+	public void before() throws IOException
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/task/interceptor/process.xml"));
+		try (InputStream istream = TestLocalInterceptor.class.getClassLoader().getResourceAsStream("test/task/interceptor/process.xml"))
+		{
+			processId = engine.getRepositoryService().deploy(istream);
+		}
 	}
 
 	@Test

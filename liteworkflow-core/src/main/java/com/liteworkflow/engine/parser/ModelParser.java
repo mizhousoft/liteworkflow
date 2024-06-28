@@ -9,6 +9,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -17,6 +18,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.liteworkflow.ProcessException;
+import com.liteworkflow.engine.model.ListenerModel;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.TransitionModel;
@@ -27,6 +29,7 @@ import com.liteworkflow.engine.parser.impl.JoinParser;
 import com.liteworkflow.engine.parser.impl.StartParser;
 import com.liteworkflow.engine.parser.impl.SubProcessParser;
 import com.liteworkflow.engine.parser.impl.TaskParser;
+import com.liteworkflow.engine.util.DomUtils;
 
 /**
  * 流程定义xml文件的模型解析器
@@ -76,11 +79,15 @@ public class ModelParser
 			ProcessModel process = new ProcessModel();
 			process.setName(processE.getAttribute(NodeParser.ATTR_NAME));
 			process.setDisplayName(processE.getAttribute(NodeParser.ATTR_DISPLAYNAME));
+			process.setCategory(StringUtils.trimToNull(processE.getAttribute(NodeParser.ATTR_CATEGORY)));
 			process.setExpireTime(processE.getAttribute(NodeParser.ATTR_EXPIRETIME));
 			process.setInstanceUrl(processE.getAttribute(NodeParser.ATTR_INSTANCEURL));
 
 			List<NodeModel> nodeModels = parseNodeList(processE.getChildNodes());
 			process.setNodeModels(nodeModels);
+
+			List<ListenerModel> listenerModels = parseExtensionElements(processE);
+			process.setListenerModels(listenerModels);
 
 			checkProcessModel(process);
 
@@ -108,7 +115,10 @@ public class ModelParser
 			if (node.getNodeType() == Node.ELEMENT_NODE)
 			{
 				NodeModel nodeModel = parseNodeElement((Element) node);
-				nodeModels.add(nodeModel);
+				if (null != nodeModel)
+				{
+					nodeModels.add(nodeModel);
+				}
 			}
 		}
 
@@ -145,6 +155,11 @@ public class ModelParser
 	private static NodeModel parseNodeElement(Element element)
 	{
 		String nodeName = element.getNodeName();
+		if (NodeParser.NODE_EXTENSION_ELEMENTS.equals(nodeName))
+		{
+			return null;
+		}
+
 		NodeParser nodeParser = getNodeParser(nodeName);
 
 		nodeParser.parse(element);
@@ -169,6 +184,47 @@ public class ModelParser
 		}
 
 		throw new ProcessException(nodeName + " NodeParser not found.");
+	}
+
+	/**
+	 * 解析扩展元素
+	 * 
+	 * @param taskElement
+	 * @return
+	 */
+	private static List<ListenerModel> parseExtensionElements(Element taskElement)
+	{
+		List<ListenerModel> listenerModels = new ArrayList<>(5);
+
+		Element extensionElement = DomUtils.listFirstChildElement(taskElement, NodeParser.NODE_EXTENSION_ELEMENTS);
+		if (null != extensionElement)
+		{
+			List<Element> listenerElements = DomUtils.listChildElements(extensionElement, NodeParser.NODE_EXECUTION_LISTENER);
+			for (Element listenerElement : listenerElements)
+			{
+				String event = listenerElement.getAttribute(NodeParser.ATTR_EVENT);
+				String clazz = listenerElement.getAttribute(NodeParser.ATTR_CLASS);
+				String delegateExpression = listenerElement.getAttribute(NodeParser.ATTR_DELEGATE_EXPRESSION);
+
+				ListenerModel listenerModel = new ListenerModel();
+				listenerModel.setEvent(event);
+
+				if (!StringUtils.isBlank(clazz))
+				{
+					listenerModel.setImplementationType(ListenerModel.IMPLEMENTATION_TYPE_CLASS);
+					listenerModel.setImplementation(clazz);
+				}
+				else if (!StringUtils.isBlank(delegateExpression))
+				{
+					listenerModel.setImplementationType(ListenerModel.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION);
+					listenerModel.setImplementation(delegateExpression);
+				}
+
+				listenerModels.add(listenerModel);
+			}
+		}
+
+		return listenerModels;
 	}
 
 	/**

@@ -12,7 +12,7 @@ import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.SubProcessModel;
 import com.liteworkflow.engine.model.TaskModel;
 import com.liteworkflow.engine.model.TransitionModel;
-import com.liteworkflow.engine.model.WorkModel;
+import com.liteworkflow.engine.model.ActivityModel;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.persistence.entity.Task;
 import com.liteworkflow.engine.persistence.request.ProcessInstPageRequest;
@@ -110,7 +110,7 @@ public class JoinExecutor extends NodeExecutor
 		List<TransitionModel> inputs = node.getInputs();
 		for (TransitionModel tm : inputs)
 		{
-			if (tm.getSource() instanceof WorkModel)
+			if (tm.getSource() instanceof ActivityModel)
 			{
 				buffer.append(tm.getSource().getName()).append(",");
 			}

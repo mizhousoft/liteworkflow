@@ -144,7 +144,7 @@ public class ProcessInstanceServiceImpl extends AccessService implements Process
 	}
 
 	/**
-	 * 更新活动实例的last_updator、last_update_time、expire_time、version、variable
+	 * 更新活动实例的last_updator、last_update_time、expire_time、revision、variable
 	 */
 	@Override
 	public void updateInstance(ProcessInstance instance)

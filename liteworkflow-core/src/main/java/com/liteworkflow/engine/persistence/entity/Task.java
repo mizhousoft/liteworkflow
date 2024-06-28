@@ -31,9 +31,9 @@ public class Task implements Serializable, Cloneable
 	private String id;
 
 	/**
-	 * 版本
+	 * 修订版本
 	 */
-	private Integer version = 0;
+	private Integer revision = 0;
 
 	/**
 	 * 流程实例ID
@@ -318,14 +318,24 @@ public class Task implements Serializable, Cloneable
 		this.performType = performType;
 	}
 
-	public Integer getVersion()
+	/**
+	 * 获取revision
+	 * 
+	 * @return
+	 */
+	public Integer getRevision()
 	{
-		return version;
+		return revision;
 	}
 
-	public void setVersion(Integer version)
+	/**
+	 * 设置revision
+	 * 
+	 * @param revision
+	 */
+	public void setRevision(Integer revision)
 	{
-		this.version = version;
+		this.revision = revision;
 	}
 
 	/**

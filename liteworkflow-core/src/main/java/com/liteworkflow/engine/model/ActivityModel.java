@@ -1,12 +1,12 @@
 package com.liteworkflow.engine.model;
 
 /**
- * 工作元素
+ * 活动元素
  * 
  * @author
  * @since 1.0
  */
-public abstract class WorkModel extends NodeModel
+public abstract class ActivityModel extends NodeModel
 {
 	/**
 	 * 

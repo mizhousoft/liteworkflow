@@ -8,39 +8,49 @@ package com.liteworkflow.engine;
  */
 public interface ProcessEngine
 {
-	public static final String ADMIN = "snaker.admin";
+	String ADMIN = "snaker.admin";
 
-	public static final String AUTO = "snaker.auto";
+	String AUTO = "snaker.auto";
 
 	/**
 	 * 获取RepositoryService服务
 	 * 
-	 * @return RepositoryService 流程定义服务
+	 * @return
 	 */
-	public RepositoryService getRepositoryService();
-
-	public HistoryService getHistoryService();
+	RepositoryService getRepositoryService();
 
 	/**
-	 * 获取实例服务
+	 * 获取ProcessInstanceService服务
 	 * 
-	 * @return ProcessInstanceService 流程实例服务
+	 * @return
 	 */
-	public ProcessInstanceService getProcessInstanceService();
+	ProcessInstanceService getProcessInstanceService();
 
 	/**
-	 * 获取任务服务
+	 * 获取RuntimeService服务
 	 * 
-	 * @return ITaskService 任务服务
+	 * @return
 	 */
-	public TaskService getTaskService();
+	RuntimeService getRuntimeService();
+
+	/**
+	 * 获取TaskService服务
+	 * 
+	 * @return
+	 */
+	TaskService getTaskService();
+
+	/**
+	 * 获取HistoryService服务
+	 * 
+	 * @return
+	 */
+	HistoryService getHistoryService();
 
 	/**
 	 * 获取管理服务
 	 * 
 	 * @return IManagerService 管理服务
 	 */
-	public ManagerService getManagerService();
-
-	public RuntimeService getRuntimeService();
+	ManagerService getManagerService();
 }

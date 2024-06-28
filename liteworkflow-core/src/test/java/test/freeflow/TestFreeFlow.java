@@ -1,5 +1,7 @@
 package test.freeflow;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,7 +9,6 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.engine.helper.StreamHelper;
 import com.liteworkflow.engine.model.TaskModel;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.persistence.entity.Task;
@@ -21,12 +22,15 @@ import test.TestSpring;
 public class TestFreeFlow extends TestSpring
 {
 	@BeforeEach
-	public void before()
+	public void before() throws IOException
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/freeflow/free.xml"));
+		try (InputStream istream = TestFreeFlow.class.getClassLoader().getResourceAsStream("test/freeflow/free.xml"))
+		{
+			processId = engine.getRepositoryService().deploy(istream);
+		}
 	}
 
 	// @Test

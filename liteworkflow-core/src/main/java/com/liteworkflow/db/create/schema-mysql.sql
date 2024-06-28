@@ -1,17 +1,18 @@
-CREATE TABLE wf_process_definition (
-    id                VARCHAR(32) PRIMARY KEY NOT NULL comment '主键ID',
-    name              VARCHAR(100) comment '流程名称',
-    display_name      VARCHAR(200) comment '流程显示名称',
-    type              VARCHAR(100) comment '流程类型',
-    instance_url      VARCHAR(200) comment '实例url',
-    state             TINYINT(1) comment '流程是否可用',
-    content           LONGBLOB comment '流程模型定义',
-    version           INT(2) comment '版本',
-    create_time       DATETIME comment '创建时间',
-    creator           VARCHAR(50) comment '创建人'
-)comment='流程定义表';
+CREATE TABLE IF NOT EXISTS wf_process_definition (
+    id                VARCHAR(32) NOT NULL comment '主键ID',
+    name              VARCHAR(32) NOT NULL comment '流程名称',
+    display_name      VARCHAR(64) NOT NULL comment '流程显示名称',
+    category          VARCHAR(32) NULL comment '流程分类',
+    state             INT NOT NULL comment '流程是否可用',
+    version           INT NOT NULL comment '版本号',
+    content           LONGBLOB NOT NULL comment '流程模型定义',
+    instance_url      VARCHAR(128) NULL comment '实例url',
+    create_time       DATETIME NOT NULL comment '创建时间',
+    creator           VARCHAR(20) NULL comment '创建人',
+    PRIMARY KEY (`id`)
+)ENGINE = InnoDB comment='流程定义表';
 
-CREATE TABLE wf_process_instance (
+CREATE TABLE IF NOT EXISTS wf_process_instance (
     id                VARCHAR(32) NOT NULL PRIMARY KEY comment '主键ID',
     parent_id         VARCHAR(32) comment '父流程ID',
     process_id        VARCHAR(32) NOT NULL comment '流程定义ID',
@@ -23,10 +24,10 @@ CREATE TABLE wf_process_instance (
     priority          TINYINT(1) comment '优先级',
     parent_node_name  VARCHAR(100) comment '父流程依赖的节点名称',
     variable          VARCHAR(2000) comment '附属变量json存储',
-    version           INT(3) comment '版本'
+    revision          INT comment '修订版本'
 )comment='流程实例表';
 
-CREATE TABLE wf_task (
+CREATE TABLE IF NOT EXISTS wf_task (
     id                VARCHAR(32) NOT NULL PRIMARY KEY comment '主键ID',
     instance_id       VARCHAR(32) NOT NULL comment '流程实例ID',
     task_name         VARCHAR(100) NOT NULL comment '任务名称',
@@ -40,15 +41,15 @@ CREATE TABLE wf_task (
     action_url        VARCHAR(200) comment '任务处理的url',
     parent_task_id    VARCHAR(32) comment '父任务ID',
     variable          VARCHAR(2000) comment '附属变量json存储',
-    version           TINYINT(1) comment '版本'
+    revision          INT comment '修订版本'
 )comment='任务表';
 
-CREATE TABLE wf_task_actor (
+CREATE TABLE IF NOT EXISTS wf_task_actor (
     task_id           VARCHAR(32) not null comment '任务ID',
     actor_id          VARCHAR(50) not null comment '参与者ID'
 )comment='任务参与者表';
 
-create table wf_historic_process_instance (
+CREATE TABLE IF NOT EXISTS wf_historic_process_instance (
     id                VARCHAR(32) not null primary key comment '主键ID',
     process_id        VARCHAR(32) not null comment '流程定义ID',
     state       	  TINYINT(1) not null comment '状态',
@@ -61,7 +62,7 @@ create table wf_historic_process_instance (
     variable          VARCHAR(2000) comment '附属变量json存储'
 )comment='历史流程实例表';
 
-create table wf_historic_task (
+CREATE TABLE IF NOT EXISTS wf_historic_task (
     id                VARCHAR(32) not null primary key comment '主键ID',
     instance_id       VARCHAR(32) not null comment '流程实例ID',
     task_name         VARCHAR(100) not null comment '任务名称',
@@ -78,12 +79,12 @@ create table wf_historic_task (
     variable          VARCHAR(2000) comment '附属变量json存储'
 )comment='历史任务表';
 
-create table wf_historic_task_actor (
+CREATE TABLE IF NOT EXISTS wf_historic_task_actor (
     task_id           VARCHAR(32) not null comment '任务ID',
     actor_id          VARCHAR(50) not null comment '参与者ID'
 )comment='历史任务参与者表';
 
-create table wf_surrogate (
+CREATE TABLE IF NOT EXISTS wf_surrogate (
     id                VARCHAR(32) PRIMARY KEY NOT NULL COMMENT '主键ID',
     process_name      VARCHAR(100) COMMENT '流程名称',
     operator          VARCHAR(50) COMMENT '授权人',
@@ -95,7 +96,7 @@ create table wf_surrogate (
 )COMMENT='委托代理表';
 create index IDX_SURROGATE_OPERATOR on wf_surrogate (operator);
 
-create table wf_cc_process_instance (
+CREATE TABLE IF NOT EXISTS wf_cc_process_instance (
     instance_id       varchar(32) COMMENT '流程实例ID',
     actor_id       	  varchar(50) COMMENT '参与者ID',
     creator           varchar(50) COMMENT '发起人',

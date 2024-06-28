@@ -55,15 +55,6 @@ public class ProcessDefinitionEntityServiceImpl implements ProcessDefinitionEnti
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void updateProcessType(String id, String type)
-	{
-		processDefinitionMapper.updateProcessType(id, type);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public void deleteEntity(ProcessDefinition processDefinition)
 	{
 		processDefinitionMapper.delete(processDefinition.getId());

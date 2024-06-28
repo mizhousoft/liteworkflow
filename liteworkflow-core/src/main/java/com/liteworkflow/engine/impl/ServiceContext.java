@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.engine.helper.AssertHelper;
 
 /**
  * 单实例的服务上下文
@@ -56,7 +55,6 @@ public abstract class ServiceContext
 	 */
 	public static ProcessEngine getEngine()
 	{
-		AssertHelper.notNull(context, "未注册服务上下文");
 		if (engine == null)
 		{
 			engine = context.find(ProcessEngine.class);
@@ -72,8 +70,6 @@ public abstract class ServiceContext
 	 */
 	public static void put(String name, Object object)
 	{
-		AssertHelper.notNull(context, "未注册服务上下文");
-
 		log.info("put new instance[name=" + name + "][object=" + object + "]");
 
 		context.put(name, object);
@@ -87,8 +83,6 @@ public abstract class ServiceContext
 	 */
 	public static void put(String name, Class<?> clazz)
 	{
-		AssertHelper.notNull(context, "未注册服务上下文");
-
 		log.info("put new instance[name=" + name + "][clazz=" + clazz.getName() + "]");
 
 		context.put(name, clazz);
@@ -102,7 +96,6 @@ public abstract class ServiceContext
 	 */
 	public static boolean exist(String name)
 	{
-		AssertHelper.notNull(context, "未注册服务上下文");
 		return context.exist(name);
 	}
 
@@ -114,7 +107,6 @@ public abstract class ServiceContext
 	 */
 	public static <T> T find(Class<T> clazz)
 	{
-		AssertHelper.notNull(context, "未注册服务上下文");
 		return context.find(clazz);
 	}
 
@@ -126,7 +118,6 @@ public abstract class ServiceContext
 	 */
 	public static <T> List<T> findList(Class<T> clazz)
 	{
-		AssertHelper.notNull(context, "未注册服务上下文");
 		return context.findList(clazz);
 	}
 
@@ -139,7 +130,6 @@ public abstract class ServiceContext
 	 */
 	public static <T> T findByName(String name, Class<T> clazz)
 	{
-		AssertHelper.notNull(context, "未注册服务上下文");
 		return context.findByName(name, clazz);
 	}
 }

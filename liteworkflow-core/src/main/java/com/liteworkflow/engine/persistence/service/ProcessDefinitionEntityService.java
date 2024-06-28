@@ -28,14 +28,6 @@ public interface ProcessDefinitionEntityService
 	void modifyEntity(ProcessDefinition processDefinition);
 
 	/**
-	 * 更新流程定义类别
-	 * 
-	 * @param type 类别
-	 * @since 1.5
-	 */
-	void updateProcessType(String id, String type);
-
-	/**
 	 * 删除流程定义对象
 	 * 
 	 * @param processDefinition 流程定义对象

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <process displayName="测试分支流程2" name="decision2">
+	<extensionElements>
+    	<executionListener class="cn.maitian.form.activiti.listener.MyExecutionListener" event="start"/>
+    </extensionElements>
 	<start displayName="start1" layout="76,146,-1,-1" name="start1">
 		<transition g="" name="transition1" offset="0,0" to="decision1"/>
 	</start>
@@ -16,6 +19,9 @@
 	</task>
 	<task assignee="task3.operator" displayName="task3" layout="300,228,-1,-1" name="task3" performType="ANY">
 		<transition g="" name="transition7" offset="0,0" to="end1"/>
+        <extensionElements> 
+        	<taskListener delegateExpression="${smartSelectHandlerListener}" event="create" />
+        </extensionElements>
 	</task>
 	<end displayName="end1" layout="480,146,-1,-1" name="end1"/>
 </process>

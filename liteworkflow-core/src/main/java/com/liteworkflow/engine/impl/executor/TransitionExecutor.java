@@ -2,9 +2,10 @@ package com.liteworkflow.engine.impl.executor;
 
 import java.util.List;
 
+import org.springframework.util.Assert;
+
 import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.ProcessEngineConfiguration;
-import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.impl.Executor;
 import com.liteworkflow.engine.impl.ServiceContext;
@@ -84,13 +85,13 @@ public class TransitionExecutor implements Executor
 	{
 		// 根据子流程模型名称获取子流程定义对象
 		ProcessEngineConfiguration engineConfiguration = execution.getEngineConfiguration();
-		ProcessDefinition processDefinition = engineConfiguration.getRepositoryService().getProcessByVersion(subProcessModel.getProcessName(),
+		ProcessDefinition processDefinition = engineConfiguration.getRepositoryService().getByVersion(subProcessModel.getProcessName(),
 		        subProcessModel.getVersion());
 
 		Execution child = execution.createSubExecution(execution, processDefinition, subProcessModel.getName());
 		ProcessInstance instance = engineConfiguration.getRuntimeService().startInstanceByExecution(child);
 
-		AssertHelper.notNull(instance, "子流程创建失败");
+		Assert.notNull(instance, "子流程创建失败");
 
 		execution.addTasks(engineConfiguration.getTaskService().getActiveTasks(instance.getId()));
 	}

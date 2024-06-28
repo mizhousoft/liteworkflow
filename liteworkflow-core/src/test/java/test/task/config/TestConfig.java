@@ -1,10 +1,12 @@
 package test.task.config;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.engine.helper.StreamHelper;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 
 import test.TestSpring;
@@ -16,12 +18,15 @@ import test.TestSpring;
 public class TestConfig extends TestSpring
 {
 	@BeforeEach
-	public void before()
+	public void before() throws IOException
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/task/config/process.xml"));
+		try (InputStream istream = TestConfig.class.getClassLoader().getResourceAsStream("test/task/config/process.xml"))
+		{
+			processId = engine.getRepositoryService().deploy(istream);
+		}
 	}
 
 	@Test

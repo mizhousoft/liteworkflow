@@ -11,6 +11,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.Assignment;
@@ -22,7 +23,6 @@ import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.ProcessInstanceService;
 import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.TaskService;
-import com.liteworkflow.engine.helper.AssertHelper;
 import com.liteworkflow.engine.helper.DateHelper;
 import com.liteworkflow.engine.helper.JsonHelper;
 import com.liteworkflow.engine.helper.StringHelper;
@@ -132,7 +132,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		if (execution == null)
 			return Collections.emptyList();
 		ProcessModel model = execution.getProcessDefinition().getModel();
-		AssertHelper.notNull(model, "当前任务未找到流程定义模型");
+		Assert.notNull(model, "当前任务未找到流程定义模型");
 		if (StringUtils.isBlank(nodeName))
 		{
 			Task newTask = rejectTask(model, execution.getTask());
@@ -141,7 +141,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		else
 		{
 			NodeModel nodeModel = model.getNodeModel(nodeName);
-			AssertHelper.notNull(nodeModel, "根据节点名称[" + nodeName + "]无法找到节点模型");
+			Assert.notNull(nodeModel, "根据节点名称[" + nodeName + "]无法找到节点模型");
 			// 动态创建转移对象，由转移对象执行execution实例
 			TransitionModel tm = new TransitionModel();
 			tm.setTarget(nodeModel);
@@ -160,10 +160,10 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	public List<Task> createFreeTask(String instanceId, String operator, Map<String, Object> args, TaskModel model)
 	{
 		ProcessInstance instance = processInstanceService.getInstance(instanceId);
-		AssertHelper.notNull(instance, "指定的流程实例[id=" + instanceId + "]已完成或不存在");
+		Assert.notNull(instance, "指定的流程实例[id=" + instanceId + "]已完成或不存在");
 		instance.setLastUpdator(operator);
 		instance.setLastUpdateTime(LocalDateTime.now());
-		ProcessDefinition process = repositoryService.getProcessById(instance.getProcessId());
+		ProcessDefinition process = repositoryService.getById(instance.getProcessId());
 		Execution execution = new Execution(engineConfiguration, process, instance, args);
 		execution.setOperator(operator);
 		return createTask(model, execution);
@@ -186,7 +186,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 		log.debug("任务[taskId=" + taskId + "]已完成");
 
 		ProcessInstance instance = processInstanceService.getInstance(task.getInstanceId());
-		AssertHelper.notNull(instance, "指定的流程实例[id=" + task.getInstanceId() + "]已完成或不存在");
+		Assert.notNull(instance, "指定的流程实例[id=" + task.getInstanceId() + "]已完成或不存在");
 		instance.setLastUpdator(operator);
 		instance.setLastUpdateTime(LocalDateTime.now());
 		processInstanceService.updateInstance(instance);
@@ -207,7 +207,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 				args.put(entry.getKey(), entry.getValue());
 			}
 		}
-		ProcessDefinition process = repositoryService.getProcessById(instance.getProcessId());
+		ProcessDefinition process = repositoryService.getById(instance.getProcessId());
 		Execution execution = new Execution(engineConfiguration, process, instance, args);
 		execution.setOperator(operator);
 		execution.setTask(task);
@@ -281,7 +281,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	public Task complete(String taskId, String operator, Map<String, Object> args)
 	{
 		Task task = taskEntityService.getTask(taskId);
-		AssertHelper.notNull(task, "指定的任务[id=" + taskId + "]不存在");
+		Assert.notNull(task, "指定的任务[id=" + taskId + "]不存在");
 		task.setVariable(JsonHelper.toJson(args));
 		if (!isAllowed(task, operator))
 		{
@@ -322,7 +322,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	public Task take(String taskId, String operator)
 	{
 		Task task = taskEntityService.getTask(taskId);
-		AssertHelper.notNull(task, "指定的任务[id=" + taskId + "]不存在");
+		Assert.notNull(task, "指定的任务[id=" + taskId + "]不存在");
 		if (!isAllowed(task, operator))
 		{
 			throw new ProcessException("当前参与者[" + operator + "]不允许提取任务[taskId=" + taskId + "]");
@@ -342,7 +342,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	public Task resume(String taskId, String operator)
 	{
 		HistoricTask histTask = historicTaskEntityService.getByTaskId(taskId);
-		AssertHelper.notNull(histTask, "指定的历史任务[id=" + taskId + "]不存在");
+		Assert.notNull(histTask, "指定的历史任务[id=" + taskId + "]不存在");
 		boolean isAllowed = true;
 		if (!StringUtils.isBlank(histTask.getOperator()))
 		{
@@ -382,7 +382,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	public void addTaskActor(String taskId, Integer performType, String... actors)
 	{
 		Task task = taskEntityService.getTask(taskId);
-		AssertHelper.notNull(task, "指定的任务[id=" + taskId + "]不存在");
+		Assert.notNull(task, "指定的任务[id=" + taskId + "]不存在");
 		if (!task.isMajor())
 			return;
 		if (performType == null)
@@ -432,7 +432,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	public void removeTaskActor(String taskId, String... actors)
 	{
 		Task task = taskEntityService.getTask(taskId);
-		AssertHelper.notNull(task, "指定的任务[id=" + taskId + "]不存在");
+		Assert.notNull(task, "指定的任务[id=" + taskId + "]不存在");
 		if (actors == null || actors.length == 0)
 			return;
 		if (task.isMajor())
@@ -477,7 +477,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	public Task withdrawTask(String taskId, String operator)
 	{
 		HistoricTask hist = historicTaskEntityService.getByTaskId(taskId);
-		AssertHelper.notNull(hist, "指定的历史任务[id=" + taskId + "]不存在");
+		Assert.notNull(hist, "指定的历史任务[id=" + taskId + "]不存在");
 		List<Task> tasks;
 		if (hist.isPerformAny())
 		{
@@ -563,7 +563,7 @@ public class TaskServiceImpl extends AccessService implements TaskService
 	public List<Task> createNewTask(String taskId, int taskType, String... actors)
 	{
 		Task task = taskEntityService.getTask(taskId);
-		AssertHelper.notNull(task, "指定的任务[id=" + taskId + "]不存在");
+		Assert.notNull(task, "指定的任务[id=" + taskId + "]不存在");
 		List<Task> tasks = new ArrayList<Task>();
 		try
 		{

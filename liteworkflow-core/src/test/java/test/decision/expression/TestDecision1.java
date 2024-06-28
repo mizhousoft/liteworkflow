@@ -1,5 +1,7 @@
 package test.decision.expression;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.engine.helper.StreamHelper;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 
 import test.TestSpring;
@@ -21,12 +22,15 @@ import test.TestSpring;
 public class TestDecision1 extends TestSpring
 {
 	@BeforeEach
-	public void before()
+	public void before() throws IOException
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/decision/expression/process.xml"));
+		try (InputStream istream = TestDecision1.class.getClassLoader().getResourceAsStream("test/decision/expression/process.xml"))
+		{
+			processId = engine.getRepositoryService().deploy(istream);
+		}
 	}
 
 	@Test

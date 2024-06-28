@@ -15,14 +15,14 @@
 		<result property="priority" column="priority" />
 		<result property="parentNodeName" column="parent_node_name" />
 		<result property="variable" column="variable" />
-		<result property="version" column="version" />
+		<result property="revision" column="revision" />
 	</resultMap>
 	
 	<insert id="save">
 		insert into wf_process_instance (id, process_id, creator, create_time, parent_id, parent_node_name, expire_time,
-		last_update_time, last_updator, variable, version)
+		last_update_time, last_updator, variable, revision)
 		values (#{id}, #{processId}, #{creator}, #{createTime}, #{parentId}, #{parentNodeName}, #{expireTime}, 
-		#{lastUpdateTime}, #{lastUpdator}, #{variable}, #{version})
+		#{lastUpdateTime}, #{lastUpdator}, #{variable}, #{revision})
 	</insert>
 	
 	<update id="update">
@@ -31,8 +31,8 @@
         last_update_time = #{lastUpdateTime},  
         variable = #{variable},  
         expire_time = #{expireTime}, 
-        version = version + 1 
-        where id = #{id} and version = #{version} 
+        revision = revision + 1 
+        where id = #{id} and revision = #{revision} 
 	</update>
 	
 	<update id="updateVariable">
@@ -47,7 +47,7 @@
 		
 	<select id="getInstance" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
 		select o.id, o.process_id, o.creator, o.create_time, o.parent_id, o.parent_node_name, o.expire_time,
-		o.last_update_time, o.last_updator, o.priority, o.variable, o.version 
+		o.last_update_time, o.last_updator, o.priority, o.variable, o.revision 
 		from wf_process_instance o 
 		where id = #{instanceId}
 	</select>
@@ -74,8 +74,8 @@
 				<bind name="pattern" value="'%' + request.displayName + '%'" />
 				and p.display_name like #{pattern} 
 			</if>
-			<if test="request.processType != null">
-                and p.type = #{request.processType}
+			<if test="request.category != null">
+                and p.category = #{request.category}
        		</if>
 			<if test="request.parentId != null">
                 and o.parent_id = #{request.parentId}
@@ -97,7 +97,7 @@
 	
 	<select id="findPageData" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
 		select o.id, o.process_id, o.creator, o.create_time, o.parent_id, o.parent_node_name, o.expire_time,
-		o.last_update_time, o.last_updator, o.priority, o.variable, o.version 
+		o.last_update_time, o.last_updator, o.priority, o.variable, o.revision 
 		from wf_process_instance o left join wf_process_definition p on p.id = o.process_id
 		<where>
        		<if test="request.operators != null and request.operators.length != 0">
@@ -119,8 +119,8 @@
 				<bind name="pattern" value="'%' + request.displayName + '%'" />
 				and p.display_name like #{pattern} 
 			</if>
-			<if test="request.processType != null">
-                and p.type = #{request.processType}
+			<if test="request.category != null">
+                and p.category = #{request.category}
        		</if>
 			<if test="request.parentId != null">
                 and o.parent_id = #{request.parentId}

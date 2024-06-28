@@ -34,9 +34,9 @@ public class ProcessInstPageRequest extends PageRequest
 	private String displayName;
 
 	/**
-	 * 流程类型
+	 * 流程分类
 	 */
-	private String processType;
+	private String category;
 
 	/**
 	 * 父实例id
@@ -147,23 +147,23 @@ public class ProcessInstPageRequest extends PageRequest
 	}
 
 	/**
-	 * 获取processType
+	 * 获取category
 	 * 
 	 * @return
 	 */
-	public String getProcessType()
+	public String getCategory()
 	{
-		return processType;
+		return category;
 	}
 
 	/**
-	 * 设置processType
+	 * 设置category
 	 * 
-	 * @param processType
+	 * @param category
 	 */
-	public void setProcessType(String processType)
+	public void setCategory(String category)
 	{
-		this.processType = processType;
+		this.category = category;
 	}
 
 	/**

@@ -59,7 +59,7 @@ public class EndExecutor extends NodeExecutor
 				return;
 			}
 
-			ProcessDefinition process = engine.getRepositoryService().getProcessById(parentInstance.getProcessId());
+			ProcessDefinition process = engine.getRepositoryService().getById(parentInstance.getProcessId());
 			ProcessModel pm = process.getModel();
 			if (pm == null)
 			{

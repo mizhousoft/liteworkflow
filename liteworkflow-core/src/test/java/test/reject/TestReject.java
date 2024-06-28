@@ -1,5 +1,7 @@
 package test.reject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.engine.helper.StreamHelper;
 
 import test.TestSpring;
 
@@ -18,12 +19,16 @@ import test.TestSpring;
 public class TestReject extends TestSpring
 {
 	@BeforeEach
-	public void before()
+	public void before() throws IOException
 	{
 		engine = applicationContext.getBean(ProcessEngine.class);
 		repositoryService = engine.getRepositoryService();
 
-		processId = engine.getRepositoryService().deploy(StreamHelper.getStreamFromClasspath("test/reject/reject.xml"));
+		try (InputStream istream = TestReject.class.getClassLoader().getResourceAsStream("test/reject/reject.xml"))
+		{
+			processId = engine.getRepositoryService().deploy(istream);
+		}
+
 		engine.getRuntimeService().startInstanceById(processId);
 	}
 
