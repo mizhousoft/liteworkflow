@@ -6,10 +6,8 @@ import com.liteworkflow.engine.HistoryService;
 import com.liteworkflow.engine.persistence.entity.HistoricProcessInstance;
 import com.liteworkflow.engine.persistence.entity.HistoricTask;
 import com.liteworkflow.engine.persistence.entity.HistoricTaskActor;
-import com.liteworkflow.engine.persistence.request.CCInstancePageRequest;
-import com.liteworkflow.engine.persistence.request.HistoricProcessInstPageRequest;
+import com.liteworkflow.engine.persistence.request.HistoricInstancePageRequest;
 import com.liteworkflow.engine.persistence.request.TaskPageRequest;
-import com.liteworkflow.engine.persistence.service.CCProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricTaskActorEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricTaskEntityService;
@@ -26,8 +24,6 @@ public class HistoryServiceImpl implements HistoryService
 
 	private HistoricProcessInstanceEntityService historicProcessInstanceEntityService;
 
-	private CCProcessInstanceEntityService ccProcessInstanceEntityService;
-
 	private HistoricTaskActorEntityService historicTaskActorEntityService;
 
 	@Override
@@ -37,13 +33,13 @@ public class HistoryServiceImpl implements HistoryService
 	}
 
 	@Override
-	public List<HistoricProcessInstance> getHistoricInstances(HistoricProcessInstPageRequest request)
+	public List<HistoricProcessInstance> getHistoricInstances(HistoricInstancePageRequest request)
 	{
 		return historicProcessInstanceEntityService.queryList(request);
 	}
 
 	@Override
-	public Page<HistoricProcessInstance> queryPageData(HistoricProcessInstPageRequest request)
+	public Page<HistoricProcessInstance> queryPageData(HistoricInstancePageRequest request)
 	{
 		return historicProcessInstanceEntityService.queryPageData(request);
 	}
@@ -81,12 +77,6 @@ public class HistoryServiceImpl implements HistoryService
 		return historicTaskEntityService.queryList(request);
 	}
 
-	@Override
-	public Page<HistoricProcessInstance> getCCWorks(CCInstancePageRequest request)
-	{
-		return ccProcessInstanceEntityService.queryPageData(request);
-	}
-
 	/**
 	 * 设置historicTaskEntityService
 	 * 
@@ -105,16 +95,6 @@ public class HistoryServiceImpl implements HistoryService
 	public void setHistoricProcessInstanceEntityService(HistoricProcessInstanceEntityService historicProcessInstanceEntityService)
 	{
 		this.historicProcessInstanceEntityService = historicProcessInstanceEntityService;
-	}
-
-	/**
-	 * 设置ccProcessInstanceEntityService
-	 * 
-	 * @param ccProcessInstanceEntityService
-	 */
-	public void setCcProcessInstanceEntityService(CCProcessInstanceEntityService ccProcessInstanceEntityService)
-	{
-		this.ccProcessInstanceEntityService = ccProcessInstanceEntityService;
 	}
 
 	/**

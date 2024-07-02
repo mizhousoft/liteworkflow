@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.liteworkflow.ProcessException;
-import com.liteworkflow.engine.ProcessEngineConfiguration;
+import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
@@ -28,7 +28,7 @@ public class Execution implements Serializable
 	/**
 	 * ProcessEngineConfiguration
 	 */
-	private ProcessEngineConfiguration engineConfiguration;
+	private ProcessEngineConfigurationImpl engineConfiguration;
 
 	/**
 	 * 流程定义对象
@@ -109,7 +109,7 @@ public class Execution implements Serializable
 	 * @param processInstance
 	 * @param args
 	 */
-	public Execution(ProcessEngineConfiguration engineConfiguration, ProcessDefinition processDefinition, ProcessInstance processInstance,
+	public Execution(ProcessEngineConfigurationImpl engineConfiguration, ProcessDefinition processDefinition, ProcessInstance processInstance,
 	        Map<String, Object> args)
 	{
 		if (processDefinition == null || processInstance == null)
@@ -270,7 +270,7 @@ public class Execution implements Serializable
 	 * 
 	 * @return
 	 */
-	public ProcessEngineConfiguration getEngineConfiguration()
+	public ProcessEngineConfigurationImpl getEngineConfiguration()
 	{
 		return engineConfiguration;
 	}

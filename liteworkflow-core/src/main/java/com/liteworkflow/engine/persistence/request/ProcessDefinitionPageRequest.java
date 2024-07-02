@@ -5,11 +5,11 @@ import com.mizhousoft.commons.data.domain.Sort;
 import com.mizhousoft.commons.data.domain.Sort.Direction;
 
 /**
- * ProcessDefPageRequest
+ * 分页请求
  *
  * @version
  */
-public class ProcessDefPageRequest extends PageRequest
+public class ProcessDefinitionPageRequest extends PageRequest
 {
 	private static final long serialVersionUID = -4195498843400032234L;
 
@@ -37,7 +37,7 @@ public class ProcessDefPageRequest extends PageRequest
 	 * 构造函数
 	 *
 	 */
-	public ProcessDefPageRequest()
+	public ProcessDefinitionPageRequest()
 	{
 		super();
 

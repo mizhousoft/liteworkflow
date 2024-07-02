@@ -3,17 +3,10 @@ package com.liteworkflow.engine.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
-
-import com.liteworkflow.engine.ProcessEngineConfiguration;
-import com.liteworkflow.engine.ProcessInstanceService;
-import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.RuntimeService;
-import com.liteworkflow.engine.impl.executor.ExecutorBuilder;
-import com.liteworkflow.engine.model.StartModel;
-import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
+import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
+import com.liteworkflow.engine.impl.command.SetInstanceVariablesCommand;
+import com.liteworkflow.engine.impl.command.StartProcessInstanceCommand;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 
 /**
@@ -21,37 +14,16 @@ import com.liteworkflow.engine.persistence.entity.ProcessInstance;
  *
  * @version
  */
-public class RuntimeServiceImpl implements RuntimeService
+public class RuntimeServiceImpl extends CommonServiceImpl implements RuntimeService
 {
-	private static final Logger log = LoggerFactory.getLogger(RuntimeServiceImpl.class);
-
-	/**
-	 * ProcessEngineConfiguration
-	 */
-	protected ProcessEngineConfiguration configuration;
-
-	/**
-	 * 流程定义业务类
-	 */
-	protected RepositoryService repositoryService;
-
-	/**
-	 * 流程实例业务类
-	 */
-	protected ProcessInstanceService processInstanceService;
-
 	/**
 	 * 构造函数
 	 *
 	 * @param configuration
 	 */
-	public RuntimeServiceImpl(ProcessEngineConfiguration configuration)
+	public RuntimeServiceImpl(ProcessEngineConfigurationImpl configuration)
 	{
-		super();
-		this.configuration = configuration;
-
-		this.repositoryService = configuration.getRepositoryService();
-		this.processInstanceService = configuration.getProcessInstanceService();
+		super(configuration);
 	}
 
 	/**
@@ -78,15 +50,7 @@ public class RuntimeServiceImpl implements RuntimeService
 	@Override
 	public ProcessInstance startInstanceById(String id, String operator, Map<String, Object> args)
 	{
-		if (args == null)
-		{
-			args = new HashMap<String, Object>(0);
-		}
-
-		ProcessDefinition process = repositoryService.getById(id);
-		Assert.notNull(process, "Process definition not found, id is " + id);
-
-		return startProcess(process, operator, args);
+		return commandExecutor.execute(new StartProcessInstanceCommand(null, id, null, operator, args));
 	}
 
 	/**
@@ -97,7 +61,7 @@ public class RuntimeServiceImpl implements RuntimeService
 	@Override
 	public ProcessInstance startInstanceByName(String name)
 	{
-		return startInstanceByName(name, null, null, null);
+		return startInstanceByName(name, null, null);
 	}
 
 	/**
@@ -106,20 +70,9 @@ public class RuntimeServiceImpl implements RuntimeService
 	 * @since 1.3
 	 */
 	@Override
-	public ProcessInstance startInstanceByName(String name, Integer version)
+	public ProcessInstance startInstanceByName(String name, String operator)
 	{
-		return startInstanceByName(name, version, null, null);
-	}
-
-	/**
-	 * 根据流程名称、版本号、操作人启动流程实例
-	 * 
-	 * @since 1.3
-	 */
-	@Override
-	public ProcessInstance startInstanceByName(String name, Integer version, String operator)
-	{
-		return startInstanceByName(name, version, operator, null);
+		return startInstanceByName(name, operator, null);
 	}
 
 	/**
@@ -128,68 +81,29 @@ public class RuntimeServiceImpl implements RuntimeService
 	 * @since 1.3
 	 */
 	@Override
-	public ProcessInstance startInstanceByName(String name, Integer version, String operator, Map<String, Object> args)
+	public ProcessInstance startInstanceByName(String name, String operator, Map<String, Object> args)
 	{
-		if (args == null)
-		{
-			args = new HashMap<String, Object>(0);
-		}
-
-		ProcessDefinition process = repositoryService.getByVersion(name, version);
-		Assert.notNull(process, "Process definition not found, name is " + name);
-
-		return startProcess(process, operator, args);
-	}
-
-	private ProcessInstance startProcess(ProcessDefinition process, String operator, Map<String, Object> args)
-	{
-		Execution execution = execute(process, operator, args, null, null);
-		if (process.getModel() != null)
-		{
-			StartModel start = process.getModel().getStartModel();
-
-			Executor executor = ExecutorBuilder.build(start);
-			executor.execute(execution, start);
-		}
-
-		return execution.getProcessInstance();
+		return commandExecutor.execute(new StartProcessInstanceCommand(name, null, null, operator, args));
 	}
 
 	/**
-	 * 根据父执行对象启动子流程实例（用于启动子流程）
+	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessInstance startInstanceByExecution(Execution execution)
+	public void setVariable(String instanceId, String variableName, Object value)
 	{
-		ProcessDefinition processDefinition = execution.getProcessDefinition();
-		StartModel start = processDefinition.getModel().getStartModel();
+		Map<String, Object> variableMap = new HashMap<>(1);
+		variableMap.put(variableName, value);
 
-		Execution current = execute(processDefinition, execution.getOperator(), execution.getArgs(), execution.getParentInstance().getId(),
-		        execution.getParentNodeName());
-		Executor executor = ExecutorBuilder.build(start);
-		executor.execute(current, start);
-
-		return current.getProcessInstance();
+		setVariables(instanceId, variableMap);
 	}
 
 	/**
-	 * 创建流程实例，并返回执行对象
-	 * 
-	 * @param process 流程定义
-	 * @param operator 操作人
-	 * @param args 参数列表
-	 * @param parentId 父流程实例id
-	 * @param parentNodeName 启动子流程的父流程节点名称
-	 * @return Execution
+	 * {@inheritDoc}
 	 */
-	private Execution execute(ProcessDefinition process, String operator, Map<String, Object> args, String parentId, String parentNodeName)
+	@Override
+	public void setVariables(String instanceId, Map<String, Object> variableMap)
 	{
-		ProcessInstance instance = processInstanceService.createInstance(process, operator, args, parentId, parentNodeName);
-
-		log.debug("创建流程实例对象:" + instance);
-
-		Execution current = new Execution(configuration, process, instance, args);
-		current.setOperator(operator);
-		return current;
+		commandExecutor.execute(new SetInstanceVariablesCommand(instanceId, variableMap));
 	}
 }

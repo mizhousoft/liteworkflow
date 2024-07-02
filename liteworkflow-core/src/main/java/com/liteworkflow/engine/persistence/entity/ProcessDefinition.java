@@ -39,14 +39,9 @@ public class ProcessDefinition implements Serializable
 	private String category;
 
 	/**
-	 * 是否可用的开关
-	 */
-	private Integer state;
-
-	/**
 	 * 版本
 	 */
-	private Integer version;
+	private int version;
 
 	/**
 	 * 流程定义字节数组
@@ -74,21 +69,61 @@ public class ProcessDefinition implements Serializable
 	 */
 	private ProcessModel model;
 
+	/**
+	 * 获取id
+	 * 
+	 * @return
+	 */
+	public String getId()
+	{
+		return id;
+	}
+
+	/**
+	 * 设置id
+	 * 
+	 * @param id
+	 */
+	public void setId(String id)
+	{
+		this.id = id;
+	}
+
+	/**
+	 * 获取name
+	 * 
+	 * @return
+	 */
 	public String getName()
 	{
 		return name;
 	}
 
+	/**
+	 * 设置name
+	 * 
+	 * @param name
+	 */
 	public void setName(String name)
 	{
 		this.name = name;
 	}
 
+	/**
+	 * 获取displayName
+	 * 
+	 * @return
+	 */
 	public String getDisplayName()
 	{
 		return displayName;
 	}
 
+	/**
+	 * 设置displayName
+	 * 
+	 * @param displayName
+	 */
 	public void setDisplayName(String displayName)
 	{
 		this.displayName = displayName;
@@ -114,84 +149,64 @@ public class ProcessDefinition implements Serializable
 		this.category = category;
 	}
 
-	public Integer getState()
+	/**
+	 * 获取version
+	 * 
+	 * @return
+	 */
+	public int getVersion()
 	{
-		return state;
-	}
-
-	public void setState(Integer state)
-	{
-		this.state = state;
-	}
-
-	public String getId()
-	{
-		return id;
-	}
-
-	public void setId(String id)
-	{
-		this.id = id;
-	}
-
-	public ProcessModel getModel()
-	{
-		return model;
+		return version;
 	}
 
 	/**
-	 * setter name/displayName/instanceUrl
+	 * 设置version
 	 * 
-	 * @param processModel
+	 * @param version
 	 */
-	public void setModel(ProcessModel processModel)
+	public void setVersion(int version)
 	{
-		this.model = processModel;
-		this.name = processModel.getName();
-		this.category = processModel.getCategory();
-		this.displayName = processModel.getDisplayName();
-		this.instanceUrl = processModel.getInstanceUrl();
+		this.version = version;
 	}
 
-	public String getInstanceUrl()
-	{
-		return instanceUrl;
-	}
-
-	public void setInstanceUrl(String instanceUrl)
-	{
-		this.instanceUrl = instanceUrl;
-	}
-
+	/**
+	 * 获取bytes
+	 * 
+	 * @return
+	 */
 	public byte[] getBytes()
 	{
 		return bytes;
 	}
 
+	/**
+	 * 设置bytes
+	 * 
+	 * @param bytes
+	 */
 	public void setBytes(byte[] bytes)
 	{
 		this.bytes = bytes;
 	}
 
-	public Integer getVersion()
+	/**
+	 * 获取instanceUrl
+	 * 
+	 * @return
+	 */
+	public String getInstanceUrl()
 	{
-		return version;
+		return instanceUrl;
 	}
 
-	public void setVersion(Integer version)
+	/**
+	 * 设置instanceUrl
+	 * 
+	 * @param instanceUrl
+	 */
+	public void setInstanceUrl(String instanceUrl)
 	{
-		this.version = version;
-	}
-
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append("Process(id=").append(this.id);
-		sb.append(",name=").append(this.name);
-		sb.append(",displayName=").append(this.displayName);
-		sb.append(",version=").append(this.version);
-		sb.append(",state=").append(this.state).append(")");
-		return sb.toString();
+		this.instanceUrl = instanceUrl;
 	}
 
 	/**
@@ -214,13 +229,62 @@ public class ProcessDefinition implements Serializable
 		this.createTime = createTime;
 	}
 
+	/**
+	 * 获取creator
+	 * 
+	 * @return
+	 */
 	public String getCreator()
 	{
 		return creator;
 	}
 
+	/**
+	 * 设置creator
+	 * 
+	 * @param creator
+	 */
 	public void setCreator(String creator)
 	{
 		this.creator = creator;
+	}
+
+	/**
+	 * 获取model
+	 * 
+	 * @return
+	 */
+	public ProcessModel getModel()
+	{
+		return model;
+	}
+
+	/**
+	 * 设置model
+	 * 
+	 * @param model
+	 */
+	public void setModel(ProcessModel model)
+	{
+		this.model = model;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString()
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append("{\"name\":\"")
+		        .append(name)
+		        .append("\", \"displayName\":\"")
+		        .append(displayName)
+		        .append("\", \"category\":\"")
+		        .append(category)
+		        .append("\", \"version\":\"")
+		        .append(version)
+		        .append("\"}");
+		return builder.toString();
 	}
 }

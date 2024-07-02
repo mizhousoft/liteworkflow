@@ -33,8 +33,5 @@ public class TestQueryProcess extends TestSpring
 
 		ProcessDefinition process = engine.getRepositoryService().getByVersion("subprocess1", 0);
 		System.out.println(process);
-
-		process = engine.getRepositoryService().getLatestByName("subprocess1");
-		System.out.println(process);
 	}
 }

@@ -6,136 +6,87 @@
 	<resultMap type="com.liteworkflow.engine.persistence.entity.ProcessInstance" id="ProcessInstanceMap">
 		<id property="id" column="id" />
 		<result property="parentId" column="parent_id" />
-		<result property="processId" column="process_id" />
-		<result property="creator" column="creator" />
-		<result property="createTime" column="create_time" />
-		<result property="expireTime" column="expire_time" />
-		<result property="lastUpdateTime" column="last_update_time" />
-		<result property="lastUpdator" column="last_updator" />
+		<result property="processDefinitionId" column="process_def_id" />
 		<result property="priority" column="priority" />
 		<result property="parentNodeName" column="parent_node_name" />
 		<result property="variable" column="variable" />
 		<result property="revision" column="revision" />
+		<result property="creator" column="creator" />
+		<result property="createTime" column="create_time" />
 	</resultMap>
 	
 	<insert id="save">
-		insert into wf_process_instance (id, process_id, creator, create_time, parent_id, parent_node_name, expire_time,
-		last_update_time, last_updator, variable, revision)
-		values (#{id}, #{processId}, #{creator}, #{createTime}, #{parentId}, #{parentNodeName}, #{expireTime}, 
-		#{lastUpdateTime}, #{lastUpdator}, #{variable}, #{revision})
+		insert into wf_process_instance (id, parent_id, process_def_id, priority, parent_node_name, variable, 
+		revision, creator, create_time)
+		values (#{id}, #{parentId}, #{processDefinitionId}, #{priority}, #{parentNodeName}, #{variable}, 
+		#{revision}, #{creator}, #{createTime})
 	</insert>
 	
 	<update id="update">
         update wf_process_instance 
-        set last_updator = #{lastUpdator},  
-        last_update_time = #{lastUpdateTime},  
-        variable = #{variable},  
-        expire_time = #{expireTime}, 
+        set variable = #{variable},  
         revision = revision + 1 
         where id = #{id} and revision = #{revision} 
-	</update>
-	
-	<update id="updateVariable">
-        update wf_process_definition 
-        set type = #{type}
-        where id = #{id} 
 	</update>
 		
 	<delete id="delete">
 		delete from wf_process_instance where id = #{id}
 	</delete>
 		
-	<select id="getInstance" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
-		select o.id, o.process_id, o.creator, o.create_time, o.parent_id, o.parent_node_name, o.expire_time,
-		o.last_update_time, o.last_updator, o.priority, o.variable, o.revision 
-		from wf_process_instance o 
-		where id = #{instanceId}
+	<select id="findById" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
+		select id, parent_id, process_def_id, priority, parent_node_name, variable, revision, creator, 
+		create_time
+		from wf_process_instance
+		where id = #{id}
+	</select>
+		
+	<select id="findByParentId" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
+		select id, parent_id, process_def_id, priority, parent_node_name, variable, revision, creator, 
+		create_time
+		from wf_process_instance
+		where parent_id = #{parentId}
 	</select>
 
 	<select id="countTotal" resultType="Long">
-		select count(o.id) from wf_process_instance o left join wf_process_definition p on p.id = o.process_id
+		select count(id) from wf_process_instance
 		<where>
+            <if test="request.processDefinitionId != null">
+                process_def_id = #{request.processDefinitionId}
+       		</if>
        		<if test="request.operators != null and request.operators.length != 0">
-                o.creator in
+                and creator in
                 <foreach collection="request.operators" item="operator" index="index" open="(" close=")" separator=",">
                     #{operator}
                 </foreach>
             </if>
-            <if test="request.names != null and request.names.length != 0">
-                and p.name in
-                <foreach collection="request.names" item="name" index="index" open="(" close=")" separator=",">
-                    #{name}
-                </foreach>
-            </if>
-            <if test="request.processId != null">
-                and o.process_id = #{request.processId}
+            <if test="request.startTime != null">
+                and create_time &gt;= #{request.startTime}
        		</if>
-            <if test="request.displayName != null">
-				<bind name="pattern" value="'%' + request.displayName + '%'" />
-				and p.display_name like #{pattern} 
-			</if>
-			<if test="request.category != null">
-                and p.category = #{request.category}
-       		</if>
-			<if test="request.parentId != null">
-                and o.parent_id = #{request.parentId}
-       		</if>
-       		<if test="request.excludedIds != null and request.excludedIds.length != 0">
-                and o.id not in
-                <foreach collection="request.excludedIds" item="excludedId" index="index" open="(" close=")" separator=",">
-                    #{excludedId}
-                </foreach>
-            </if>
-            <if test="request.createTimeStart != null">
-                and o.create_time &gt;= #{request.createTimeStart}
-       		</if>
-            <if test="request.createTimeEnd != null">
-                and o.create_time &lt;= #{request.createTimeEnd}
+            <if test="request.endTime != null">
+                and create_time &lt;= #{request.endTime}
        		</if>
 		</where>
 	</select>
 	
 	<select id="findPageData" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
-		select o.id, o.process_id, o.creator, o.create_time, o.parent_id, o.parent_node_name, o.expire_time,
-		o.last_update_time, o.last_updator, o.priority, o.variable, o.revision 
-		from wf_process_instance o left join wf_process_definition p on p.id = o.process_id
+		select id, parent_id, process_def_id, priority, parent_node_name, variable, revision, creator, 
+		create_time
+		from wf_process_instance
 		<where>
+            <if test="request.processDefinitionId != null">
+                process_def_id = #{request.processDefinitionId}
+       		</if>
        		<if test="request.operators != null and request.operators.length != 0">
-                o.creator in
+                and creator in
                 <foreach collection="request.operators" item="operator" index="index" open="(" close=")" separator=",">
                     #{operator}
                 </foreach>
             </if>
-            <if test="request.names != null and request.names.length != 0">
-                and p.name in
-                <foreach collection="request.names" item="name" index="index" open="(" close=")" separator=",">
-                    #{name}
-                </foreach>
-            </if>
-            <if test="request.processId != null">
-                and o.process_id = #{request.processId}
+            <if test="request.startTime != null">
+                and create_time &gt;= #{request.startTime}
        		</if>
-            <if test="request.displayName != null">
-				<bind name="pattern" value="'%' + request.displayName + '%'" />
-				and p.display_name like #{pattern} 
-			</if>
-			<if test="request.category != null">
-                and p.category = #{request.category}
-       		</if>
-			<if test="request.parentId != null">
-                and o.parent_id = #{request.parentId}
-       		</if>
-       		<if test="request.excludedIds != null and request.excludedIds.length != 0">
-                and o.id not in
-                <foreach collection="request.excludedIds" item="excludedId" index="index" open="(" close=")" separator=",">
-                    #{excludedId}
-                </foreach>
-            </if>
-            <if test="request.createTimeStart != null">
-                and o.create_time &gt;= #{request.createTimeStart}
-       		</if>
-            <if test="request.createTimeEnd != null">
-                and o.create_time &lt;= #{request.createTimeEnd}
+            <if test="request.endTime != null">
+                and create_time &lt;= #{request.endTime}
        		</if>
 		</where>
 		<if test="request.sortString != null">

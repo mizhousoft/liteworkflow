@@ -2,9 +2,9 @@ package com.liteworkflow.engine.impl.executor;
 
 import java.util.List;
 
-import com.liteworkflow.engine.ProcessInstanceService;
 import com.liteworkflow.engine.TaskService;
 import com.liteworkflow.engine.impl.Execution;
+import com.liteworkflow.engine.model.ActivityModel;
 import com.liteworkflow.engine.model.ForkModel;
 import com.liteworkflow.engine.model.JoinModel;
 import com.liteworkflow.engine.model.NodeModel;
@@ -12,11 +12,10 @@ import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.model.SubProcessModel;
 import com.liteworkflow.engine.model.TaskModel;
 import com.liteworkflow.engine.model.TransitionModel;
-import com.liteworkflow.engine.model.ActivityModel;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.persistence.entity.Task;
-import com.liteworkflow.engine.persistence.request.ProcessInstPageRequest;
 import com.liteworkflow.engine.persistence.request.TaskPageRequest;
+import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
 
 /**
  * TODO
@@ -49,8 +48,8 @@ public class JoinExecutor extends NodeExecutor
 		 * 查询当前流程实例的无法参与合并的node列表
 		 * 若所有中间node都完成，则设置为已合并状态，告诉model可继续执行join的输出变迁
 		 */
-		ProcessInstanceService processInstanceService = execution.getEngineConfiguration().getProcessInstanceService();
 		TaskService taskService = execution.getEngineConfiguration().getTaskService();
+		ProcessInstanceEntityService processInstanceEntityService = execution.getEngineConfiguration().getProcessInstanceEntityService();
 
 		ProcessInstance instance = execution.getProcessInstance();
 		ProcessModel model = execution.getProcessModel();
@@ -60,10 +59,9 @@ public class JoinExecutor extends NodeExecutor
 
 		if (model.containsNodeNames(SubProcessModel.class, activeNodes))
 		{
-			ProcessInstPageRequest request = new ProcessInstPageRequest();
-			request.setParentId(instance.getId());
-			request.setExcludedIds(new String[] { execution.getChildInstanceId() });
-			List<ProcessInstance> instances = processInstanceService.getActiveInstances(request);
+			List<ProcessInstance> instances = processInstanceEntityService.queryByParentId(instance.getId());
+			instances = instances.stream().filter(i -> !i.getId().equals(execution.getChildInstanceId())).toList();
+
 			// 如果所有子流程都已完成，则表示可合并
 			if (instances == null || instances.isEmpty())
 			{

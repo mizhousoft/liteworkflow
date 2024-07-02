@@ -1,10 +1,12 @@
 package test.query;
 
+import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.engine.persistence.request.HistoricProcessInstPageRequest;
+import com.liteworkflow.engine.persistence.request.HistoricInstancePageRequest;
 
 import test.TestSpring;
 
@@ -26,13 +28,13 @@ public class TestQueryHistInstance extends TestSpring
 	@Test
 	public void test()
 	{
-		HistoricProcessInstPageRequest request = new HistoricProcessInstPageRequest();
-		request.setCreateTimeStart("2014-01-01");
+		HistoricInstancePageRequest request = new HistoricInstancePageRequest();
+		request.setStartTime(LocalDateTime.of(2014, 1, 1, 0, 0));
 		request.setNames(new String[] { "simple" });
 		request.setState(0);
 		request.setCategory("预算管理流程1");
 
 		System.out.println(engine.getHistoryService().getHistoricInstances(request));
-		System.out.println(engine.getHistoryService().getHistoricInstances(new HistoricProcessInstPageRequest()));
+		System.out.println(engine.getHistoryService().getHistoricInstances(new HistoricInstancePageRequest()));
 	}
 }

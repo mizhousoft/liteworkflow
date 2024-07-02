@@ -46,11 +46,4 @@ public interface ProcessEngine
 	 * @return
 	 */
 	HistoryService getHistoryService();
-
-	/**
-	 * 获取管理服务
-	 * 
-	 * @return IManagerService 管理服务
-	 */
-	ManagerService getManagerService();
 }

@@ -3,29 +3,26 @@ CREATE TABLE IF NOT EXISTS wf_process_definition (
     name              VARCHAR(32) NOT NULL comment '流程名称',
     display_name      VARCHAR(64) NOT NULL comment '流程显示名称',
     category          VARCHAR(32) NULL comment '流程分类',
-    state             INT NOT NULL comment '流程是否可用',
-    version           INT NOT NULL comment '版本号',
+    version           INT NOT NULL DEFAULT 0 comment '版本号',
     content           LONGBLOB NOT NULL comment '流程模型定义',
     instance_url      VARCHAR(128) NULL comment '实例url',
-    create_time       DATETIME NOT NULL comment '创建时间',
     creator           VARCHAR(20) NULL comment '创建人',
+    create_time       DATETIME NOT NULL comment '创建时间',
     PRIMARY KEY (`id`)
 )ENGINE = InnoDB comment='流程定义表';
 
 CREATE TABLE IF NOT EXISTS wf_process_instance (
-    id                VARCHAR(32) NOT NULL PRIMARY KEY comment '主键ID',
-    parent_id         VARCHAR(32) comment '父流程ID',
-    process_id        VARCHAR(32) NOT NULL comment '流程定义ID',
-    creator           VARCHAR(50) comment '发起人',
+    id                VARCHAR(32) NOT NULL comment '主键ID',
+    parent_id         VARCHAR(32) NULL comment '父流程ID',
+    process_def_id    VARCHAR(32) NOT NULL comment '流程定义ID',
+    priority          INT UNSIGNED NOT NULL DEFAULT 0 comment '优先级',
+    parent_node_name  VARCHAR(64) NULL comment '父流程依赖的节点名称',
+    variable          VARCHAR(2048) NULL comment '附属变量json存储',
+    revision          INT UNSIGNED NOT NULL DEFAULT 0 comment '修订版本',
+    creator           VARCHAR(20) NULL comment '发起人',
     create_time       DATETIME NOT NULL comment '发起时间',
-    expire_time       DATETIME comment '期望完成时间',
-    last_update_time  DATETIME comment '上次更新时间',
-    last_updator      VARCHAR(50) comment '上次更新人',
-    priority          TINYINT(1) comment '优先级',
-    parent_node_name  VARCHAR(100) comment '父流程依赖的节点名称',
-    variable          VARCHAR(2000) comment '附属变量json存储',
-    revision          INT comment '修订版本'
-)comment='流程实例表';
+    PRIMARY KEY (`id`)
+)ENGINE = InnoDB comment='流程实例表';
 
 CREATE TABLE IF NOT EXISTS wf_task (
     id                VARCHAR(32) NOT NULL PRIMARY KEY comment '主键ID',
@@ -84,30 +81,8 @@ CREATE TABLE IF NOT EXISTS wf_historic_task_actor (
     actor_id          VARCHAR(50) not null comment '参与者ID'
 )comment='历史任务参与者表';
 
-CREATE TABLE IF NOT EXISTS wf_surrogate (
-    id                VARCHAR(32) PRIMARY KEY NOT NULL COMMENT '主键ID',
-    process_name      VARCHAR(100) COMMENT '流程名称',
-    operator          VARCHAR(50) COMMENT '授权人',
-    surrogate         VARCHAR(50) COMMENT '代理人',
-    odate             VARCHAR(64) COMMENT '操作时间',
-    sdate             VARCHAR(64) COMMENT '开始时间',
-    edate             VARCHAR(64) COMMENT '结束时间',
-    state             TINYINT(1) COMMENT '状态'
-)COMMENT='委托代理表';
-create index IDX_SURROGATE_OPERATOR on wf_surrogate (operator);
-
-CREATE TABLE IF NOT EXISTS wf_cc_process_instance (
-    instance_id       varchar(32) COMMENT '流程实例ID',
-    actor_id       	  varchar(50) COMMENT '参与者ID',
-    creator           varchar(50) COMMENT '发起人',
-    create_time       DATETIME COMMENT '抄送时间',
-    finish_Time       DATETIME COMMENT '完成时间',
-    status            TINYINT(1)  COMMENT '状态'
-)comment='抄送实例表';
-create index IDX_CCINSTANCE_instance_id on wf_cc_process_instance (instance_id);
-
 create index IDX_process_name on wf_process_definition (name);
-create index IDX_INSTANCE_PROCESSID on wf_process_instance (process_id);
+create index IDX_INSTANCE_PROCESSID on wf_process_instance (process_def_id);
 create index IDX_TASK_instance_id on wf_task (instance_id);
 create index IDX_TASK_TASKNAME on wf_task (task_name);
 create index IDX_TASK_PARENTTASK on wf_task (parent_task_id);
@@ -128,7 +103,7 @@ alter table wf_process_instance
   add constraint FK_INSTANCE_PARENTID foreign key (parent_id)
   references wf_process_instance (id);
 alter table wf_process_instance
-  add constraint FK_INSTANCE_PROCESSID foreign key (process_id)
+  add constraint FK_INSTANCE_PROCESSID foreign key (process_def_id)
   references wf_process_definition (id);
 alter table wf_historic_task_actor
   add constraint FK_HISTORIC_TASKACTOR foreign key (task_id)

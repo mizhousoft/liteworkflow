@@ -2,13 +2,10 @@ package com.liteworkflow.engine.persistence.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Map;
 
-import com.liteworkflow.engine.helper.JsonHelper;
-
 /**
- * 流程工作单实体类（一般称为流程实例）
+ * 流程实例
  * 
  * @author
  * @since 1.0
@@ -26,14 +23,34 @@ public class ProcessInstance implements Serializable
 	private String id;
 
 	/**
-	 * 修订版本
+	 * 流程实例为子流程时，该字段标识父流程实例ID
 	 */
-	private Integer revision = 0;
+	private String parentId;
 
 	/**
 	 * 流程定义ID
 	 */
-	private String processId;
+	private String processDefinitionId;
+
+	/**
+	 * 流程实例优先级
+	 */
+	private int priority;
+
+	/**
+	 * 流程实例为子流程时，该字段标识父流程哪个节点模型启动的子流程
+	 */
+	private String parentNodeName;
+
+	/**
+	 * 流程实例附属变量
+	 */
+	private String variable;
+
+	/**
+	 * 修订版本
+	 */
+	private int revision = 0;
 
 	/**
 	 * 流程实例创建者ID
@@ -46,124 +63,125 @@ public class ProcessInstance implements Serializable
 	private LocalDateTime createTime;
 
 	/**
-	 * 流程实例为子流程时，该字段标识父流程实例ID
+	 * 变量
 	 */
-	private String parentId;
+	private Map<String, Object> variableMap;
 
 	/**
-	 * 流程实例为子流程时，该字段标识父流程哪个节点模型启动的子流程
+	 * 获取id
+	 * 
+	 * @return
 	 */
-	private String parentNodeName;
-
-	/**
-	 * 流程实例期望完成时间
-	 */
-	private LocalDateTime expireTime;
-
-	/**
-	 * 流程实例上一次更新时间
-	 */
-	private LocalDateTime lastUpdateTime;
-
-	/**
-	 * 流程实例上一次更新人员ID
-	 */
-	private String lastUpdator;
-
-	/**
-	 * 流程实例优先级
-	 */
-	private Integer priority;
-
-	/**
-	 * 流程实例附属变量
-	 */
-	private String variable;
-
-	public String getProcessId()
-	{
-		return processId;
-	}
-
-	public void setProcessId(String processId)
-	{
-		this.processId = processId;
-	}
-
-	public String getCreator()
-	{
-		return creator;
-	}
-
-	public void setCreator(String creator)
-	{
-		this.creator = creator;
-	}
-
-	public String getParentId()
-	{
-		return parentId;
-	}
-
-	public void setParentId(String parentId)
-	{
-		this.parentId = parentId;
-	}
-
-	public String getLastUpdator()
-	{
-		return lastUpdator;
-	}
-
-	public void setLastUpdator(String lastUpdator)
-	{
-		this.lastUpdator = lastUpdator;
-	}
-
-	public Integer getPriority()
-	{
-		return priority;
-	}
-
-	public void setPriority(Integer priority)
-	{
-		this.priority = priority;
-	}
-
 	public String getId()
 	{
 		return id;
 	}
 
+	/**
+	 * 设置id
+	 * 
+	 * @param id
+	 */
 	public void setId(String id)
 	{
 		this.id = id;
 	}
 
+	/**
+	 * 获取parentId
+	 * 
+	 * @return
+	 */
+	public String getParentId()
+	{
+		return parentId;
+	}
+
+	/**
+	 * 设置parentId
+	 * 
+	 * @param parentId
+	 */
+	public void setParentId(String parentId)
+	{
+		this.parentId = parentId;
+	}
+
+	/**
+	 * 获取processDefinitionId
+	 * 
+	 * @return
+	 */
+	public String getProcessDefinitionId()
+	{
+		return processDefinitionId;
+	}
+
+	/**
+	 * 设置processDefinitionId
+	 * 
+	 * @param processDefinitionId
+	 */
+	public void setProcessDefinitionId(String processDefinitionId)
+	{
+		this.processDefinitionId = processDefinitionId;
+	}
+
+	/**
+	 * 获取priority
+	 * 
+	 * @return
+	 */
+	public int getPriority()
+	{
+		return priority;
+	}
+
+	/**
+	 * 设置priority
+	 * 
+	 * @param priority
+	 */
+	public void setPriority(int priority)
+	{
+		this.priority = priority;
+	}
+
+	/**
+	 * 获取parentNodeName
+	 * 
+	 * @return
+	 */
 	public String getParentNodeName()
 	{
 		return parentNodeName;
 	}
 
+	/**
+	 * 设置parentNodeName
+	 * 
+	 * @param parentNodeName
+	 */
 	public void setParentNodeName(String parentNodeName)
 	{
 		this.parentNodeName = parentNodeName;
 	}
 
+	/**
+	 * 获取variable
+	 * 
+	 * @return
+	 */
 	public String getVariable()
 	{
 		return variable;
 	}
 
-	@SuppressWarnings("unchecked")
-	public Map<String, Object> getVariableMap()
-	{
-		Map<String, Object> map = JsonHelper.fromJson(this.variable, Map.class);
-		if (map == null)
-			return Collections.emptyMap();
-		return map;
-	}
-
+	/**
+	 * 设置variable
+	 * 
+	 * @param variable
+	 */
 	public void setVariable(String variable)
 	{
 		this.variable = variable;
@@ -174,7 +192,7 @@ public class ProcessInstance implements Serializable
 	 * 
 	 * @return
 	 */
-	public Integer getRevision()
+	public int getRevision()
 	{
 		return revision;
 	}
@@ -184,9 +202,29 @@ public class ProcessInstance implements Serializable
 	 * 
 	 * @param revision
 	 */
-	public void setRevision(Integer revision)
+	public void setRevision(int revision)
 	{
 		this.revision = revision;
+	}
+
+	/**
+	 * 获取creator
+	 * 
+	 * @return
+	 */
+	public String getCreator()
+	{
+		return creator;
+	}
+
+	/**
+	 * 设置creator
+	 * 
+	 * @param creator
+	 */
+	public void setCreator(String creator)
+	{
+		this.creator = creator;
 	}
 
 	/**
@@ -210,52 +248,39 @@ public class ProcessInstance implements Serializable
 	}
 
 	/**
-	 * 获取lastUpdateTime
+	 * 获取variableMap
 	 * 
 	 * @return
 	 */
-	public LocalDateTime getLastUpdateTime()
+	public Map<String, Object> getVariableMap()
 	{
-		return lastUpdateTime;
+		return variableMap;
 	}
 
 	/**
-	 * 设置lastUpdateTime
+	 * 设置variableMap
 	 * 
-	 * @param lastUpdateTime
+	 * @param variableMap
 	 */
-	public void setLastUpdateTime(LocalDateTime lastUpdateTime)
+	public void setVariableMap(Map<String, Object> variableMap)
 	{
-		this.lastUpdateTime = lastUpdateTime;
+		this.variableMap = variableMap;
 	}
 
 	/**
-	 * 获取expireTime
-	 * 
-	 * @return
+	 * {@inheritDoc}
 	 */
-	public LocalDateTime getExpireTime()
-	{
-		return expireTime;
-	}
-
-	/**
-	 * 设置expireTime
-	 * 
-	 * @param expireTime
-	 */
-	public void setExpireTime(LocalDateTime expireTime)
-	{
-		this.expireTime = expireTime;
-	}
-
+	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder();
-		sb.append("ProcessInstance(id=").append(this.id);
-		sb.append(",processId=").append(this.processId);
-		sb.append(",creator=").append(this.creator);
-		sb.append(",createTime").append(this.createTime).append(")");
-		return sb.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append("{\"id\":\"")
+		        .append(id)
+		        .append("\", \"processDefinitionId\":\"")
+		        .append(processDefinitionId)
+		        .append("\", \"revision\":\"")
+		        .append(revision)
+		        .append("\"}");
+		return builder.toString();
 	}
 }

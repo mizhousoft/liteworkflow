@@ -1,22 +1,24 @@
 package com.liteworkflow.engine.persistence.request;
 
+import java.time.LocalDateTime;
+
 import com.mizhousoft.commons.data.domain.PageRequest;
 import com.mizhousoft.commons.data.domain.Sort;
 import com.mizhousoft.commons.data.domain.Sort.Direction;
 
 /**
- * CCInstancePageRequest
+ * 分页请求
  *
  * @version
  */
-public class CCInstancePageRequest extends PageRequest
+public class HistoricInstancePageRequest extends PageRequest
 {
 	private static final long serialVersionUID = -2630784391027545999L;
 
 	/**
 	 * 流程定义id
 	 */
-	private String processId;
+	private String processDefinitionId;
 
 	/**
 	 * 操作人员id
@@ -44,46 +46,44 @@ public class CCInstancePageRequest extends PageRequest
 	private String category;
 
 	/**
-	 * 父实例id
+	 * 创建开始时间
 	 */
-	private String parentId;
+	private LocalDateTime startTime;
 
 	/**
-	 * 创建时间范围
+	 * 创建结束时间
 	 */
-	private String createTimeStart;
-
-	private String createTimeEnd;
+	private LocalDateTime endTime;
 
 	/**
 	 * 构造函数
 	 *
 	 */
-	public CCInstancePageRequest()
+	public HistoricInstancePageRequest()
 	{
 		super();
 
-		this.setSort(Sort.create(Direction.DESC, "cc.create_Time"));
+		this.setSort(Sort.create(Direction.DESC, "o.create_Time"));
 	}
 
 	/**
-	 * 获取processId
+	 * 获取processDefinitionId
 	 * 
 	 * @return
 	 */
-	public String getProcessId()
+	public String getProcessDefinitionId()
 	{
-		return processId;
+		return processDefinitionId;
 	}
 
 	/**
-	 * 设置processId
+	 * 设置processDefinitionId
 	 * 
-	 * @param processId
+	 * @param processDefinitionId
 	 */
-	public void setProcessId(String processId)
+	public void setProcessDefinitionId(String processDefinitionId)
 	{
-		this.processId = processId;
+		this.processDefinitionId = processDefinitionId;
 	}
 
 	/**
@@ -187,62 +187,42 @@ public class CCInstancePageRequest extends PageRequest
 	}
 
 	/**
-	 * 获取parentId
+	 * 获取startTime
 	 * 
 	 * @return
 	 */
-	public String getParentId()
+	public LocalDateTime getStartTime()
 	{
-		return parentId;
+		return startTime;
 	}
 
 	/**
-	 * 设置parentId
+	 * 设置startTime
 	 * 
-	 * @param parentId
+	 * @param startTime
 	 */
-	public void setParentId(String parentId)
+	public void setStartTime(LocalDateTime startTime)
 	{
-		this.parentId = parentId;
+		this.startTime = startTime;
 	}
 
 	/**
-	 * 获取createTimeStart
-	 * 
-	 * @return
-	 */
-	public String getCreateTimeStart()
-	{
-		return createTimeStart;
-	}
-
-	/**
-	 * 设置createTimeStart
-	 * 
-	 * @param createTimeStart
-	 */
-	public void setCreateTimeStart(String createTimeStart)
-	{
-		this.createTimeStart = createTimeStart;
-	}
-
-	/**
-	 * 获取createTimeEnd
+	 * 获取endTime
 	 * 
 	 * @return
 	 */
-	public String getCreateTimeEnd()
+	public LocalDateTime getEndTime()
 	{
-		return createTimeEnd;
+		return endTime;
 	}
 
 	/**
-	 * 设置createTimeEnd
+	 * 设置endTime
 	 * 
-	 * @param createTimeEnd
+	 * @param endTime
 	 */
-	public void setCreateTimeEnd(String createTimeEnd)
+	public void setEndTime(LocalDateTime endTime)
 	{
-		this.createTimeEnd = createTimeEnd;
+		this.endTime = endTime;
 	}
 }

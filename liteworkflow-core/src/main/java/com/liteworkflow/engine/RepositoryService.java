@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
-import com.liteworkflow.engine.persistence.request.ProcessDefPageRequest;
+import com.liteworkflow.engine.persistence.request.ProcessDefinitionPageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
@@ -41,24 +41,12 @@ public interface RepositoryService
 	void redeploy(String id, InputStream input);
 
 	/**
-	 * 卸载指定的流程定义，只更新状态
+	 * 删除流程定义
 	 * 
 	 * @param id
+	 * @param cascade
 	 */
-	void undeploy(String id);
-
-	/**
-	 * 谨慎使用.数据恢复非常痛苦，你懂得~~
-	 * 级联删除指定流程定义的所有数据：
-	 * 1.wf_process_definition
-	 * 2.wf_process_instance,wf_historic_process_instance
-	 * 3.wf_task,wf_historic_task
-	 * 4.wf_task_actor,wf_historic_task_actor
-	 * 5.wf_cc_process_instance
-	 * 
-	 * @param id
-	 */
-	void cascadeRemove(String id);
+	void deleteDeployment(String id, boolean cascade);
 
 	/**
 	 * 根据主键ID获取流程定义对象
@@ -99,5 +87,5 @@ public interface RepositoryService
 	 * @param request
 	 * @return
 	 */
-	Page<ProcessDefinition> queryPageData(ProcessDefPageRequest request);
+	Page<ProcessDefinition> queryPageData(ProcessDefinitionPageRequest request);
 }

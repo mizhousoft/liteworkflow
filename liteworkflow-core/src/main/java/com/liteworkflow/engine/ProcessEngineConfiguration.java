@@ -67,11 +67,4 @@ public interface ProcessEngineConfiguration
 	 * @return
 	 */
 	HistoryService getHistoryService();
-
-	/**
-	 * 获取ManagerService
-	 * 
-	 * @return
-	 */
-	ManagerService getManagerService();
 }

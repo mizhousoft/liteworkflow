@@ -32,7 +32,7 @@ public class TestConfig extends TestSpring
 	@Test
 	public void test()
 	{
-		ProcessInstance instance = engine.getRuntimeService().startInstanceByName("config", 0, "2", null);
+		ProcessInstance instance = engine.getRuntimeService().startInstanceByName("config", "2", null);
 		System.out.println("instance=" + instance);
 	}
 }

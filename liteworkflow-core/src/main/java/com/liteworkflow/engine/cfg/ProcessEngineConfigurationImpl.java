@@ -8,7 +8,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import com.liteworkflow.engine.HistoryService;
-import com.liteworkflow.engine.ManagerService;
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.ProcessInstanceService;
@@ -17,40 +16,33 @@ import com.liteworkflow.engine.RuntimeService;
 import com.liteworkflow.engine.TaskService;
 import com.liteworkflow.engine.cache.CacheManager;
 import com.liteworkflow.engine.cache.memory.MemoryCacheManager;
+import com.liteworkflow.engine.impl.CommandExecutor;
+import com.liteworkflow.engine.impl.CommandExecutorImpl;
 import com.liteworkflow.engine.impl.HistoryServiceImpl;
-import com.liteworkflow.engine.impl.ManagerServiceImpl;
 import com.liteworkflow.engine.impl.ProcessEngineImpl;
 import com.liteworkflow.engine.impl.ProcessInstanceServiceImpl;
 import com.liteworkflow.engine.impl.RepositoryServiceImpl;
 import com.liteworkflow.engine.impl.RuntimeServiceImpl;
-import com.liteworkflow.engine.impl.ServiceContext;
 import com.liteworkflow.engine.impl.TaskServiceImpl;
-import com.liteworkflow.engine.impl.context.SpringContext;
-import com.liteworkflow.engine.persistence.mapper.CCProcessInstanceMapper;
 import com.liteworkflow.engine.persistence.mapper.HistoricProcessInstanceMapper;
 import com.liteworkflow.engine.persistence.mapper.HistoricTaskActorMapper;
 import com.liteworkflow.engine.persistence.mapper.HistoricTaskMapper;
 import com.liteworkflow.engine.persistence.mapper.ProcessDefinitionMapper;
 import com.liteworkflow.engine.persistence.mapper.ProcessInstanceMapper;
-import com.liteworkflow.engine.persistence.mapper.SurrogateMapper;
 import com.liteworkflow.engine.persistence.mapper.TaskActorMapper;
 import com.liteworkflow.engine.persistence.mapper.TaskMapper;
-import com.liteworkflow.engine.persistence.service.CCProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricTaskActorEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricTaskEntityService;
 import com.liteworkflow.engine.persistence.service.ProcessDefinitionEntityService;
 import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
-import com.liteworkflow.engine.persistence.service.SurrogateEntityService;
 import com.liteworkflow.engine.persistence.service.TaskActorEntityService;
 import com.liteworkflow.engine.persistence.service.TaskEntityService;
-import com.liteworkflow.engine.persistence.service.impl.CCProcessInstanceEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.HistoricProcessInstanceEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.HistoricTaskActorEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.HistoricTaskEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.ProcessDefinitionEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.ProcessInstanceEntityServiceImpl;
-import com.liteworkflow.engine.persistence.service.impl.SurrogateEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.TaskActorEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.TaskEntityServiceImpl;
 
@@ -101,11 +93,6 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	private HistoryService historyService;
 
 	/**
-	 * ManagerService
-	 */
-	private ManagerService managerService;
-
-	/**
 	 * RuntimeService
 	 */
 	private RuntimeService runtimeService;
@@ -141,24 +128,19 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	private TaskEntityService taskEntityService;
 
 	/**
-	 * SurrogateEntityService
-	 */
-	private SurrogateEntityService surrogateEntityService;
-
-	/**
 	 * HistoricProcessInstanceEntityService
 	 */
 	private HistoricProcessInstanceEntityService historicProcessInstanceEntityService;
 
 	/**
-	 * CCProcessInstanceEntityService
-	 */
-	private CCProcessInstanceEntityService ccProcessInstanceEntityService;
-
-	/**
 	 * ProcessInstanceEntityService
 	 */
 	private ProcessInstanceEntityService processInstanceEntityService;
+
+	/**
+	 * CommandExecutor
+	 */
+	private CommandExecutor commandExecutor = new CommandExecutorImpl(this);
 
 	/**
 	 * {@inheritDoc}
@@ -168,9 +150,9 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	{
 		LOG.info("Start to build ProcessEngine.");
 
-		ServiceContext.setContext(new SpringContext(applicationContext));
+		initPersistenceServices();
 
-		initServices();
+		initOpenServices();
 
 		this.processEngine = new ProcessEngineImpl(this);
 
@@ -237,26 +219,17 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ManagerService getManagerService()
-	{
-		return this.managerService;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public RuntimeService getRuntimeService()
 	{
 		return runtimeService;
 	}
 
 	/**
-	 * 初始化服务
+	 * 初始化持久层服务
 	 * 
 	 * @throws Exception
 	 */
-	private void initServices() throws Exception
+	private void initPersistenceServices() throws Exception
 	{
 		this.processDefinitionEntityService = initProcessDefinitionEntityService(sqlSessionFactory);
 
@@ -264,47 +237,45 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		this.historicTaskEntityService = initHistoricTaskEntityService(sqlSessionFactory, historicTaskActorEntityService);
 		this.taskActorEntityService = initTaskActorEntityService(sqlSessionFactory);
 		this.taskEntityService = initTaskEntityService(sqlSessionFactory);
-		this.surrogateEntityService = initSurrogateEntityService(sqlSessionFactory);
 
 		this.historicProcessInstanceEntityService = initHistoricProcessInstanceEntityService(sqlSessionFactory);
-		this.ccProcessInstanceEntityService = initCCProcessInstanceEntityService(sqlSessionFactory);
 		this.processInstanceEntityService = initProcessInstanceEntityService(sqlSessionFactory, historicProcessInstanceEntityService);
+	}
 
-		RepositoryServiceImpl repositoryService = new RepositoryServiceImpl(this, cacheManager, processDefinitionEntityService,
-		        historicProcessInstanceEntityService);
+	/**
+	 * 初始化开放服务
+	 * 
+	 */
+	private void initOpenServices()
+	{
+		RepositoryServiceImpl repositoryService = new RepositoryServiceImpl(this, cacheManager, processDefinitionEntityService);
+		repositoryService.setCommandExecutor(commandExecutor);
 		this.repositoryService = repositoryService;
 
 		HistoryServiceImpl historyService = new HistoryServiceImpl();
-		historyService.setCcProcessInstanceEntityService(ccProcessInstanceEntityService);
 		historyService.setHistoricProcessInstanceEntityService(historicProcessInstanceEntityService);
 		historyService.setHistoricTaskEntityService(historicTaskEntityService);
 		historyService.setHistoricTaskActorEntityService(historicTaskActorEntityService);
 		this.historyService = historyService;
 
 		ProcessInstanceServiceImpl processInstanceService = new ProcessInstanceServiceImpl();
-		processInstanceService.setCcProcessInstanceEntityService(ccProcessInstanceEntityService);
 		processInstanceService.setHistoricProcessInstanceEntityService(historicProcessInstanceEntityService);
 		processInstanceService.setHistoricTaskEntityService(historicTaskEntityService);
 		processInstanceService.setProcessInstanceEntityService(processInstanceEntityService);
 		processInstanceService.setTaskEntityService(taskEntityService);
-		processInstanceService.setEngineConfiguration(this);
 		this.processInstanceService = processInstanceService;
 
-		TaskServiceImpl taskService = new TaskServiceImpl();
+		TaskServiceImpl taskService = new TaskServiceImpl(this);
 		taskService.setHistoricTaskEntityService(historicTaskEntityService);
-		taskService.setProcessInstanceEntityService(processInstanceEntityService);
 		taskService.setTaskActorEntityService(taskActorEntityService);
 		taskService.setTaskEntityService(taskEntityService);
 		taskService.setRepositoryService(repositoryService);
 		taskService.setProcessInstanceService(processInstanceService);
-		taskService.setEngineConfiguration(this);
+		taskService.setCommandExecutor(commandExecutor);
 		this.taskService = taskService;
 
-		ManagerServiceImpl managerService = new ManagerServiceImpl();
-		managerService.setSurrogateEntityService(surrogateEntityService);
-		this.managerService = managerService;
-
 		RuntimeServiceImpl runtimeService = new RuntimeServiceImpl(this);
+		runtimeService.setCommandExecutor(commandExecutor);
 		this.runtimeService = runtimeService;
 	}
 
@@ -418,36 +389,6 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		return historicTaskActorEntityService;
 	}
 
-	private CCProcessInstanceEntityService initCCProcessInstanceEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
-	{
-		MapperFactoryBean<CCProcessInstanceMapper> factoryBean = new MapperFactoryBean<CCProcessInstanceMapper>();
-		factoryBean.setMapperInterface(CCProcessInstanceMapper.class);
-		factoryBean.setAddToConfig(true);
-		factoryBean.setSqlSessionFactory(sqlSessionFactory);
-		factoryBean.afterPropertiesSet();
-		CCProcessInstanceMapper ccProcessInstanceMapper = (CCProcessInstanceMapper) factoryBean.getObject();
-
-		CCProcessInstanceEntityServiceImpl ccProcessInstanceEntityService = new CCProcessInstanceEntityServiceImpl();
-		ccProcessInstanceEntityService.setCcProcessInstanceMapper(ccProcessInstanceMapper);
-
-		return ccProcessInstanceEntityService;
-	}
-
-	private SurrogateEntityService initSurrogateEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
-	{
-		MapperFactoryBean<SurrogateMapper> factoryBean = new MapperFactoryBean<SurrogateMapper>();
-		factoryBean.setMapperInterface(SurrogateMapper.class);
-		factoryBean.setAddToConfig(true);
-		factoryBean.setSqlSessionFactory(sqlSessionFactory);
-		factoryBean.afterPropertiesSet();
-		SurrogateMapper surrogateMapper = (SurrogateMapper) factoryBean.getObject();
-
-		SurrogateEntityServiceImpl surrogateEntityService = new SurrogateEntityServiceImpl();
-		surrogateEntityService.setSurrogateMapper(surrogateMapper);
-
-		return surrogateEntityService;
-	}
-
 	/**
 	 * 获取processDefinitionEntityService
 	 * 
@@ -499,16 +440,6 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	}
 
 	/**
-	 * 获取surrogateEntityService
-	 * 
-	 * @return
-	 */
-	public SurrogateEntityService getSurrogateEntityService()
-	{
-		return surrogateEntityService;
-	}
-
-	/**
 	 * 获取historicProcessInstanceEntityService
 	 * 
 	 * @return
@@ -516,16 +447,6 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	public HistoricProcessInstanceEntityService getHistoricProcessInstanceEntityService()
 	{
 		return historicProcessInstanceEntityService;
-	}
-
-	/**
-	 * 获取ccProcessInstanceEntityService
-	 * 
-	 * @return
-	 */
-	public CCProcessInstanceEntityService getCcProcessInstanceEntityService()
-	{
-		return ccProcessInstanceEntityService;
 	}
 
 	/**

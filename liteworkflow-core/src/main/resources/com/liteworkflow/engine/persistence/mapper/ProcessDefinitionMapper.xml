@@ -8,7 +8,6 @@
 		<result property="name" column="name" />
 		<result property="displayName" column="display_name" />
 		<result property="category" column="category" />
-		<result property="state" column="state" />
 		<result property="version" column="version" />
 		<result property="bytes" column="content" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
 		<result property="instanceUrl" column="instance_url" />
@@ -17,20 +16,18 @@
 	</resultMap>
 	
 	<sql id="Column_List">
-        id, name, display_name, category, state, version, content, instance_url, create_time, creator
+        id, name, display_name, category, version, content, instance_url, create_time, creator
     </sql>
 	
 	<insert id="save">
-		insert into wf_process_definition (id, name, display_name, category, state, version, content, instance_url, create_time, creator)
-		values (#{id}, #{name}, #{displayName}, #{category}, #{state}, #{version}, #{bytes, typeHandler=org.apache.ibatis.type.BlobTypeHandler}, #{instanceUrl}, #{createTime}, #{creator})
+		insert into wf_process_definition (id, name, display_name, category, version, content, instance_url, create_time, creator)
+		values (#{id}, #{name}, #{displayName}, #{category}, #{version}, #{bytes, typeHandler=org.apache.ibatis.type.BlobTypeHandler}, #{instanceUrl}, #{createTime}, #{creator})
 	</insert>
 
 	<update id="update">
         update wf_process_definition 
-        set name = #{name},
-        display_name = #{displayName},
+        set display_name = #{displayName},
         category = #{category},
-        state = #{state},
         content = #{bytes, typeHandler=org.apache.ibatis.type.BlobTypeHandler},
         instance_url = #{instanceUrl}
         where id = #{id} 

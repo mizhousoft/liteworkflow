@@ -41,7 +41,6 @@ public class TestProcess extends TestSpring
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("task1.operator", "1");
 		engine.getRuntimeService().startInstanceById(processId, "1", args);
-		engine.getRepositoryService().undeploy(processId);
 		// engine.startInstanceById(processId, "1", args);
 	}
 }

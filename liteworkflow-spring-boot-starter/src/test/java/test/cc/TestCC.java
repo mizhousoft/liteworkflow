@@ -2,8 +2,6 @@ package test.cc;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.liteworkflow.boot.WorkflowApplication;
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.RepositoryService;
-import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 
 /**
  * @author yuqs
@@ -43,11 +40,6 @@ public class TestCC
 	@Test
 	public void test()
 	{
-		Map<String, Object> args = new HashMap<String, Object>();
-		args.put("task1.operator", new String[] { "1" });
-		ProcessInstance order = engine.getRuntimeService().startInstanceByName("simple", 0, "2", args);
-		engine.getProcessInstanceService().createCCInstance(order.getId(), "test");
-		// engine.getOrderService().updateCCStatus("b0fcc08da45d4e88819d9c287917b525", "test");
-		// engine.getOrderService().deleteCCOrder("01b960b9d5df4be7b8565b9f64bc1856", "test");
+
 	}
 }

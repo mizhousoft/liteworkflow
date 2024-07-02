@@ -3,7 +3,7 @@ package com.liteworkflow.engine.persistence.service;
 import java.util.List;
 
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
-import com.liteworkflow.engine.persistence.request.ProcessInstPageRequest;
+import com.liteworkflow.engine.persistence.request.ProcessInstancePageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
@@ -51,18 +51,18 @@ public interface ProcessInstanceEntityService
 	/**
 	 * 根据流程实例id查询实例对象
 	 * 
-	 * @param instanceId 活动流程实例id
+	 * @param id 活动流程实例id
 	 * @return ProcessInstance 活动流程实例对象
 	 */
-	ProcessInstance getByInstanceId(String instanceId);
+	ProcessInstance getById(String id);
 
 	/**
+	 * 根据父ID查询
 	 * 
-	 * 
-	 * @param request
+	 * @param parentId
 	 * @return
 	 */
-	List<ProcessInstance> queryList(ProcessInstPageRequest request);
+	List<ProcessInstance> queryByParentId(String parentId);
 
 	/**
 	 * 分页查询
@@ -70,5 +70,5 @@ public interface ProcessInstanceEntityService
 	 * @param request
 	 * @return
 	 */
-	Page<ProcessInstance> queryPageData(ProcessInstPageRequest request);
+	Page<ProcessInstance> queryPageData(ProcessInstancePageRequest request);
 }

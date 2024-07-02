@@ -45,10 +45,10 @@ public class TestModel extends TestSpring
 	{
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("task1.operator", new String[] { "1" });
-		ProcessInstance instance = engine.getRuntimeService().startInstanceByName("simple", null, "2", args);
+		ProcessInstance instance = engine.getRuntimeService().startInstanceByName("simple", "2", args);
 		System.out.println("instance=" + instance);
 
-		ProcessDefinition process = engine.getRepositoryService().getById(instance.getProcessId());
+		ProcessDefinition process = engine.getRepositoryService().getById(instance.getProcessDefinitionId());
 		ProcessModel processModel = process.getModel();
 
 		List<Task> tasks = engine.getTaskService().getActiveTasks(instance.getId());

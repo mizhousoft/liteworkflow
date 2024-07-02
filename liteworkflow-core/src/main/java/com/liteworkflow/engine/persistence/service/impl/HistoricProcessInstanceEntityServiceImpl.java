@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.liteworkflow.engine.persistence.entity.HistoricProcessInstance;
 import com.liteworkflow.engine.persistence.mapper.HistoricProcessInstanceMapper;
-import com.liteworkflow.engine.persistence.request.HistoricProcessInstPageRequest;
+import com.liteworkflow.engine.persistence.request.HistoricInstancePageRequest;
 import com.liteworkflow.engine.persistence.service.HistoricProcessInstanceEntityService;
 import com.mizhousoft.commons.data.domain.Page;
 import com.mizhousoft.commons.data.util.PageBuilder;
@@ -59,7 +59,7 @@ public class HistoricProcessInstanceEntityServiceImpl implements HistoricProcess
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<HistoricProcessInstance> queryList(HistoricProcessInstPageRequest request)
+	public List<HistoricProcessInstance> queryList(HistoricInstancePageRequest request)
 	{
 		request.setPageSize(100000);
 
@@ -70,7 +70,7 @@ public class HistoricProcessInstanceEntityServiceImpl implements HistoricProcess
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Page<HistoricProcessInstance> queryPageData(HistoricProcessInstPageRequest request)
+	public Page<HistoricProcessInstance> queryPageData(HistoricInstancePageRequest request)
 	{
 		long total = historicProcessInstanceMapper.countTotal(request);
 		long rowOffset = PageUtils.calcRowOffset(request, total);

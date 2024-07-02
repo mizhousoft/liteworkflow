@@ -2,7 +2,6 @@ package com.liteworkflow.engine;
 
 import java.util.Map;
 
-import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 
 /**
@@ -20,7 +19,7 @@ public interface RuntimeService
 	 * @return ProcessInstance 流程实例
 	 * @see #startInstanceById(String, String, Map)
 	 */
-	public ProcessInstance startInstanceById(String id);
+	ProcessInstance startInstanceById(String id);
 
 	/**
 	 * 根据流程定义ID，操作人ID启动流程实例
@@ -30,7 +29,7 @@ public interface RuntimeService
 	 * @return ProcessInstance 流程实例
 	 * @see #startInstanceById(String, String, Map)
 	 */
-	public ProcessInstance startInstanceById(String id, String operator);
+	ProcessInstance startInstanceById(String id, String operator);
 
 	/**
 	 * 根据流程定义ID，操作人ID，参数列表启动流程实例
@@ -40,7 +39,7 @@ public interface RuntimeService
 	 * @param args 参数列表
 	 * @return ProcessInstance 流程实例
 	 */
-	public ProcessInstance startInstanceById(String id, String operator, Map<String, Object> args);
+	ProcessInstance startInstanceById(String id, String operator, Map<String, Object> args);
 
 	/**
 	 * 根据流程名称启动流程实例
@@ -48,16 +47,7 @@ public interface RuntimeService
 	 * @param name 流程定义名称
 	 * @return ProcessInstance 流程实例
 	 */
-	public ProcessInstance startInstanceByName(String name);
-
-	/**
-	 * 根据流程名称、版本号启动流程实例
-	 * 
-	 * @param name 流程定义名称
-	 * @param version 版本号
-	 * @return ProcessInstance 流程实例
-	 */
-	public ProcessInstance startInstanceByName(String name, Integer version);
+	ProcessInstance startInstanceByName(String name);
 
 	/**
 	 * 根据流程名称、版本号、操作人启动流程实例
@@ -67,7 +57,7 @@ public interface RuntimeService
 	 * @param operator 操作人
 	 * @return ProcessInstance 流程实例
 	 */
-	public ProcessInstance startInstanceByName(String name, Integer version, String operator);
+	ProcessInstance startInstanceByName(String name, String operator);
 
 	/**
 	 * 根据流程名称、版本号、操作人、参数列表启动流程实例
@@ -78,13 +68,9 @@ public interface RuntimeService
 	 * @param args 参数列表
 	 * @return ProcessInstance 流程实例
 	 */
-	public ProcessInstance startInstanceByName(String name, Integer version, String operator, Map<String, Object> args);
+	ProcessInstance startInstanceByName(String name, String operator, Map<String, Object> args);
 
-	/**
-	 * 根据父执行对象启动子流程实例
-	 * 
-	 * @param execution 执行对象
-	 * @return ProcessInstance 流程实例
-	 */
-	public ProcessInstance startInstanceByExecution(Execution execution);
+	void setVariable(String instanceId, String variableName, Object value);
+
+	void setVariables(String instanceId, Map<String, Object> variableMap);
 }

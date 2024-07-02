@@ -1,7 +1,6 @@
 package com.liteworkflow.engine.impl;
 
 import com.liteworkflow.engine.HistoryService;
-import com.liteworkflow.engine.ManagerService;
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.ProcessInstanceService;
@@ -38,11 +37,6 @@ public class ProcessEngineImpl implements ProcessEngine
 	private HistoryService historyService;
 
 	/**
-	 * 管理业务类
-	 */
-	private ManagerService managerService;
-
-	/**
 	 * 运行服务类
 	 */
 	private RuntimeService runtimeService;
@@ -61,7 +55,6 @@ public class ProcessEngineImpl implements ProcessEngine
 		this.runtimeService = configuration.getRuntimeService();
 		this.taskService = configuration.getTaskService();
 		this.historyService = configuration.getHistoryService();
-		this.managerService = configuration.getManagerService();
 	}
 
 	/**
@@ -107,14 +100,5 @@ public class ProcessEngineImpl implements ProcessEngine
 	public HistoryService getHistoryService()
 	{
 		return historyService;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ManagerService getManagerService()
-	{
-		return managerService;
 	}
 }

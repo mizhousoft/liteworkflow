@@ -3,7 +3,7 @@ package com.liteworkflow.engine.persistence.service;
 import java.util.List;
 
 import com.liteworkflow.engine.persistence.entity.HistoricProcessInstance;
-import com.liteworkflow.engine.persistence.request.HistoricProcessInstPageRequest;
+import com.liteworkflow.engine.persistence.request.HistoricInstancePageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
@@ -48,7 +48,7 @@ public interface HistoricProcessInstanceEntityService
 	 * @param request
 	 * @return
 	 */
-	List<HistoricProcessInstance> queryList(HistoricProcessInstPageRequest request);
+	List<HistoricProcessInstance> queryList(HistoricInstancePageRequest request);
 
 	/**
 	 * 分页查询
@@ -56,5 +56,5 @@ public interface HistoricProcessInstanceEntityService
 	 * @param request
 	 * @return
 	 */
-	Page<HistoricProcessInstance> queryPageData(HistoricProcessInstPageRequest request);
+	Page<HistoricProcessInstance> queryPageData(HistoricInstancePageRequest request);
 }

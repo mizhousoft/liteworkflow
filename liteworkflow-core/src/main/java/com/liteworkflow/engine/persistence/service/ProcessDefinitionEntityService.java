@@ -3,7 +3,7 @@ package com.liteworkflow.engine.persistence.service;
 import java.util.List;
 
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
-import com.liteworkflow.engine.persistence.request.ProcessDefPageRequest;
+import com.liteworkflow.engine.persistence.request.ProcessDefinitionPageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
@@ -65,5 +65,5 @@ public interface ProcessDefinitionEntityService
 	 * @param request
 	 * @return
 	 */
-	Page<ProcessDefinition> queryPageData(ProcessDefPageRequest request);
+	Page<ProcessDefinition> queryPageData(ProcessDefinitionPageRequest request);
 }

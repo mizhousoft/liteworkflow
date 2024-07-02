@@ -1,11 +1,14 @@
 package com.liteworkflow.engine.persistence.service.impl;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+import com.liteworkflow.engine.helper.JsonHelper;
 import com.liteworkflow.engine.persistence.entity.HistoricProcessInstance;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.persistence.mapper.ProcessInstanceMapper;
-import com.liteworkflow.engine.persistence.request.ProcessInstPageRequest;
+import com.liteworkflow.engine.persistence.request.ProcessInstancePageRequest;
 import com.liteworkflow.engine.persistence.service.HistoricProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
 import com.mizhousoft.commons.data.domain.Page;
@@ -92,28 +95,39 @@ public class ProcessInstanceEntityServiceImpl implements ProcessInstanceEntitySe
 	/**
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public ProcessInstance getByInstanceId(String instanceId)
+	public ProcessInstance getById(String id)
 	{
-		return processInstanceMapper.getInstance(instanceId);
+		ProcessInstance processInstance = processInstanceMapper.findById(id);
+		if (null != processInstance)
+		{
+			Map<String, Object> variableMap = JsonHelper.fromJson(processInstance.getVariable(), Map.class);
+			if (null == variableMap)
+			{
+				variableMap = Collections.emptyMap();
+			}
+
+			processInstance.setVariableMap(variableMap);
+		}
+
+		return processInstance;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<ProcessInstance> queryList(ProcessInstPageRequest request)
+	public List<ProcessInstance> queryByParentId(String parentId)
 	{
-		request.setPageSize(100000);
-
-		return processInstanceMapper.findPageData(0, request);
+		return processInstanceMapper.findByParentId(parentId);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Page<ProcessInstance> queryPageData(ProcessInstPageRequest request)
+	public Page<ProcessInstance> queryPageData(ProcessInstancePageRequest request)
 	{
 		long total = processInstanceMapper.countTotal(request);
 		long rowOffset = PageUtils.calcRowOffset(request, total);

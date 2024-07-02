@@ -4,14 +4,14 @@ import java.util.List;
 
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.mapper.ProcessDefinitionMapper;
-import com.liteworkflow.engine.persistence.request.ProcessDefPageRequest;
+import com.liteworkflow.engine.persistence.request.ProcessDefinitionPageRequest;
 import com.liteworkflow.engine.persistence.service.ProcessDefinitionEntityService;
 import com.mizhousoft.commons.data.domain.Page;
 import com.mizhousoft.commons.data.util.PageBuilder;
 import com.mizhousoft.commons.data.util.PageUtils;
 
 /**
- * ProcessDefinitionEntityService
+ * 流程定义服务
  *
  * @version
  */
@@ -37,18 +37,18 @@ public class ProcessDefinitionEntityServiceImpl implements ProcessDefinitionEnti
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addEntity(ProcessDefinition process)
+	public void addEntity(ProcessDefinition processDefinition)
 	{
-		processDefinitionMapper.save(process);
+		processDefinitionMapper.save(processDefinition);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void modifyEntity(ProcessDefinition process)
+	public void modifyEntity(ProcessDefinition processDefinition)
 	{
-		processDefinitionMapper.update(process);
+		processDefinitionMapper.update(processDefinition);
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class ProcessDefinitionEntityServiceImpl implements ProcessDefinitionEnti
 	{
 		Integer ver = processDefinitionMapper.findLatestVersion(name);
 
-		return (ver != null ? ver.intValue() : -1);
+		return ver;
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class ProcessDefinitionEntityServiceImpl implements ProcessDefinitionEnti
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Page<ProcessDefinition> queryPageData(ProcessDefPageRequest request)
+	public Page<ProcessDefinition> queryPageData(ProcessDefinitionPageRequest request)
 	{
 		long total = processDefinitionMapper.countTotal(request);
 		long rowOffset = PageUtils.calcRowOffset(request, total);

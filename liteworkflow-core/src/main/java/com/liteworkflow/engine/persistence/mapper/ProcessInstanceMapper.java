@@ -1,27 +1,22 @@
 package com.liteworkflow.engine.persistence.mapper;
 
+import java.util.List;
+
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.mizhousoft.commons.mapper.PageableMapper;
 
 /**
- * ProcessInstanceMapper
+ * 流程实例持久层
  *
  * @version
  */
 public interface ProcessInstanceMapper extends PageableMapper<ProcessInstance, String>
 {
 	/**
-	 * 根据流程实例id查询实例对象
+	 * 根据父ID查询
 	 * 
-	 * @param instanceId 活动流程实例id
-	 * @return ProcessInstance 活动流程实例对象
+	 * @param parentId
+	 * @return
 	 */
-	ProcessInstance getInstance(String instanceId);
-
-	/**
-	 * 更新实例变量（包括历史实例表）
-	 * 
-	 * @param instance 实例对象
-	 */
-	void updateVariable(ProcessInstance instance);
+	List<ProcessInstance> findByParentId(String parentId);
 }

@@ -79,35 +79,12 @@ public class HistoricProcessInstance implements Serializable
 	public HistoricProcessInstance(ProcessInstance instance)
 	{
 		this.id = instance.getId();
-		this.processId = instance.getProcessId();
+		this.processId = instance.getProcessDefinitionId();
 		this.createTime = instance.getCreateTime();
-		this.expireTime = instance.getExpireTime();
 		this.creator = instance.getCreator();
 		this.parentId = instance.getParentId();
 		this.priority = instance.getPriority();
 		this.variable = instance.getVariable();
-	}
-
-	/**
-	 * 根据历史实例撤回活动实例
-	 * 
-	 * @return 活动实例对象
-	 */
-	public ProcessInstance undo()
-	{
-		ProcessInstance instance = new ProcessInstance();
-		instance.setId(this.id);
-		instance.setProcessId(this.processId);
-		instance.setParentId(this.parentId);
-		instance.setCreator(this.creator);
-		instance.setCreateTime(this.createTime);
-		instance.setLastUpdator(this.creator);
-		instance.setLastUpdateTime(this.endTime);
-		instance.setExpireTime(this.expireTime);
-		instance.setPriority(this.priority);
-		instance.setVariable(this.variable);
-		instance.setRevision(0);
-		return instance;
 	}
 
 	public String getProcessId()

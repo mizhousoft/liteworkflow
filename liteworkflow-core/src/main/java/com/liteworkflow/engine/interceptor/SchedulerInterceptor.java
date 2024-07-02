@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.liteworkflow.engine.impl.Execution;
-import com.liteworkflow.engine.impl.ServiceContext;
 import com.liteworkflow.engine.model.TaskModel;
 import com.liteworkflow.engine.persistence.entity.Task;
 import com.liteworkflow.engine.scheduling.IScheduler;
@@ -35,7 +34,7 @@ public class SchedulerInterceptor implements FlowInterceptor
 	/**
 	 * 是否调度
 	 */
-	private boolean isScheduled = true;
+	private boolean isScheduled = false;
 
 	/**
 	 * 时限控制拦截方法
@@ -86,17 +85,6 @@ public class SchedulerInterceptor implements FlowInterceptor
 
 	private void schedule(JobEntity entity)
 	{
-		if (scheduler == null)
-		{
-			scheduler = ServiceContext.getContext().find(IScheduler.class);
-		}
-		if (scheduler != null)
-		{
-			scheduler.schedule(entity);
-		}
-		else
-		{
-			isScheduled = false;
-		}
+
 	}
 }
