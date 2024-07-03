@@ -18,7 +18,7 @@ import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
  *
  * @version
  */
-public class TaskExecutor extends NodeExecutor
+public class TaskExecutor extends NodeFlowExecutor
 {
 	/**
 	 * {@inheritDoc}

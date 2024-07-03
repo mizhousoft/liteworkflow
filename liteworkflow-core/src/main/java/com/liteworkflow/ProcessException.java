@@ -3,8 +3,7 @@ package com.liteworkflow;
 /**
  * 框架抛出的所有异常都是此类（unchecked exception）
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class ProcessException extends RuntimeException
 {

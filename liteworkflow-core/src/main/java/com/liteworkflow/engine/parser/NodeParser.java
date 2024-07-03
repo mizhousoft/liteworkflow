@@ -7,8 +7,7 @@ import com.liteworkflow.engine.model.NodeModel;
 /**
  * 节点解析接口
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public interface NodeParser
 {

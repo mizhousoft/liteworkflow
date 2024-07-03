@@ -10,8 +10,7 @@ import com.mizhousoft.commons.data.domain.Page;
 /**
  * 流程定义业务类
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public interface RepositoryService
 {
@@ -79,7 +78,7 @@ public interface RepositoryService
 	 * @param name
 	 * @return
 	 */
-	List<ProcessDefinition> queryListByName(String name);
+	List<ProcessDefinition> queryList(String name);
 
 	/**
 	 * 分页查询数据

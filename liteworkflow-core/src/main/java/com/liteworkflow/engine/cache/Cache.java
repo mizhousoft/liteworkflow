@@ -3,8 +3,7 @@ package com.liteworkflow.engine.cache;
 /**
  * 缓存接口
  * 
- * @author
- * @since 1.3
+ * @version
  */
 public interface Cache<K, V>
 {

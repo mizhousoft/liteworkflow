@@ -6,6 +6,7 @@ import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
 import org.springframework.util.Assert;
 
+import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.impl.Command;
 import com.liteworkflow.engine.impl.CommandContext;
@@ -46,7 +47,7 @@ public class RedeployCommand implements Command<ProcessDefinition>
 		}
 		catch (IOException e)
 		{
-			throw new IllegalArgumentException("Read input stream failed.", e);
+			throw new ProcessException("Read input stream failed.", e);
 		}
 	}
 
@@ -56,7 +57,7 @@ public class RedeployCommand implements Command<ProcessDefinition>
 	@Override
 	public ProcessDefinition execute(CommandContext context)
 	{
-		ProcessEngineConfigurationImpl engineConfiguration = context.getProcessEngineConfiguration();
+		ProcessEngineConfigurationImpl engineConfiguration = context.getEngineConfiguration();
 		ProcessDefinitionEntityService processDefinitionEntityService = engineConfiguration.getProcessDefinitionEntityService();
 
 		ProcessDefinition processDefinition = processDefinitionEntityService.getById(id);
@@ -70,9 +71,9 @@ public class RedeployCommand implements Command<ProcessDefinition>
 		processDefinition.setBytes(bytes);
 		processDefinition.setInstanceUrl(processModel.getInstanceUrl());
 
-		processDefinition.setModel(processModel);
-
 		processDefinitionEntityService.modifyEntity(processDefinition);
+
+		processDefinition.setModel(processModel);
 
 		return processDefinition;
 	}

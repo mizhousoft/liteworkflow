@@ -21,8 +21,7 @@ import com.mizhousoft.commons.lang.ClassUtils;
  * 抽象dom节点解析类
  * 完成通用的属性、变迁解析
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public abstract class AbstractNodeParser implements NodeParser
 {
@@ -163,7 +162,7 @@ public abstract class AbstractNodeParser implements NodeParser
 		}
 		catch (Exception e)
 		{
-			throw new IllegalArgumentException(interceptorsStr + " is not implment FlowInterceptor.", e);
+			throw new ProcessException(interceptorsStr + " is not implment FlowInterceptor.", e);
 		}
 	}
 

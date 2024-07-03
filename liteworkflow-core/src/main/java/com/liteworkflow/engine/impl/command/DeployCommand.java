@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 import org.apache.commons.io.IOUtils;
 
+import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.impl.Command;
@@ -47,7 +48,7 @@ public class DeployCommand implements Command<ProcessDefinition>
 		}
 		catch (IOException e)
 		{
-			throw new IllegalArgumentException("Read input stream failed.", e);
+			throw new ProcessException("Read input stream failed.", e);
 		}
 	}
 
@@ -57,20 +58,12 @@ public class DeployCommand implements Command<ProcessDefinition>
 	@Override
 	public ProcessDefinition execute(CommandContext context)
 	{
-		ProcessEngineConfigurationImpl engineConfiguration = context.getProcessEngineConfiguration();
+		ProcessEngineConfigurationImpl engineConfiguration = context.getEngineConfiguration();
 		ProcessDefinitionEntityService processDefinitionEntityService = engineConfiguration.getProcessDefinitionEntityService();
 
 		ProcessModel processModel = ModelParser.parse(bytes);
 
-		Integer version = processDefinitionEntityService.getLatestVersion(processModel.getName());
-		if (version == null)
-		{
-			version = 0;
-		}
-		else
-		{
-			version = version + 1;
-		}
+		Integer version = genProcessModelVersion(processModel, processDefinitionEntityService);
 
 		ProcessDefinition processDefinition = new ProcessDefinition();
 		processDefinition.setId(StringHelper.getPrimaryKey());
@@ -83,10 +76,32 @@ public class DeployCommand implements Command<ProcessDefinition>
 		processDefinition.setCreateTime(LocalDateTime.now());
 		processDefinition.setCreator(creator);
 
-		processDefinition.setModel(processModel);
-
 		processDefinitionEntityService.addEntity(processDefinition);
 
+		processDefinition.setModel(processModel);
+
 		return processDefinition;
+	}
+
+	/**
+	 * 生成流程定义版本号
+	 * 
+	 * @param processModel
+	 * @param processDefinitionEntityService
+	 * @return
+	 */
+	private int genProcessModelVersion(ProcessModel processModel, ProcessDefinitionEntityService processDefinitionEntityService)
+	{
+		Integer version = processDefinitionEntityService.getLatestVersion(processModel.getName());
+		if (version == null)
+		{
+			version = 0;
+		}
+		else
+		{
+			version = version + 1;
+		}
+
+		return version;
 	}
 }

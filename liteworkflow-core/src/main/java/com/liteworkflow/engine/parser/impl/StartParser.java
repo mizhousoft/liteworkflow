@@ -7,8 +7,7 @@ import com.liteworkflow.engine.parser.AbstractNodeParser;
 /**
  * 开始节点解析类
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class StartParser extends AbstractNodeParser
 {

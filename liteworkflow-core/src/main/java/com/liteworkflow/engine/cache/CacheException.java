@@ -5,8 +5,7 @@ import com.liteworkflow.ProcessException;
 /**
  * cache异常
  * 
- * @author
- * @since 1.3
+ * @version
  */
 public class CacheException extends ProcessException
 {

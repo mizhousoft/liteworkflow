@@ -8,8 +8,7 @@ import com.liteworkflow.engine.parser.AbstractNodeParser;
 /**
  * 结束节点解析类
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class EndParser extends AbstractNodeParser
 {

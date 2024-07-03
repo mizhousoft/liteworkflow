@@ -14,7 +14,7 @@ import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.helper.JsonHelper;
 import com.liteworkflow.engine.impl.Execution;
-import com.liteworkflow.engine.impl.Executor;
+import com.liteworkflow.engine.impl.FlowExecutor;
 import com.liteworkflow.engine.impl.GeneralCompletion;
 import com.liteworkflow.engine.impl.strategy.GeneralAccessStrategy;
 import com.liteworkflow.engine.model.NodeModel;
@@ -37,7 +37,7 @@ import com.liteworkflow.engine.persistence.service.TaskEntityService;
  *
  * @version
  */
-public class EndExecutor extends NodeExecutor
+public class EndExecutor extends NodeFlowExecutor
 {
 
 	/**
@@ -75,20 +75,20 @@ public class EndExecutor extends NodeExecutor
 				return;
 			}
 
-			ProcessDefinition process = engine.getRepositoryService().getById(parentInstance.getProcessDefinitionId());
-			ProcessModel pm = process.getModel();
-			if (pm == null)
+			ProcessDefinition processDefinition = engine.getRepositoryService().getById(parentInstance.getProcessDefinitionId());
+			ProcessModel processModel = processDefinition.getModel();
+			if (processModel == null)
 			{
 				return;
 			}
 
-			SubProcessModel spm = (SubProcessModel) pm.getNodeModel(instance.getParentNodeName());
-			Execution newExecution = new Execution(engine, process, parentInstance, execution.getArgs());
+			SubProcessModel subProcessModel = (SubProcessModel) processModel.getNodeModel(instance.getParentNodeName());
+			Execution newExecution = new Execution(engine, processDefinition, parentInstance, execution.getArgs());
 			newExecution.setChildInstanceId(instance.getId());
 			newExecution.setTask(execution.getTask());
 
-			Executor executor = ExecutorBuilder.build(spm);
-			executor.execute(newExecution, spm);
+			FlowExecutor executor = FlowExecutorFactory.build(subProcessModel);
+			executor.execute(newExecution, subProcessModel);
 
 			/**
 			 * SubProcessModel执行结果的tasks合并到当前执行对象execution的tasks列表中

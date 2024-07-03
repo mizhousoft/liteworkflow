@@ -12,17 +12,17 @@ public class CommandExecutorImpl implements CommandExecutor
 	/**
 	 * ProcessEngineConfigurationImpl
 	 */
-	private ProcessEngineConfigurationImpl processEngineConfiguration;
+	private ProcessEngineConfigurationImpl engineConfiguration;
 
 	/**
 	 * 构造函数
 	 *
-	 * @param processEngineConfiguration
+	 * @param engineConfiguration
 	 */
-	public CommandExecutorImpl(ProcessEngineConfigurationImpl processEngineConfiguration)
+	public CommandExecutorImpl(ProcessEngineConfigurationImpl engineConfiguration)
 	{
 		super();
-		this.processEngineConfiguration = processEngineConfiguration;
+		this.engineConfiguration = engineConfiguration;
 	}
 
 	/**
@@ -31,9 +31,9 @@ public class CommandExecutorImpl implements CommandExecutor
 	@Override
 	public <T> T execute(Command<T> command)
 	{
-		CommandContext commandContext = new CommandContext();
-		commandContext.setProcessEngineConfiguration(processEngineConfiguration);
+		CommandContext context = new CommandContext();
+		context.setEngineConfiguration(engineConfiguration);
 
-		return command.execute(commandContext);
+		return command.execute(context);
 	}
 }

@@ -8,7 +8,7 @@ import com.liteworkflow.engine.model.NodeModel;
  *
  * @version
  */
-public class ForkExecutor extends NodeExecutor
+public class ForkExecutor extends NodeFlowExecutor
 {
 
 	/**

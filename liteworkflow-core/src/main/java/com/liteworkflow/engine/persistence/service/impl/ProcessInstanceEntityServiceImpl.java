@@ -54,18 +54,6 @@ public class ProcessInstanceEntityServiceImpl implements ProcessInstanceEntitySe
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void saveInstanceAndHistoric(ProcessInstance instance)
-	{
-		HistoricProcessInstance historicInstance = new HistoricProcessInstance(instance);
-		historicInstance.setState(STATE_ACTIVE);
-		processInstanceMapper.save(instance);
-		historicProcessInstanceEntityService.addEntity(historicInstance);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public void modifyEntity(ProcessInstance instance)
 	{
 		processInstanceMapper.update(instance);

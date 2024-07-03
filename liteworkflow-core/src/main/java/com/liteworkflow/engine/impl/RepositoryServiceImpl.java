@@ -24,12 +24,11 @@ import com.mizhousoft.commons.data.domain.Page;
 /**
  * 流程定义业务类
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class RepositoryServiceImpl extends CommonServiceImpl implements RepositoryService
 {
-	private static final Logger log = LoggerFactory.getLogger(RepositoryServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RepositoryServiceImpl.class);
 
 	/**
 	 * cache manager
@@ -63,7 +62,6 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 	{
 		super(engineConfiguration);
 
-		this.engineConfiguration = engineConfiguration;
 		this.cacheManager = cacheManager;
 		this.processDefinitionEntityService = processDefinitionEntityService;
 
@@ -187,7 +185,7 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<ProcessDefinition> queryListByName(String name)
+	public List<ProcessDefinition> queryList(String name)
 	{
 		return processDefinitionEntityService.queryByName(name, null);
 	}
@@ -219,7 +217,7 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 
 		nameCache.put(processDefinition.getId(), cacheKey);
 
-		log.info("Put process definition cache, id is {}, name is {}.", processDefinition.getId(), cacheKey);
+		LOG.info("Put process definition cache, id is {}, name is {}.", processDefinition.getId(), cacheKey);
 	}
 
 	/**
@@ -234,7 +232,7 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 
 		nameCache.remove(processDefinition.getId());
 
-		log.info("Remove process definition cache, id is {}, name is {}.", processDefinition.getId(), cacheKey);
+		LOG.info("Remove process definition cache, id is {}, name is {}.", processDefinition.getId(), cacheKey);
 	}
 
 	/**

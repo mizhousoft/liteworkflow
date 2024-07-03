@@ -9,8 +9,7 @@ import com.liteworkflow.engine.AssignmentHandler;
 /**
  * 任务定义task元素
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class TaskModel extends ActivityModel
 {

@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS wf_process_instance (
     id                VARCHAR(32) NOT NULL comment '主键ID',
     parent_id         VARCHAR(32) NULL comment '父流程ID',
     process_def_id    VARCHAR(32) NOT NULL comment '流程定义ID',
+    business_key      VARCHAR(32) NULL comment '业务KEY',
     priority          INT UNSIGNED NOT NULL DEFAULT 0 comment '优先级',
     parent_node_name  VARCHAR(64) NULL comment '父流程依赖的节点名称',
     variable          VARCHAR(2048) NULL comment '附属变量json存储',
@@ -47,17 +48,18 @@ CREATE TABLE IF NOT EXISTS wf_task_actor (
 )comment='任务参与者表';
 
 CREATE TABLE IF NOT EXISTS wf_historic_process_instance (
-    id                VARCHAR(32) not null primary key comment '主键ID',
-    process_id        VARCHAR(32) not null comment '流程定义ID',
-    state       	  TINYINT(1) not null comment '状态',
-    creator           VARCHAR(50) comment '发起人',
-    create_time       DATETIME not null comment '发起时间',
-    end_time          DATETIME comment '完成时间',
-    expire_time       DATETIME comment '期望完成时间',
-    priority          TINYINT(1) comment '优先级',
-    parent_id         VARCHAR(32) comment '父流程ID',
-    variable          VARCHAR(2000) comment '附属变量json存储'
-)comment='历史流程实例表';
+    id                VARCHAR(32) NOT NULL comment '主键ID',
+    parent_id         VARCHAR(32) NULL comment '父流程ID',
+    process_def_id    VARCHAR(32) NOT NULL comment '流程定义ID',
+    business_key      VARCHAR(32) NULL comment '业务KEY',
+    state       	  INT UNSIGNED NOT NULL DEFAULT 0 comment '状态',
+    priority          INT UNSIGNED NOT NULL DEFAULT 0 comment '优先级',
+    variable          VARCHAR(2048) NULL comment '附属变量json存储',
+    end_time          DATETIME NULL comment '完成时间',
+    creator           VARCHAR(20) NULL comment '发起人',
+    create_time       DATETIME NOT NULL comment '发起时间',
+    PRIMARY KEY (`id`)
+)ENGINE = InnoDB comment='历史流程实例表';
 
 CREATE TABLE IF NOT EXISTS wf_historic_task (
     id                VARCHAR(32) not null primary key comment '主键ID',
@@ -81,17 +83,17 @@ CREATE TABLE IF NOT EXISTS wf_historic_task_actor (
     actor_id          VARCHAR(50) not null comment '参与者ID'
 )comment='历史任务参与者表';
 
-create index IDX_process_name on wf_process_definition (name);
-create index IDX_INSTANCE_PROCESSID on wf_process_instance (process_def_id);
-create index IDX_TASK_instance_id on wf_task (instance_id);
-create index IDX_TASK_TASKNAME on wf_task (task_name);
-create index IDX_TASK_PARENTTASK on wf_task (parent_task_id);
-create index IDX_TASKACTOR_TASK on wf_task_actor (task_id);
-create index IDX_HISTORIC_INSTANCE_PROCESSID on wf_historic_process_instance (process_id);
-create index IDX_HISTORIC_TASK_instance_id on wf_historic_task (instance_id);
-create index IDX_HISTORIC_TASK_TASKNAME on wf_historic_task (task_name);
-create index IDX_HISTORIC_TASK_PARENTTASK on wf_historic_task (parent_task_id);
-create index IDX_HISTORIC_TASKACTOR_TASK on wf_historic_task_actor (task_id);
+create index idx_process_name on wf_process_definition (name);
+create index idx_instance_processid on wf_process_instance (process_def_id);
+create index idx_task_instance_id on wf_task (instance_id);
+create index idx_task_taskname on wf_task (task_name);
+create index idx_task_parenttask on wf_task (parent_task_id);
+create index idx_taskactor_task on wf_task_actor (task_id);
+create index idx_historic_instance_processid on wf_historic_process_instance (process_def_id);
+create index idx_historic_task_instance_id on wf_historic_task (instance_id);
+create index idx_historic_task_taskname on wf_historic_task (task_name);
+create index idx_historic_task_parenttask on wf_historic_task (parent_task_id);
+create index idx_historic_taskactor_task on wf_historic_task_actor (task_id);
 
 alter table wf_task_actor
   add constraint FK_TASK_ACTOR_TASKID foreign key (task_id)
@@ -115,5 +117,5 @@ alter table wf_historic_process_instance
   add constraint FK_HISTORIC_INSTANCE_PARENTID foreign key (parent_id)
   references wf_historic_process_instance (id);
 alter table wf_historic_process_instance
-  add constraint FK_HISTORIC_INSTANCE_PROCESSID foreign key (process_id)
+  add constraint FK_HISTORIC_INSTANCE_PROCESSID foreign key (process_def_id)
   references wf_process_definition (id);

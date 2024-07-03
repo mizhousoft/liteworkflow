@@ -1,6 +1,7 @@
 package com.liteworkflow.engine.persistence.service.impl;
 
 import java.util.List;
+import java.util.Set;
 
 import com.liteworkflow.engine.persistence.entity.HistoricProcessInstance;
 import com.liteworkflow.engine.persistence.mapper.HistoricProcessInstanceMapper;
@@ -11,13 +12,27 @@ import com.mizhousoft.commons.data.util.PageBuilder;
 import com.mizhousoft.commons.data.util.PageUtils;
 
 /**
- * HistoricProcessInstanceEntityService
+ * 历史流程实例实体服务
  *
  * @version
  */
 public class HistoricProcessInstanceEntityServiceImpl implements HistoricProcessInstanceEntityService
 {
+	/**
+	 * HistoricProcessInstanceMapper
+	 */
 	private HistoricProcessInstanceMapper historicProcessInstanceMapper;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param historicProcessInstanceMapper
+	 */
+	public HistoricProcessInstanceEntityServiceImpl(HistoricProcessInstanceMapper historicProcessInstanceMapper)
+	{
+		super();
+		this.historicProcessInstanceMapper = historicProcessInstanceMapper;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -52,18 +67,16 @@ public class HistoricProcessInstanceEntityServiceImpl implements HistoricProcess
 	@Override
 	public HistoricProcessInstance getByInstanceId(String instanceId)
 	{
-		return historicProcessInstanceMapper.getHistoricInstance(instanceId);
+		return historicProcessInstanceMapper.findById(instanceId);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<HistoricProcessInstance> queryList(HistoricInstancePageRequest request)
+	public Set<String> queryIdsByProcessDefinitionId(String processDefinitionId)
 	{
-		request.setPageSize(100000);
-
-		return historicProcessInstanceMapper.findPageData(0, request);
+		return historicProcessInstanceMapper.findIdsByProcessDefinitionId(processDefinitionId);
 	}
 
 	/**
@@ -80,11 +93,6 @@ public class HistoricProcessInstanceEntityServiceImpl implements HistoricProcess
 		Page<HistoricProcessInstance> page = PageBuilder.build(list, request, total);
 
 		return page;
-	}
-
-	public void setHistoricProcessInstanceMapper(HistoricProcessInstanceMapper historicProcessInstanceMapper)
-	{
-		this.historicProcessInstanceMapper = historicProcessInstanceMapper;
 	}
 
 }

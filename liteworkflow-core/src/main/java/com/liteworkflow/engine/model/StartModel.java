@@ -6,8 +6,7 @@ import java.util.List;
 /**
  * 开始节点定义start元素
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class StartModel extends NodeModel
 {

@@ -50,8 +50,7 @@ import com.liteworkflow.engine.persistence.service.impl.TaskEntityServiceImpl;
  * 只允许应用程序存在一个Configuration实例
  * 初始化服务上下文，查找流程引擎实现类并初始化依赖的服务
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguration, ApplicationContextAware
 {
@@ -368,8 +367,8 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		factoryBean.afterPropertiesSet();
 		HistoricProcessInstanceMapper historicProcessInstanceMapper = (HistoricProcessInstanceMapper) factoryBean.getObject();
 
-		HistoricProcessInstanceEntityServiceImpl historicProcessInstanceEntityService = new HistoricProcessInstanceEntityServiceImpl();
-		historicProcessInstanceEntityService.setHistoricProcessInstanceMapper(historicProcessInstanceMapper);
+		HistoricProcessInstanceEntityServiceImpl historicProcessInstanceEntityService = new HistoricProcessInstanceEntityServiceImpl(
+		        historicProcessInstanceMapper);
 
 		return historicProcessInstanceEntityService;
 	}

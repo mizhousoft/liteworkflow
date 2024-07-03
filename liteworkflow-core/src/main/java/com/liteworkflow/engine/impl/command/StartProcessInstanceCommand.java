@@ -1,6 +1,5 @@
 package com.liteworkflow.engine.impl.command;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,131 +7,113 @@ import org.springframework.util.Assert;
 
 import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
-import com.liteworkflow.engine.helper.JsonHelper;
-import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.impl.Command;
 import com.liteworkflow.engine.impl.CommandContext;
 import com.liteworkflow.engine.impl.Execution;
-import com.liteworkflow.engine.impl.Executor;
-import com.liteworkflow.engine.impl.executor.ExecutorBuilder;
+import com.liteworkflow.engine.impl.FlowExecutor;
+import com.liteworkflow.engine.impl.executor.FlowExecutorFactory;
 import com.liteworkflow.engine.model.StartModel;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
-import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
+import com.liteworkflow.engine.util.ProcessInstanceUtils;
 
 /**
- * TODO
+ * 启动流程实例命令
  *
  * @version
  */
 public class StartProcessInstanceCommand implements Command<ProcessInstance>
 {
-	protected String processDefinitionKey;
+	/**
+	 * 流程名称
+	 */
+	private String processDefinitionName;
 
-	protected String processDefinitionId;
+	/**
+	 * 流程定义ID
+	 */
+	private String processDefinitionId;
 
-	protected String businessKey;
+	/**
+	 * 业务标识
+	 */
+	private String businessKey;
 
-	protected String operator;
+	/**
+	 * 操作人
+	 */
+	private String operator;
 
-	protected Map<String, Object> variables;
+	/**
+	 * 流程变量
+	 */
+	private Map<String, Object> variables;
 
-	public StartProcessInstanceCommand(String processDefinitionKey, String processDefinitionId, String businessKey, String operator,
+	/**
+	 * 构造函数
+	 *
+	 * @param processDefinitionName
+	 * @param processDefinitionId
+	 * @param businessKey
+	 * @param operator
+	 * @param variables
+	 */
+	public StartProcessInstanceCommand(String processDefinitionName, String processDefinitionId, String businessKey, String operator,
 	        Map<String, Object> variables)
 	{
-		this.processDefinitionKey = processDefinitionKey;
+		this.processDefinitionName = processDefinitionName;
 		this.processDefinitionId = processDefinitionId;
 		this.businessKey = businessKey;
 		this.operator = operator;
-		this.variables = variables;
+		this.variables = null == variables ? new HashMap<>(10) : variables;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessInstance execute(CommandContext commandContext)
+	public ProcessInstance execute(CommandContext context)
 	{
-		if (variables == null)
-		{
-			variables = new HashMap<String, Object>(0);
-		}
+		ProcessEngineConfigurationImpl engineConfiguration = context.getEngineConfiguration();
 
-		ProcessDefinition process = getProcessDefinition(commandContext);
+		ProcessDefinition processDefinition = getProcessDefinition(engineConfiguration);
 
-		return startProcess(process, operator, variables, commandContext);
-	}
+		ProcessInstance processInstance = ProcessInstanceUtils.createProcessInstance(processDefinition, businessKey, operator, variables,
+		        null, null, engineConfiguration);
 
-	private ProcessDefinition getProcessDefinition(CommandContext commandContext)
-	{
-		ProcessEngineConfigurationImpl processEngineConfiguration = commandContext.getProcessEngineConfiguration();
-		RepositoryService repositoryService = processEngineConfiguration.getRepositoryService();
+		Execution execution = new Execution(engineConfiguration, processDefinition, processInstance, variables);
+		execution.setOperator(operator);
 
-		ProcessDefinition process = null;
-		if (null != processDefinitionId)
-		{
-			process = repositoryService.getById(processDefinitionId);
-			Assert.notNull(process, "Process definition not found, name is " + processDefinitionId);
-		}
-		else if (null != processDefinitionKey)
-		{
-			process = repositoryService.getLatestByName(processDefinitionKey);
-			Assert.notNull(process, "Process definition not found, name is " + processDefinitionKey);
-		}
+		StartModel startModel = processDefinition.getModel().getStartModel();
 
-		return process;
-	}
+		FlowExecutor flowExecutor = FlowExecutorFactory.build(startModel);
+		flowExecutor.execute(execution, startModel);
 
-	private ProcessInstance startProcess(ProcessDefinition process, String operator, Map<String, Object> args,
-	        CommandContext commandContext)
-	{
-		Execution execution = execute(process, operator, args, commandContext);
-
-		StartModel startModel = process.getModel().getStartModel();
-
-		Executor executor = ExecutorBuilder.build(startModel);
-		executor.execute(execution, startModel);
-
-		return execution.getProcessInstance();
+		return processInstance;
 	}
 
 	/**
-	 * 创建流程实例，并返回执行对象
+	 * 获取ProcessDefinition
 	 * 
-	 * @param process 流程定义
-	 * @param operator 操作人
-	 * @param args 参数列表
-	 * @param parentId 父流程实例id
-	 * @param parentNodeName 启动子流程的父流程节点名称
-	 * @return Execution
+	 * @param engineConfiguration
+	 * @return
 	 */
-	private Execution execute(ProcessDefinition process, String operator, Map<String, Object> args, CommandContext commandContext)
+	private ProcessDefinition getProcessDefinition(ProcessEngineConfigurationImpl engineConfiguration)
 	{
-		ProcessEngineConfigurationImpl processEngineConfiguration = commandContext.getProcessEngineConfiguration();
+		RepositoryService repositoryService = engineConfiguration.getRepositoryService();
 
-		ProcessInstance instance = createInstance(process, operator, args, null, null, commandContext);
+		ProcessDefinition processDefinition = null;
+		if (null != processDefinitionId)
+		{
+			processDefinition = repositoryService.getById(processDefinitionId);
+			Assert.notNull(processDefinition, "Process definition not found, id is " + processDefinitionId);
+		}
+		else if (null != processDefinitionName)
+		{
+			processDefinition = repositoryService.getLatestByName(processDefinitionName);
+			Assert.notNull(processDefinition, "Process definition not found, name is " + processDefinitionName);
+		}
 
-		Execution current = new Execution(processEngineConfiguration, process, instance, args);
-		current.setOperator(operator);
-
-		return current;
-	}
-
-	public ProcessInstance createInstance(ProcessDefinition process, String operator, Map<String, Object> args, String parentId,
-	        String parentNodeName, CommandContext commandContext)
-	{
-		ProcessEngineConfigurationImpl processEngineConfiguration = commandContext.getProcessEngineConfiguration();
-		ProcessInstanceEntityService processInstanceEntityService = processEngineConfiguration.getProcessInstanceEntityService();
-
-		ProcessInstance instance = new ProcessInstance();
-		instance.setId(StringHelper.getPrimaryKey());
-		instance.setParentId(parentId);
-		instance.setParentNodeName(parentNodeName);
-		instance.setCreateTime(LocalDateTime.now());
-		instance.setCreator(operator);
-		instance.setProcessDefinitionId(process.getId());
-		instance.setVariable(JsonHelper.toJson(args));
-		processInstanceEntityService.saveInstanceAndHistoric(instance);
-		return instance;
+		return processDefinition;
 	}
 }

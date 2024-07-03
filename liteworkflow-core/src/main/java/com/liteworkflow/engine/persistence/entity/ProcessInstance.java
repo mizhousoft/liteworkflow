@@ -7,8 +7,7 @@ import java.util.Map;
 /**
  * 流程实例
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class ProcessInstance implements Serializable
 {
@@ -31,6 +30,11 @@ public class ProcessInstance implements Serializable
 	 * 流程定义ID
 	 */
 	private String processDefinitionId;
+
+	/**
+	 * 业务标识
+	 */
+	private String businessKey;
 
 	/**
 	 * 流程实例优先级
@@ -125,6 +129,26 @@ public class ProcessInstance implements Serializable
 	public void setProcessDefinitionId(String processDefinitionId)
 	{
 		this.processDefinitionId = processDefinitionId;
+	}
+
+	/**
+	 * 获取businessKey
+	 * 
+	 * @return
+	 */
+	public String getBusinessKey()
+	{
+		return businessKey;
+	}
+
+	/**
+	 * 设置businessKey
+	 * 
+	 * @param businessKey
+	 */
+	public void setBusinessKey(String businessKey)
+	{
+		this.businessKey = businessKey;
 	}
 
 	/**

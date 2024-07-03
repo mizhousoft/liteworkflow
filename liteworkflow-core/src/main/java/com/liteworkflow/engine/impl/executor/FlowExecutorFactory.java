@@ -1,6 +1,7 @@
 package com.liteworkflow.engine.impl.executor;
 
-import com.liteworkflow.engine.impl.Executor;
+import com.liteworkflow.ProcessException;
+import com.liteworkflow.engine.impl.FlowExecutor;
 import com.liteworkflow.engine.model.BaseModel;
 import com.liteworkflow.engine.model.DecisionModel;
 import com.liteworkflow.engine.model.EndModel;
@@ -12,13 +13,19 @@ import com.liteworkflow.engine.model.TaskModel;
 import com.liteworkflow.engine.model.TransitionModel;
 
 /**
- * TODO
+ * 流程执行器工厂类
  *
  * @version
  */
-public class ExecutorBuilder
+public class FlowExecutorFactory
 {
-	public static Executor build(BaseModel model)
+	/**
+	 * 构建流程执行器
+	 * 
+	 * @param model
+	 * @return
+	 */
+	public static FlowExecutor build(BaseModel model)
 	{
 		if (model instanceof StartModel)
 		{
@@ -53,6 +60,6 @@ public class ExecutorBuilder
 			return new TransitionExecutor();
 		}
 
-		return null;
+		throw new ProcessException("Model not support to build FlowExecutor.");
 	}
 }

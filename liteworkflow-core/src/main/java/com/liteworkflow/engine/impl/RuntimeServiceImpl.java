@@ -5,12 +5,13 @@ import java.util.Map;
 
 import com.liteworkflow.engine.RuntimeService;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
+import com.liteworkflow.engine.impl.command.SetInstanceOwnerCommand;
 import com.liteworkflow.engine.impl.command.SetInstanceVariablesCommand;
 import com.liteworkflow.engine.impl.command.StartProcessInstanceCommand;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 
 /**
- * TODO
+ * 流程运行时服务
  *
  * @version
  */
@@ -19,71 +20,74 @@ public class RuntimeServiceImpl extends CommonServiceImpl implements RuntimeServ
 	/**
 	 * 构造函数
 	 *
-	 * @param configuration
+	 * @param engineConfiguration
 	 */
-	public RuntimeServiceImpl(ProcessEngineConfigurationImpl configuration)
+	public RuntimeServiceImpl(ProcessEngineConfigurationImpl engineConfiguration)
 	{
-		super(configuration);
+		super(engineConfiguration);
 	}
 
 	/**
-	 * 根据流程定义ID启动流程实例
+	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessInstance startInstanceById(String id)
+	public ProcessInstance startInstanceById(String processDefinitionId)
 	{
-		return startInstanceById(id, null, null);
+		return startInstanceById(processDefinitionId, null, null);
 	}
 
 	/**
-	 * 根据流程定义ID，操作人ID启动流程实例
+	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessInstance startInstanceById(String id, String operator)
+	public ProcessInstance startInstanceById(String processDefinitionId, String operator)
 	{
-		return startInstanceById(id, operator, null);
+		return startInstanceById(processDefinitionId, operator, null);
 	}
 
 	/**
-	 * 根据流程定义ID，操作人ID，参数列表启动流程实例
+	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessInstance startInstanceById(String id, String operator, Map<String, Object> args)
+	public ProcessInstance startInstanceById(String processDefinitionId, String operator, Map<String, Object> args)
 	{
-		return commandExecutor.execute(new StartProcessInstanceCommand(null, id, null, operator, args));
+		return commandExecutor.execute(new StartProcessInstanceCommand(null, processDefinitionId, null, operator, args));
 	}
 
 	/**
-	 * 根据流程名称启动流程实例
-	 * 
-	 * @since 1.3
+	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessInstance startInstanceByName(String name)
+	public ProcessInstance startInstanceByName(String processDefinitionName)
 	{
-		return startInstanceByName(name, null, null);
+		return startInstanceByName(processDefinitionName, null, null);
 	}
 
 	/**
-	 * 根据流程名称、版本号启动流程实例
-	 * 
-	 * @since 1.3
+	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessInstance startInstanceByName(String name, String operator)
+	public ProcessInstance startInstanceByName(String processDefinitionName, String operator)
 	{
-		return startInstanceByName(name, operator, null);
+		return startInstanceByName(processDefinitionName, operator, null);
 	}
 
 	/**
-	 * 根据流程名称、版本号、操作人、参数列表启动流程实例
-	 * 
-	 * @since 1.3
+	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessInstance startInstanceByName(String name, String operator, Map<String, Object> args)
+	public ProcessInstance startInstanceByName(String processDefinitionName, String operator, Map<String, Object> args)
 	{
-		return commandExecutor.execute(new StartProcessInstanceCommand(name, null, null, operator, args));
+		return commandExecutor.execute(new StartProcessInstanceCommand(processDefinitionName, null, null, operator, args));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setOwner(String instanceId, String owner)
+	{
+		commandExecutor.execute(new SetInstanceOwnerCommand(instanceId, owner));
 	}
 
 	/**

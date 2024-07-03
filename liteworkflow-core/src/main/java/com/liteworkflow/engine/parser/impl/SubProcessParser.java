@@ -11,8 +11,7 @@ import com.liteworkflow.engine.parser.AbstractNodeParser;
 /**
  * 子流程节点解析类
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class SubProcessParser extends AbstractNodeParser
 {

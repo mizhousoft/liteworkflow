@@ -3,8 +3,7 @@ package com.liteworkflow.engine.cache;
 /**
  * 缓存管理器接口，该接口提供具体的cache实现
  * 
- * @author
- * @since 1.3
+ * @version
  */
 public interface CacheManager
 {

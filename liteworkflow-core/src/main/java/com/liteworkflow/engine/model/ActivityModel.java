@@ -3,8 +3,7 @@ package com.liteworkflow.engine.model;
 /**
  * 活动元素
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public abstract class ActivityModel extends NodeModel
 {

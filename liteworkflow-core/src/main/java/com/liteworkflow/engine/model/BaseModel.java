@@ -5,8 +5,7 @@ import java.io.Serializable;
 /**
  * 模型元素基类
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class BaseModel implements Serializable
 {

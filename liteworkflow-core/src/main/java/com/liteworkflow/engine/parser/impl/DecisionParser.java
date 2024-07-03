@@ -12,8 +12,7 @@ import com.mizhousoft.commons.lang.ClassUtils;
 /**
  * 决策节点解析类
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class DecisionParser extends AbstractNodeParser
 {

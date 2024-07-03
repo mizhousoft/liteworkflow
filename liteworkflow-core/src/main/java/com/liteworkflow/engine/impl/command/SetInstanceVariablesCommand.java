@@ -2,6 +2,8 @@ package com.liteworkflow.engine.impl.command;
 
 import java.util.Map;
 
+import org.springframework.util.Assert;
+
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.helper.JsonHelper;
 import com.liteworkflow.engine.impl.Command;
@@ -10,14 +12,20 @@ import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
 
 /**
- * TODO
+ * 设置流程实例变量命令
  *
  * @version
  */
 public class SetInstanceVariablesCommand implements Command<ProcessInstance>
 {
+	/**
+	 * 流程实例ID
+	 */
 	private String instanceId;
 
+	/**
+	 * 变量
+	 */
 	private Map<String, Object> variableMap;
 
 	/**
@@ -37,15 +45,18 @@ public class SetInstanceVariablesCommand implements Command<ProcessInstance>
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessInstance execute(CommandContext commandContext)
+	public ProcessInstance execute(CommandContext context)
 	{
-		ProcessEngineConfigurationImpl processEngineConfiguration = commandContext.getProcessEngineConfiguration();
-		ProcessInstanceEntityService processInstanceEntityService = processEngineConfiguration.getProcessInstanceEntityService();
+		ProcessEngineConfigurationImpl engineConfiguration = context.getEngineConfiguration();
+		ProcessInstanceEntityService processInstanceEntityService = engineConfiguration.getProcessInstanceEntityService();
 
 		ProcessInstance instance = processInstanceEntityService.getById(instanceId);
-		Map<String, Object> data = instance.getVariableMap();
-		data.putAll(variableMap);
-		instance.setVariable(JsonHelper.toJson(data));
+		Assert.notNull(instance, "ProcessInstance not found, id is " + instanceId);
+
+		Map<String, Object> dataMap = instance.getVariableMap();
+		dataMap.putAll(variableMap);
+		instance.setVariable(JsonHelper.toJson(dataMap));
+
 		processInstanceEntityService.modifyVariable(instance);
 
 		return instance;

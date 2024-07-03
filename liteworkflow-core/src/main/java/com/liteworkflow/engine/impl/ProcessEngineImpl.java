@@ -11,8 +11,7 @@ import com.liteworkflow.engine.TaskService;
 /**
  * 基本的流程引擎实现类
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class ProcessEngineImpl implements ProcessEngine
 {
@@ -44,17 +43,17 @@ public class ProcessEngineImpl implements ProcessEngine
 	/**
 	 * 构造函数
 	 *
-	 * @param configuration
+	 * @param engineConfiguration
 	 */
-	public ProcessEngineImpl(ProcessEngineConfiguration configuration)
+	public ProcessEngineImpl(ProcessEngineConfiguration engineConfiguration)
 	{
 		super();
 
-		this.repositoryService = configuration.getRepositoryService();
-		this.processInstanceService = configuration.getProcessInstanceService();
-		this.runtimeService = configuration.getRuntimeService();
-		this.taskService = configuration.getTaskService();
-		this.historyService = configuration.getHistoryService();
+		this.repositoryService = engineConfiguration.getRepositoryService();
+		this.processInstanceService = engineConfiguration.getProcessInstanceService();
+		this.runtimeService = engineConfiguration.getRuntimeService();
+		this.taskService = engineConfiguration.getTaskService();
+		this.historyService = engineConfiguration.getHistoryService();
 	}
 
 	/**

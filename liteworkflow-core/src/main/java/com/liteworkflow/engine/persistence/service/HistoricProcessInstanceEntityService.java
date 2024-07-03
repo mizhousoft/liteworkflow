@@ -1,54 +1,54 @@
 package com.liteworkflow.engine.persistence.service;
 
-import java.util.List;
+import java.util.Set;
 
 import com.liteworkflow.engine.persistence.entity.HistoricProcessInstance;
 import com.liteworkflow.engine.persistence.request.HistoricInstancePageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
- * HistoricProcessInstanceEntityService
+ * 历史流程实例实体服务
  *
  * @version
  */
 public interface HistoricProcessInstanceEntityService
 {
 	/**
-	 * 迁移活动实例
+	 * 新增历史流程实例
 	 * 
-	 * @param historicInstance 历史流程实例对象
+	 * @param historicInstance
 	 */
 	void addEntity(HistoricProcessInstance historicInstance);
 
 	/**
-	 * 更新历史流程实例状态
+	 * 修改历史流程实例
 	 * 
-	 * @param historicInstance 历史流程实例对象
+	 * @param historicInstance
 	 */
 	void modifyEntity(HistoricProcessInstance historicInstance);
 
 	/**
-	 * 删除历史实例记录
+	 * 删除历史流程实例
 	 * 
-	 * @param historicInstance 历史实例
+	 * @param historicInstance
 	 */
 	void deleteEntity(HistoricProcessInstance historicInstance);
 
 	/**
 	 * 根据流程实例ID获取历史流程实例对象
 	 * 
-	 * @param instanceId 历史流程实例id
-	 * @return HistoricProcessInstance 历史流程实例对象
+	 * @param instanceId
+	 * @return
 	 */
 	HistoricProcessInstance getByInstanceId(String instanceId);
 
 	/**
+	 * 根据流程定义ID查询流程实例ID
 	 * 
-	 * 
-	 * @param request
+	 * @param processDefinitionId
 	 * @return
 	 */
-	List<HistoricProcessInstance> queryList(HistoricInstancePageRequest request);
+	Set<String> queryIdsByProcessDefinitionId(String processDefinitionId);
 
 	/**
 	 * 分页查询

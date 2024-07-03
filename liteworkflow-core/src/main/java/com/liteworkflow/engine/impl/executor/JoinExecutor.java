@@ -22,7 +22,7 @@ import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
  *
  * @version
  */
-public class JoinExecutor extends NodeExecutor
+public class JoinExecutor extends NodeFlowExecutor
 {
 
 	/**

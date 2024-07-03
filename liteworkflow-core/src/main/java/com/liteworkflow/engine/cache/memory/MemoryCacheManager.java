@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.cache.Cache;
 import com.liteworkflow.engine.cache.CacheException;
 import com.liteworkflow.engine.cache.CacheManager;
@@ -12,12 +13,14 @@ import com.liteworkflow.engine.cache.CacheManager;
 /**
  * 基于虚拟机内存的cache管理器
  * 
- * @author
- * @since 1.3
+ * @version
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class MemoryCacheManager implements CacheManager
 {
+	/**
+	 * 缓存对象
+	 */
 	private final ConcurrentMap<String, Cache> caches = new ConcurrentHashMap<String, Cache>(10);
 
 	/**
@@ -28,7 +31,7 @@ public class MemoryCacheManager implements CacheManager
 	{
 		if (StringUtils.isBlank(name))
 		{
-			throw new IllegalArgumentException("Cache name is null.");
+			throw new ProcessException("Cache name is null.");
 		}
 
 		Cache cache = caches.get(name);

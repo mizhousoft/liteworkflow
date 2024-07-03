@@ -7,6 +7,7 @@
 		<id property="id" column="id" />
 		<result property="parentId" column="parent_id" />
 		<result property="processDefinitionId" column="process_def_id" />
+		<result property="businessKey" column="business_key" />
 		<result property="priority" column="priority" />
 		<result property="parentNodeName" column="parent_node_name" />
 		<result property="variable" column="variable" />
@@ -16,10 +17,10 @@
 	</resultMap>
 	
 	<insert id="save">
-		insert into wf_process_instance (id, parent_id, process_def_id, priority, parent_node_name, variable, 
-		revision, creator, create_time)
-		values (#{id}, #{parentId}, #{processDefinitionId}, #{priority}, #{parentNodeName}, #{variable}, 
-		#{revision}, #{creator}, #{createTime})
+		insert into wf_process_instance (id, parent_id, process_def_id, business_key, priority, parent_node_name, 
+		variable, revision, creator, create_time)
+		values (#{id}, #{parentId}, #{processDefinitionId}, #{businessKey}, #{priority}, #{parentNodeName}, 
+		#{variable}, #{revision}, #{creator}, #{createTime})
 	</insert>
 	
 	<update id="update">
@@ -34,14 +35,14 @@
 	</delete>
 		
 	<select id="findById" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
-		select id, parent_id, process_def_id, priority, parent_node_name, variable, revision, creator, 
+		select id, parent_id, process_def_id, business_key, priority, parent_node_name, variable, revision, creator, 
 		create_time
 		from wf_process_instance
 		where id = #{id}
 	</select>
 		
 	<select id="findByParentId" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
-		select id, parent_id, process_def_id, priority, parent_node_name, variable, revision, creator, 
+		select id, parent_id, process_def_id, business_key, priority, parent_node_name, variable, revision, creator, 
 		create_time
 		from wf_process_instance
 		where parent_id = #{parentId}
@@ -69,7 +70,7 @@
 	</select>
 	
 	<select id="findPageData" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
-		select id, parent_id, process_def_id, priority, parent_node_name, variable, revision, creator, 
+		select id, parent_id, process_def_id, business_key, priority, parent_node_name, variable, revision, creator, 
 		create_time
 		from wf_process_instance
 		<where>

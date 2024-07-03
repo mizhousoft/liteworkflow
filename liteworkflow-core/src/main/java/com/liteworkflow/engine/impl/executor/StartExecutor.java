@@ -4,13 +4,12 @@ import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.model.NodeModel;
 
 /**
- * TODO
+ * 开始事件流程执行器
  *
  * @version
  */
-public class StartExecutor extends NodeExecutor
+public class StartExecutor extends NodeFlowExecutor
 {
-
 	/**
 	 * {@inheritDoc}
 	 */

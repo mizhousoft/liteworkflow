@@ -13,8 +13,7 @@ import com.liteworkflow.engine.model.TaskModel.TaskType;
 /**
  * 任务实体类
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class Task implements Serializable, Cloneable
 {

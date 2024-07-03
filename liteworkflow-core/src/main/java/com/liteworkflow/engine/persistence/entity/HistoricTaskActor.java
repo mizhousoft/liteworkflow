@@ -5,8 +5,7 @@ import java.io.Serializable;
 /**
  * 历史任务参与者实体类
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class HistoricTaskActor implements Serializable
 {

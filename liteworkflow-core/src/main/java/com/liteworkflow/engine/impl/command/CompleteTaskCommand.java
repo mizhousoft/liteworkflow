@@ -21,9 +21,9 @@ import com.liteworkflow.engine.helper.JsonHelper;
 import com.liteworkflow.engine.impl.Command;
 import com.liteworkflow.engine.impl.CommandContext;
 import com.liteworkflow.engine.impl.Execution;
-import com.liteworkflow.engine.impl.Executor;
+import com.liteworkflow.engine.impl.FlowExecutor;
 import com.liteworkflow.engine.impl.GeneralCompletion;
-import com.liteworkflow.engine.impl.executor.ExecutorBuilder;
+import com.liteworkflow.engine.impl.executor.FlowExecutorFactory;
 import com.liteworkflow.engine.impl.strategy.GeneralAccessStrategy;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.model.ProcessModel;
@@ -33,17 +33,18 @@ import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.persistence.entity.Task;
 import com.liteworkflow.engine.persistence.entity.TaskActor;
 import com.liteworkflow.engine.persistence.service.HistoricTaskEntityService;
+import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.TaskActorEntityService;
 import com.liteworkflow.engine.persistence.service.TaskEntityService;
 
 /**
- * TODO
+ * 完成任务指令
  *
  * @version
  */
 public class CompleteTaskCommand implements Command<Void>
 {
-	private static final Logger log = LoggerFactory.getLogger(CompleteTaskCommand.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CompleteTaskCommand.class);
 
 	private String taskId;
 
@@ -82,7 +83,7 @@ public class CompleteTaskCommand implements Command<Void>
 		{
 			NodeModel nodeModel = model.getNodeModel(execution.getTask().getTaskName());
 			// 将执行对象交给该任务对应的节点模型执行
-			Executor executor = ExecutorBuilder.build(nodeModel);
+			FlowExecutor executor = FlowExecutorFactory.build(nodeModel);
 			executor.execute(execution, nodeModel);
 		}
 
@@ -95,14 +96,16 @@ public class CompleteTaskCommand implements Command<Void>
 			args = new HashMap<String, Object>();
 		Task task = complete(taskId, operator, args, commandContext);
 
-		log.debug("任务[taskId=" + taskId + "]已完成");
+		LOG.debug("任务[taskId=" + taskId + "]已完成");
 
-		ProcessEngineConfigurationImpl processEngineConfiguration = commandContext.getProcessEngineConfiguration();
+		ProcessEngineConfigurationImpl processEngineConfiguration = commandContext.getEngineConfiguration();
 		ProcessInstanceService processInstanceService = processEngineConfiguration.getProcessInstanceService();
+		ProcessInstanceEntityService processInstanceEntityService = processEngineConfiguration.getProcessInstanceEntityService();
 
 		ProcessInstance instance = processInstanceService.getInstance(task.getInstanceId());
 		Assert.notNull(instance, "指定的流程实例[id=" + task.getInstanceId() + "]已完成或不存在");
-		processInstanceService.updateInstance(instance);
+		processInstanceEntityService.modifyEntity(instance);
+
 		// 协办任务完成不产生执行对象
 		if (!task.isMajor())
 		{
@@ -132,7 +135,7 @@ public class CompleteTaskCommand implements Command<Void>
 
 	public Task complete(String taskId, String operator, Map<String, Object> args, CommandContext commandContext)
 	{
-		ProcessEngineConfigurationImpl processEngineConfiguration = commandContext.getProcessEngineConfiguration();
+		ProcessEngineConfigurationImpl processEngineConfiguration = commandContext.getEngineConfiguration();
 		TaskEntityService taskEntityService = processEngineConfiguration.getTaskEntityService();
 		TaskActorEntityService taskActorEntityService = processEngineConfiguration.getTaskActorEntityService();
 		HistoricTaskEntityService historicTaskEntityService = processEngineConfiguration.getHistoricTaskEntityService();
@@ -186,7 +189,7 @@ public class CompleteTaskCommand implements Command<Void>
 			}
 		}
 
-		TaskActorEntityService taskActorEntityService = commandContext.getProcessEngineConfiguration().getTaskActorEntityService();
+		TaskActorEntityService taskActorEntityService = commandContext.getEngineConfiguration().getTaskActorEntityService();
 
 		List<TaskActor> actors = taskActorEntityService.queryByTaskId(task.getId());
 		if (actors == null || actors.isEmpty())

@@ -5,29 +5,33 @@
 	
 	<resultMap type="com.liteworkflow.engine.persistence.entity.HistoricProcessInstance" id="HistoricProcessInstanceMap">
 		<id property="id" column="id" />
-		<result property="processId" column="process_id" />
+		<result property="parentId" column="parent_id" />
+		<result property="processDefinitionId" column="process_def_id" />
+		<result property="businessKey" column="business_key" />
 		<result property="state" column="state" />
 		<result property="priority" column="priority" />
+		<result property="variable" column="variable" />
+		<result property="endTime" column="end_time" />
 		<result property="creator" column="creator" />
 		<result property="createTime" column="create_time" />
-		<result property="endTime" column="end_time" />
-		<result property="parentId" column="parent_id" />
-		<result property="expireTime" column="expire_time" />
-		<result property="variable" column="variable" />
 	</resultMap>
 	
-	<insert id="save">
-		insert into wf_historic_process_instance (id, process_id, state, creator, create_time, end_time, parent_id, expire_time,
-		variable)
-		values (#{id}, #{processId}, #{state}, #{creator}, #{createTime}, #{endTime}, #{parentId}, #{expireTime}, 
-		#{variable})
-	</insert>
+	<sql id="Column_List">
+        id, parent_id, process_def_id, business_key, state, priority, variable, end_time, creator, create_time
+    </sql>
+
+    <insert id="save">
+        insert into wf_historic_process_instance (id, parent_id, process_def_id, business_key, state, priority, variable,
+        end_time, creator, create_time)
+        values (#{id}, #{parentId}, #{processDefinitionId}, #{businessKey}, #{state}, #{priority}, #{variable},
+        #{endTime}, #{creator}, #{createTime})
+    </insert>
 	
 	<update id="update">
         update wf_historic_process_instance 
         set state = #{state}, 
-        end_time = #{endTime}, 
-        variable = #{variable} 
+        variable = #{variable}, 
+        end_time = #{endTime}
         where id = #{id} 
 	</update>
 		
@@ -35,15 +39,20 @@
 		delete from wf_historic_process_instance where id = #{id}
 	</delete>
 	
-	<select id="getHistoricInstance" parameterType="java.util.Map" resultMap="HistoricProcessInstanceMap">
-		select o.id, o.process_id, o.state, o.priority, o.creator, o.create_time, o.end_time, o.parent_id, 
-		o.expire_time, o.variable 
-		from wf_historic_process_instance o 
-		where id = #{instanceId}
+	<select id="findById" parameterType="java.util.Map" resultMap="HistoricProcessInstanceMap">
+		select <include refid="Column_List"/>
+        from wf_historic_process_instance
+		where id = #{id}
+	</select>
+	
+	<select id="findIdsByProcessDefinitionId" parameterType="java.util.Map" resultMap="HistoricProcessInstanceMap">
+		select <include refid="Column_List"/>
+        from wf_historic_process_instance
+		where process_def_id = #{processDefinitionId}
 	</select>
 	
 	<select id="countTotal" resultType="Long">
-		select count(o.id) from wf_historic_process_instance o left join wf_process_definition p on p.id = o.process_id
+		select count(o.id) from wf_historic_process_instance o left join wf_process_definition p on p.id = o.process_def_id
 		<where>
        		<if test="request.operators != null and request.operators.length != 0">
                 o.creator in
@@ -58,7 +67,7 @@
                 </foreach>
             </if>
             <if test="request.processDefinitionId != null">
-                and o.process_id = #{request.processDefinitionId}
+                and o.process_def_id = #{request.processDefinitionId}
        		</if>
 			<if test="request.category != null">
                 and p.category = #{request.category}
@@ -80,9 +89,9 @@
 	</select>
 	
 	<select id="findPageData" parameterType="java.util.Map" resultMap="HistoricProcessInstanceMap">
-		select o.id, o.process_id, o.state, o.priority, o.creator, o.create_time, o.end_time, o.parent_id,
-		o.expire_time, o.variable 
-		from wf_historic_process_instance o left join wf_process_definition p on p.id = o.process_id
+		select o.id, o.parent_id, o.process_def_id, o.business_key, o.state, o.priority, o.variable, 
+		o.end_time, o.creator, o.create_time
+		from wf_historic_process_instance o left join wf_process_definition p on p.id = o.process_def_id
 		<where>
        		<if test="request.operators != null and request.operators.length != 0">
                 o.creator in
@@ -97,7 +106,7 @@
                 </foreach>
             </if>
             <if test="request.processDefinitionId != null">
-                and o.process_id = #{request.processDefinitionId}
+                and o.process_def_id = #{request.processDefinitionId}
        		</if>
 			<if test="request.category != null">
                 and p.category = #{request.category}

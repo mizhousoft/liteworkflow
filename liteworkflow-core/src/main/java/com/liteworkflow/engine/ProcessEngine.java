@@ -3,8 +3,7 @@ package com.liteworkflow.engine;
 /**
  * 流程引擎接口
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public interface ProcessEngine
 {

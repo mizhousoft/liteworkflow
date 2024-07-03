@@ -4,20 +4,19 @@ import java.util.List;
 
 import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.impl.Execution;
-import com.liteworkflow.engine.impl.Executor;
+import com.liteworkflow.engine.impl.FlowExecutor;
 import com.liteworkflow.engine.interceptor.FlowInterceptor;
 import com.liteworkflow.engine.model.BaseModel;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.model.TransitionModel;
 
 /**
- * TODO
+ * 节点流程执行器
  *
  * @version
  */
-public abstract class NodeExecutor implements Executor
+public abstract class NodeFlowExecutor implements FlowExecutor
 {
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -36,7 +35,7 @@ public abstract class NodeExecutor implements Executor
 	}
 
 	/**
-	 * 拦截方法
+	 * 拦截
 	 * 
 	 * @param interceptorList 拦截器列表
 	 * @param execution 执行对象
@@ -56,6 +55,12 @@ public abstract class NodeExecutor implements Executor
 		}
 	}
 
+	/**
+	 * 执行节点迁移
+	 * 
+	 * @param execution
+	 * @param nodeModel
+	 */
 	protected void runOutTransition(Execution execution, NodeModel nodeModel)
 	{
 		List<TransitionModel> outputs = nodeModel.getOutputs();
@@ -63,7 +68,7 @@ public abstract class NodeExecutor implements Executor
 		{
 			transition.setEnabled(true);
 
-			Executor executor = ExecutorBuilder.build(transition);
+			FlowExecutor executor = FlowExecutorFactory.build(transition);
 			executor.execute(execution, transition);
 		}
 	}
@@ -71,7 +76,8 @@ public abstract class NodeExecutor implements Executor
 	/**
 	 * 具体节点模型需要完成的执行逻辑
 	 * 
-	 * @param execution 执行对象
+	 * @param execution
+	 * @param nodeModel
 	 */
 	protected abstract void doExecute(Execution execution, NodeModel nodeModel);
 }

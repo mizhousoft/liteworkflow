@@ -17,25 +17,42 @@ import com.mizhousoft.commons.data.domain.Page;
 /**
  * 流程实例业务类
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class ProcessInstanceServiceImpl implements ProcessInstanceService
 {
+	/**
+	 * ProcessInstanceEntityService
+	 */
 	private ProcessInstanceEntityService processInstanceEntityService;
 
+	/**
+	 * HistoricProcessInstanceEntityService
+	 */
 	private HistoricProcessInstanceEntityService historicProcessInstanceEntityService;
 
+	/**
+	 * TaskEntityService
+	 */
 	private TaskEntityService taskEntityService;
 
+	/**
+	 * HistoricTaskEntityService
+	 */
 	private HistoricTaskEntityService historicTaskEntityService;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public ProcessInstance getInstance(String instanceId)
 	{
 		return processInstanceEntityService.getById(instanceId);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Page<ProcessInstance> queryPageData(ProcessInstancePageRequest request)
 	{
@@ -43,22 +60,7 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService
 	}
 
 	/**
-	 * 更新活动实例的last_updator、last_update_time、expire_time、revision、variable
-	 */
-	@Override
-	public void updateInstance(ProcessInstance instance)
-	{
-		processInstanceEntityService.modifyEntity(instance);
-	}
-
-	/**
-	 * 级联删除指定流程实例的所有数据：
-	 * 1.wf_process_instance,wf_historic_process_instance
-	 * 2.wf_task,wf_historic_task
-	 * 3.wf_task_actor,wf_historic_task_actor
-	 * 4.wf_cc_process_instance
-	 * 
-	 * @param id 实例id
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void cascadeRemove(String id)

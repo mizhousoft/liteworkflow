@@ -2,20 +2,14 @@ package com.liteworkflow.engine.persistence.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Map;
-
-import com.liteworkflow.engine.helper.JsonHelper;
 
 /**
  * 历史流程实例实体类
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class HistoricProcessInstance implements Serializable
 {
-
 	/**
 	 * 
 	 */
@@ -27,14 +21,39 @@ public class HistoricProcessInstance implements Serializable
 	private String id;
 
 	/**
+	 * 流程实例为子流程时，该字段标识父流程实例ID
+	 */
+	private String parentId;
+
+	/**
 	 * 流程定义ID
 	 */
-	private String processId;
+	private String processDefinitionId;
+
+	/**
+	 * 业务标识
+	 */
+	private String businessKey;
 
 	/**
 	 * 流程实例状态（0：结束；1：活动）
 	 */
 	private Integer state;
+
+	/**
+	 * 流程实例优先级
+	 */
+	private Integer priority;
+
+	/**
+	 * 流程实例附属变量
+	 */
+	private String variable;
+
+	/**
+	 * 流程实例结束时间
+	 */
+	private LocalDateTime endTime;
 
 	/**
 	 * 流程实例创建者ID
@@ -47,54 +66,83 @@ public class HistoricProcessInstance implements Serializable
 	private LocalDateTime createTime;
 
 	/**
-	 * 流程实例结束时间
+	 * 获取id
+	 * 
+	 * @return
 	 */
-	private LocalDateTime endTime;
-
-	/**
-	 * 流程实例为子流程时，该字段标识父流程实例ID
-	 */
-	private String parentId;
-
-	/**
-	 * 流程实例期望完成时间
-	 */
-	private LocalDateTime expireTime;
-
-	/**
-	 * 流程实例优先级
-	 */
-	private Integer priority;
-
-	/**
-	 * 流程实例附属变量
-	 */
-	private String variable;
-
-	public HistoricProcessInstance()
+	public String getId()
 	{
-
+		return id;
 	}
 
-	public HistoricProcessInstance(ProcessInstance instance)
+	/**
+	 * 设置id
+	 * 
+	 * @param id
+	 */
+	public void setId(String id)
 	{
-		this.id = instance.getId();
-		this.processId = instance.getProcessDefinitionId();
-		this.createTime = instance.getCreateTime();
-		this.creator = instance.getCreator();
-		this.parentId = instance.getParentId();
-		this.priority = instance.getPriority();
-		this.variable = instance.getVariable();
+		this.id = id;
 	}
 
-	public String getProcessId()
+	/**
+	 * 获取parentId
+	 * 
+	 * @return
+	 */
+	public String getParentId()
 	{
-		return processId;
+		return parentId;
 	}
 
-	public void setProcessId(String processId)
+	/**
+	 * 设置parentId
+	 * 
+	 * @param parentId
+	 */
+	public void setParentId(String parentId)
 	{
-		this.processId = processId;
+		this.parentId = parentId;
+	}
+
+	/**
+	 * 获取processDefinitionId
+	 * 
+	 * @return
+	 */
+	public String getProcessDefinitionId()
+	{
+		return processDefinitionId;
+	}
+
+	/**
+	 * 设置processDefinitionId
+	 * 
+	 * @param processDefinitionId
+	 */
+	public void setProcessDefinitionId(String processDefinitionId)
+	{
+		this.processDefinitionId = processDefinitionId;
+	}
+
+	/**
+	 * 获取businessKey
+	 * 
+	 * @return
+	 */
+	public String getBusinessKey()
+	{
+		return businessKey;
+	}
+
+	/**
+	 * 设置businessKey
+	 * 
+	 * @param businessKey
+	 */
+	public void setBusinessKey(String businessKey)
+	{
+		this.businessKey = businessKey;
 	}
 
 	/**
@@ -117,44 +165,44 @@ public class HistoricProcessInstance implements Serializable
 		this.state = state;
 	}
 
-	public String getCreator()
-	{
-		return creator;
-	}
-
-	public void setCreator(String creator)
-	{
-		this.creator = creator;
-	}
-
-	public String getParentId()
-	{
-		return parentId;
-	}
-
-	public void setParentId(String parentId)
-	{
-		this.parentId = parentId;
-	}
-
 	/**
-	 * 获取createTime
+	 * 获取priority
 	 * 
 	 * @return
 	 */
-	public LocalDateTime getCreateTime()
+	public Integer getPriority()
 	{
-		return createTime;
+		return priority;
 	}
 
 	/**
-	 * 设置createTime
+	 * 设置priority
 	 * 
-	 * @param createTime
+	 * @param priority
 	 */
-	public void setCreateTime(LocalDateTime createTime)
+	public void setPriority(Integer priority)
 	{
-		this.createTime = createTime;
+		this.priority = priority;
+	}
+
+	/**
+	 * 获取variable
+	 * 
+	 * @return
+	 */
+	public String getVariable()
+	{
+		return variable;
+	}
+
+	/**
+	 * 设置variable
+	 * 
+	 * @param variable
+	 */
+	public void setVariable(String variable)
+	{
+		this.variable = variable;
 	}
 
 	/**
@@ -178,71 +226,53 @@ public class HistoricProcessInstance implements Serializable
 	}
 
 	/**
-	 * 获取expireTime
+	 * 获取creator
 	 * 
 	 * @return
 	 */
-	public LocalDateTime getExpireTime()
+	public String getCreator()
 	{
-		return expireTime;
+		return creator;
 	}
 
 	/**
-	 * 设置expireTime
+	 * 设置creator
 	 * 
-	 * @param expireTime
+	 * @param creator
 	 */
-	public void setExpireTime(LocalDateTime expireTime)
+	public void setCreator(String creator)
 	{
-		this.expireTime = expireTime;
+		this.creator = creator;
 	}
 
-	public Integer getPriority()
+	/**
+	 * 获取createTime
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getCreateTime()
 	{
-		return priority;
+		return createTime;
 	}
 
-	public void setPriority(Integer priority)
+	/**
+	 * 设置createTime
+	 * 
+	 * @param createTime
+	 */
+	public void setCreateTime(LocalDateTime createTime)
 	{
-		this.priority = priority;
+		this.createTime = createTime;
 	}
 
-	public String getId()
-	{
-		return id;
-	}
-
-	public void setId(String id)
-	{
-		this.id = id;
-	}
-
-	public String getVariable()
-	{
-		return variable;
-	}
-
-	public void setVariable(String variable)
-	{
-		this.variable = variable;
-	}
-
-	@SuppressWarnings("unchecked")
-	public Map<String, Object> getVariableMap()
-	{
-		Map<String, Object> map = JsonHelper.fromJson(this.variable, Map.class);
-		if (map == null)
-			return Collections.emptyMap();
-		return map;
-	}
-
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder();
-		sb.append("HistoricProcessInstance(id=").append(this.id);
-		sb.append(",processId=").append(this.processId);
-		sb.append(",creator=").append(this.creator);
-		sb.append(",createTime").append(this.createTime).append(")");
-		return sb.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append("{\"id\":\"").append(id).append("\", \"processDefinitionId\":\"").append(processDefinitionId).append("\"}");
+		return builder.toString();
 	}
 }

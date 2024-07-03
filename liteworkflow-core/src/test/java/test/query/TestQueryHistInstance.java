@@ -34,7 +34,7 @@ public class TestQueryHistInstance extends TestSpring
 		request.setState(0);
 		request.setCategory("预算管理流程1");
 
-		System.out.println(engine.getHistoryService().getHistoricInstances(request));
-		System.out.println(engine.getHistoryService().getHistoricInstances(new HistoricInstancePageRequest()));
+		System.out.println(engine.getHistoryService().queryPageData(request));
+		System.out.println(engine.getHistoryService().queryPageData(new HistoricInstancePageRequest()));
 	}
 }

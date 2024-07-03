@@ -40,14 +40,6 @@ public interface HistoryService
 	String[] getHistoricTaskActorsByTaskId(String taskId);
 
 	/**
-	 * 根据filter查询历史流程实例
-	 * 
-	 * @param filter 查询过滤器
-	 * @return List<HistoricProcessInstance> 历史实例集合
-	 */
-	List<HistoricProcessInstance> getHistoricInstances(HistoricInstancePageRequest request);
-
-	/**
 	 * 根据filter分页查询历史流程实例
 	 * 
 	 * @param page 分页对象

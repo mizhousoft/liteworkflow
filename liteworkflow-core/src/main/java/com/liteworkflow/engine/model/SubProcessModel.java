@@ -3,8 +3,7 @@ package com.liteworkflow.engine.model;
 /**
  * 子流程定义subprocess元素
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class SubProcessModel extends ActivityModel
 {

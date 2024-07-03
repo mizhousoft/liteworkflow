@@ -5,8 +5,7 @@ import java.io.Serializable;
 /**
  * 任务参与者实体类
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class TaskActor implements Serializable
 {

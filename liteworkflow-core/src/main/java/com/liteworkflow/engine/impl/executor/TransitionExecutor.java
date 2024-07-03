@@ -14,12 +14,11 @@ import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.Assignment;
 import com.liteworkflow.engine.AssignmentHandler;
 import com.liteworkflow.engine.ProcessEngineConfiguration;
-import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.helper.DateHelper;
 import com.liteworkflow.engine.helper.JsonHelper;
 import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.impl.Execution;
-import com.liteworkflow.engine.impl.Executor;
+import com.liteworkflow.engine.impl.FlowExecutor;
 import com.liteworkflow.engine.model.BaseModel;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.model.StartModel;
@@ -32,16 +31,16 @@ import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.persistence.entity.Task;
 import com.liteworkflow.engine.persistence.entity.TaskActor;
-import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.TaskActorEntityService;
 import com.liteworkflow.engine.persistence.service.TaskEntityService;
+import com.liteworkflow.engine.util.ProcessInstanceUtils;
 
 /**
- * TODO
+ * 流程迁移流程执行器
  *
  * @version
  */
-public class TransitionExecutor implements Executor
+public class TransitionExecutor implements FlowExecutor
 {
 	private static final String START = "start";
 
@@ -71,7 +70,7 @@ public class TransitionExecutor implements Executor
 		else
 		{
 			// 如果目标节点模型为其它控制类型，则继续由目标节点执行
-			Executor executor = ExecutorBuilder.build(target);
+			FlowExecutor executor = FlowExecutorFactory.build(target);
 			executor.execute(execution, target);
 		}
 	}
@@ -86,8 +85,8 @@ public class TransitionExecutor implements Executor
 	{
 		// 根据子流程模型名称获取子流程定义对象
 		ProcessEngineConfiguration engineConfiguration = execution.getEngineConfiguration();
-		ProcessDefinition processDefinition = engineConfiguration.getRepositoryService().getByVersion(subProcessModel.getProcessName(),
-		        subProcessModel.getVersion());
+		ProcessDefinition processDefinition = engineConfiguration.getRepositoryService()
+		        .getByVersion(subProcessModel.getProcessName(), subProcessModel.getVersion());
 
 		Execution child = execution.createSubExecution(execution, processDefinition, subProcessModel.getName());
 		ProcessInstance instance = startInstanceByExecution(child);
@@ -100,35 +99,19 @@ public class TransitionExecutor implements Executor
 	public ProcessInstance startInstanceByExecution(Execution execution)
 	{
 		ProcessDefinition processDefinition = execution.getProcessDefinition();
-		StartModel start = processDefinition.getModel().getStartModel();
+		StartModel startModel = processDefinition.getModel().getStartModel();
 
-		ProcessInstance instance = createInstance(processDefinition, execution.getOperator(), execution.getArgs(),
-		        execution.getParentInstance().getId(), execution.getParentNodeName(), execution.getEngineConfiguration());
+		ProcessInstance instance = ProcessInstanceUtils.createProcessInstance(processDefinition, null, execution.getOperator(),
+		        execution.getArgs(), execution.getParentInstance().getId(), execution.getParentNodeName(),
+		        execution.getEngineConfiguration());
 
 		Execution current = new Execution(execution.getEngineConfiguration(), processDefinition, instance, execution.getArgs());
 		current.setOperator(execution.getOperator());
 
-		Executor executor = ExecutorBuilder.build(start);
-		executor.execute(current, start);
+		FlowExecutor executor = FlowExecutorFactory.build(startModel);
+		executor.execute(current, startModel);
 
 		return current.getProcessInstance();
-	}
-
-	public ProcessInstance createInstance(ProcessDefinition process, String operator, Map<String, Object> args, String parentId,
-	        String parentNodeName, ProcessEngineConfigurationImpl processEngineConfiguration)
-	{
-		ProcessInstanceEntityService processInstanceEntityService = processEngineConfiguration.getProcessInstanceEntityService();
-
-		ProcessInstance instance = new ProcessInstance();
-		instance.setId(StringHelper.getPrimaryKey());
-		instance.setParentId(parentId);
-		instance.setParentNodeName(parentNodeName);
-		instance.setCreateTime(LocalDateTime.now());
-		instance.setCreator(operator);
-		instance.setProcessDefinitionId(process.getId());
-		instance.setVariable(JsonHelper.toJson(args));
-		processInstanceEntityService.saveInstanceAndHistoric(instance);
-		return instance;
 	}
 
 	public List<Task> createTask(TaskModel taskModel, Execution execution)

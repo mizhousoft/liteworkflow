@@ -33,12 +33,6 @@ public class HistoryServiceImpl implements HistoryService
 	}
 
 	@Override
-	public List<HistoricProcessInstance> getHistoricInstances(HistoricInstancePageRequest request)
-	{
-		return historicProcessInstanceEntityService.queryList(request);
-	}
-
-	@Override
 	public Page<HistoricProcessInstance> queryPageData(HistoricInstancePageRequest request)
 	{
 		return historicProcessInstanceEntityService.queryPageData(request);

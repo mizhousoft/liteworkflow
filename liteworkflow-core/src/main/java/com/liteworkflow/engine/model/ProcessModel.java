@@ -6,8 +6,7 @@ import java.util.List;
 /**
  * 流程定义process元素
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class ProcessModel extends BaseModel
 {
@@ -96,9 +95,9 @@ public class ProcessModel extends BaseModel
 	{
 		for (NodeModel nodeModel : nodeModels)
 		{
-			if (nodeModel instanceof StartModel)
+			if (nodeModel instanceof StartModel startModel)
 			{
-				return (StartModel) nodeModel;
+				return startModel;
 			}
 		}
 
@@ -114,9 +113,9 @@ public class ProcessModel extends BaseModel
 	{
 		for (NodeModel nodeModel : nodeModels)
 		{
-			if (nodeModel instanceof EndModel)
+			if (nodeModel instanceof EndModel endModel)
 			{
-				return (EndModel) nodeModel;
+				return endModel;
 			}
 		}
 

@@ -17,8 +17,7 @@ import com.mizhousoft.commons.data.domain.Page;
  * 5、回退任务
  * 6、提取任务
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public interface TaskService
 {

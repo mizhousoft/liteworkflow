@@ -11,8 +11,7 @@ import com.liteworkflow.engine.model.TaskModel.PerformType;
 /**
  * 历史任务实体类
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class HistoricTask implements Serializable
 {

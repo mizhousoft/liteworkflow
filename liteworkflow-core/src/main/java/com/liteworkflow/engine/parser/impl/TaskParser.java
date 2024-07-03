@@ -17,8 +17,7 @@ import com.mizhousoft.commons.lang.ClassUtils;
 /**
  * 任务节点解析类
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class TaskParser extends AbstractNodeParser
 {

@@ -1,20 +1,22 @@
 package com.liteworkflow.engine.persistence.mapper;
 
+import java.util.Set;
+
 import com.liteworkflow.engine.persistence.entity.HistoricProcessInstance;
 import com.mizhousoft.commons.mapper.PageableMapper;
 
 /**
- * HistoricProcessInstanceMapper
+ * 历史流程实例实体类持久层
  *
  * @version
  */
 public interface HistoricProcessInstanceMapper extends PageableMapper<HistoricProcessInstance, String>
 {
 	/**
-	 * 根据流程实例ID获取历史流程实例对象
+	 * 根据流程定义ID查询历史流程实例ID
 	 * 
-	 * @param instanceId 历史流程实例id
-	 * @return HistoricProcessInstance 历史流程实例对象
+	 * @param processDefinitionId
+	 * @return
 	 */
-	HistoricProcessInstance getHistoricInstance(String instanceId);
+	Set<String> findIdsByProcessDefinitionId(String processDefinitionId);
 }

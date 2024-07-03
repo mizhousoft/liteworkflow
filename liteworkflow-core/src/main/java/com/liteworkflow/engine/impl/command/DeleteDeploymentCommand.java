@@ -1,26 +1,32 @@
 package com.liteworkflow.engine.impl.command;
 
-import java.util.List;
+import java.util.Set;
+
+import org.springframework.util.Assert;
 
 import com.liteworkflow.engine.ProcessInstanceService;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.impl.Command;
 import com.liteworkflow.engine.impl.CommandContext;
-import com.liteworkflow.engine.persistence.entity.HistoricProcessInstance;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
-import com.liteworkflow.engine.persistence.request.HistoricInstancePageRequest;
 import com.liteworkflow.engine.persistence.service.HistoricProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.ProcessDefinitionEntityService;
 
 /**
- * 删除命令命令
+ * 删除流程定义命令
  *
  * @version
  */
 public class DeleteDeploymentCommand implements Command<ProcessDefinition>
 {
+	/**
+	 * 流程定义ID
+	 */
 	private String id;
 
+	/**
+	 * 是否级联删除流程、任务、历史等数据
+	 */
 	private boolean cascade;
 
 	/**
@@ -42,22 +48,22 @@ public class DeleteDeploymentCommand implements Command<ProcessDefinition>
 	@Override
 	public ProcessDefinition execute(CommandContext context)
 	{
-		ProcessEngineConfigurationImpl engineConfiguration = context.getProcessEngineConfiguration();
+		ProcessEngineConfigurationImpl engineConfiguration = context.getEngineConfiguration();
 		ProcessDefinitionEntityService processDefinitionEntityService = engineConfiguration.getProcessDefinitionEntityService();
+		ProcessInstanceService processInstanceService = engineConfiguration.getProcessInstanceService();
 		HistoricProcessInstanceEntityService historicProcessInstanceEntityService = engineConfiguration
 		        .getHistoricProcessInstanceEntityService();
 
 		ProcessDefinition processDefinition = processDefinitionEntityService.getById(id);
+		Assert.notNull(processDefinition, "Process definition not found, id is " + id + '.');
 
-		HistoricInstancePageRequest request = new HistoricInstancePageRequest();
-		request.setProcessDefinitionId(id);
-		List<HistoricProcessInstance> historicInstances = historicProcessInstanceEntityService.queryList(request);
-
-		ProcessInstanceService processInstanceService = engineConfiguration.getProcessInstanceService();
-
-		for (HistoricProcessInstance historicInstance : historicInstances)
+		if (cascade)
 		{
-			processInstanceService.cascadeRemove(historicInstance.getId());
+			Set<String> instanceIds = historicProcessInstanceEntityService.queryIdsByProcessDefinitionId(id);
+			for (String instanceId : instanceIds)
+			{
+				processInstanceService.cascadeRemove(instanceId);
+			}
 		}
 
 		processDefinitionEntityService.deleteEntity(processDefinition);

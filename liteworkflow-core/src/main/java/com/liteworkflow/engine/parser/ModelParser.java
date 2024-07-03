@@ -34,8 +34,7 @@ import com.liteworkflow.engine.util.DomUtils;
 /**
  * 流程定义xml文件的模型解析器
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class ModelParser
 {

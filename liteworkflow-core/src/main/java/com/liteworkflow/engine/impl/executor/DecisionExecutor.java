@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.liteworkflow.ProcessException;
 import com.liteworkflow.engine.DecisionHandler;
 import com.liteworkflow.engine.impl.Execution;
-import com.liteworkflow.engine.impl.Executor;
+import com.liteworkflow.engine.impl.FlowExecutor;
 import com.liteworkflow.engine.impl.Expression;
 import com.liteworkflow.engine.impl.el.SpelExpression;
 import com.liteworkflow.engine.model.DecisionModel;
@@ -21,7 +21,7 @@ import com.liteworkflow.engine.model.TransitionModel;
  *
  * @version
  */
-public class DecisionExecutor extends NodeExecutor
+public class DecisionExecutor extends NodeFlowExecutor
 {
 	private static final Logger log = LoggerFactory.getLogger(DecisionExecutor.class);
 
@@ -65,7 +65,7 @@ public class DecisionExecutor extends NodeExecutor
 				{
 					tm.setEnabled(true);
 
-					Executor executor = ExecutorBuilder.build(tm);
+					FlowExecutor executor = FlowExecutorFactory.build(tm);
 					executor.execute(execution, tm);
 
 					isfound = true;
@@ -76,7 +76,7 @@ public class DecisionExecutor extends NodeExecutor
 				if (tm.getName().equals(next))
 				{
 					tm.setEnabled(true);
-					Executor executor = ExecutorBuilder.build(tm);
+					FlowExecutor executor = FlowExecutorFactory.build(tm);
 					executor.execute(execution, tm);
 					isfound = true;
 				}

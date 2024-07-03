@@ -28,7 +28,7 @@ public class TestQueryProcess extends TestSpring
 	@Test
 	public void test()
 	{
-		List<ProcessDefinition> list = engine.getRepositoryService().queryListByName("subprocess1");
+		List<ProcessDefinition> list = engine.getRepositoryService().queryList("subprocess1");
 		System.out.println(list.size());
 
 		ProcessDefinition process = engine.getRepositoryService().getByVersion("subprocess1", 0);

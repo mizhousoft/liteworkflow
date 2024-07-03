@@ -5,8 +5,7 @@ import com.liteworkflow.engine.DecisionHandler;
 /**
  * 决策定义decision元素
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class DecisionModel extends NodeModel
 {

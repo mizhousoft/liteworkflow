@@ -12,25 +12,25 @@ public class CommandContext
 	/**
 	 * ProcessEngineConfigurationImpl
 	 */
-	private ProcessEngineConfigurationImpl processEngineConfiguration;
+	private ProcessEngineConfigurationImpl engineConfiguration;
 
 	/**
-	 * 获取processEngineConfiguration
+	 * 获取engineConfiguration
 	 * 
 	 * @return
 	 */
-	public ProcessEngineConfigurationImpl getProcessEngineConfiguration()
+	public ProcessEngineConfigurationImpl getEngineConfiguration()
 	{
-		return processEngineConfiguration;
+		return engineConfiguration;
 	}
 
 	/**
-	 * 设置processEngineConfiguration
+	 * 设置engineConfiguration
 	 * 
-	 * @param processEngineConfiguration
+	 * @param engineConfiguration
 	 */
-	public void setProcessEngineConfiguration(ProcessEngineConfigurationImpl processEngineConfiguration)
+	public void setEngineConfiguration(ProcessEngineConfigurationImpl engineConfiguration)
 	{
-		this.processEngineConfiguration = processEngineConfiguration;
+		this.engineConfiguration = engineConfiguration;
 	}
 }

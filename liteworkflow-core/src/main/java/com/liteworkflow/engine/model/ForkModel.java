@@ -3,8 +3,7 @@ package com.liteworkflow.engine.model;
 /**
  * 分支定义fork元素
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class ForkModel extends NodeModel
 {

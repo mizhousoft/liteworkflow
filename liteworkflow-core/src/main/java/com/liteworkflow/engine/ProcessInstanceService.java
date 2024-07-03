@@ -7,8 +7,7 @@ import com.mizhousoft.commons.data.domain.Page;
 /**
  * 流程实例业务类
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public interface ProcessInstanceService
 {
@@ -28,13 +27,6 @@ public interface ProcessInstanceService
 	 * @return List<ProcessInstance> 活动实例集合
 	 */
 	Page<ProcessInstance> queryPageData(ProcessInstancePageRequest request);
-
-	/**
-	 * 更新流程实例
-	 * 
-	 * @param instance 流程实例对象
-	 */
-	void updateInstance(ProcessInstance instance);
 
 	/**
 	 * 谨慎使用.数据恢复非常痛苦，你懂得~~

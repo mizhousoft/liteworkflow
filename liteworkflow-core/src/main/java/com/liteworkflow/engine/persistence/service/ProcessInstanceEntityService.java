@@ -21,13 +21,6 @@ public interface ProcessInstanceEntityService
 	void addEntity(ProcessInstance instance);
 
 	/**
-	 * 保存流程实例
-	 * 
-	 * @param instance 流程实例对象
-	 */
-	void saveInstanceAndHistoric(ProcessInstance instance);
-
-	/**
 	 * 更新流程实例对象
 	 * 
 	 * @param instance 流程实例对象

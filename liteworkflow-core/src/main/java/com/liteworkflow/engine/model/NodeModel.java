@@ -8,8 +8,7 @@ import com.liteworkflow.engine.interceptor.FlowInterceptor;
 /**
  * 节点元素（存在输入输出的变迁）
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public abstract class NodeModel extends BaseModel
 {

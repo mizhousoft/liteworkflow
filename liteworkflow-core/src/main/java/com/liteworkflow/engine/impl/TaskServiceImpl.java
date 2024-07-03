@@ -29,8 +29,7 @@ import com.mizhousoft.commons.data.domain.Page;
 /**
  * 任务执行业务类
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class TaskServiceImpl extends CommonServiceImpl implements TaskService
 {
@@ -63,7 +62,7 @@ public class TaskServiceImpl extends CommonServiceImpl implements TaskService
 	}
 
 	/**
-	 * 根据任务主键ID执行任务
+	 * {@inheritDoc}
 	 */
 	@Override
 	public List<Task> executeTask(String taskId)
@@ -72,7 +71,7 @@ public class TaskServiceImpl extends CommonServiceImpl implements TaskService
 	}
 
 	/**
-	 * 根据任务主键ID，操作人ID执行任务
+	 * {@inheritDoc}
 	 */
 	@Override
 	public List<Task> executeTask(String taskId, String operator)
@@ -81,7 +80,7 @@ public class TaskServiceImpl extends CommonServiceImpl implements TaskService
 	}
 
 	/**
-	 * 根据任务主键ID，操作人ID，参数列表执行任务
+	 * {@inheritDoc}
 	 */
 	@Override
 	public List<Task> executeTask(String taskId, String operator, Map<String, Object> args)
@@ -91,24 +90,36 @@ public class TaskServiceImpl extends CommonServiceImpl implements TaskService
 		return null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Task getTask(String taskId)
 	{
 		return taskEntityService.getTask(taskId);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public List<Task> getActiveTasks(String instanceId)
 	{
 		return taskEntityService.queryByInstanceId(instanceId);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public List<Task> getActiveTasks(TaskPageRequest request)
 	{
 		return taskEntityService.queryList(request);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Page<Task> queryPageData(TaskPageRequest request)
 	{
@@ -116,7 +127,7 @@ public class TaskServiceImpl extends CommonServiceImpl implements TaskService
 	}
 
 	/**
-	 * 向指定任务添加参与者
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void addTaskActor(String taskId, String... actors)
@@ -125,8 +136,7 @@ public class TaskServiceImpl extends CommonServiceImpl implements TaskService
 	}
 
 	/**
-	 * 向指定任务添加参与者
-	 * 该方法根据performType类型判断是否需要创建新的活动任务
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void addTaskActor(String taskId, Integer performType, String... actors)
@@ -176,7 +186,7 @@ public class TaskServiceImpl extends CommonServiceImpl implements TaskService
 	}
 
 	/**
-	 * 向指定任务移除参与者
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void removeTaskActor(String taskId, String... actors)
@@ -221,7 +231,7 @@ public class TaskServiceImpl extends CommonServiceImpl implements TaskService
 	}
 
 	/**
-	 * 撤回指定的任务
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Task withdrawTask(String taskId, String operator)
@@ -255,7 +265,7 @@ public class TaskServiceImpl extends CommonServiceImpl implements TaskService
 	}
 
 	/**
-	 * 驳回任务
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Task rejectTask(ProcessModel model, Task currentTask)
@@ -333,16 +343,6 @@ public class TaskServiceImpl extends CommonServiceImpl implements TaskService
 	public void setHistoricTaskEntityService(HistoricTaskEntityService historicTaskEntityService)
 	{
 		this.historicTaskEntityService = historicTaskEntityService;
-	}
-
-	/**
-	 * 设置engineConfiguration
-	 * 
-	 * @param engineConfiguration
-	 */
-	public void setEngineConfiguration(ProcessEngineConfigurationImpl engineConfiguration)
-	{
-		this.engineConfiguration = engineConfiguration;
 	}
 
 	/**

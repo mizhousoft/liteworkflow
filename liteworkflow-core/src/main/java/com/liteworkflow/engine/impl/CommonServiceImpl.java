@@ -10,9 +10,9 @@ import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 public abstract class CommonServiceImpl
 {
 	/**
-	 * ProcessEngineConfiguration
+	 * ProcessEngineConfigurationImpl
 	 */
-	protected ProcessEngineConfigurationImpl engineConfiguration;
+	protected final ProcessEngineConfigurationImpl engineConfiguration;
 
 	/**
 	 * CommandExecutor

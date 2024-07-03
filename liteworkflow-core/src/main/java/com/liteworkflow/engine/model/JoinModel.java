@@ -3,8 +3,7 @@ package com.liteworkflow.engine.model;
 /**
  * 合并定义join元素
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class JoinModel extends NodeModel
 {

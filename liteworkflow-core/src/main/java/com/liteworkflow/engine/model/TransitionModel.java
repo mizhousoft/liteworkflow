@@ -3,8 +3,7 @@ package com.liteworkflow.engine.model;
 /**
  * 变迁定义transition元素
  * 
- * @author
- * @since 1.0
+ * @version
  */
 public class TransitionModel extends BaseModel
 {
