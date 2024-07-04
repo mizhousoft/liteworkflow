@@ -95,11 +95,6 @@ public class Task implements Serializable, Cloneable
 	private String actionUrl;
 
 	/**
-	 * 任务参与者列表
-	 */
-	private String[] actorIds;
-
-	/**
 	 * 父任务Id
 	 */
 	private String parentTaskId;
@@ -287,24 +282,6 @@ public class Task implements Serializable, Cloneable
 	public void setInstanceId(String instanceId)
 	{
 		this.instanceId = instanceId;
-	}
-
-	public String[] getActorIds()
-	{
-		if (actorIds == null)
-		{
-			String actorStr = (String) getVariableMap().get(KEY_ACTOR);
-			if (actorStr != null)
-			{
-				actorIds = actorStr.split(",");
-			}
-		}
-		return actorIds;
-	}
-
-	public void setActorIds(String[] actorIds)
-	{
-		this.actorIds = actorIds;
 	}
 
 	public Integer getPerformType()

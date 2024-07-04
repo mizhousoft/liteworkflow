@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 import org.w3c.dom.Element;
 
-import com.liteworkflow.ProcessException;
+import com.liteworkflow.WorkFlowException;
 import com.liteworkflow.engine.interceptor.FlowInterceptor;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.model.TransitionModel;
@@ -82,12 +82,12 @@ public abstract class AbstractNodeParser implements NodeParser
 		{
 			if (names.contains(output.getName()))
 			{
-				throw new ProcessException("Transition name duplication, value is " + output.getName());
+				throw new WorkFlowException("Transition name duplication, value is " + output.getName());
 			}
 
 			if (tos.contains(output.getTo()))
 			{
-				throw new ProcessException("Transition to duplication, value is " + output.getTo());
+				throw new WorkFlowException("Transition to duplication, value is " + output.getTo());
 			}
 
 			names.add(output.getName());
@@ -162,7 +162,7 @@ public abstract class AbstractNodeParser implements NodeParser
 		}
 		catch (Exception e)
 		{
-			throw new ProcessException(interceptorsStr + " is not implment FlowInterceptor.", e);
+			throw new WorkFlowException(interceptorsStr + " is not implment FlowInterceptor.", e);
 		}
 	}
 

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.liteworkflow.ProcessException;
+import com.liteworkflow.WorkFlowException;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
@@ -92,7 +92,7 @@ public class Execution implements Serializable
 	{
 		if (execution == null || processDefinition == null || parentNodeName == null)
 		{
-			throw new ProcessException("构造Execution对象失败，请检查execution、process、parentNodeName是否为空");
+			throw new WorkFlowException("构造Execution对象失败，请检查execution、process、parentNodeName是否为空");
 		}
 		this.engineConfiguration = execution.getEngineConfiguration();
 		this.processDefinition = processDefinition;
@@ -109,12 +109,12 @@ public class Execution implements Serializable
 	 * @param processInstance
 	 * @param args
 	 */
-	public Execution(ProcessEngineConfigurationImpl engineConfiguration, ProcessDefinition processDefinition, ProcessInstance processInstance,
-	        Map<String, Object> args)
+	public Execution(ProcessEngineConfigurationImpl engineConfiguration, ProcessDefinition processDefinition,
+	        ProcessInstance processInstance, Map<String, Object> args)
 	{
 		if (processDefinition == null || processInstance == null)
 		{
-			throw new ProcessException("构造Execution对象失败，请检查process、instance是否为空");
+			throw new WorkFlowException("构造Execution对象失败，请检查process、instance是否为空");
 		}
 		this.engineConfiguration = engineConfiguration;
 		this.processDefinition = processDefinition;

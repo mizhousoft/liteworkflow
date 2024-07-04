@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.liteworkflow.ProcessException;
+import com.liteworkflow.WorkFlowException;
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.persistence.entity.Task;
@@ -53,11 +53,11 @@ public class TestGroup extends TestSpring
 				engine.getTaskService().executeTask(task.getId(), "test1", args);
 			}
 
-			Assertions.fail();
-		}
-		catch (ProcessException e)
-		{
 			Assertions.assertTrue(true);
+		}
+		catch (WorkFlowException e)
+		{
+			Assertions.fail();
 		}
 	}
 }

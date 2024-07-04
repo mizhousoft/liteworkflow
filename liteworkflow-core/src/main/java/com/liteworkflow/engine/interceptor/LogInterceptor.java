@@ -28,13 +28,6 @@ public class LogInterceptor implements FlowInterceptor
 			buffer.append(",名称=").append(task.getDisplayName());
 			buffer.append(",创建时间=").append(task.getCreateTime());
 			buffer.append(",参与者={");
-			if (task.getActorIds() != null)
-			{
-				for (String actor : task.getActorIds())
-				{
-					buffer.append(actor).append(";");
-				}
-			}
 			buffer.append("}]");
 			log.info(buffer.toString());
 		}

@@ -31,41 +31,39 @@
 		delete from wf_historic_task where id = #{id}
 	</delete>
 	
-	<select id="getHistTask" parameterType="java.util.Map" resultMap="HistoricTaskMap">
+	<select id="findById" parameterType="java.util.Map" resultMap="HistoricTaskMap">
 		select id, instance_id, task_name, display_name, task_type, perform_type, task_state, operator, create_time,
 		finish_Time, expire_time, action_url, parent_task_id, variable 
 		from wf_historic_task
-		where id = #{taskId}
+		where id = #{id}
+	</select>
+	
+	<select id="findByInstanceId" parameterType="java.util.Map" resultMap="HistoricTaskMap">
+		select id, instance_id, task_name, display_name, task_type, perform_type, task_state, operator, create_time,
+		finish_Time, expire_time, action_url, parent_task_id, variable 
+		from wf_historic_task
+		where instance_id = #{instanceId}
 	</select>
 	
 	<select id="findList" parameterType="java.util.Map" resultMap="HistoricTaskMap">
 		select id, instance_id, task_name, display_name, task_type, perform_type, task_state, operator, create_time,
 		finish_Time, expire_time, action_url, parent_task_id, variable 
 		from wf_historic_task
-		<if test="operators != null and operators.length != 0">
-			left join wf_historic_task_actor ta on ta.task_id = id
-		</if>		
 		<where>
 			<if test="instanceId != null">
                 instance_id = #{instanceId}
        		</if>
-       		<if test="operators != null and operators.length != 0">
-                and ta.actor_id in
-                <foreach collection="operators" item="operator" index="index" open="(" close=")" separator=",">
-                    #{operator}
-                </foreach>
-            </if>
             <if test="names != null and names.length != 0">
                 and task_name in
                 <foreach collection="names" item="name" index="index" open="(" close=")" separator=",">
                     #{name}
                 </foreach>
             </if>
-            <if test="createTimeStart != null">
-                and create_time &gt;= #{createTimeStart}
+            <if test="startTime != null">
+                and create_time &gt;= #{startTime}
        		</if>
-            <if test="createTimeEnd != null">
-                and create_time &lt;= #{createTimeEnd}
+            <if test="endTime != null">
+                and create_time &lt;= #{endTime}
        		</if>
 		</where>
 		<if test="sortString != null">

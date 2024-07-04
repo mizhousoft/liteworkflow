@@ -6,13 +6,11 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Element;
 
-import com.liteworkflow.engine.AssignmentHandler;
 import com.liteworkflow.engine.model.ListenerModel;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.model.TaskModel;
 import com.liteworkflow.engine.parser.AbstractNodeParser;
 import com.liteworkflow.engine.util.DomUtils;
-import com.mizhousoft.commons.lang.ClassUtils;
 
 /**
  * 任务节点解析类
@@ -52,21 +50,6 @@ public class TaskParser extends AbstractNodeParser
 		task.setReminderRepeat(element.getAttribute(ATTR_REMINDERREPEAT));
 		task.setPerformType(element.getAttribute(ATTR_PERFORMTYPE));
 		task.setTaskType(element.getAttribute(ATTR_TASKTYPE));
-		task.setAssignmentHandler(element.getAttribute(ATTR_ASSIGNEE_HANDLER));
-
-		if (!StringUtils.isBlank(task.getAssignmentHandler()))
-		{
-			try
-			{
-				AssignmentHandler assignmentHandler = (AssignmentHandler) ClassUtils.newInstance(task.getAssignmentHandler(),
-				        this.getClass().getClassLoader());
-				task.setAssignmentHandlerObject(assignmentHandler);
-			}
-			catch (Exception e)
-			{
-				throw new IllegalArgumentException(task.getAssignmentHandler() + " is not implment AssignmentHandler.", e);
-			}
-		}
 
 		List<ListenerModel> listenerModels = parseExtensionElements(element);
 		task.setListenerModels(listenerModels);

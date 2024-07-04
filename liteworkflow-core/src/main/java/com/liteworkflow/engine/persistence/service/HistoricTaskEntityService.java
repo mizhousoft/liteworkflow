@@ -6,36 +6,36 @@ import com.liteworkflow.engine.persistence.entity.HistoricTask;
 import com.liteworkflow.engine.persistence.request.TaskPageRequest;
 
 /**
- * HistoricTaskEntityService
+ * 历史任务实例服务
  *
  * @version
  */
 public interface HistoricTaskEntityService
 {
 	/**
-	 * 迁移活动任务
+	 * 新增历史任务
 	 * 
-	 * @param historicTask 历史任务对象
+	 * @param historicTask
 	 */
 	void addEntity(HistoricTask historicTask);
 
 	/**
-	 * 删除历史任务记录
+	 * 删除历史任务
 	 * 
-	 * @param historicTask 历史任务
+	 * @param historicTask
 	 */
 	void deleteEntity(HistoricTask historicTask);
 
 	/**
-	 * 根据任务ID获取历史任务对象
+	 * 根据ID获取历史任务
 	 * 
-	 * @param taskId 历史任务id
-	 * @return 历史任务对象
+	 * @param taskId
+	 * @return
 	 */
-	HistoricTask getByTaskId(String taskId);
+	HistoricTask getById(String taskId);
 
 	/**
-	 * 
+	 * 根据流程实例ID查询历史任务
 	 * 
 	 * @param instanceId
 	 * @return
@@ -43,7 +43,7 @@ public interface HistoricTaskEntityService
 	List<HistoricTask> queryByInstanceId(String instanceId);
 
 	/**
-	 * 
+	 * 分页查询历史任务
 	 * 
 	 * @param request
 	 * @return

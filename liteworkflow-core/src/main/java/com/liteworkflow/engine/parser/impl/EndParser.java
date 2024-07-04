@@ -1,6 +1,6 @@
 package com.liteworkflow.engine.parser.impl;
 
-import com.liteworkflow.ProcessException;
+import com.liteworkflow.WorkFlowException;
 import com.liteworkflow.engine.model.EndModel;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.parser.AbstractNodeParser;
@@ -39,7 +39,7 @@ public class EndParser extends AbstractNodeParser
 
 		if (!model.getOutputs().isEmpty())
 		{
-			throw new ProcessException("End node can not config transition child element.");
+			throw new WorkFlowException("End node can not config transition child element.");
 		}
 	}
 

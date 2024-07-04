@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.liteworkflow.engine.AssignmentHandler;
-
 /**
  * 任务定义task元素
  * 
@@ -92,16 +90,6 @@ public class TaskModel extends ActivityModel
 	 * 是否自动执行
 	 */
 	private String autoExecute;
-
-	/**
-	 * 分配参与者处理类型
-	 */
-	private String assignmentHandler;
-
-	/**
-	 * 分配参与者处理对象
-	 */
-	private AssignmentHandler assignmentHandlerObject;
 
 	/**
 	 * 监听器模型
@@ -191,31 +179,6 @@ public class TaskModel extends ActivityModel
 	public void setAutoExecute(String autoExecute)
 	{
 		this.autoExecute = autoExecute;
-	}
-
-	public AssignmentHandler getAssignmentHandlerObject()
-	{
-		return assignmentHandlerObject;
-	}
-
-	/**
-	 * 设置assignmentHandlerObject
-	 * 
-	 * @param assignmentHandlerObject
-	 */
-	public void setAssignmentHandlerObject(AssignmentHandler assignmentHandlerObject)
-	{
-		this.assignmentHandlerObject = assignmentHandlerObject;
-	}
-
-	public void setAssignmentHandler(String assignmentHandlerStr)
-	{
-		this.assignmentHandler = assignmentHandlerStr;
-	}
-
-	public String getAssignmentHandler()
-	{
-		return assignmentHandler;
 	}
 
 	/**

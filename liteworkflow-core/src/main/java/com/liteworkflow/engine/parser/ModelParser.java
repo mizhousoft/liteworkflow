@@ -17,7 +17,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.liteworkflow.ProcessException;
+import com.liteworkflow.WorkFlowException;
 import com.liteworkflow.engine.model.ListenerModel;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.model.ProcessModel;
@@ -94,7 +94,7 @@ public class ModelParser
 		}
 		catch (SAXException | IOException | ParserConfigurationException e)
 		{
-			throw new ProcessException("Model xml parse failed.", e);
+			throw new WorkFlowException("Model xml parse failed.", e);
 		}
 	}
 
@@ -182,7 +182,7 @@ public class ModelParser
 			}
 		}
 
-		throw new ProcessException(nodeName + " NodeParser not found.");
+		throw new WorkFlowException(nodeName + " NodeParser not found.");
 	}
 
 	/**
@@ -246,7 +246,7 @@ public class ModelParser
 			{
 				if (!nodeModels.stream().anyMatch(nm -> nm.getName().equals(output.getTo())))
 				{
-					throw new ProcessException("Transition to is wrong, can not associate node.");
+					throw new WorkFlowException("Transition to is wrong, can not associate node.");
 				}
 			}
 		}

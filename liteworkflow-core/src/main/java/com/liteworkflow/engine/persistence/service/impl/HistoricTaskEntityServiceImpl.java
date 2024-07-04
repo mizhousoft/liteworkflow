@@ -2,25 +2,33 @@ package com.liteworkflow.engine.persistence.service.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.liteworkflow.engine.persistence.entity.HistoricTask;
-import com.liteworkflow.engine.persistence.entity.HistoricTaskActor;
 import com.liteworkflow.engine.persistence.mapper.HistoricTaskMapper;
 import com.liteworkflow.engine.persistence.request.TaskPageRequest;
-import com.liteworkflow.engine.persistence.service.HistoricTaskActorEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricTaskEntityService;
 
 /**
- * HistoricTaskEntityService
+ * 历史任务实例服务
  *
  * @version
  */
 public class HistoricTaskEntityServiceImpl implements HistoricTaskEntityService
 {
+	/**
+	 * HistoricTaskMapper
+	 */
 	private HistoricTaskMapper historicTaskMapper;
 
-	private HistoricTaskActorEntityService historicTaskActorEntityService;
+	/**
+	 * 构造函数
+	 *
+	 * @param historicTaskMapper
+	 */
+	public HistoricTaskEntityServiceImpl(HistoricTaskMapper historicTaskMapper)
+	{
+		super();
+		this.historicTaskMapper = historicTaskMapper;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -29,19 +37,6 @@ public class HistoricTaskEntityServiceImpl implements HistoricTaskEntityService
 	public void addEntity(HistoricTask task)
 	{
 		historicTaskMapper.save(task);
-		if (task.getActorIds() != null)
-		{
-			for (String actorId : task.getActorIds())
-			{
-				if (StringUtils.isBlank(actorId))
-					continue;
-
-				HistoricTaskActor taskActor = new HistoricTaskActor();
-				taskActor.setTaskId(task.getId());
-				taskActor.setActorId(actorId);
-				historicTaskActorEntityService.addEntity(taskActor);
-			}
-		}
 	}
 
 	/**
@@ -50,18 +45,16 @@ public class HistoricTaskEntityServiceImpl implements HistoricTaskEntityService
 	@Override
 	public void deleteEntity(HistoricTask historicTask)
 	{
-		historicTaskActorEntityService.deleteByTaskId(historicTask.getId());
-
-		historicTaskMapper.delete(historicTask);
+		historicTaskMapper.delete(historicTask.getId());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public HistoricTask getByTaskId(String taskId)
+	public HistoricTask getById(String taskId)
 	{
-		return historicTaskMapper.getHistTask(taskId);
+		return historicTaskMapper.findById(taskId);
 	}
 
 	/**
@@ -70,10 +63,7 @@ public class HistoricTaskEntityServiceImpl implements HistoricTaskEntityService
 	@Override
 	public List<HistoricTask> queryByInstanceId(String instanceId)
 	{
-		TaskPageRequest request = new TaskPageRequest();
-		request.setInstanceId(instanceId);
-
-		return queryList(request);
+		return historicTaskMapper.findByInstanceId(instanceId);
 	}
 
 	/**
@@ -83,25 +73,5 @@ public class HistoricTaskEntityServiceImpl implements HistoricTaskEntityService
 	public List<HistoricTask> queryList(TaskPageRequest request)
 	{
 		return historicTaskMapper.findList(request);
-	}
-
-	/**
-	 * 设置historicTaskMapper
-	 * 
-	 * @param historicTaskMapper
-	 */
-	public void setHistoricTaskMapper(HistoricTaskMapper historicTaskMapper)
-	{
-		this.historicTaskMapper = historicTaskMapper;
-	}
-
-	/**
-	 * 设置historicTaskActorEntityService
-	 * 
-	 * @param historicTaskActorEntityService
-	 */
-	public void setHistoricTaskActorEntityService(HistoricTaskActorEntityService historicTaskActorEntityService)
-	{
-		this.historicTaskActorEntityService = historicTaskActorEntityService;
 	}
 }

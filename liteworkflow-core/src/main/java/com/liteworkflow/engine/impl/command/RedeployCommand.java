@@ -6,7 +6,7 @@ import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
 import org.springframework.util.Assert;
 
-import com.liteworkflow.ProcessException;
+import com.liteworkflow.WorkFlowException;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.impl.Command;
 import com.liteworkflow.engine.impl.CommandContext;
@@ -47,7 +47,7 @@ public class RedeployCommand implements Command<ProcessDefinition>
 		}
 		catch (IOException e)
 		{
-			throw new ProcessException("Read input stream failed.", e);
+			throw new WorkFlowException("Read input stream failed.", e);
 		}
 	}
 

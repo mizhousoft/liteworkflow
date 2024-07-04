@@ -9,7 +9,7 @@ import com.liteworkflow.engine.persistence.request.TaskPageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
- * TODO
+ * 历史数据服务
  *
  * @version
  */
@@ -32,14 +32,6 @@ public interface HistoryService
 	HistoricTask getHistTask(String taskId);
 
 	/**
-	 * 根据任务ID获取历史任务参与者数组
-	 * 
-	 * @param taskId 历史任务id
-	 * @return String[] 历史参与者id数组
-	 */
-	String[] getHistoricTaskActorsByTaskId(String taskId);
-
-	/**
 	 * 根据filter分页查询历史流程实例
 	 * 
 	 * @param page 分页对象
@@ -49,12 +41,12 @@ public interface HistoryService
 	Page<HistoricProcessInstance> queryPageData(HistoricInstancePageRequest request);
 
 	/**
-	 * 根据filter查询活动任务
+	 * 根据流程实例ID查询
 	 * 
-	 * @param filter 查询过滤器
-	 * @return List<Task> 活动任务集合
+	 * @param instanceId
+	 * @return
 	 */
-	List<HistoricTask> getHistoricTasks(String instanceId);
+	List<HistoricTask> queryHistoricTasks(String instanceId);
 
 	/**
 	 * 根据filter查询活动任务

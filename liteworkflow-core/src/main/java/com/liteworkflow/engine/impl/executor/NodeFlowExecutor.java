@@ -2,7 +2,7 @@ package com.liteworkflow.engine.impl.executor;
 
 import java.util.List;
 
-import com.liteworkflow.ProcessException;
+import com.liteworkflow.WorkFlowException;
 import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.impl.FlowExecutor;
 import com.liteworkflow.engine.interceptor.FlowInterceptor;
@@ -51,7 +51,7 @@ public abstract class NodeFlowExecutor implements FlowExecutor
 		}
 		catch (Exception e)
 		{
-			throw new ProcessException(e);
+			throw new WorkFlowException(e);
 		}
 	}
 

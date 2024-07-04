@@ -25,25 +25,19 @@ import com.liteworkflow.engine.impl.RepositoryServiceImpl;
 import com.liteworkflow.engine.impl.RuntimeServiceImpl;
 import com.liteworkflow.engine.impl.TaskServiceImpl;
 import com.liteworkflow.engine.persistence.mapper.HistoricProcessInstanceMapper;
-import com.liteworkflow.engine.persistence.mapper.HistoricTaskActorMapper;
 import com.liteworkflow.engine.persistence.mapper.HistoricTaskMapper;
 import com.liteworkflow.engine.persistence.mapper.ProcessDefinitionMapper;
 import com.liteworkflow.engine.persistence.mapper.ProcessInstanceMapper;
-import com.liteworkflow.engine.persistence.mapper.TaskActorMapper;
 import com.liteworkflow.engine.persistence.mapper.TaskMapper;
 import com.liteworkflow.engine.persistence.service.HistoricProcessInstanceEntityService;
-import com.liteworkflow.engine.persistence.service.HistoricTaskActorEntityService;
 import com.liteworkflow.engine.persistence.service.HistoricTaskEntityService;
 import com.liteworkflow.engine.persistence.service.ProcessDefinitionEntityService;
 import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
-import com.liteworkflow.engine.persistence.service.TaskActorEntityService;
 import com.liteworkflow.engine.persistence.service.TaskEntityService;
 import com.liteworkflow.engine.persistence.service.impl.HistoricProcessInstanceEntityServiceImpl;
-import com.liteworkflow.engine.persistence.service.impl.HistoricTaskActorEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.HistoricTaskEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.ProcessDefinitionEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.ProcessInstanceEntityServiceImpl;
-import com.liteworkflow.engine.persistence.service.impl.TaskActorEntityServiceImpl;
 import com.liteworkflow.engine.persistence.service.impl.TaskEntityServiceImpl;
 
 /**
@@ -107,19 +101,9 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	private ProcessDefinitionEntityService processDefinitionEntityService;
 
 	/**
-	 * HistoricTaskActorEntityService
-	 */
-	private HistoricTaskActorEntityService historicTaskActorEntityService;
-
-	/**
 	 * HistoricTaskEntityService
 	 */
 	private HistoricTaskEntityService historicTaskEntityService;
-
-	/**
-	 * TaskActorEntityService
-	 */
-	private TaskActorEntityService taskActorEntityService;
 
 	/**
 	 * TaskEntityService
@@ -232,9 +216,7 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	{
 		this.processDefinitionEntityService = initProcessDefinitionEntityService(sqlSessionFactory);
 
-		this.historicTaskActorEntityService = initHistoricTaskActorEntityService(sqlSessionFactory);
-		this.historicTaskEntityService = initHistoricTaskEntityService(sqlSessionFactory, historicTaskActorEntityService);
-		this.taskActorEntityService = initTaskActorEntityService(sqlSessionFactory);
+		this.historicTaskEntityService = initHistoricTaskEntityService(sqlSessionFactory);
 		this.taskEntityService = initTaskEntityService(sqlSessionFactory);
 
 		this.historicProcessInstanceEntityService = initHistoricProcessInstanceEntityService(sqlSessionFactory);
@@ -251,10 +233,7 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		repositoryService.setCommandExecutor(commandExecutor);
 		this.repositoryService = repositoryService;
 
-		HistoryServiceImpl historyService = new HistoryServiceImpl();
-		historyService.setHistoricProcessInstanceEntityService(historicProcessInstanceEntityService);
-		historyService.setHistoricTaskEntityService(historicTaskEntityService);
-		historyService.setHistoricTaskActorEntityService(historicTaskActorEntityService);
+		HistoryServiceImpl historyService = new HistoryServiceImpl(historicTaskEntityService, historicProcessInstanceEntityService);
 		this.historyService = historyService;
 
 		ProcessInstanceServiceImpl processInstanceService = new ProcessInstanceServiceImpl();
@@ -265,8 +244,6 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		this.processInstanceService = processInstanceService;
 
 		TaskServiceImpl taskService = new TaskServiceImpl(this);
-		taskService.setHistoricTaskEntityService(historicTaskEntityService);
-		taskService.setTaskActorEntityService(taskActorEntityService);
 		taskService.setTaskEntityService(taskEntityService);
 		taskService.setRepositoryService(repositoryService);
 		taskService.setProcessInstanceService(processInstanceService);
@@ -293,23 +270,7 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		return processDefinitionEntityService;
 	}
 
-	private TaskActorEntityService initTaskActorEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
-	{
-		MapperFactoryBean<TaskActorMapper> factoryBean = new MapperFactoryBean<TaskActorMapper>();
-		factoryBean.setMapperInterface(TaskActorMapper.class);
-		factoryBean.setAddToConfig(true);
-		factoryBean.setSqlSessionFactory(sqlSessionFactory);
-		factoryBean.afterPropertiesSet();
-		TaskActorMapper taskActorMapper = (TaskActorMapper) factoryBean.getObject();
-
-		TaskActorEntityServiceImpl taskActorEntityService = new TaskActorEntityServiceImpl();
-		taskActorEntityService.setTaskActorMapper(taskActorMapper);
-
-		return taskActorEntityService;
-	}
-
-	private HistoricTaskEntityService initHistoricTaskEntityService(SqlSessionFactory sqlSessionFactory,
-	        HistoricTaskActorEntityService historicTaskActorEntityService) throws Exception
+	private HistoricTaskEntityService initHistoricTaskEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
 	{
 		MapperFactoryBean<HistoricTaskMapper> factoryBean = new MapperFactoryBean<HistoricTaskMapper>();
 		factoryBean.setMapperInterface(HistoricTaskMapper.class);
@@ -318,9 +279,7 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		factoryBean.afterPropertiesSet();
 		HistoricTaskMapper historicTaskMapper = (HistoricTaskMapper) factoryBean.getObject();
 
-		HistoricTaskEntityServiceImpl historicTaskEntityService = new HistoricTaskEntityServiceImpl();
-		historicTaskEntityService.setHistoricTaskMapper(historicTaskMapper);
-		historicTaskEntityService.setHistoricTaskActorEntityService(historicTaskActorEntityService);
+		HistoricTaskEntityServiceImpl historicTaskEntityService = new HistoricTaskEntityServiceImpl(historicTaskMapper);
 
 		return historicTaskEntityService;
 	}
@@ -373,21 +332,6 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		return historicProcessInstanceEntityService;
 	}
 
-	private HistoricTaskActorEntityService initHistoricTaskActorEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
-	{
-		MapperFactoryBean<HistoricTaskActorMapper> factoryBean = new MapperFactoryBean<HistoricTaskActorMapper>();
-		factoryBean.setMapperInterface(HistoricTaskActorMapper.class);
-		factoryBean.setAddToConfig(true);
-		factoryBean.setSqlSessionFactory(sqlSessionFactory);
-		factoryBean.afterPropertiesSet();
-		HistoricTaskActorMapper historicTaskActorMapper = (HistoricTaskActorMapper) factoryBean.getObject();
-
-		HistoricTaskActorEntityServiceImpl historicTaskActorEntityService = new HistoricTaskActorEntityServiceImpl();
-		historicTaskActorEntityService.setHistoricTaskActorMapper(historicTaskActorMapper);
-
-		return historicTaskActorEntityService;
-	}
-
 	/**
 	 * 获取processDefinitionEntityService
 	 * 
@@ -399,16 +343,6 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	}
 
 	/**
-	 * 获取historicTaskActorEntityService
-	 * 
-	 * @return
-	 */
-	public HistoricTaskActorEntityService getHistoricTaskActorEntityService()
-	{
-		return historicTaskActorEntityService;
-	}
-
-	/**
 	 * 获取historicTaskEntityService
 	 * 
 	 * @return
@@ -416,16 +350,6 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	public HistoricTaskEntityService getHistoricTaskEntityService()
 	{
 		return historicTaskEntityService;
-	}
-
-	/**
-	 * 获取taskActorEntityService
-	 * 
-	 * @return
-	 */
-	public TaskActorEntityService getTaskActorEntityService()
-	{
-		return taskActorEntityService;
 	}
 
 	/**

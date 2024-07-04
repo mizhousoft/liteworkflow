@@ -2,39 +2,30 @@ package com.liteworkflow.engine.impl.command;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
-import com.liteworkflow.ProcessException;
-import com.liteworkflow.engine.Completion;
-import com.liteworkflow.engine.Constants;
-import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.ProcessInstanceService;
 import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.helper.JsonHelper;
 import com.liteworkflow.engine.impl.Command;
 import com.liteworkflow.engine.impl.CommandContext;
+import com.liteworkflow.engine.impl.Constants;
 import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.impl.FlowExecutor;
-import com.liteworkflow.engine.impl.GeneralCompletion;
 import com.liteworkflow.engine.impl.executor.FlowExecutorFactory;
-import com.liteworkflow.engine.impl.strategy.GeneralAccessStrategy;
 import com.liteworkflow.engine.model.NodeModel;
 import com.liteworkflow.engine.model.ProcessModel;
 import com.liteworkflow.engine.persistence.entity.HistoricTask;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.persistence.entity.Task;
-import com.liteworkflow.engine.persistence.entity.TaskActor;
 import com.liteworkflow.engine.persistence.service.HistoricTaskEntityService;
 import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
-import com.liteworkflow.engine.persistence.service.TaskActorEntityService;
 import com.liteworkflow.engine.persistence.service.TaskEntityService;
 
 /**
@@ -137,64 +128,20 @@ public class CompleteTaskCommand implements Command<Void>
 	{
 		ProcessEngineConfigurationImpl processEngineConfiguration = commandContext.getEngineConfiguration();
 		TaskEntityService taskEntityService = processEngineConfiguration.getTaskEntityService();
-		TaskActorEntityService taskActorEntityService = processEngineConfiguration.getTaskActorEntityService();
 		HistoricTaskEntityService historicTaskEntityService = processEngineConfiguration.getHistoricTaskEntityService();
 
 		Task task = taskEntityService.getTask(taskId);
 		Assert.notNull(task, "指定的任务[id=" + taskId + "]不存在");
 		task.setVariable(JsonHelper.toJson(args));
-		if (!isAllowed(task, operator, commandContext))
-		{
-			throw new ProcessException("当前参与者[" + operator + "]不允许执行任务[taskId=" + taskId + "]");
-		}
+
 		HistoricTask historicTask = new HistoricTask(task);
 		historicTask.setFinishTime(LocalDateTime.now());
 		historicTask.setTaskState(Constants.STATE_FINISH);
 		historicTask.setOperator(operator);
-		if (historicTask.getActorIds() == null)
-		{
-			List<TaskActor> actors = taskActorEntityService.queryByTaskId(task.getId());
-			String[] actorIds = new String[actors.size()];
-			for (int i = 0; i < actors.size(); i++)
-			{
-				actorIds[i] = actors.get(i).getActorId();
-			}
-			historicTask.setActorIds(actorIds);
-		}
-
 		historicTaskEntityService.addEntity(historicTask);
 
-		taskActorEntityService.deleteByTaskId(task.getId());
 		taskEntityService.deleteEntity(task);
 
-		Completion completion = new GeneralCompletion();
-		if (completion != null)
-		{
-			completion.complete(historicTask);
-		}
 		return task;
-	}
-
-	public boolean isAllowed(Task task, String operator, CommandContext commandContext)
-	{
-		if (!StringUtils.isBlank(operator))
-		{
-			if (ProcessEngine.ADMIN.equalsIgnoreCase(operator) || ProcessEngine.AUTO.equalsIgnoreCase(operator))
-			{
-				return true;
-			}
-			if (!StringUtils.isBlank(task.getOperator()))
-			{
-				return operator.equals(task.getOperator());
-			}
-		}
-
-		TaskActorEntityService taskActorEntityService = commandContext.getEngineConfiguration().getTaskActorEntityService();
-
-		List<TaskActor> actors = taskActorEntityService.queryByTaskId(task.getId());
-		if (actors == null || actors.isEmpty())
-			return true;
-
-		return !StringUtils.isBlank(operator) && new GeneralAccessStrategy().isAllowed(operator, actors);
 	}
 }

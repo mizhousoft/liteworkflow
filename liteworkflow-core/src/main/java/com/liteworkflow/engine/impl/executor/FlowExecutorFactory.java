@@ -1,6 +1,6 @@
 package com.liteworkflow.engine.impl.executor;
 
-import com.liteworkflow.ProcessException;
+import com.liteworkflow.WorkFlowException;
 import com.liteworkflow.engine.impl.FlowExecutor;
 import com.liteworkflow.engine.model.BaseModel;
 import com.liteworkflow.engine.model.DecisionModel;
@@ -60,6 +60,6 @@ public class FlowExecutorFactory
 			return new TransitionExecutor();
 		}
 
-		throw new ProcessException("Model not support to build FlowExecutor.");
+		throw new WorkFlowException("Model not support to build FlowExecutor.");
 	}
 }

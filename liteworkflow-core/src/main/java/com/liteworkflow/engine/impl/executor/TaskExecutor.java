@@ -1,6 +1,9 @@
 package com.liteworkflow.engine.impl.executor;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import com.liteworkflow.engine.TaskService;
 import com.liteworkflow.engine.impl.Execution;
@@ -10,7 +13,6 @@ import com.liteworkflow.engine.model.SubProcessModel;
 import com.liteworkflow.engine.model.TaskModel;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.persistence.entity.Task;
-import com.liteworkflow.engine.persistence.request.TaskPageRequest;
 import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
 
 /**
@@ -85,12 +87,12 @@ public class TaskExecutor extends NodeFlowExecutor
 		}
 		if (isSubProcessMerged && model.containsNodeNames(TaskModel.class, activeNodes))
 		{
-			TaskPageRequest request = new TaskPageRequest();
-			request.setInstanceId(instance.getId());
-			request.setExcludedIds(new String[] { execution.getTask().getId() });
-			request.setNames(activeNodes);
+			List<Task> tasks = taskService.getActiveTasks(instance.getId());
+			tasks = tasks.stream()
+			        .filter(task -> !task.getId().equals(execution.getTask().getId()))
+			        .filter(task -> ArrayUtils.contains(activeNodes, task.getTaskName()))
+			        .collect(Collectors.toList());
 
-			List<Task> tasks = taskService.getActiveTasks(request);
 			if (tasks == null || tasks.isEmpty())
 			{
 				// 如果所有task都已完成，则表示可合并

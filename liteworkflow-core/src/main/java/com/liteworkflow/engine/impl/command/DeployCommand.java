@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 import org.apache.commons.io.IOUtils;
 
-import com.liteworkflow.ProcessException;
+import com.liteworkflow.WorkFlowException;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.impl.Command;
@@ -48,7 +48,7 @@ public class DeployCommand implements Command<ProcessDefinition>
 		}
 		catch (IOException e)
 		{
-			throw new ProcessException("Read input stream failed.", e);
+			throw new WorkFlowException("Read input stream failed.", e);
 		}
 	}
 

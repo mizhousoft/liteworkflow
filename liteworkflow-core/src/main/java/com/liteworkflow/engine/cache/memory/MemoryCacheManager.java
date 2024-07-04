@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.liteworkflow.ProcessException;
+import com.liteworkflow.WorkFlowException;
 import com.liteworkflow.engine.cache.Cache;
 import com.liteworkflow.engine.cache.CacheException;
 import com.liteworkflow.engine.cache.CacheManager;
@@ -31,7 +31,7 @@ public class MemoryCacheManager implements CacheManager
 	{
 		if (StringUtils.isBlank(name))
 		{
-			throw new ProcessException("Cache name is null.");
+			throw new WorkFlowException("Cache name is null.");
 		}
 
 		Cache cache = caches.get(name);

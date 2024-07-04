@@ -4,35 +4,22 @@ import java.util.List;
 
 import com.liteworkflow.engine.persistence.entity.HistoricTask;
 import com.liteworkflow.engine.persistence.request.TaskPageRequest;
+import com.mizhousoft.commons.mapper.PageableMapper;
 
 /**
- * HistoricTaskMapper
+ * 历史任务持久层
  *
  * @version
  */
-public interface HistoricTaskMapper
+public interface HistoricTaskMapper extends PageableMapper<HistoricTask, String>
 {
 	/**
-	 * 迁移活动任务
+	 * 根据流程实例ID查询
 	 * 
-	 * @param historicTask 历史任务对象
+	 * @param instanceId
+	 * @return
 	 */
-	void save(HistoricTask historicTask);
-
-	/**
-	 * 删除历史任务记录
-	 * 
-	 * @param historicTask 历史任务
-	 */
-	void delete(HistoricTask historicTask);
-
-	/**
-	 * 根据任务ID获取历史任务对象
-	 * 
-	 * @param taskId 历史任务id
-	 * @return 历史任务对象
-	 */
-	HistoricTask getHistTask(String taskId);
+	List<HistoricTask> findByInstanceId(String instanceId);
 
 	/**
 	 * 

@@ -1,13 +1,13 @@
 package com.liteworkflow.engine.cache;
 
-import com.liteworkflow.ProcessException;
+import com.liteworkflow.WorkFlowException;
 
 /**
- * cache异常
+ * 缓存异常
  * 
  * @version
  */
-public class CacheException extends ProcessException
+public class CacheException extends WorkFlowException
 {
 	/**
 	 * 
@@ -15,16 +15,19 @@ public class CacheException extends ProcessException
 	private static final long serialVersionUID = -5329674600226403430L;
 
 	/**
-	 * 创建cache异常
+	 * 构造函数
+	 *
+	 * @param message
+	 * @param cause
 	 */
-	public CacheException()
+	public CacheException(String message, Throwable cause)
 	{
-		super();
+		super(message, cause);
 	}
 
 	/**
-	 * 创建cache异常
-	 * 
+	 * 构造函数
+	 *
 	 * @param message
 	 */
 	public CacheException(String message)
@@ -33,23 +36,12 @@ public class CacheException extends ProcessException
 	}
 
 	/**
-	 * 创建cache异常
-	 * 
+	 * 构造函数
+	 *
 	 * @param cause
 	 */
 	public CacheException(Throwable cause)
 	{
 		super(cause);
-	}
-
-	/**
-	 * 创建cache异常
-	 * 
-	 * @param message
-	 * @param cause
-	 */
-	public CacheException(String message, Throwable cause)
-	{
-		super(message, cause);
 	}
 }

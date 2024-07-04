@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.liteworkflow.ProcessException;
+import com.liteworkflow.WorkFlowException;
 import com.liteworkflow.engine.DecisionHandler;
 import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.impl.FlowExecutor;
@@ -85,7 +85,7 @@ public class DecisionExecutor extends NodeFlowExecutor
 
 		if (!isfound)
 		{
-			throw new ProcessException(execution.getProcessInstance().getId() + "->decision节点无法确定下一步执行路线");
+			throw new WorkFlowException(execution.getProcessInstance().getId() + "->decision节点无法确定下一步执行路线");
 		}
 	}
 

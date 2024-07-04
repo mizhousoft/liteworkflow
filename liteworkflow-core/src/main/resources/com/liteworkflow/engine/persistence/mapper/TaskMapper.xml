@@ -65,36 +65,21 @@
 	
 	<select id="countTotal" resultType="Long">
 		select count(id) from wf_task 
-		<if test="request.operators != null and request.operators.length != 0">
-			left join wf_task_actor ta on ta.task_id = id
-		</if>		
 		<where>
 			<if test="request.instanceId != null">
                 instance_id = #{request.instanceId}
        		</if>
-       		<if test="request.excludedIds != null and request.excludedIds.length != 0">
-                and id not in
-                <foreach collection="request.excludedIds" item="excludedId" index="index" open="(" close=")" separator=",">
-                    #{excludedId}
-                </foreach>
-            </if>
-       		<if test="request.operators != null and request.operators.length != 0">
-                and ta.actor_id in
-                <foreach collection="request.operators" item="operator" index="index" open="(" close=")" separator=",">
-                    #{operator}
-                </foreach>
-            </if>
             <if test="request.names != null and request.names.length != 0">
                 and task_name in
                 <foreach collection="request.names" item="name" index="index" open="(" close=")" separator=",">
                     #{name}
                 </foreach>
             </if>
-            <if test="request.createTimeStart != null">
-                and create_time &gt;= #{request.createTimeStart}
+            <if test="request.startTime != null">
+                and create_time &gt;= #{request.startTime}
        		</if>
-            <if test="request.createTimeEnd != null">
-                and create_time &lt;= #{request.createTimeEnd}
+            <if test="request.endTime != null">
+                and create_time &lt;= #{request.endTime}
        		</if>
 		</where>
 	</select>
@@ -103,36 +88,21 @@
 		select id, instance_id, task_name, display_name, task_type, perform_type, operator, create_time, finish_Time,
 		expire_time, action_url, parent_task_id, variable, revision 
 		from wf_task 
-		<if test="request.operators != null and request.operators.length != 0">
-			left join wf_task_actor ta on ta.task_id = id
-		</if>		
 		<where>
 			<if test="request.instanceId != null">
                 instance_id = #{request.instanceId}
        		</if>
-       		<if test="request.excludedIds != null and request.excludedIds.length != 0">
-                and id not in
-                <foreach collection="request.excludedIds" item="excludedId" index="index" open="(" close=")" separator=",">
-                    #{excludedId}
-                </foreach>
-            </if>
-       		<if test="request.operators != null and request.operators.length != 0">
-                and ta.actor_id in
-                <foreach collection="request.operators" item="operator" index="index" open="(" close=")" separator=",">
-                    #{operator}
-                </foreach>
-            </if>
             <if test="request.names != null and request.names.length != 0">
                 and task_name in
                 <foreach collection="request.names" item="name" index="index" open="(" close=")" separator=",">
                     #{name}
                 </foreach>
             </if>
-            <if test="request.createTimeStart != null">
-                and create_time &gt;= #{request.createTimeStart}
+            <if test="request.startTime != null">
+                and create_time &gt;= #{request.startTime}
        		</if>
-            <if test="request.createTimeEnd != null">
-                and create_time &lt;= #{request.createTimeEnd}
+            <if test="request.endTime != null">
+                and create_time &lt;= #{request.endTime}
        		</if>
 		</where>
 		<if test="request.sortString != null">

@@ -1,5 +1,7 @@
 package com.liteworkflow.engine.persistence.request;
 
+import java.time.LocalDateTime;
+
 import com.mizhousoft.commons.data.domain.PageRequest;
 import com.mizhousoft.commons.data.domain.Sort;
 import com.mizhousoft.commons.data.domain.Sort.Direction;
@@ -24,11 +26,6 @@ public class TaskPageRequest extends PageRequest
 	private String instanceId;
 
 	/**
-	 * exclude ids
-	 */
-	private String[] excludedIds;
-
-	/**
 	 * 操作人员id
 	 */
 	private String[] operators;
@@ -36,9 +33,9 @@ public class TaskPageRequest extends PageRequest
 	/**
 	 * 创建时间范围
 	 */
-	private String createTimeStart;
+	private LocalDateTime startTime;
 
-	private String createTimeEnd;
+	private LocalDateTime endTime;
 
 	/**
 	 * 构造函数
@@ -67,14 +64,12 @@ public class TaskPageRequest extends PageRequest
 	 *
 	 * @param names
 	 * @param instanceId
-	 * @param excludedIds
 	 */
-	public TaskPageRequest(String[] names, String instanceId, String[] excludedIds)
+	public TaskPageRequest(String[] names, String instanceId)
 	{
 		super();
 		this.names = names;
 		this.instanceId = instanceId;
-		this.excludedIds = excludedIds;
 	}
 
 	/**
@@ -118,26 +113,6 @@ public class TaskPageRequest extends PageRequest
 	}
 
 	/**
-	 * 获取excludedIds
-	 * 
-	 * @return
-	 */
-	public String[] getExcludedIds()
-	{
-		return excludedIds;
-	}
-
-	/**
-	 * 设置excludedIds
-	 * 
-	 * @param excludedIds
-	 */
-	public void setExcludedIds(String[] excludedIds)
-	{
-		this.excludedIds = excludedIds;
-	}
-
-	/**
 	 * 获取operators
 	 * 
 	 * @return
@@ -158,42 +133,42 @@ public class TaskPageRequest extends PageRequest
 	}
 
 	/**
-	 * 获取createTimeStart
+	 * 获取startTime
 	 * 
 	 * @return
 	 */
-	public String getCreateTimeStart()
+	public LocalDateTime getStartTime()
 	{
-		return createTimeStart;
+		return startTime;
 	}
 
 	/**
-	 * 设置createTimeStart
+	 * 设置startTime
 	 * 
-	 * @param createTimeStart
+	 * @param startTime
 	 */
-	public void setCreateTimeStart(String createTimeStart)
+	public void setStartTime(LocalDateTime startTime)
 	{
-		this.createTimeStart = createTimeStart;
+		this.startTime = startTime;
 	}
 
 	/**
-	 * 获取createTimeEnd
+	 * 获取endTime
 	 * 
 	 * @return
 	 */
-	public String getCreateTimeEnd()
+	public LocalDateTime getEndTime()
 	{
-		return createTimeEnd;
+		return endTime;
 	}
 
 	/**
-	 * 设置createTimeEnd
+	 * 设置endTime
 	 * 
-	 * @param createTimeEnd
+	 * @param endTime
 	 */
-	public void setCreateTimeEnd(String createTimeEnd)
+	public void setEndTime(LocalDateTime endTime)
 	{
-		this.createTimeEnd = createTimeEnd;
+		this.endTime = endTime;
 	}
 }
