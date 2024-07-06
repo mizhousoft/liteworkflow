@@ -24,14 +24,6 @@ public interface HistoryService
 	HistoricProcessInstance getHistoricInstance(String instanceId);
 
 	/**
-	 * 根据任务ID获取历史任务对象
-	 * 
-	 * @param taskId 历史任务id
-	 * @return HistoricTask 历史任务对象
-	 */
-	HistoricTask getHistTask(String taskId);
-
-	/**
 	 * 根据filter分页查询历史流程实例
 	 * 
 	 * @param page 分页对象
@@ -41,7 +33,15 @@ public interface HistoryService
 	Page<HistoricProcessInstance> queryPageData(HistoricInstancePageRequest request);
 
 	/**
-	 * 根据流程实例ID查询
+	 * 根据任务ID获取历史任务对象
+	 * 
+	 * @param id
+	 * @return
+	 */
+	HistoricTask getHistTask(String id);
+
+	/**
+	 * 根据流程实例ID查询历史任务
 	 * 
 	 * @param instanceId
 	 * @return
@@ -49,10 +49,10 @@ public interface HistoryService
 	List<HistoricTask> queryHistoricTasks(String instanceId);
 
 	/**
-	 * 根据filter查询活动任务
+	 * 分页查询历史任务
 	 * 
-	 * @param filter 查询过滤器
-	 * @return List<Task> 活动任务集合
+	 * @param request
+	 * @return
 	 */
-	List<HistoricTask> getHistoricTasks(TaskPageRequest request);
+	Page<HistoricTask> queryPageData(TaskPageRequest request);
 }

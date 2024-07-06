@@ -1,103 +1,83 @@
 CREATE TABLE IF NOT EXISTS wf_process_definition (
-    id                VARCHAR(32) NOT NULL comment '主键ID',
-    name              VARCHAR(32) NOT NULL comment '流程名称',
-    display_name      VARCHAR(64) NOT NULL comment '流程显示名称',
-    category          VARCHAR(32) NULL comment '流程分类',
-    version           INT NOT NULL DEFAULT 0 comment '版本号',
-    content           LONGBLOB NOT NULL comment '流程模型定义',
-    instance_url      VARCHAR(128) NULL comment '实例url',
-    creator           VARCHAR(20) NULL comment '创建人',
-    create_time       DATETIME NOT NULL comment '创建时间',
+    id                VARCHAR(32) NOT NULL COMMENT '主键ID',
+    name              VARCHAR(32) NOT NULL COMMENT '流程名称',
+    display_name      VARCHAR(64) NOT NULL COMMENT '流程显示名称',
+    category          VARCHAR(32) NULL COMMENT '流程分类',
+    version           INT NOT NULL DEFAULT 0 COMMENT '版本号',
+    content           LONGBLOB NOT NULL COMMENT '流程模型定义',
+    creator           VARCHAR(20) NULL COMMENT '创建人',
+    create_time       DATETIME NOT NULL COMMENT '创建时间',
     PRIMARY KEY (`id`)
-)ENGINE = InnoDB comment='流程定义表';
+)ENGINE = InnoDB COMMENT='流程定义表';
 
 CREATE TABLE IF NOT EXISTS wf_process_instance (
-    id                VARCHAR(32) NOT NULL comment '主键ID',
-    parent_id         VARCHAR(32) NULL comment '父流程ID',
-    process_def_id    VARCHAR(32) NOT NULL comment '流程定义ID',
-    business_key      VARCHAR(32) NULL comment '业务KEY',
-    priority          INT UNSIGNED NOT NULL DEFAULT 0 comment '优先级',
-    parent_node_name  VARCHAR(64) NULL comment '父流程依赖的节点名称',
-    variable          VARCHAR(2048) NULL comment '附属变量json存储',
-    revision          INT UNSIGNED NOT NULL DEFAULT 0 comment '修订版本',
-    creator           VARCHAR(20) NULL comment '发起人',
-    create_time       DATETIME NOT NULL comment '发起时间',
+    id                VARCHAR(32) NOT NULL COMMENT '主键ID',
+    parent_id         VARCHAR(32) NULL COMMENT '父流程ID',
+    process_def_id    VARCHAR(32) NOT NULL COMMENT '流程定义ID',
+    business_key      VARCHAR(32) NULL COMMENT '业务KEY',
+    priority          INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '优先级',
+    parent_node_name  VARCHAR(64) NULL COMMENT '父流程依赖的节点名称',
+    variable          VARCHAR(2048) NULL COMMENT '附属变量json存储',
+    revision          INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '修订版本',
+    creator           VARCHAR(20) NULL COMMENT '发起人',
+    create_time       DATETIME NOT NULL COMMENT '发起时间',
     PRIMARY KEY (`id`)
-)ENGINE = InnoDB comment='流程实例表';
+)ENGINE = InnoDB COMMENT='流程实例表';
 
 CREATE TABLE IF NOT EXISTS wf_task (
-    id                VARCHAR(32) NOT NULL PRIMARY KEY comment '主键ID',
-    parent_task_id    VARCHAR(32) comment '父任务ID',
-    instance_id       VARCHAR(32) NOT NULL comment '流程实例ID',
-    task_name         VARCHAR(100) NOT NULL comment '任务名称',
-    display_name      VARCHAR(200) NOT NULL comment '任务显示名称',
-    task_type         INT NOT NULL comment '任务类型',
-    perform_type      INT comment '参与类型',
-    finish_Time       DATETIME comment '任务完成时间',
-    expire_time       DATETIME comment '任务期望完成时间',
-    action_url        VARCHAR(200) comment '任务处理的url',
-    variable          VARCHAR(2000) comment '附属变量json存储',
-    revision          INT comment '修订版本',
-    operator          VARCHAR(50) comment '任务处理人',
-    create_time       DATETIME comment '任务创建时间'
-)ENGINE = InnoDB comment='任务表';
+    id                VARCHAR(32) NOT NULL COMMENT '主键ID',
+    parent_task_id    VARCHAR(32) NULL COMMENT '父任务ID',
+    process_def_id    VARCHAR(32) NOT NULL COMMENT '流程定义ID',
+    instance_id       VARCHAR(32) NOT NULL COMMENT '流程实例ID',
+    name         	  VARCHAR(64) NOT NULL COMMENT '任务名称',
+    display_name      VARCHAR(64) NOT NULL COMMENT '任务显示名称',
+    task_type         INT NOT NULL COMMENT '任务类型',
+    perform_type      INT NOT NULL DEFAULT 0 COMMENT '参与类型',
+    expire_time       DATETIME NULL COMMENT '任务期望完成时间',
+    variable          VARCHAR(2048) NULL COMMENT '附属变量json存储',
+    revision          INT NULL DEFAULT 0 COMMENT '修订版本',
+    operator          VARCHAR(20) NULL COMMENT '任务处理人',
+    create_time       DATETIME NOT NULL COMMENT '创建时间',
+    PRIMARY KEY (`id`)
+)ENGINE = InnoDB COMMENT='任务表';
 
 CREATE TABLE IF NOT EXISTS wf_historic_process_instance (
-    id                VARCHAR(32) NOT NULL comment '主键ID',
-    parent_id         VARCHAR(32) NULL comment '父流程ID',
-    process_def_id    VARCHAR(32) NOT NULL comment '流程定义ID',
-    business_key      VARCHAR(32) NULL comment '业务KEY',
-    state       	  INT UNSIGNED NOT NULL DEFAULT 0 comment '状态',
-    priority          INT UNSIGNED NOT NULL DEFAULT 0 comment '优先级',
-    variable          VARCHAR(2048) NULL comment '附属变量json存储',
-    end_time          DATETIME NULL comment '完成时间',
-    creator           VARCHAR(20) NULL comment '发起人',
-    create_time       DATETIME NOT NULL comment '发起时间',
+    id                VARCHAR(32) NOT NULL COMMENT '主键ID',
+    parent_id         VARCHAR(32) NULL COMMENT '父流程ID',
+    process_def_id    VARCHAR(32) NOT NULL COMMENT '流程定义ID',
+    business_key      VARCHAR(32) NULL COMMENT '业务KEY',
+    state       	  INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '状态',
+    priority          INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '优先级',
+    variable          VARCHAR(2048) NULL COMMENT '附属变量json存储',
+    end_time          DATETIME NULL COMMENT '完成时间',
+    creator           VARCHAR(20) NULL COMMENT '发起人',
+    create_time       DATETIME NOT NULL COMMENT '发起时间',
     PRIMARY KEY (`id`)
-)ENGINE = InnoDB comment='历史流程实例表';
+)ENGINE = InnoDB COMMENT='历史流程实例表';
 
 CREATE TABLE IF NOT EXISTS wf_historic_task (
-    id                VARCHAR(32) not null primary key comment '主键ID',
-    parent_task_id    VARCHAR(32) comment '父任务ID',
-    instance_id       VARCHAR(32) not null comment '流程实例ID',
-    task_name         VARCHAR(100) not null comment '任务名称',
-    display_name      VARCHAR(200) not null comment '任务显示名称',
-    task_type         INT not null comment '任务类型',
-    perform_type      INT comment '参与类型',
-    task_state        INT not null comment '任务状态',
-    operator          VARCHAR(50) comment '任务处理人',
-    finish_Time       DATETIME comment '任务完成时间',
-    expire_time       DATETIME comment '任务期望完成时间',
-    action_url        VARCHAR(200) comment '任务处理url',
-    variable          VARCHAR(2000) comment '附属变量json存储',
-    create_time       DATETIME not null comment '任务创建时间'
-)comment='历史任务表';
+    id                VARCHAR(32) NOT NULL COMMENT '主键ID',
+    parent_task_id    VARCHAR(32) COMMENT '父任务ID',
+    process_def_id    VARCHAR(32) NOT NULL COMMENT '流程定义ID',
+    instance_id       VARCHAR(32) NOT NULL COMMENT '流程实例ID',
+    name         	  VARCHAR(64) NOT NULL COMMENT '任务名称',
+    display_name      VARCHAR(64) NOT NULL COMMENT '任务显示名称',
+    task_type         INT NOT NULL COMMENT '任务类型',
+    perform_type      INT COMMENT '参与类型',
+    state        	  INT NOT NULL COMMENT '任务状态',
+    variable          VARCHAR(2048) NULL COMMENT '附属变量json存储',
+    operator          VARCHAR(20) NULL COMMENT '任务处理人',
+    start_time        DATETIME NOT NULL COMMENT '开始时间',
+    end_time          DATETIME NOT NULL COMMENT '结束时间',
+    PRIMARY KEY (`id`)
+)ENGINE = InnoDB COMMENT='历史任务表';
 
-create index idx_process_name on wf_process_definition (name);
-create index idx_instance_processid on wf_process_instance (process_def_id);
-create index idx_task_instance_id on wf_task (instance_id);
-create index idx_task_taskname on wf_task (task_name);
-create index idx_task_parenttask on wf_task (parent_task_id);
-create index idx_historic_instance_processid on wf_historic_process_instance (process_def_id);
-create index idx_historic_task_instance_id on wf_historic_task (instance_id);
-create index idx_historic_task_taskname on wf_historic_task (task_name);
-create index idx_historic_task_parenttask on wf_historic_task (parent_task_id);
-
-alter table wf_task
-  add constraint FK_TASK_INSTANCEID foreign key (instance_id)
-  references wf_process_instance (id);
-alter table wf_process_instance
-  add constraint FK_INSTANCE_PARENTID foreign key (parent_id)
-  references wf_process_instance (id);
-alter table wf_process_instance
-  add constraint FK_INSTANCE_PROCESSID foreign key (process_def_id)
-  references wf_process_definition (id);
-alter table wf_historic_task
-  add constraint FK_HISTORIC_TASK_INSTANCEID foreign key (instance_id)
-  references wf_historic_process_instance (id);
-alter table wf_historic_process_instance
-  add constraint FK_HISTORIC_INSTANCE_PARENTID foreign key (parent_id)
-  references wf_historic_process_instance (id);
-alter table wf_historic_process_instance
-  add constraint FK_HISTORIC_INSTANCE_PROCESSID foreign key (process_def_id)
-  references wf_process_definition (id);
+create index process_definition_index_name on wf_process_definition (name);
+create index process_instance_index_process_def_id on wf_process_instance (process_def_id);
+create index task_index_instance_id on wf_task (instance_id);
+create index task_index_task_name on wf_task (name);
+create index task_index_parent_task_id on wf_task (parent_task_id);
+create index historic_instance_index_process_def_id on wf_historic_process_instance (process_def_id);
+create index historic_task_index_instance_id on wf_historic_task (instance_id);
+create index historic_task_index_name on wf_historic_task (name);
+create index historic_task_index_parent_task_id on wf_historic_task (parent_task_id);

@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.util.Assert;
 
 import com.liteworkflow.engine.ProcessEngineConfiguration;
@@ -92,7 +92,7 @@ public class TransitionExecutor implements FlowExecutor
 
 		Assert.notNull(instance, "子流程创建失败");
 
-		List<Task> tasks = taskService.getActiveTasks(instance.getId());
+		List<Task> tasks = taskService.queryByInstanceId(instance.getId());
 		execution.addTasks(tasks);
 	}
 
@@ -123,11 +123,8 @@ public class TransitionExecutor implements FlowExecutor
 			args = new HashMap<String, Object>();
 		LocalDate expireDate = DateHelper.processTime(args, taskModel.getExpireTime());
 		LocalDate remindDate = DateHelper.processTime(args, taskModel.getReminderTime());
-		String form = (String) args.get(taskModel.getForm());
-		String actionUrl = StringUtils.isBlank(form) ? taskModel.getForm() : form;
 
 		Task task = createTaskBase(taskModel, execution);
-		task.setActionUrl(actionUrl);
 		task.setExpireDate(expireDate);
 		if (null != expireDate)
 		{
@@ -145,16 +142,9 @@ public class TransitionExecutor implements FlowExecutor
 		else if (taskModel.isPerformAll())
 		{
 			// 任务执行方式为参与者中每个都要执行完才可驱动流程继续流转，该方法根据参与者个数产生对应的task数量
+			Task singleTask = new Task();
+			BeanUtils.copyProperties(task, singleTask);
 
-			Task singleTask;
-			try
-			{
-				singleTask = (Task) task.clone();
-			}
-			catch (CloneNotSupportedException e)
-			{
-				singleTask = task;
-			}
 			singleTask = saveTask(execution, singleTask);
 			singleTask.setRemindDate(remindDate);
 			tasks.add(singleTask);
@@ -185,18 +175,12 @@ public class TransitionExecutor implements FlowExecutor
 	private Task createTaskBase(TaskModel model, Execution execution)
 	{
 		Task task = new Task();
+		task.setProcessDefinitionId(execution.getProcessInstance().getProcessDefinitionId());
 		task.setInstanceId(execution.getProcessInstance().getId());
-		task.setTaskName(model.getName());
+		task.setName(model.getName());
 		task.setDisplayName(model.getDisplayName());
 		task.setCreateTime(LocalDateTime.now());
-		if (model.isMajor())
-		{
-			task.setTaskType(TaskType.Major.ordinal());
-		}
-		else
-		{
-			task.setTaskType(TaskType.Aidant.ordinal());
-		}
+		task.setTaskType(TaskType.Major.ordinal());
 		task.setParentTaskId(execution.getTask() == null ? START : execution.getTask().getId());
 		task.setModel(model);
 		return task;

@@ -65,13 +65,6 @@ public class TaskModel extends ActivityModel
 	private String performType = PERFORMTYPE_ANY;
 
 	/**
-	 * 任务类型
-	 * major：主办任务
-	 * aidant：协办任务
-	 */
-	private String taskType = TASKTYPE_MAJOR;
-
-	/**
 	 * 期望完成时间
 	 */
 	private String expireTime;
@@ -106,11 +99,6 @@ public class TaskModel extends ActivityModel
 		return PERFORMTYPE_ALL.equalsIgnoreCase(this.performType);
 	}
 
-	public boolean isMajor()
-	{
-		return TASKTYPE_MAJOR.equalsIgnoreCase(this.taskType);
-	}
-
 	public String getAssignee()
 	{
 		return assignee;
@@ -129,16 +117,6 @@ public class TaskModel extends ActivityModel
 	public void setExpireTime(String expireTime)
 	{
 		this.expireTime = expireTime;
-	}
-
-	public String getTaskType()
-	{
-		return taskType;
-	}
-
-	public void setTaskType(String taskType)
-	{
-		this.taskType = (StringUtils.isBlank(taskType) ? TASKTYPE_MAJOR : taskType);
 	}
 
 	public String getPerformType()

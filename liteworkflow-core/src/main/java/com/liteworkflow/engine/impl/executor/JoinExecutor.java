@@ -76,10 +76,10 @@ public class JoinExecutor extends NodeFlowExecutor
 		}
 		if (isSubProcessMerged && model.containsNodeNames(TaskModel.class, activeNodes))
 		{
-			List<Task> tasks = taskService.getActiveTasks(instance.getId());
+			List<Task> tasks = taskService.queryByInstanceId(instance.getId());
 			tasks = tasks.stream()
 			        .filter(task -> !task.getId().equals(execution.getTask().getId()))
-			        .filter(task -> ArrayUtils.contains(activeNodes, task.getTaskName()))
+			        .filter(task -> ArrayUtils.contains(activeNodes, task.getName()))
 			        .collect(Collectors.toList());
 			if (tasks == null || tasks.isEmpty())
 			{

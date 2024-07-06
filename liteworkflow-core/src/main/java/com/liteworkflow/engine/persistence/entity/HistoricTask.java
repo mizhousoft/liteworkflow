@@ -2,11 +2,6 @@ package com.liteworkflow.engine.persistence.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Map;
-
-import com.liteworkflow.engine.helper.JsonHelper;
-import com.liteworkflow.engine.model.TaskModel.PerformType;
 
 /**
  * 历史任务实体类
@@ -15,7 +10,6 @@ import com.liteworkflow.engine.model.TaskModel.PerformType;
  */
 public class HistoricTask implements Serializable
 {
-
 	/**
 	 * 
 	 */
@@ -27,6 +21,16 @@ public class HistoricTask implements Serializable
 	private String id;
 
 	/**
+	 * 父任务Id
+	 */
+	private String parentTaskId;
+
+	/**
+	 * 流程定义ID
+	 */
+	private String processDefinitionId;
+
+	/**
 	 * 流程实例ID
 	 */
 	private String instanceId;
@@ -34,7 +38,7 @@ public class HistoricTask implements Serializable
 	/**
 	 * 任务名称
 	 */
-	private String taskName;
+	private String name;
 
 	/**
 	 * 任务显示名称
@@ -42,19 +46,24 @@ public class HistoricTask implements Serializable
 	private String displayName;
 
 	/**
-	 * 参与方式（0：普通任务；1：参与者fork任务[即：如果10个参与者，需要每个人都要完成，才继续流转]）
-	 */
-	private Integer performType;
-
-	/**
 	 * 任务类型
 	 */
 	private Integer taskType;
 
 	/**
+	 * 参与方式（0：普通任务；1：参与者fork任务[即：如果10个参与者，需要每个人都要完成，才继续流转]）
+	 */
+	private Integer performType;
+
+	/**
 	 * 任务状态（0：结束；1：活动）
 	 */
-	private Integer taskState;
+	private Integer state;
+
+	/**
+	 * 任务附属变量
+	 */
+	private String variable;
 
 	/**
 	 * 任务处理者ID
@@ -62,235 +71,73 @@ public class HistoricTask implements Serializable
 	private String operator;
 
 	/**
-	 * 任务创建时间
+	 * 开始时间
 	 */
-	private LocalDateTime createTime;
+	private LocalDateTime startTime;
 
 	/**
-	 * 任务完成时间
+	 * 结束时间
 	 */
-	private LocalDateTime finishTime;
+	private LocalDateTime endTime;
 
 	/**
-	 * 期望任务完成时间
-	 */
-	private LocalDateTime expireTime;
-
-	/**
-	 * 任务关联的表单url
-	 */
-	private String actionUrl;
-
-	/**
-	 * 任务参与者列表
-	 */
-	private String[] actorIds;
-
-	/**
-	 * 父任务Id
-	 */
-	private String parentTaskId;
-
-	/**
-	 * 任务附属变量
-	 */
-	private String variable;
-
-	public String getParentTaskId()
-	{
-		return parentTaskId;
-	}
-
-	public void setParentTaskId(String parentTaskId)
-	{
-		this.parentTaskId = parentTaskId;
-	}
-
-	public String getVariable()
-	{
-		return variable;
-	}
-
-	public void setVariable(String variable)
-	{
-		this.variable = variable;
-	}
-
-	public HistoricTask()
-	{
-
-	}
-
-	public HistoricTask(Task task)
-	{
-		this.id = task.getId();
-		this.instanceId = task.getInstanceId();
-		this.createTime = task.getCreateTime();
-		this.displayName = task.getDisplayName();
-		this.taskName = task.getTaskName();
-		this.taskType = task.getTaskType();
-		this.expireTime = task.getExpireTime();
-		this.actionUrl = task.getActionUrl();
-		this.parentTaskId = task.getParentTaskId();
-		this.variable = task.getVariable();
-		this.performType = task.getPerformType();
-	}
-
-	/**
-	 * 根据历史任务产生撤回的任务对象
-	 * 
-	 * @return 任务对象
-	 */
-	public Task undoTask()
-	{
-		Task task = new Task();
-		task.setInstanceId(this.getInstanceId());
-
-		task.setTaskName(this.getTaskName());
-		task.setDisplayName(this.getDisplayName());
-		task.setTaskType(this.getTaskType());
-		task.setExpireTime(this.getExpireTime());
-		task.setActionUrl(this.getActionUrl());
-		task.setParentTaskId(this.getParentTaskId());
-		task.setVariable(this.getVariable());
-		task.setPerformType(this.getPerformType());
-		task.setOperator(this.getOperator());
-		return task;
-	}
-
-	public boolean isPerformAny()
-	{
-		return this.performType.intValue() == PerformType.ANY.ordinal();
-	}
-
-	public String getTaskName()
-	{
-		return taskName;
-	}
-
-	public void setTaskName(String taskName)
-	{
-		this.taskName = taskName;
-	}
-
-	public Integer getTaskType()
-	{
-		return taskType;
-	}
-
-	public void setTaskType(Integer taskType)
-	{
-		this.taskType = taskType;
-	}
-
-	public Integer getTaskState()
-	{
-		return taskState;
-	}
-
-	public void setTaskState(Integer taskState)
-	{
-		this.taskState = taskState;
-	}
-
-	public String getOperator()
-	{
-		return operator;
-	}
-
-	public void setOperator(String operator)
-	{
-		this.operator = operator;
-	}
-
-	/**
-	 * 获取createTime
+	 * 获取id
 	 * 
 	 * @return
 	 */
-	public LocalDateTime getCreateTime()
-	{
-		return createTime;
-	}
-
-	/**
-	 * 设置createTime
-	 * 
-	 * @param createTime
-	 */
-	public void setCreateTime(LocalDateTime createTime)
-	{
-		this.createTime = createTime;
-	}
-
-	/**
-	 * 获取finishTime
-	 * 
-	 * @return
-	 */
-	public LocalDateTime getFinishTime()
-	{
-		return finishTime;
-	}
-
-	/**
-	 * 设置finishTime
-	 * 
-	 * @param finishTime
-	 */
-	public void setFinishTime(LocalDateTime finishTime)
-	{
-		this.finishTime = finishTime;
-	}
-
-	/**
-	 * 获取expireTime
-	 * 
-	 * @return
-	 */
-	public LocalDateTime getExpireTime()
-	{
-		return expireTime;
-	}
-
-	/**
-	 * 设置expireTime
-	 * 
-	 * @param expireTime
-	 */
-	public void setExpireTime(LocalDateTime expireTime)
-	{
-		this.expireTime = expireTime;
-	}
-
-	public String getActionUrl()
-	{
-		return actionUrl;
-	}
-
-	public void setActionUrl(String actionUrl)
-	{
-		this.actionUrl = actionUrl;
-	}
-
-	public String getDisplayName()
-	{
-		return displayName;
-	}
-
-	public void setDisplayName(String displayName)
-	{
-		this.displayName = displayName;
-	}
-
 	public String getId()
 	{
 		return id;
 	}
 
+	/**
+	 * 设置id
+	 * 
+	 * @param id
+	 */
 	public void setId(String id)
 	{
 		this.id = id;
+	}
+
+	/**
+	 * 获取parentTaskId
+	 * 
+	 * @return
+	 */
+	public String getParentTaskId()
+	{
+		return parentTaskId;
+	}
+
+	/**
+	 * 设置parentTaskId
+	 * 
+	 * @param parentTaskId
+	 */
+	public void setParentTaskId(String parentTaskId)
+	{
+		this.parentTaskId = parentTaskId;
+	}
+
+	/**
+	 * 获取processDefinitionId
+	 * 
+	 * @return
+	 */
+	public String getProcessDefinitionId()
+	{
+		return processDefinitionId;
+	}
+
+	/**
+	 * 设置processDefinitionId
+	 * 
+	 * @param processDefinitionId
+	 */
+	public void setProcessDefinitionId(String processDefinitionId)
+	{
+		this.processDefinitionId = processDefinitionId;
 	}
 
 	/**
@@ -313,45 +160,204 @@ public class HistoricTask implements Serializable
 		this.instanceId = instanceId;
 	}
 
+	/**
+	 * 获取name
+	 * 
+	 * @return
+	 */
+	public String getName()
+	{
+		return name;
+	}
+
+	/**
+	 * 设置name
+	 * 
+	 * @param name
+	 */
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	/**
+	 * 获取displayName
+	 * 
+	 * @return
+	 */
+	public String getDisplayName()
+	{
+		return displayName;
+	}
+
+	/**
+	 * 设置displayName
+	 * 
+	 * @param displayName
+	 */
+	public void setDisplayName(String displayName)
+	{
+		this.displayName = displayName;
+	}
+
+	/**
+	 * 获取taskType
+	 * 
+	 * @return
+	 */
+	public Integer getTaskType()
+	{
+		return taskType;
+	}
+
+	/**
+	 * 设置taskType
+	 * 
+	 * @param taskType
+	 */
+	public void setTaskType(Integer taskType)
+	{
+		this.taskType = taskType;
+	}
+
+	/**
+	 * 获取performType
+	 * 
+	 * @return
+	 */
 	public Integer getPerformType()
 	{
 		return performType;
 	}
 
+	/**
+	 * 设置performType
+	 * 
+	 * @param performType
+	 */
 	public void setPerformType(Integer performType)
 	{
 		this.performType = performType;
 	}
 
-	public String[] getActorIds()
+	/**
+	 * 获取state
+	 * 
+	 * @return
+	 */
+	public Integer getState()
 	{
-		return actorIds;
+		return state;
 	}
 
-	public void setActorIds(String[] actorIds)
+	/**
+	 * 设置state
+	 * 
+	 * @param state
+	 */
+	public void setState(Integer state)
 	{
-		this.actorIds = actorIds;
+		this.state = state;
 	}
 
-	@SuppressWarnings("unchecked")
-	public Map<String, Object> getVariableMap()
+	/**
+	 * 获取variable
+	 * 
+	 * @return
+	 */
+	public String getVariable()
 	{
-		Map<String, Object> map = JsonHelper.fromJson(this.variable, Map.class);
-		if (map == null)
-			return Collections.emptyMap();
-		return map;
+		return variable;
 	}
 
+	/**
+	 * 设置variable
+	 * 
+	 * @param variable
+	 */
+	public void setVariable(String variable)
+	{
+		this.variable = variable;
+	}
+
+	/**
+	 * 获取operator
+	 * 
+	 * @return
+	 */
+	public String getOperator()
+	{
+		return operator;
+	}
+
+	/**
+	 * 设置operator
+	 * 
+	 * @param operator
+	 */
+	public void setOperator(String operator)
+	{
+		this.operator = operator;
+	}
+
+	/**
+	 * 获取startTime
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getStartTime()
+	{
+		return startTime;
+	}
+
+	/**
+	 * 设置startTime
+	 * 
+	 * @param startTime
+	 */
+	public void setStartTime(LocalDateTime startTime)
+	{
+		this.startTime = startTime;
+	}
+
+	/**
+	 * 获取endTime
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getEndTime()
+	{
+		return endTime;
+	}
+
+	/**
+	 * 设置endTime
+	 * 
+	 * @param endTime
+	 */
+	public void setEndTime(LocalDateTime endTime)
+	{
+		this.endTime = endTime;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder();
-		sb.append("HistoricTask(id=").append(this.id);
-		sb.append(",instanceId=").append(this.instanceId);
-		sb.append(",taskName=").append(this.taskName);
-		sb.append(",displayName").append(this.displayName);
-		sb.append(",taskType=").append(this.taskType);
-		sb.append(",createTime").append(this.createTime);
-		sb.append(",performType=").append(this.performType).append(")");
-		return sb.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append("{\"id\":\"")
+		        .append(id)
+		        .append("\", \"processDefinitionId\":\"")
+		        .append(processDefinitionId)
+		        .append("\", \"instanceId\":\"")
+		        .append(instanceId)
+		        .append("\", \"name\":\"")
+		        .append(name)
+		        .append("\", \"displayName\":\"")
+		        .append(displayName)
+		        .append("\"}");
+		return builder.toString();
 	}
 }

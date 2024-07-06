@@ -1,4 +1,4 @@
-package com.liteworkflow.engine;
+package com.liteworkflow.engine.delegate;
 
 import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.persistence.entity.Task;

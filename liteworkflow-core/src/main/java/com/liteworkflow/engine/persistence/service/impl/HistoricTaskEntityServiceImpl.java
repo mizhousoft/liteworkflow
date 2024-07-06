@@ -6,6 +6,9 @@ import com.liteworkflow.engine.persistence.entity.HistoricTask;
 import com.liteworkflow.engine.persistence.mapper.HistoricTaskMapper;
 import com.liteworkflow.engine.persistence.request.TaskPageRequest;
 import com.liteworkflow.engine.persistence.service.HistoricTaskEntityService;
+import com.mizhousoft.commons.data.domain.Page;
+import com.mizhousoft.commons.data.util.PageBuilder;
+import com.mizhousoft.commons.data.util.PageUtils;
 
 /**
  * 历史任务实例服务
@@ -70,8 +73,15 @@ public class HistoricTaskEntityServiceImpl implements HistoricTaskEntityService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<HistoricTask> queryList(TaskPageRequest request)
+	public Page<HistoricTask> queryPageData(TaskPageRequest request)
 	{
-		return historicTaskMapper.findList(request);
+		long total = historicTaskMapper.countTotal(request);
+		long rowOffset = PageUtils.calcRowOffset(request, total);
+
+		List<HistoricTask> list = historicTaskMapper.findPageData(rowOffset, request);
+
+		Page<HistoricTask> page = PageBuilder.build(list, request, total);
+
+		return page;
 	}
 }

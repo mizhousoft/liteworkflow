@@ -48,20 +48,14 @@ public class ProcessDefinition implements Serializable
 	private byte[] bytes;
 
 	/**
-	 * 当前流程的实例url（一般为流程第一步的url）
-	 * 该字段可以直接打开流程申请的表单
+	 * 创建人
 	 */
-	private String instanceUrl;
+	private String creator;
 
 	/**
 	 * 创建时间
 	 */
 	private LocalDateTime createTime;
-
-	/**
-	 * 创建人
-	 */
-	private String creator;
 
 	/**
 	 * 流程定义模型
@@ -186,26 +180,6 @@ public class ProcessDefinition implements Serializable
 	public void setBytes(byte[] bytes)
 	{
 		this.bytes = bytes;
-	}
-
-	/**
-	 * 获取instanceUrl
-	 * 
-	 * @return
-	 */
-	public String getInstanceUrl()
-	{
-		return instanceUrl;
-	}
-
-	/**
-	 * 设置instanceUrl
-	 * 
-	 * @param instanceUrl
-	 */
-	public void setInstanceUrl(String instanceUrl)
-	{
-		this.instanceUrl = instanceUrl;
 	}
 
 	/**

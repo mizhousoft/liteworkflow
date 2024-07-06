@@ -64,7 +64,7 @@ public class SchedulerInterceptor implements FlowInterceptor
 		try
 		{
 			JobEntity entity = new JobEntity(id, task, startDate, args);
-			entity.setModelName(task.getTaskName());
+			entity.setModelName(task.getName());
 			entity.setJobType(jobType);
 			if (jobType == JobType.REMINDER.ordinal())
 			{

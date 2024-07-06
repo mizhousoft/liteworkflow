@@ -3,12 +3,8 @@ package com.liteworkflow.engine.persistence.entity;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Map;
 
-import com.liteworkflow.engine.helper.JsonHelper;
 import com.liteworkflow.engine.model.TaskModel;
-import com.liteworkflow.engine.model.TaskModel.TaskType;
 
 /**
  * 任务实体类
@@ -22,17 +18,20 @@ public class Task implements Serializable, Cloneable
 	 */
 	private static final long serialVersionUID = -189094546633914087L;
 
-	public static final String KEY_ACTOR = "S-ACTOR";
-
 	/**
 	 * 主键ID
 	 */
 	private String id;
 
 	/**
-	 * 修订版本
+	 * 父任务Id
 	 */
-	private Integer revision = 0;
+	private String parentTaskId;
+
+	/**
+	 * 流程定义ID
+	 */
+	private String processDefinitionId;
 
 	/**
 	 * 流程实例ID
@@ -42,7 +41,7 @@ public class Task implements Serializable, Cloneable
 	/**
 	 * 任务名称
 	 */
-	private String taskName;
+	private String name;
 
 	/**
 	 * 任务显示名称
@@ -50,14 +49,29 @@ public class Task implements Serializable, Cloneable
 	private String displayName;
 
 	/**
+	 * 任务类型（0：主办任务；1：协办任务）
+	 */
+	private Integer taskType;
+
+	/**
 	 * 参与方式（0：普通任务；1：参与者会签任务）
 	 */
 	private Integer performType;
 
 	/**
-	 * 任务类型（0：主办任务；1：协办任务）
+	 * 期望任务完成时间
 	 */
-	private Integer taskType;
+	private LocalDateTime expireTime;
+
+	/**
+	 * 任务附属变量
+	 */
+	private String variable;
+
+	/**
+	 * 修订版本
+	 */
+	private int revision = 0;
 
 	/**
 	 * 任务处理者ID
@@ -70,16 +84,6 @@ public class Task implements Serializable, Cloneable
 	private LocalDateTime createTime;
 
 	/**
-	 * 任务完成时间
-	 */
-	private LocalDateTime finishTime;
-
-	/**
-	 * 期望任务完成时间
-	 */
-	private LocalDateTime expireTime;
-
-	/**
 	 * 期望的完成时间date类型
 	 */
 	private LocalDate expireDate;
@@ -90,85 +94,245 @@ public class Task implements Serializable, Cloneable
 	private LocalDate remindDate;
 
 	/**
-	 * 任务关联的表单url
-	 */
-	private String actionUrl;
-
-	/**
-	 * 父任务Id
-	 */
-	private String parentTaskId;
-
-	/**
-	 * 任务附属变量
-	 */
-	private String variable;
-
-	/**
 	 * 保持模型对象
 	 */
 	private TaskModel model;
 
-	public Task()
+	/**
+	 * 获取id
+	 * 
+	 * @return
+	 */
+	public String getId()
 	{
-
+		return id;
 	}
 
-	public Task(String id)
+	/**
+	 * 设置id
+	 * 
+	 * @param id
+	 */
+	public void setId(String id)
 	{
 		this.id = id;
 	}
 
-	public boolean isMajor()
-	{
-		return this.taskType == TaskType.Major.ordinal();
-	}
-
+	/**
+	 * 获取parentTaskId
+	 * 
+	 * @return
+	 */
 	public String getParentTaskId()
 	{
 		return parentTaskId;
 	}
 
+	/**
+	 * 设置parentTaskId
+	 * 
+	 * @param parentTaskId
+	 */
 	public void setParentTaskId(String parentTaskId)
 	{
 		this.parentTaskId = parentTaskId;
 	}
 
-	public String getVariable()
+	/**
+	 * 获取processDefinitionId
+	 * 
+	 * @return
+	 */
+	public String getProcessDefinitionId()
 	{
-		return variable;
+		return processDefinitionId;
 	}
 
-	public void setVariable(String variable)
+	/**
+	 * 设置processDefinitionId
+	 * 
+	 * @param processDefinitionId
+	 */
+	public void setProcessDefinitionId(String processDefinitionId)
 	{
-		this.variable = variable;
+		this.processDefinitionId = processDefinitionId;
 	}
 
-	public String getTaskName()
+	/**
+	 * 获取instanceId
+	 * 
+	 * @return
+	 */
+	public String getInstanceId()
 	{
-		return taskName;
+		return instanceId;
 	}
 
-	public void setTaskName(String taskName)
+	/**
+	 * 设置instanceId
+	 * 
+	 * @param instanceId
+	 */
+	public void setInstanceId(String instanceId)
 	{
-		this.taskName = taskName;
+		this.instanceId = instanceId;
 	}
 
+	/**
+	 * 获取name
+	 * 
+	 * @return
+	 */
+	public String getName()
+	{
+		return name;
+	}
+
+	/**
+	 * 设置name
+	 * 
+	 * @param name
+	 */
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	/**
+	 * 获取displayName
+	 * 
+	 * @return
+	 */
+	public String getDisplayName()
+	{
+		return displayName;
+	}
+
+	/**
+	 * 设置displayName
+	 * 
+	 * @param displayName
+	 */
+	public void setDisplayName(String displayName)
+	{
+		this.displayName = displayName;
+	}
+
+	/**
+	 * 获取taskType
+	 * 
+	 * @return
+	 */
 	public Integer getTaskType()
 	{
 		return taskType;
 	}
 
+	/**
+	 * 设置taskType
+	 * 
+	 * @param taskType
+	 */
 	public void setTaskType(Integer taskType)
 	{
 		this.taskType = taskType;
 	}
 
+	/**
+	 * 获取performType
+	 * 
+	 * @return
+	 */
+	public Integer getPerformType()
+	{
+		return performType;
+	}
+
+	/**
+	 * 设置performType
+	 * 
+	 * @param performType
+	 */
+	public void setPerformType(Integer performType)
+	{
+		this.performType = performType;
+	}
+
+	/**
+	 * 获取expireTime
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getExpireTime()
+	{
+		return expireTime;
+	}
+
+	/**
+	 * 设置expireTime
+	 * 
+	 * @param expireTime
+	 */
+	public void setExpireTime(LocalDateTime expireTime)
+	{
+		this.expireTime = expireTime;
+	}
+
+	/**
+	 * 获取variable
+	 * 
+	 * @return
+	 */
+	public String getVariable()
+	{
+		return variable;
+	}
+
+	/**
+	 * 设置variable
+	 * 
+	 * @param variable
+	 */
+	public void setVariable(String variable)
+	{
+		this.variable = variable;
+	}
+
+	/**
+	 * 获取revision
+	 * 
+	 * @return
+	 */
+	public int getRevision()
+	{
+		return revision;
+	}
+
+	/**
+	 * 设置revision
+	 * 
+	 * @param revision
+	 */
+	public void setRevision(int revision)
+	{
+		this.revision = revision;
+	}
+
+	/**
+	 * 获取operator
+	 * 
+	 * @return
+	 */
 	public String getOperator()
 	{
 		return operator;
 	}
 
+	/**
+	 * 设置operator
+	 * 
+	 * @param operator
+	 */
 	public void setOperator(String operator)
 	{
 		this.operator = operator;
@@ -192,126 +356,6 @@ public class Task implements Serializable, Cloneable
 	public void setCreateTime(LocalDateTime createTime)
 	{
 		this.createTime = createTime;
-	}
-
-	/**
-	 * 获取finishTime
-	 * 
-	 * @return
-	 */
-	public LocalDateTime getFinishTime()
-	{
-		return finishTime;
-	}
-
-	/**
-	 * 设置finishTime
-	 * 
-	 * @param finishTime
-	 */
-	public void setFinishTime(LocalDateTime finishTime)
-	{
-		this.finishTime = finishTime;
-	}
-
-	/**
-	 * 获取expireTime
-	 * 
-	 * @return
-	 */
-	public LocalDateTime getExpireTime()
-	{
-		return expireTime;
-	}
-
-	/**
-	 * 设置expireTime
-	 * 
-	 * @param expireTime
-	 */
-	public void setExpireTime(LocalDateTime expireTime)
-	{
-		this.expireTime = expireTime;
-	}
-
-	public String getActionUrl()
-	{
-		return actionUrl;
-	}
-
-	public void setActionUrl(String actionUrl)
-	{
-		this.actionUrl = actionUrl;
-	}
-
-	public String getDisplayName()
-	{
-		return displayName;
-	}
-
-	public void setDisplayName(String displayName)
-	{
-		this.displayName = displayName;
-	}
-
-	public String getId()
-	{
-		return id;
-	}
-
-	public void setId(String id)
-	{
-		this.id = id;
-	}
-
-	/**
-	 * 获取instanceId
-	 * 
-	 * @return
-	 */
-	public String getInstanceId()
-	{
-		return instanceId;
-	}
-
-	/**
-	 * 设置instanceId
-	 * 
-	 * @param instanceId
-	 */
-	public void setInstanceId(String instanceId)
-	{
-		this.instanceId = instanceId;
-	}
-
-	public Integer getPerformType()
-	{
-		return performType;
-	}
-
-	public void setPerformType(Integer performType)
-	{
-		this.performType = performType;
-	}
-
-	/**
-	 * 获取revision
-	 * 
-	 * @return
-	 */
-	public Integer getRevision()
-	{
-		return revision;
-	}
-
-	/**
-	 * 设置revision
-	 * 
-	 * @param revision
-	 */
-	public void setRevision(Integer revision)
-	{
-		this.revision = revision;
 	}
 
 	/**
@@ -354,40 +398,44 @@ public class Task implements Serializable, Cloneable
 		this.remindDate = remindDate;
 	}
 
+	/**
+	 * 获取model
+	 * 
+	 * @return
+	 */
 	public TaskModel getModel()
 	{
 		return model;
 	}
 
+	/**
+	 * 设置model
+	 * 
+	 * @param model
+	 */
 	public void setModel(TaskModel model)
 	{
 		this.model = model;
 	}
 
-	@SuppressWarnings("unchecked")
-	public Map<String, Object> getVariableMap()
-	{
-		Map<String, Object> map = JsonHelper.fromJson(this.variable, Map.class);
-		if (map == null)
-			return Collections.emptyMap();
-		return map;
-	}
-
-	public Object clone() throws CloneNotSupportedException
-	{
-		return super.clone();
-	}
-
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder();
-		sb.append("Task(id=").append(this.id);
-		sb.append(",instanceId=").append(this.instanceId);
-		sb.append(",taskName=").append(this.taskName);
-		sb.append(",displayName").append(this.displayName);
-		sb.append(",taskType=").append(this.taskType);
-		sb.append(",createTime=").append(this.createTime);
-		sb.append(",performType=").append(this.performType).append(")");
-		return sb.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append("{\"id\":\"")
+		        .append(id)
+		        .append("\", \"processDefinitionId\":\"")
+		        .append(processDefinitionId)
+		        .append("\", \"instanceId\":\"")
+		        .append(instanceId)
+		        .append("\", \"name\":\"")
+		        .append(name)
+		        .append("\", \"displayName\":\"")
+		        .append(displayName)
+		        .append("\"}");
+		return builder.toString();
 	}
 }

@@ -33,10 +33,10 @@ public interface RuntimeService
 	 * 
 	 * @param processDefinitionId
 	 * @param operator
-	 * @param args
+	 * @param variableMap
 	 * @return
 	 */
-	ProcessInstance startInstanceById(String processDefinitionId, String operator, Map<String, Object> args);
+	ProcessInstance startInstanceById(String processDefinitionId, String operator, Map<String, Object> variableMap);
 
 	/**
 	 * 根据流程名称启动流程实例
@@ -60,10 +60,10 @@ public interface RuntimeService
 	 * 
 	 * @param processDefinitionName
 	 * @param operator
-	 * @param args
+	 * @param variableMap
 	 * @return
 	 */
-	ProcessInstance startInstanceByName(String processDefinitionName, String operator, Map<String, Object> args);
+	ProcessInstance startInstanceByName(String processDefinitionName, String operator, Map<String, Object> variableMap);
 
 	/**
 	 * 设置流程发起人

@@ -69,7 +69,6 @@ public class RedeployCommand implements Command<ProcessDefinition>
 		processDefinition.setDisplayName(processModel.getDisplayName());
 		processDefinition.setCategory(processModel.getCategory());
 		processDefinition.setBytes(bytes);
-		processDefinition.setInstanceUrl(processModel.getInstanceUrl());
 
 		processDefinitionEntityService.modifyEntity(processDefinition);
 

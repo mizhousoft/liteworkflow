@@ -46,10 +46,10 @@ public class TestSubProcess2 extends TestSpring
 		args.put("task1.operator", new String[] { "1" });
 		ProcessInstance instance = engine.getRuntimeService().startInstanceById(processId, "2", args);
 		System.out.println(instance);
-		List<Task> tasks = engine.getTaskService().getActiveTasks(instance.getId());
+		List<Task> tasks = engine.getTaskService().queryByInstanceId(instance.getId());
 		for (Task task : tasks)
 		{
-			engine.getTaskService().executeTask(task.getId(), "1", args);
+			engine.getTaskService().complete(task.getId(), "1", args);
 		}
 	}
 }

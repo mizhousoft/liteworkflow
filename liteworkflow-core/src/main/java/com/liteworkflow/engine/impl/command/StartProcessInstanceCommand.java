@@ -47,7 +47,7 @@ public class StartProcessInstanceCommand implements Command<ProcessInstance>
 	/**
 	 * 流程变量
 	 */
-	private Map<String, Object> variables;
+	private Map<String, Object> variableMap;
 
 	/**
 	 * 构造函数
@@ -56,16 +56,16 @@ public class StartProcessInstanceCommand implements Command<ProcessInstance>
 	 * @param processDefinitionId
 	 * @param businessKey
 	 * @param operator
-	 * @param variables
+	 * @param variableMap
 	 */
 	public StartProcessInstanceCommand(String processDefinitionName, String processDefinitionId, String businessKey, String operator,
-	        Map<String, Object> variables)
+	        Map<String, Object> variableMap)
 	{
 		this.processDefinitionName = processDefinitionName;
 		this.processDefinitionId = processDefinitionId;
 		this.businessKey = businessKey;
 		this.operator = operator;
-		this.variables = null == variables ? new HashMap<>(10) : variables;
+		this.variableMap = null == variableMap ? new HashMap<>(10) : variableMap;
 	}
 
 	/**
@@ -78,10 +78,10 @@ public class StartProcessInstanceCommand implements Command<ProcessInstance>
 
 		ProcessDefinition processDefinition = getProcessDefinition(engineConfiguration);
 
-		ProcessInstance processInstance = ProcessInstanceUtils.createProcessInstance(processDefinition, businessKey, operator, variables,
+		ProcessInstance processInstance = ProcessInstanceUtils.createProcessInstance(processDefinition, businessKey, operator, variableMap,
 		        null, null, engineConfiguration);
 
-		Execution execution = new Execution(engineConfiguration, processDefinition, processInstance, variables);
+		Execution execution = new Execution(engineConfiguration, processDefinition, processInstance, variableMap);
 		execution.setOperator(operator);
 
 		StartModel startModel = processDefinition.getModel().getStartModel();

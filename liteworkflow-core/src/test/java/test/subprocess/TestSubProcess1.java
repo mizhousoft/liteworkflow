@@ -46,11 +46,11 @@ public class TestSubProcess1 extends TestSpring
 		ProcessInstance instance = engine.getRuntimeService().startInstanceById(processId, "2", args);
 		System.out.println("************************" + instance);
 
-		List<Task> tasks = engine.getTaskService().getActiveTasks(instance.getId());
+		List<Task> tasks = engine.getTaskService().queryByInstanceId(instance.getId());
 		for (Task task : tasks)
 		{
 			System.out.println("************************begin:::::" + task);
-			engine.getTaskService().executeTask(task.getId(), "1", args);
+			engine.getTaskService().complete(task.getId(), "1", args);
 			System.out.println("************************end:::::" + task);
 		}
 	}

@@ -11,13 +11,27 @@ import com.mizhousoft.commons.data.util.PageBuilder;
 import com.mizhousoft.commons.data.util.PageUtils;
 
 /**
- * TaskEntityService
+ * 任务实体服务
  *
  * @version
  */
 public class TaskEntityServiceImpl implements TaskEntityService
 {
+	/**
+	 * 任务持久层
+	 */
 	private TaskMapper taskMapper;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param taskMapper
+	 */
+	public TaskEntityServiceImpl(TaskMapper taskMapper)
+	{
+		super();
+		this.taskMapper = taskMapper;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -50,27 +64,9 @@ public class TaskEntityServiceImpl implements TaskEntityService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Task getTask(String taskId)
+	public Task getById(String taskId)
 	{
-		return taskMapper.getTask(taskId);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<Task> getNextActiveTasks(String parentTaskId)
-	{
-		return taskMapper.getNextActiveTasks(parentTaskId);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<Task> getNextActiveTaskList(String instanceId, String taskName, String parentTaskId)
-	{
-		return taskMapper.getNextActiveTaskList(instanceId, taskName, parentTaskId);
+		return taskMapper.findById(taskId);
 	}
 
 	/**
@@ -79,21 +75,7 @@ public class TaskEntityServiceImpl implements TaskEntityService
 	@Override
 	public List<Task> queryByInstanceId(String instanceId)
 	{
-		TaskPageRequest request = new TaskPageRequest();
-		request.setInstanceId(instanceId);
-
-		return queryList(request);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<Task> queryList(TaskPageRequest request)
-	{
-		request.setPageSize(100000);
-
-		return taskMapper.findPageData(0, request);
+		return taskMapper.findByInstanceId(instanceId);
 	}
 
 	/**
@@ -110,15 +92,5 @@ public class TaskEntityServiceImpl implements TaskEntityService
 		Page<Task> page = PageBuilder.build(list, request, total);
 
 		return page;
-	}
-
-	/**
-	 * 设置taskMapper
-	 * 
-	 * @param taskMapper
-	 */
-	public void setTaskMapper(TaskMapper taskMapper)
-	{
-		this.taskMapper = taskMapper;
 	}
 }

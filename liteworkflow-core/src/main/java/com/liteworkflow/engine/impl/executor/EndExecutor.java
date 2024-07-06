@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 
 import com.liteworkflow.WorkFlowException;
-import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.helper.JsonHelper;
 import com.liteworkflow.engine.impl.Constants;
@@ -26,6 +25,7 @@ import com.liteworkflow.engine.persistence.service.HistoricProcessInstanceEntity
 import com.liteworkflow.engine.persistence.service.HistoricTaskEntityService;
 import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.TaskEntityService;
+import com.liteworkflow.engine.util.HistoricTaskUtils;
 
 /**
  * TODO
@@ -43,15 +43,10 @@ public class EndExecutor extends NodeFlowExecutor
 	{
 		ProcessEngineConfigurationImpl engine = execution.getEngineConfiguration();
 		ProcessInstance instance = execution.getProcessInstance();
-		List<Task> tasks = engine.getTaskService().getActiveTasks(instance.getId());
-		for (Task task : tasks)
+		List<Task> tasks = engine.getTaskService().queryByInstanceId(instance.getId());
+		if (!tasks.isEmpty())
 		{
-			if (task.isMajor())
-			{
-				throw new WorkFlowException("存在未完成的主办任务,请确认.");
-			}
-
-			complete(task.getId(), ProcessEngine.AUTO, null, execution);
+			throw new WorkFlowException("存在未完成的主办任务,请确认.");
 		}
 
 		/**
@@ -107,19 +102,19 @@ public class EndExecutor extends NodeFlowExecutor
 		processInstanceEntityService.deleteEntity(instance);
 	}
 
-	public Task complete(String taskId, String operator, Map<String, Object> args, Execution execution)
+	public Task complete(String taskId, String operator, Map<String, Object> variableMap, Execution execution)
 	{
 		ProcessEngineConfigurationImpl engine = execution.getEngineConfiguration();
 		TaskEntityService taskEntityService = engine.getTaskEntityService();
 		HistoricTaskEntityService historicTaskEntityService = engine.getHistoricTaskEntityService();
 
-		Task task = taskEntityService.getTask(taskId);
+		Task task = taskEntityService.getById(taskId);
 		Assert.notNull(task, "指定的任务[id=" + taskId + "]不存在");
-		task.setVariable(JsonHelper.toJson(args));
+		task.setVariable(JsonHelper.toJson(variableMap));
 
-		HistoricTask historicTask = new HistoricTask(task);
-		historicTask.setFinishTime(LocalDateTime.now());
-		historicTask.setTaskState(Constants.STATE_FINISH);
+		HistoricTask historicTask = HistoricTaskUtils.createHistoricTask(task);
+		historicTask.setEndTime(LocalDateTime.now());
+		historicTask.setState(Constants.STATE_FINISH);
 		historicTask.setOperator(operator);
 		historicTaskEntityService.addEntity(historicTask);
 

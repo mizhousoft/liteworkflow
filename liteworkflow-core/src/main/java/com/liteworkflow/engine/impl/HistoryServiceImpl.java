@@ -82,8 +82,8 @@ public class HistoryServiceImpl implements HistoryService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<HistoricTask> getHistoricTasks(TaskPageRequest request)
+	public Page<HistoricTask> queryPageData(TaskPageRequest request)
 	{
-		return historicTaskEntityService.queryList(request);
+		return historicTaskEntityService.queryPageData(request);
 	}
 }

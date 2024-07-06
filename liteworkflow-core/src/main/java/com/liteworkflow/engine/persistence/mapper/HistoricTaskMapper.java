@@ -3,7 +3,6 @@ package com.liteworkflow.engine.persistence.mapper;
 import java.util.List;
 
 import com.liteworkflow.engine.persistence.entity.HistoricTask;
-import com.liteworkflow.engine.persistence.request.TaskPageRequest;
 import com.mizhousoft.commons.mapper.PageableMapper;
 
 /**
@@ -20,12 +19,4 @@ public interface HistoricTaskMapper extends PageableMapper<HistoricTask, String>
 	 * @return
 	 */
 	List<HistoricTask> findByInstanceId(String instanceId);
-
-	/**
-	 * 
-	 * 
-	 * @param request
-	 * @return
-	 */
-	List<HistoricTask> findList(TaskPageRequest request);
 }

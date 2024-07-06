@@ -72,7 +72,6 @@ public class DeployCommand implements Command<ProcessDefinition>
 		processDefinition.setCategory(processModel.getCategory());
 		processDefinition.setVersion(version);
 		processDefinition.setBytes(bytes);
-		processDefinition.setInstanceUrl(processModel.getInstanceUrl());
 		processDefinition.setCreateTime(LocalDateTime.now());
 		processDefinition.setCreator(creator);
 

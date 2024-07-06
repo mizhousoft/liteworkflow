@@ -51,10 +51,10 @@ public class TestModel extends TestSpring
 		ProcessDefinition process = engine.getRepositoryService().getById(instance.getProcessDefinitionId());
 		ProcessModel processModel = process.getModel();
 
-		List<Task> tasks = engine.getTaskService().getActiveTasks(instance.getId());
+		List<Task> tasks = engine.getTaskService().queryByInstanceId(instance.getId());
 		for (Task task : tasks)
 		{
-			TaskModel model = getTaskModel(task.getTaskName(), processModel);
+			TaskModel model = getTaskModel(task.getName(), processModel);
 			System.out.println(model.getName());
 			List<TaskModel> models = model.getNextModels(TaskModel.class);
 			for (TaskModel tm : models)

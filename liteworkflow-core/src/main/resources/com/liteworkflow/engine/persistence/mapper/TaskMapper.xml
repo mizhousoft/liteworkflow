@@ -5,35 +5,32 @@
 	
 	<resultMap type="com.liteworkflow.engine.persistence.entity.Task" id="TaskMap">
 		<id property="id" column="id" />
+		<result property="processDefinitionId" column="process_def_id" />
 		<result property="instanceId" column="instance_id" />
-		<result property="taskName" column="task_name" />
+		<result property="name" column="name" />
 		<result property="displayName" column="display_name" />
 		<result property="taskType" column="task_type" />
 		<result property="performType" column="perform_type" />
 		<result property="operator" column="operator" />
 		<result property="createTime" column="create_time" />
-		<result property="finishTime" column="finish_Time" />
 		<result property="expireTime" column="expire_time" />
-		<result property="actionUrl" column="action_url" />
 		<result property="parentTaskId" column="parent_task_id" />
 		<result property="variable" column="variable" />
 		<result property="revision" column="revision" />
 	</resultMap>
 	
 	<insert id="save">
-		insert into wf_task (id, instance_id, task_name, display_name, task_type, perform_type, operator, create_time,
-		finish_Time, expire_time, action_url, parent_task_id, variable, revision)
-		values (#{id}, #{instanceId}, #{taskName}, #{displayName}, #{taskType}, #{performType}, #{operator}, #{createTime}, 
-		#{finishTime}, #{expireTime}, #{actionUrl}, #{parentTaskId}, #{variable}, #{revision})
+		insert into wf_task (id, process_def_id, instance_id, name, display_name, task_type, perform_type, operator, create_time,
+		expire_time, parent_task_id, variable, revision)
+		values (#{id}, #{processDefinitionId}, #{instanceId}, #{name}, #{displayName}, #{taskType}, #{performType}, #{operator}, #{createTime}, 
+		#{expireTime}, #{parentTaskId}, #{variable}, #{revision})
 	</insert>
 	
 	<update id="update">
         update wf_task 
-        set finish_Time= #{finishTime}, 
-        operator= #{operator}, 
+        set operator= #{operator}, 
         variable= #{variable}, 
         expire_time= #{expireTime}, 
-        action_url= #{actionUrl}, 
         revision = revision + 1 
         where id = #{id} and revision = #{revision}
 	</update>
@@ -42,27 +39,20 @@
 		delete from wf_task where id = #{id}
 	</delete>
 		
-	<select id="getTask" parameterType="java.util.Map" resultMap="TaskMap">
-		select id, instance_id, task_name, display_name, task_type, perform_type, operator, create_time, finish_Time,
-		expire_time, action_url, parent_task_id, variable, revision
+	<select id="findById" parameterType="java.util.Map" resultMap="TaskMap">
+		select id, process_def_id, instance_id, name, display_name, task_type, perform_type, operator, create_time,
+		expire_time, parent_task_id, variable, revision
 		from wf_task
-		where id = #{taskId}
-	</select>
-		
-	<select id="getNextActiveTasks" parameterType="java.util.Map" resultMap="TaskMap">
-		select id, instance_id, task_name, display_name, task_type, perform_type, operator, create_time, finish_Time,
-		expire_time, action_url, parent_task_id, variable, revision
-		from wf_task
-		where parent_task_id = #{parentTaskId}
-	</select>
-		
-	<select id="getNextActiveTaskList" parameterType="java.util.Map" resultMap="TaskMap">
-		select id, instance_id, task_name, display_name, task_type, perform_type, operator, create_time, finish_Time,
-		expire_time, action_url, parent_task_id, variable, revision
-		from wf_task
-		where parent_task_id in ( select ht.id from wf_historic_task ht where ht.instance_id = #{instanceId} and ht.task_name = #{taskName} and ht.parent_task_id = #{parentTaskId} )
+		where id = #{id}
 	</select>
 	
+	<select id="findByInstanceId" parameterType="java.util.Map" resultMap="TaskMap">
+		select id, process_def_id, instance_id, name, display_name, task_type, perform_type, operator, create_time,
+		expire_time, parent_task_id, variable, revision
+		from wf_task
+		where instance_id = #{instanceId}
+	</select>
+		
 	<select id="countTotal" resultType="Long">
 		select count(id) from wf_task 
 		<where>
@@ -70,7 +60,7 @@
                 instance_id = #{request.instanceId}
        		</if>
             <if test="request.names != null and request.names.length != 0">
-                and task_name in
+                and name in
                 <foreach collection="request.names" item="name" index="index" open="(" close=")" separator=",">
                     #{name}
                 </foreach>
@@ -85,15 +75,15 @@
 	</select>
 	
 	<select id="findPageData" parameterType="java.util.Map" resultMap="TaskMap">
-		select id, instance_id, task_name, display_name, task_type, perform_type, operator, create_time, finish_Time,
-		expire_time, action_url, parent_task_id, variable, revision 
-		from wf_task 
+		select id, process_def_id, instance_id, name, display_name, task_type, perform_type, operator, create_time,
+		expire_time, parent_task_id, variable, revision
+		from wf_task
 		<where>
 			<if test="request.instanceId != null">
                 instance_id = #{request.instanceId}
        		</if>
             <if test="request.names != null and request.names.length != 0">
-                and task_name in
+                and name in
                 <foreach collection="request.names" item="name" index="index" open="(" close=")" separator=",">
                     #{name}
                 </foreach>

@@ -27,10 +27,10 @@ public class SpelExpression implements Expression
 	 * {@inheritDoc}
 	 */
 	@Override
-	public <T> T eval(Class<T> T, String expr, Map<String, Object> args)
+	public <T> T eval(Class<T> T, String expr, Map<String, Object> variableMap)
 	{
 		EvaluationContext context = new StandardEvaluationContext();
-		for (Entry<String, Object> entry : args.entrySet())
+		for (Entry<String, Object> entry : variableMap.entrySet())
 		{
 			context.setVariable(entry.getKey(), entry.getValue());
 		}

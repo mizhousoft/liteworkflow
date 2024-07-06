@@ -3,8 +3,6 @@ package com.liteworkflow.engine.impl;
 import java.util.List;
 import java.util.Map;
 
-import com.liteworkflow.engine.ProcessInstanceService;
-import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.TaskService;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.impl.command.CompleteTaskCommand;
@@ -20,53 +18,49 @@ import com.mizhousoft.commons.data.domain.Page;
  */
 public class TaskServiceImpl extends CommonServiceImpl implements TaskService
 {
+	/**
+	 * 任务实体服务
+	 */
 	private TaskEntityService taskEntityService;
-
-	/**
-	 * 流程定义业务类
-	 */
-	protected RepositoryService repositoryService;
-
-	/**
-	 * 流程实例业务类
-	 */
-	protected ProcessInstanceService processInstanceService;
 
 	/**
 	 * 构造函数
 	 *
 	 * @param engineConfiguration
+	 * @param taskEntityService
 	 */
-	public TaskServiceImpl(ProcessEngineConfigurationImpl engineConfiguration)
+	public TaskServiceImpl(ProcessEngineConfigurationImpl engineConfiguration, TaskEntityService taskEntityService)
 	{
 		super(engineConfiguration);
+
+		this.taskEntityService = taskEntityService;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<Task> executeTask(String taskId)
+	public List<Task> complete(String taskId)
 	{
-		return executeTask(taskId, null);
+		return complete(taskId, null);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<Task> executeTask(String taskId, String operator)
+	public List<Task> complete(String taskId, String operator)
 	{
-		return executeTask(taskId, operator, null);
+		return complete(taskId, operator, null);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<Task> executeTask(String taskId, String operator, Map<String, Object> args)
+	public List<Task> complete(String taskId, String operator, Map<String, Object> variableMap)
 	{
-		commandExecutor.execute(new CompleteTaskCommand(taskId, operator, args));
+		commandExecutor.execute(new CompleteTaskCommand(taskId, operator, variableMap));
 
 		return null;
 	}
@@ -77,14 +71,14 @@ public class TaskServiceImpl extends CommonServiceImpl implements TaskService
 	@Override
 	public Task getTask(String taskId)
 	{
-		return taskEntityService.getTask(taskId);
+		return taskEntityService.getById(taskId);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<Task> getActiveTasks(String instanceId)
+	public List<Task> queryByInstanceId(String instanceId)
 	{
 		return taskEntityService.queryByInstanceId(instanceId);
 	}
@@ -96,35 +90,5 @@ public class TaskServiceImpl extends CommonServiceImpl implements TaskService
 	public Page<Task> queryPageData(TaskPageRequest request)
 	{
 		return taskEntityService.queryPageData(request);
-	}
-
-	/**
-	 * 设置taskEntityService
-	 * 
-	 * @param taskEntityService
-	 */
-	public void setTaskEntityService(TaskEntityService taskEntityService)
-	{
-		this.taskEntityService = taskEntityService;
-	}
-
-	/**
-	 * 设置repositoryService
-	 * 
-	 * @param repositoryService
-	 */
-	public void setRepositoryService(RepositoryService repositoryService)
-	{
-		this.repositoryService = repositoryService;
-	}
-
-	/**
-	 * 设置processInstanceService
-	 * 
-	 * @param processInstanceService
-	 */
-	public void setProcessInstanceService(ProcessInstanceService processInstanceService)
-	{
-		this.processInstanceService = processInstanceService;
 	}
 }

@@ -49,9 +49,9 @@ public class RuntimeServiceImpl extends CommonServiceImpl implements RuntimeServ
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessInstance startInstanceById(String processDefinitionId, String operator, Map<String, Object> args)
+	public ProcessInstance startInstanceById(String processDefinitionId, String operator, Map<String, Object> variableMap)
 	{
-		return commandExecutor.execute(new StartProcessInstanceCommand(null, processDefinitionId, null, operator, args));
+		return commandExecutor.execute(new StartProcessInstanceCommand(null, processDefinitionId, null, operator, variableMap));
 	}
 
 	/**
@@ -76,9 +76,9 @@ public class RuntimeServiceImpl extends CommonServiceImpl implements RuntimeServ
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessInstance startInstanceByName(String processDefinitionName, String operator, Map<String, Object> args)
+	public ProcessInstance startInstanceByName(String processDefinitionName, String operator, Map<String, Object> variableMap)
 	{
-		return commandExecutor.execute(new StartProcessInstanceCommand(processDefinitionName, null, null, operator, args));
+		return commandExecutor.execute(new StartProcessInstanceCommand(processDefinitionName, null, null, operator, variableMap));
 	}
 
 	/**

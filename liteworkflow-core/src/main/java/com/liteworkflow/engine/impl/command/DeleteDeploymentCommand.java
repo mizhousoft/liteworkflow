@@ -22,7 +22,7 @@ public class DeleteDeploymentCommand implements Command<ProcessDefinition>
 	/**
 	 * 流程定义ID
 	 */
-	private String id;
+	private String processDefinitionId;
 
 	/**
 	 * 是否级联删除流程、任务、历史等数据
@@ -32,13 +32,13 @@ public class DeleteDeploymentCommand implements Command<ProcessDefinition>
 	/**
 	 * 构造函数
 	 *
-	 * @param id
+	 * @param processDefinitionId
 	 * @param cascade
 	 */
-	public DeleteDeploymentCommand(String id, boolean cascade)
+	public DeleteDeploymentCommand(String processDefinitionId, boolean cascade)
 	{
 		super();
-		this.id = id;
+		this.processDefinitionId = processDefinitionId;
 		this.cascade = cascade;
 	}
 
@@ -54,15 +54,15 @@ public class DeleteDeploymentCommand implements Command<ProcessDefinition>
 		HistoricProcessInstanceEntityService historicProcessInstanceEntityService = engineConfiguration
 		        .getHistoricProcessInstanceEntityService();
 
-		ProcessDefinition processDefinition = processDefinitionEntityService.getById(id);
-		Assert.notNull(processDefinition, "Process definition not found, id is " + id + '.');
+		ProcessDefinition processDefinition = processDefinitionEntityService.getById(processDefinitionId);
+		Assert.notNull(processDefinition, "Process definition not found, id is " + processDefinitionId + '.');
 
 		if (cascade)
 		{
-			Set<String> instanceIds = historicProcessInstanceEntityService.queryIdsByProcessDefinitionId(id);
+			Set<String> instanceIds = historicProcessInstanceEntityService.queryIdsByProcessDefinitionId(processDefinitionId);
 			for (String instanceId : instanceIds)
 			{
-				processInstanceService.cascadeRemove(instanceId);
+				processInstanceService.deleteInstance(instanceId);
 			}
 		}
 

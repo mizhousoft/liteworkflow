@@ -7,74 +7,48 @@ import com.liteworkflow.engine.persistence.request.TaskPageRequest;
 import com.mizhousoft.commons.data.domain.Page;
 
 /**
- * TaskEntityService
+ * 任务实体服务
  *
  * @version
  */
 public interface TaskEntityService
 {
 	/**
-	 * 保存任务对象
+	 * 新增任务
 	 * 
-	 * @param task 任务对象
+	 * @param task
 	 */
 	void addEntity(Task task);
 
 	/**
-	 * 更新任务对象
+	 * 修改任务
 	 * 
-	 * @param task 任务对象
+	 * @param task
 	 */
 	void modifyEntity(Task task);
 
 	/**
-	 * 删除任务、任务参与者对象
+	 * 修改任务
 	 * 
-	 * @param task 任务对象
+	 * @param task
 	 */
 	void deleteEntity(Task task);
 
 	/**
-	 * 根据任务id查询任务对象
+	 * 根据任务ID查询
 	 * 
-	 * @param taskId 任务id
-	 * @return Task 任务对象
+	 * @param id
+	 * @return
 	 */
-	Task getTask(String taskId);
+	Task getById(String id);
 
 	/**
-	 * 根据父任务id查询所有子任务
+	 * 根据实例ID查询任务
 	 * 
-	 * @param parentTaskId 父任务id
-	 * @return List<Task> 活动任务集合
-	 */
-	List<Task> getNextActiveTasks(String parentTaskId);
-
-	/**
-	 * 根据流程实例id、任务名称获取
-	 * 
-	 * @param instanceId 流程实例id
-	 * @param taskName 任务名称
-	 * @param parentTaskId 父任务id
-	 * @return List<Task> 活动任务集合
-	 */
-	List<Task> getNextActiveTaskList(String instanceId, String taskName, String parentTaskId);
-
-	/**
-	 * 
-	 * 
-	 * @param
+	 * @param instanceId
 	 * @return
 	 */
 	List<Task> queryByInstanceId(String instanceId);
-
-	/**
-	 * 
-	 * 
-	 * @param request
-	 * @return
-	 */
-	List<Task> queryList(TaskPageRequest request);
 
 	/**
 	 * 分页查询

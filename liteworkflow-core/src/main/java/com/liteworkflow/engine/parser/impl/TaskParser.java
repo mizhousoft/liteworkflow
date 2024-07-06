@@ -42,14 +42,12 @@ public class TaskParser extends AbstractNodeParser
 	protected void doParseNode(NodeModel node, Element element)
 	{
 		TaskModel task = (TaskModel) node;
-		task.setForm(element.getAttribute(ATTR_FORM));
 		task.setAssignee(element.getAttribute(ATTR_ASSIGNEE));
 		task.setExpireTime(element.getAttribute(ATTR_EXPIRETIME));
 		task.setAutoExecute(element.getAttribute(ATTR_AUTOEXECUTE));
 		task.setReminderTime(element.getAttribute(ATTR_REMINDERTIME));
 		task.setReminderRepeat(element.getAttribute(ATTR_REMINDERREPEAT));
 		task.setPerformType(element.getAttribute(ATTR_PERFORMTYPE));
-		task.setTaskType(element.getAttribute(ATTR_TASKTYPE));
 
 		List<ListenerModel> listenerModels = parseExtensionElements(element);
 		task.setListenerModels(listenerModels);

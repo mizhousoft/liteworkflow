@@ -27,6 +27,7 @@ import com.liteworkflow.engine.persistence.entity.Task;
 import com.liteworkflow.engine.persistence.service.HistoricTaskEntityService;
 import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.TaskEntityService;
+import com.liteworkflow.engine.util.HistoricTaskUtils;
 
 /**
  * 完成任务指令
@@ -41,21 +42,21 @@ public class CompleteTaskCommand implements Command<Void>
 
 	private String operator;
 
-	private Map<String, Object> args;
+	private Map<String, Object> variableMap;
 
 	/**
 	 * 构造函数
 	 *
 	 * @param taskId
 	 * @param operator
-	 * @param args
+	 * @param variableMap
 	 */
-	public CompleteTaskCommand(String taskId, String operator, Map<String, Object> args)
+	public CompleteTaskCommand(String taskId, String operator, Map<String, Object> variableMap)
 	{
 		super();
 		this.taskId = taskId;
 		this.operator = operator;
-		this.args = args;
+		this.variableMap = variableMap;
 	}
 
 	/**
@@ -65,14 +66,14 @@ public class CompleteTaskCommand implements Command<Void>
 	public Void execute(CommandContext commandContext)
 	{
 		// 完成任务，并且构造执行对象
-		Execution execution = execute(taskId, operator, args, commandContext);
+		Execution execution = execute(taskId, operator, variableMap, commandContext);
 		if (execution == null)
 			return null;
 
 		ProcessModel model = execution.getProcessDefinition().getModel();
 		if (model != null)
 		{
-			NodeModel nodeModel = model.getNodeModel(execution.getTask().getTaskName());
+			NodeModel nodeModel = model.getNodeModel(execution.getTask().getName());
 			// 将执行对象交给该任务对应的节点模型执行
 			FlowExecutor executor = FlowExecutorFactory.build(nodeModel);
 			executor.execute(execution, nodeModel);
@@ -81,62 +82,59 @@ public class CompleteTaskCommand implements Command<Void>
 		return null;
 	}
 
-	private Execution execute(String taskId, String operator, Map<String, Object> args, CommandContext commandContext)
+	private Execution execute(String taskId, String operator, Map<String, Object> variableMap, CommandContext commandContext)
 	{
-		if (args == null)
-			args = new HashMap<String, Object>();
-		Task task = complete(taskId, operator, args, commandContext);
+		if (variableMap == null)
+			variableMap = new HashMap<String, Object>();
+		Task task = complete(taskId, operator, variableMap, commandContext);
 
 		LOG.debug("任务[taskId=" + taskId + "]已完成");
 
-		ProcessEngineConfigurationImpl processEngineConfiguration = commandContext.getEngineConfiguration();
-		ProcessInstanceService processInstanceService = processEngineConfiguration.getProcessInstanceService();
-		ProcessInstanceEntityService processInstanceEntityService = processEngineConfiguration.getProcessInstanceEntityService();
+		ProcessEngineConfigurationImpl engineConfiguration = commandContext.getEngineConfiguration();
+		ProcessInstanceService processInstanceService = engineConfiguration.getProcessInstanceService();
+		ProcessInstanceEntityService processInstanceEntityService = engineConfiguration.getProcessInstanceEntityService();
 
 		ProcessInstance instance = processInstanceService.getInstance(task.getInstanceId());
 		Assert.notNull(instance, "指定的流程实例[id=" + task.getInstanceId() + "]已完成或不存在");
 		processInstanceEntityService.modifyEntity(instance);
 
-		// 协办任务完成不产生执行对象
-		if (!task.isMajor())
-		{
-			return null;
-		}
 		Map<String, Object> instanceVarMaps = instance.getVariableMap();
 		if (instanceVarMaps != null)
 		{
 			for (Map.Entry<String, Object> entry : instanceVarMaps.entrySet())
 			{
-				if (args.containsKey(entry.getKey()))
+				if (variableMap.containsKey(entry.getKey()))
 				{
 					continue;
 				}
-				args.put(entry.getKey(), entry.getValue());
+
+				variableMap.put(entry.getKey(), entry.getValue());
 			}
 		}
 
-		RepositoryService repositoryService = processEngineConfiguration.getRepositoryService();
+		RepositoryService repositoryService = engineConfiguration.getRepositoryService();
 
 		ProcessDefinition process = repositoryService.getById(instance.getProcessDefinitionId());
-		Execution execution = new Execution(processEngineConfiguration, process, instance, args);
+		Execution execution = new Execution(engineConfiguration, process, instance, variableMap);
 		execution.setOperator(operator);
 		execution.setTask(task);
+
 		return execution;
 	}
 
-	public Task complete(String taskId, String operator, Map<String, Object> args, CommandContext commandContext)
+	public Task complete(String taskId, String operator, Map<String, Object> variableMap, CommandContext commandContext)
 	{
-		ProcessEngineConfigurationImpl processEngineConfiguration = commandContext.getEngineConfiguration();
-		TaskEntityService taskEntityService = processEngineConfiguration.getTaskEntityService();
-		HistoricTaskEntityService historicTaskEntityService = processEngineConfiguration.getHistoricTaskEntityService();
+		ProcessEngineConfigurationImpl engineConfiguration = commandContext.getEngineConfiguration();
+		TaskEntityService taskEntityService = engineConfiguration.getTaskEntityService();
+		HistoricTaskEntityService historicTaskEntityService = engineConfiguration.getHistoricTaskEntityService();
 
-		Task task = taskEntityService.getTask(taskId);
+		Task task = taskEntityService.getById(taskId);
 		Assert.notNull(task, "指定的任务[id=" + taskId + "]不存在");
-		task.setVariable(JsonHelper.toJson(args));
+		task.setVariable(JsonHelper.toJson(variableMap));
 
-		HistoricTask historicTask = new HistoricTask(task);
-		historicTask.setFinishTime(LocalDateTime.now());
-		historicTask.setTaskState(Constants.STATE_FINISH);
+		HistoricTask historicTask = HistoricTaskUtils.createHistoricTask(task);
+		historicTask.setEndTime(LocalDateTime.now());
+		historicTask.setState(Constants.STATE_FINISH);
 		historicTask.setOperator(operator);
 		historicTaskEntityService.addEntity(historicTask);
 

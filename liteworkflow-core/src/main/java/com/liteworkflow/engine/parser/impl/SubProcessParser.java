@@ -1,6 +1,5 @@
 package com.liteworkflow.engine.parser.impl;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.w3c.dom.Element;
 
@@ -47,11 +46,5 @@ public class SubProcessParser extends AbstractNodeParser
 			ver = Integer.parseInt(version);
 		}
 		model.setVersion(ver);
-
-		String form = element.getAttribute(ATTR_FORM);
-		if (!StringUtils.isBlank(form))
-		{
-			model.setForm(form);
-		}
 	}
 }

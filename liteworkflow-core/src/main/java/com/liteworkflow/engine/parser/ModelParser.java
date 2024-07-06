@@ -80,7 +80,6 @@ public class ModelParser
 			process.setDisplayName(processE.getAttribute(NodeParser.ATTR_DISPLAYNAME));
 			process.setCategory(StringUtils.trimToNull(processE.getAttribute(NodeParser.ATTR_CATEGORY)));
 			process.setExpireTime(processE.getAttribute(NodeParser.ATTR_EXPIRETIME));
-			process.setInstanceUrl(processE.getAttribute(NodeParser.ATTR_INSTANCEURL));
 
 			List<NodeModel> nodeModels = parseNodeList(processE.getChildNodes());
 			process.setNodeModels(nodeModels);

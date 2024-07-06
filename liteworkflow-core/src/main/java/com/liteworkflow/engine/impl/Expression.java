@@ -15,8 +15,8 @@ public interface Expression
 	 * 
 	 * @param T 返回类型
 	 * @param expr 表达式串
-	 * @param args 参数列表
+	 * @param variableMap 参数列表
 	 * @return T 返回对象
 	 */
-	public <T> T eval(Class<T> T, String expr, Map<String, Object> args);
+	public <T> T eval(Class<T> T, String expr, Map<String, Object> variableMap);
 }

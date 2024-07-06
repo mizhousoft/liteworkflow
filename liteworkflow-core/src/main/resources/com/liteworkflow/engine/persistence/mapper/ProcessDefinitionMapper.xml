@@ -10,26 +10,24 @@
 		<result property="category" column="category" />
 		<result property="version" column="version" />
 		<result property="bytes" column="content" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
-		<result property="instanceUrl" column="instance_url" />
 		<result property="createTime" column="create_time" />
 		<result property="creator" column="creator" />
 	</resultMap>
 	
 	<sql id="Column_List">
-        id, name, display_name, category, version, content, instance_url, create_time, creator
+        id, name, display_name, category, version, content, create_time, creator
     </sql>
 	
 	<insert id="save">
-		insert into wf_process_definition (id, name, display_name, category, version, content, instance_url, create_time, creator)
-		values (#{id}, #{name}, #{displayName}, #{category}, #{version}, #{bytes, typeHandler=org.apache.ibatis.type.BlobTypeHandler}, #{instanceUrl}, #{createTime}, #{creator})
+		insert into wf_process_definition (id, name, display_name, category, version, content, create_time, creator)
+		values (#{id}, #{name}, #{displayName}, #{category}, #{version}, #{bytes, typeHandler=org.apache.ibatis.type.BlobTypeHandler}, #{createTime}, #{creator})
 	</insert>
 
 	<update id="update">
         update wf_process_definition 
         set display_name = #{displayName},
         category = #{category},
-        content = #{bytes, typeHandler=org.apache.ibatis.type.BlobTypeHandler},
-        instance_url = #{instanceUrl}
+        content = #{bytes, typeHandler=org.apache.ibatis.type.BlobTypeHandler}
         where id = #{id} 
 	</update>
 

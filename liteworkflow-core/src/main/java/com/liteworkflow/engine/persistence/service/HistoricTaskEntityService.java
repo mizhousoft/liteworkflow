@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.liteworkflow.engine.persistence.entity.HistoricTask;
 import com.liteworkflow.engine.persistence.request.TaskPageRequest;
+import com.mizhousoft.commons.data.domain.Page;
 
 /**
  * 历史任务实例服务
@@ -29,10 +30,10 @@ public interface HistoricTaskEntityService
 	/**
 	 * 根据ID获取历史任务
 	 * 
-	 * @param taskId
+	 * @param id
 	 * @return
 	 */
-	HistoricTask getById(String taskId);
+	HistoricTask getById(String id);
 
 	/**
 	 * 根据流程实例ID查询历史任务
@@ -48,5 +49,5 @@ public interface HistoricTaskEntityService
 	 * @param request
 	 * @return
 	 */
-	List<HistoricTask> queryList(TaskPageRequest request);
+	Page<HistoricTask> queryPageData(TaskPageRequest request);
 }

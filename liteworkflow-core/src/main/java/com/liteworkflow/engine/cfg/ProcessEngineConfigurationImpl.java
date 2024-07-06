@@ -236,17 +236,11 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		HistoryServiceImpl historyService = new HistoryServiceImpl(historicTaskEntityService, historicProcessInstanceEntityService);
 		this.historyService = historyService;
 
-		ProcessInstanceServiceImpl processInstanceService = new ProcessInstanceServiceImpl();
-		processInstanceService.setHistoricProcessInstanceEntityService(historicProcessInstanceEntityService);
-		processInstanceService.setHistoricTaskEntityService(historicTaskEntityService);
-		processInstanceService.setProcessInstanceEntityService(processInstanceEntityService);
-		processInstanceService.setTaskEntityService(taskEntityService);
+		ProcessInstanceServiceImpl processInstanceService = new ProcessInstanceServiceImpl(this, processInstanceEntityService);
+		processInstanceService.setCommandExecutor(commandExecutor);
 		this.processInstanceService = processInstanceService;
 
-		TaskServiceImpl taskService = new TaskServiceImpl(this);
-		taskService.setTaskEntityService(taskEntityService);
-		taskService.setRepositoryService(repositoryService);
-		taskService.setProcessInstanceService(processInstanceService);
+		TaskServiceImpl taskService = new TaskServiceImpl(this, taskEntityService);
 		taskService.setCommandExecutor(commandExecutor);
 		this.taskService = taskService;
 
@@ -310,8 +304,7 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		factoryBean.afterPropertiesSet();
 		TaskMapper taskMapper = (TaskMapper) factoryBean.getObject();
 
-		TaskEntityServiceImpl taskEntityService = new TaskEntityServiceImpl();
-		taskEntityService.setTaskMapper(taskMapper);
+		TaskEntityServiceImpl taskEntityService = new TaskEntityServiceImpl(taskMapper);
 
 		return taskEntityService;
 	}

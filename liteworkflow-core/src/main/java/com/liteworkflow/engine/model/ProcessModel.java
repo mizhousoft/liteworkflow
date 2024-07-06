@@ -31,11 +31,6 @@ public class ProcessModel extends BaseModel
 	private String category;
 
 	/**
-	 * 流程实例启动url
-	 */
-	private String instanceUrl;
-
-	/**
 	 * 期望完成时间
 	 */
 	private String expireTime;
@@ -206,26 +201,6 @@ public class ProcessModel extends BaseModel
 	public void setCategory(String category)
 	{
 		this.category = category;
-	}
-
-	/**
-	 * 获取instanceUrl
-	 * 
-	 * @return
-	 */
-	public String getInstanceUrl()
-	{
-		return instanceUrl;
-	}
-
-	/**
-	 * 设置instanceUrl
-	 * 
-	 * @param instanceUrl
-	 */
-	public void setInstanceUrl(String instanceUrl)
-	{
-		this.instanceUrl = instanceUrl;
 	}
 
 	/**
