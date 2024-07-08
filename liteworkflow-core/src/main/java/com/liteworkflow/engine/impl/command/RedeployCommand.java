@@ -10,8 +10,8 @@ import com.liteworkflow.WorkFlowException;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.impl.Command;
 import com.liteworkflow.engine.impl.CommandContext;
-import com.liteworkflow.engine.model.ProcessModel;
-import com.liteworkflow.engine.parser.ModelParser;
+import com.liteworkflow.engine.model.BpmnModel;
+import com.liteworkflow.engine.parser.BpmnParser;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.service.ProcessDefinitionEntityService;
 
@@ -30,20 +30,20 @@ public class RedeployCommand implements Command<ProcessDefinition>
 	/**
 	 * 流程定义ID
 	 */
-	private String id;
+	private String processDefinitionId;
 
 	/**
 	 * 构造函数
 	 *
-	 * @param input
-	 * @param id
+	 * @param istream
+	 * @param processDefinitionId
 	 */
-	public RedeployCommand(InputStream input, String id)
+	public RedeployCommand(InputStream istream, String processDefinitionId)
 	{
 		try
 		{
-			this.bytes = IOUtils.toByteArray(input);
-			this.id = id;
+			this.bytes = IOUtils.toByteArray(istream);
+			this.processDefinitionId = processDefinitionId;
 		}
 		catch (IOException e)
 		{
@@ -60,19 +60,18 @@ public class RedeployCommand implements Command<ProcessDefinition>
 		ProcessEngineConfigurationImpl engineConfiguration = context.getEngineConfiguration();
 		ProcessDefinitionEntityService processDefinitionEntityService = engineConfiguration.getProcessDefinitionEntityService();
 
-		ProcessDefinition processDefinition = processDefinitionEntityService.getById(id);
-		Assert.notNull(processDefinition, "Process definition not found, id is " + id);
+		ProcessDefinition processDefinition = processDefinitionEntityService.getById(processDefinitionId);
+		Assert.notNull(processDefinition, "Process definition not found, id is " + processDefinitionId);
 
-		ProcessModel processModel = ModelParser.parse(bytes);
+		BpmnModel bpmnModel = BpmnParser.parse(bytes);
 
-		processDefinition.setName(processModel.getName());
-		processDefinition.setDisplayName(processModel.getDisplayName());
-		processDefinition.setCategory(processModel.getCategory());
+		processDefinition.setName(bpmnModel.getDisplayName());
+		processDefinition.setCategory(bpmnModel.getCategory());
 		processDefinition.setBytes(bytes);
 
 		processDefinitionEntityService.modifyEntity(processDefinition);
 
-		processDefinition.setModel(processModel);
+		processDefinition.setBpmnModel(bpmnModel);
 
 		return processDefinition;
 	}

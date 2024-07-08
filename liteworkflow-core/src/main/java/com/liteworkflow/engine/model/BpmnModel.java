@@ -4,26 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 流程定义process元素
+ * 流程定义模型
  * 
  * @version
  */
-public class ProcessModel extends BaseModel
+public class BpmnModel extends FlowElement
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -9000210138346445915L;
-
 	/**
 	 * 节点元素集合
 	 */
-	private List<NodeModel> nodeModels = new ArrayList<NodeModel>();
+	private List<FlowNode> nodeModels = new ArrayList<FlowNode>();
 
 	/**
 	 * 任务元素集合
 	 */
-	private List<TaskModel> taskModels = new ArrayList<TaskModel>();
+	private List<UserTaskModel> taskModels = new ArrayList<UserTaskModel>();
 
 	/**
 	 * 流程分类
@@ -36,20 +31,20 @@ public class ProcessModel extends BaseModel
 	private String expireTime;
 
 	/**
-	 * 监听器模型
+	 * 监听器元素
 	 */
-	private List<ListenerModel> listenerModels;
+	private List<EventListenerElement> eventListeners;
 
 	/**
 	 * 获取所有的有序任务模型集合
 	 * 
 	 * @return List<TaskModel> 任务模型集合
 	 */
-	public synchronized List<TaskModel> getTaskModels()
+	public synchronized List<UserTaskModel> getTaskModels()
 	{
 		if (taskModels.isEmpty())
 		{
-			buildModels(taskModels, getStartModel().getNextModels(TaskModel.class), TaskModel.class);
+			buildModels(taskModels, getStartModel().getNextModels(UserTaskModel.class), UserTaskModel.class);
 		}
 
 		return taskModels;
@@ -76,7 +71,7 @@ public class ProcessModel extends BaseModel
 			if (!models.contains(nextModel))
 			{
 				models.add(nextModel);
-				buildModels(models, ((NodeModel) nextModel).getNextModels(clazz), clazz);
+				buildModels(models, ((FlowNode) nextModel).getNextModels(clazz), clazz);
 			}
 		}
 	}
@@ -86,11 +81,11 @@ public class ProcessModel extends BaseModel
 	 * 
 	 * @return
 	 */
-	public StartModel getStartModel()
+	public StartEventModel getStartModel()
 	{
-		for (NodeModel nodeModel : nodeModels)
+		for (FlowNode nodeModel : nodeModels)
 		{
-			if (nodeModel instanceof StartModel startModel)
+			if (nodeModel instanceof StartEventModel startModel)
 			{
 				return startModel;
 			}
@@ -104,11 +99,11 @@ public class ProcessModel extends BaseModel
 	 * 
 	 * @return
 	 */
-	public EndModel getEndModel()
+	public EndEventModel getEndModel()
 	{
-		for (NodeModel nodeModel : nodeModels)
+		for (FlowNode nodeModel : nodeModels)
 		{
-			if (nodeModel instanceof EndModel endModel)
+			if (nodeModel instanceof EndEventModel endModel)
 			{
 				return endModel;
 			}
@@ -120,14 +115,14 @@ public class ProcessModel extends BaseModel
 	/**
 	 * 获取process定义的指定节点名称的节点模型
 	 * 
-	 * @param nodeName 节点名称
+	 * @param nodeId 节点ID
 	 * @return
 	 */
-	public NodeModel getNodeModel(String nodeName)
+	public FlowNode getNodeModel(String nodeId)
 	{
-		for (NodeModel nodeModel : nodeModels)
+		for (FlowNode nodeModel : nodeModels)
 		{
-			if (nodeModel.getName().equals(nodeName))
+			if (nodeModel.getId().equals(nodeId))
 			{
 				return nodeModel;
 			}
@@ -139,21 +134,21 @@ public class ProcessModel extends BaseModel
 	/**
 	 * 判断当前模型的节点是否包含给定的节点名称参数
 	 * 
-	 * @param nodeNames 节点名称数组
+	 * @param nodeIds 节点Id数组
 	 * @return
 	 */
-	public <T> boolean containsNodeNames(Class<T> T, String... nodeNames)
+	public <T> boolean containsNodeNames(Class<T> T, String... nodeIds)
 	{
-		for (NodeModel node : nodeModels)
+		for (FlowNode node : nodeModels)
 		{
 			if (!T.isInstance(node))
 			{
 				continue;
 			}
 
-			for (String nodeName : nodeNames)
+			for (String nodeId : nodeIds)
 			{
-				if (node.getName().equals(nodeName))
+				if (node.getId().equals(nodeId))
 				{
 					return true;
 				}
@@ -168,7 +163,7 @@ public class ProcessModel extends BaseModel
 	 * 
 	 * @return
 	 */
-	public List<NodeModel> getNodeModels()
+	public List<FlowNode> getNodeModels()
 	{
 		return nodeModels;
 	}
@@ -178,7 +173,7 @@ public class ProcessModel extends BaseModel
 	 * 
 	 * @param nodeModels
 	 */
-	public void setNodeModels(List<NodeModel> nodeModels)
+	public void setNodeModels(List<FlowNode> nodeModels)
 	{
 		this.nodeModels = nodeModels;
 	}
@@ -228,28 +223,28 @@ public class ProcessModel extends BaseModel
 	 * 
 	 * @param taskModels
 	 */
-	public void setTaskModels(List<TaskModel> taskModels)
+	public void setTaskModels(List<UserTaskModel> taskModels)
 	{
 		this.taskModels = taskModels;
 	}
 
 	/**
-	 * 获取listenerModels
+	 * 获取eventListeners
 	 * 
 	 * @return
 	 */
-	public List<ListenerModel> getListenerModels()
+	public List<EventListenerElement> getEventListeners()
 	{
-		return listenerModels;
+		return eventListeners;
 	}
 
 	/**
-	 * 设置listenerModels
+	 * 设置eventListeners
 	 * 
-	 * @param listenerModels
+	 * @param eventListeners
 	 */
-	public void setListenerModels(List<ListenerModel> listenerModels)
+	public void setEventListeners(List<EventListenerElement> eventListeners)
 	{
-		this.listenerModels = listenerModels;
+		this.eventListeners = eventListeners;
 	}
 }

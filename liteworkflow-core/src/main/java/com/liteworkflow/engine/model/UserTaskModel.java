@@ -9,13 +9,8 @@ import org.apache.commons.lang3.StringUtils;
  * 
  * @version
  */
-public class TaskModel extends ActivityModel
+public class UserTaskModel extends ActivityModel
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1775545243233990922L;
-
 	/**
 	 * 类型：普通任务
 	 */
@@ -27,29 +22,11 @@ public class TaskModel extends ActivityModel
 	public static final String PERFORMTYPE_ALL = "ALL";
 
 	/**
-	 * 类型：主办任务
-	 */
-	public static final String TASKTYPE_MAJOR = "Major";
-
-	/**
-	 * 类型：协办任务
-	 */
-	public static final String TASKTYPE_AIDANT = "Aidant";
-
-	/**
 	 * 参与类型
 	 */
 	public enum PerformType
 	{
 		ANY, ALL;
-	}
-
-	/**
-	 * 任务类型(Major:主办的,Aidant:协助的,Record:仅仅作为记录的)
-	 */
-	public enum TaskType
-	{
-		Major, Aidant, Record;
 	}
 
 	/**
@@ -85,9 +62,9 @@ public class TaskModel extends ActivityModel
 	private String autoExecute;
 
 	/**
-	 * 监听器模型
+	 * 事件监听器
 	 */
-	private List<ListenerModel> listenerModels;
+	private List<EventListenerElement> eventListeners;
 
 	public boolean isPerformAny()
 	{
@@ -160,22 +137,22 @@ public class TaskModel extends ActivityModel
 	}
 
 	/**
-	 * 获取listenerModels
+	 * 获取eventListeners
 	 * 
 	 * @return
 	 */
-	public List<ListenerModel> getListenerModels()
+	public List<EventListenerElement> getEventListeners()
 	{
-		return listenerModels;
+		return eventListeners;
 	}
 
 	/**
-	 * 设置listenerModels
+	 * 设置eventListeners
 	 * 
-	 * @param listenerModels
+	 * @param eventListeners
 	 */
-	public void setListenerModels(List<ListenerModel> listenerModels)
+	public void setEventListeners(List<EventListenerElement> eventListeners)
 	{
-		this.listenerModels = listenerModels;
+		this.eventListeners = eventListeners;
 	}
 }

@@ -1,7 +1,7 @@
 package com.liteworkflow.engine.parser.impl;
 
-import com.liteworkflow.engine.model.JoinModel;
-import com.liteworkflow.engine.model.NodeModel;
+import com.liteworkflow.engine.model.JoinGatewayModel;
+import com.liteworkflow.engine.model.FlowNode;
 import com.liteworkflow.engine.parser.AbstractNodeParser;
 
 /**
@@ -9,14 +9,14 @@ import com.liteworkflow.engine.parser.AbstractNodeParser;
  * 
  * @version
  */
-public class JoinParser extends AbstractNodeParser
+public class JoinGatewayParser extends AbstractNodeParser
 {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected NodeModel newModel()
+	protected FlowNode newModel()
 	{
-		return new JoinModel();
+		return new JoinGatewayModel();
 	}
 
 	/**
@@ -25,6 +25,6 @@ public class JoinParser extends AbstractNodeParser
 	@Override
 	public String getNodeName()
 	{
-		return "join";
+		return "joinGateway";
 	}
 }

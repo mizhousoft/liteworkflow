@@ -2,7 +2,7 @@ package com.liteworkflow.engine.scheduling;
 
 import java.util.Map;
 
-import com.liteworkflow.engine.model.NodeModel;
+import com.liteworkflow.engine.model.FlowNode;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 
 /**
@@ -22,5 +22,5 @@ public interface IReminder
 	 * @param nodeModel 节点模型
 	 * @param data 数据
 	 */
-	void remind(ProcessDefinition process, String instanceId, String taskId, NodeModel nodeModel, Map<String, Object> data);
+	void remind(ProcessDefinition process, String instanceId, String taskId, FlowNode nodeModel, Map<String, Object> data);
 }

@@ -6,9 +6,9 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Element;
 
-import com.liteworkflow.engine.model.ListenerModel;
-import com.liteworkflow.engine.model.NodeModel;
-import com.liteworkflow.engine.model.TaskModel;
+import com.liteworkflow.engine.model.EventListenerElement;
+import com.liteworkflow.engine.model.FlowNode;
+import com.liteworkflow.engine.model.UserTaskModel;
 import com.liteworkflow.engine.parser.AbstractNodeParser;
 import com.liteworkflow.engine.util.DomUtils;
 
@@ -17,14 +17,14 @@ import com.liteworkflow.engine.util.DomUtils;
  * 
  * @version
  */
-public class TaskParser extends AbstractNodeParser
+public class UserTaskParser extends AbstractNodeParser
 {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected NodeModel newModel()
+	protected FlowNode newModel()
 	{
-		return new TaskModel();
+		return new UserTaskModel();
 	}
 
 	/**
@@ -33,15 +33,15 @@ public class TaskParser extends AbstractNodeParser
 	@Override
 	public String getNodeName()
 	{
-		return "task";
+		return "userTask";
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	protected void doParseNode(NodeModel node, Element element)
+	protected void doParseNode(FlowNode node, Element element)
 	{
-		TaskModel task = (TaskModel) node;
+		UserTaskModel task = (UserTaskModel) node;
 		task.setAssignee(element.getAttribute(ATTR_ASSIGNEE));
 		task.setExpireTime(element.getAttribute(ATTR_EXPIRETIME));
 		task.setAutoExecute(element.getAttribute(ATTR_AUTOEXECUTE));
@@ -49,8 +49,8 @@ public class TaskParser extends AbstractNodeParser
 		task.setReminderRepeat(element.getAttribute(ATTR_REMINDERREPEAT));
 		task.setPerformType(element.getAttribute(ATTR_PERFORMTYPE));
 
-		List<ListenerModel> listenerModels = parseExtensionElements(element);
-		task.setListenerModels(listenerModels);
+		List<EventListenerElement> eventListeners = parseEventListenerElements(element);
+		task.setEventListeners(eventListeners);
 	}
 
 	/**
@@ -59,9 +59,9 @@ public class TaskParser extends AbstractNodeParser
 	 * @param taskElement
 	 * @return
 	 */
-	private List<ListenerModel> parseExtensionElements(Element taskElement)
+	private List<EventListenerElement> parseEventListenerElements(Element taskElement)
 	{
-		List<ListenerModel> listenerModels = new ArrayList<>(5);
+		List<EventListenerElement> eventListeners = new ArrayList<>(5);
 
 		Element extensionElement = DomUtils.listFirstChildElement(taskElement, NODE_EXTENSION_ELEMENTS);
 		if (null != extensionElement)
@@ -73,24 +73,24 @@ public class TaskParser extends AbstractNodeParser
 				String clazz = listenerElement.getAttribute(ATTR_CLASS);
 				String delegateExpression = listenerElement.getAttribute(ATTR_DELEGATE_EXPRESSION);
 
-				ListenerModel listenerModel = new ListenerModel();
-				listenerModel.setEvent(event);
+				EventListenerElement eventListener = new EventListenerElement();
+				eventListener.setEvent(event);
 
 				if (!StringUtils.isBlank(clazz))
 				{
-					listenerModel.setImplementationType(ListenerModel.IMPLEMENTATION_TYPE_CLASS);
-					listenerModel.setImplementation(clazz);
+					eventListener.setImplementationType(EventListenerElement.IMPLEMENTATION_TYPE_CLASS);
+					eventListener.setImplementation(clazz);
 				}
 				else if (!StringUtils.isBlank(delegateExpression))
 				{
-					listenerModel.setImplementationType(ListenerModel.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION);
-					listenerModel.setImplementation(delegateExpression);
+					eventListener.setImplementationType(EventListenerElement.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION);
+					eventListener.setImplementation(delegateExpression);
 				}
 
-				listenerModels.add(listenerModel);
+				eventListeners.add(eventListener);
 			}
 		}
 
-		return listenerModels;
+		return eventListeners;
 	}
 }

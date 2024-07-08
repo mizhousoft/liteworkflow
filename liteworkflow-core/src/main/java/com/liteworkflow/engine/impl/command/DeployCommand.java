@@ -11,8 +11,8 @@ import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.impl.Command;
 import com.liteworkflow.engine.impl.CommandContext;
-import com.liteworkflow.engine.model.ProcessModel;
-import com.liteworkflow.engine.parser.ModelParser;
+import com.liteworkflow.engine.model.BpmnModel;
+import com.liteworkflow.engine.parser.BpmnParser;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.service.ProcessDefinitionEntityService;
 
@@ -36,14 +36,14 @@ public class DeployCommand implements Command<ProcessDefinition>
 	/**
 	 * 构造函数
 	 *
-	 * @param input
+	 * @param istream
 	 * @param creator
 	 */
-	public DeployCommand(InputStream input, String creator)
+	public DeployCommand(InputStream istream, String creator)
 	{
 		try
 		{
-			this.bytes = IOUtils.toByteArray(input);
+			this.bytes = IOUtils.toByteArray(istream);
 			this.creator = creator;
 		}
 		catch (IOException e)
@@ -61,15 +61,15 @@ public class DeployCommand implements Command<ProcessDefinition>
 		ProcessEngineConfigurationImpl engineConfiguration = context.getEngineConfiguration();
 		ProcessDefinitionEntityService processDefinitionEntityService = engineConfiguration.getProcessDefinitionEntityService();
 
-		ProcessModel processModel = ModelParser.parse(bytes);
+		BpmnModel bpmnModel = BpmnParser.parse(bytes);
 
-		Integer version = genProcessModelVersion(processModel, processDefinitionEntityService);
+		Integer version = genProcessModelVersion(bpmnModel, processDefinitionEntityService);
 
 		ProcessDefinition processDefinition = new ProcessDefinition();
 		processDefinition.setId(StringHelper.getPrimaryKey());
-		processDefinition.setName(processModel.getName());
-		processDefinition.setDisplayName(processModel.getDisplayName());
-		processDefinition.setCategory(processModel.getCategory());
+		processDefinition.setKey(bpmnModel.getId());
+		processDefinition.setName(bpmnModel.getDisplayName());
+		processDefinition.setCategory(bpmnModel.getCategory());
 		processDefinition.setVersion(version);
 		processDefinition.setBytes(bytes);
 		processDefinition.setCreateTime(LocalDateTime.now());
@@ -77,7 +77,7 @@ public class DeployCommand implements Command<ProcessDefinition>
 
 		processDefinitionEntityService.addEntity(processDefinition);
 
-		processDefinition.setModel(processModel);
+		processDefinition.setBpmnModel(bpmnModel);
 
 		return processDefinition;
 	}
@@ -85,13 +85,13 @@ public class DeployCommand implements Command<ProcessDefinition>
 	/**
 	 * 生成流程定义版本号
 	 * 
-	 * @param processModel
+	 * @param bpmnModel
 	 * @param processDefinitionEntityService
 	 * @return
 	 */
-	private int genProcessModelVersion(ProcessModel processModel, ProcessDefinitionEntityService processDefinitionEntityService)
+	private int genProcessModelVersion(BpmnModel bpmnModel, ProcessDefinitionEntityService processDefinitionEntityService)
 	{
-		Integer version = processDefinitionEntityService.getLatestVersion(processModel.getName());
+		Integer version = processDefinitionEntityService.getLatestVersion(bpmnModel.getId());
 		if (version == null)
 		{
 			version = 0;

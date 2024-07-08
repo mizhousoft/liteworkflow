@@ -2,7 +2,7 @@ package com.liteworkflow.engine.parser;
 
 import org.w3c.dom.Element;
 
-import com.liteworkflow.engine.model.NodeModel;
+import com.liteworkflow.engine.model.FlowNode;
 
 /**
  * 节点解析接口
@@ -32,9 +32,9 @@ public interface NodeParser
 	public static final String NODE_TASK_LISTENER = "taskListener";
 
 	/**
-	 * 节点属性名称
+	 * 节点属性ID
 	 */
-	public static final String ATTR_NAME = "name";
+	public static final String ATTR_ID = "id";
 
 	/**
 	 * 节点显示名称
@@ -176,7 +176,7 @@ public interface NodeParser
 	 * 
 	 * @return 节点模型
 	 */
-	public NodeModel getModel();
+	public FlowNode getModel();
 
 	/**
 	 * 获取节点名称

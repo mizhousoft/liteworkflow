@@ -1,7 +1,7 @@
 package com.liteworkflow.engine.impl.executor;
 
 import com.liteworkflow.engine.impl.Execution;
-import com.liteworkflow.engine.model.NodeModel;
+import com.liteworkflow.engine.model.FlowNode;
 
 /**
  * 开始事件流程执行器
@@ -14,7 +14,7 @@ public class StartExecutor extends NodeFlowExecutor
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void doExecute(Execution execution, NodeModel nodeModel)
+	protected void doExecute(Execution execution, FlowNode nodeModel)
 	{
 		runOutTransition(execution, nodeModel);
 	}

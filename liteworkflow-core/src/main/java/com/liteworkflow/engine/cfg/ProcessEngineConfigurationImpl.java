@@ -249,6 +249,13 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		this.runtimeService = runtimeService;
 	}
 
+	/**
+	 * 初始化ProcessDefinitionEntityService
+	 * 
+	 * @param sqlSessionFactory
+	 * @return
+	 * @throws Exception
+	 */
 	private ProcessDefinitionEntityService initProcessDefinitionEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
 	{
 		MapperFactoryBean<ProcessDefinitionMapper> factoryBean = new MapperFactoryBean<ProcessDefinitionMapper>();
@@ -264,6 +271,13 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		return processDefinitionEntityService;
 	}
 
+	/**
+	 * 初始化HistoricTaskEntityService
+	 * 
+	 * @param sqlSessionFactory
+	 * @return
+	 * @throws Exception
+	 */
 	private HistoricTaskEntityService initHistoricTaskEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
 	{
 		MapperFactoryBean<HistoricTaskMapper> factoryBean = new MapperFactoryBean<HistoricTaskMapper>();
@@ -278,6 +292,14 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		return historicTaskEntityService;
 	}
 
+	/**
+	 * 初始化ProcessInstanceEntityService
+	 * 
+	 * @param sqlSessionFactory
+	 * @param historicProcessInstanceEntityService
+	 * @return
+	 * @throws Exception
+	 */
 	private ProcessInstanceEntityService initProcessInstanceEntityService(SqlSessionFactory sqlSessionFactory,
 	        HistoricProcessInstanceEntityService historicProcessInstanceEntityService) throws Exception
 	{
@@ -288,13 +310,19 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		factoryBean.afterPropertiesSet();
 		ProcessInstanceMapper processInstanceMapper = (ProcessInstanceMapper) factoryBean.getObject();
 
-		ProcessInstanceEntityServiceImpl processInstanceEntityService = new ProcessInstanceEntityServiceImpl();
-		processInstanceEntityService.setProcessInstanceMapper(processInstanceMapper);
-		processInstanceEntityService.setHistoricProcessInstanceEntityService(historicProcessInstanceEntityService);
+		ProcessInstanceEntityServiceImpl processInstanceEntityService = new ProcessInstanceEntityServiceImpl(processInstanceMapper,
+		        historicProcessInstanceEntityService);
 
 		return processInstanceEntityService;
 	}
 
+	/**
+	 * 初始化TaskEntityService
+	 * 
+	 * @param sqlSessionFactory
+	 * @return
+	 * @throws Exception
+	 */
 	private TaskEntityService initTaskEntityService(SqlSessionFactory sqlSessionFactory) throws Exception
 	{
 		MapperFactoryBean<TaskMapper> factoryBean = new MapperFactoryBean<TaskMapper>();
@@ -309,6 +337,13 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 		return taskEntityService;
 	}
 
+	/**
+	 * 初始化HistoricProcessInstanceEntityService
+	 * 
+	 * @param sqlSessionFactory
+	 * @return
+	 * @throws Exception
+	 */
 	private HistoricProcessInstanceEntityService initHistoricProcessInstanceEntityService(SqlSessionFactory sqlSessionFactory)
 	        throws Exception
 	{
@@ -373,6 +408,16 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	public ProcessInstanceEntityService getProcessInstanceEntityService()
 	{
 		return processInstanceEntityService;
+	}
+
+	/**
+	 * 获取commandExecutor
+	 * 
+	 * @return
+	 */
+	public CommandExecutor getCommandExecutor()
+	{
+		return commandExecutor;
 	}
 
 	/**

@@ -12,7 +12,7 @@ import com.liteworkflow.engine.impl.CommandContext;
 import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.impl.FlowExecutor;
 import com.liteworkflow.engine.impl.executor.FlowExecutorFactory;
-import com.liteworkflow.engine.model.StartModel;
+import com.liteworkflow.engine.model.StartEventModel;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.util.ProcessInstanceUtils;
@@ -25,9 +25,9 @@ import com.liteworkflow.engine.util.ProcessInstanceUtils;
 public class StartProcessInstanceCommand implements Command<ProcessInstance>
 {
 	/**
-	 * 流程名称
+	 * 流程Key
 	 */
-	private String processDefinitionName;
+	private String processDefinitionKey;
 
 	/**
 	 * 流程定义ID
@@ -52,16 +52,16 @@ public class StartProcessInstanceCommand implements Command<ProcessInstance>
 	/**
 	 * 构造函数
 	 *
-	 * @param processDefinitionName
+	 * @param processDefinitionKey
 	 * @param processDefinitionId
 	 * @param businessKey
 	 * @param operator
 	 * @param variableMap
 	 */
-	public StartProcessInstanceCommand(String processDefinitionName, String processDefinitionId, String businessKey, String operator,
+	public StartProcessInstanceCommand(String processDefinitionKey, String processDefinitionId, String businessKey, String operator,
 	        Map<String, Object> variableMap)
 	{
-		this.processDefinitionName = processDefinitionName;
+		this.processDefinitionKey = processDefinitionKey;
 		this.processDefinitionId = processDefinitionId;
 		this.businessKey = businessKey;
 		this.operator = operator;
@@ -82,9 +82,8 @@ public class StartProcessInstanceCommand implements Command<ProcessInstance>
 		        null, null, engineConfiguration);
 
 		Execution execution = new Execution(engineConfiguration, processDefinition, processInstance, variableMap);
-		execution.setOperator(operator);
 
-		StartModel startModel = processDefinition.getModel().getStartModel();
+		StartEventModel startModel = processDefinition.getBpmnModel().getStartModel();
 
 		FlowExecutor flowExecutor = FlowExecutorFactory.build(startModel);
 		flowExecutor.execute(execution, startModel);
@@ -105,13 +104,13 @@ public class StartProcessInstanceCommand implements Command<ProcessInstance>
 		ProcessDefinition processDefinition = null;
 		if (null != processDefinitionId)
 		{
-			processDefinition = repositoryService.getById(processDefinitionId);
+			processDefinition = repositoryService.getProcessDefinition(processDefinitionId);
 			Assert.notNull(processDefinition, "Process definition not found, id is " + processDefinitionId);
 		}
-		else if (null != processDefinitionName)
+		else if (null != processDefinitionKey)
 		{
-			processDefinition = repositoryService.getLatestByName(processDefinitionName);
-			Assert.notNull(processDefinition, "Process definition not found, name is " + processDefinitionName);
+			processDefinition = repositoryService.getLatestByKey(processDefinitionKey);
+			Assert.notNull(processDefinition, "Process definition not found, key is " + processDefinitionKey);
 		}
 
 		return processDefinition;

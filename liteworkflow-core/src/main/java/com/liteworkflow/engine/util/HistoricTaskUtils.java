@@ -25,7 +25,7 @@ public abstract class HistoricTaskUtils
 		historicTask.setProcessDefinitionId(task.getProcessDefinitionId());
 		historicTask.setInstanceId(task.getInstanceId());
 		historicTask.setDisplayName(task.getDisplayName());
-		historicTask.setName(task.getName());
+		historicTask.setTaskDefinitionId(task.getTaskDefinitionId());
 		historicTask.setTaskType(task.getTaskType());
 		historicTask.setParentTaskId(task.getParentTaskId());
 		historicTask.setVariable(task.getVariable());

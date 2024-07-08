@@ -5,22 +5,17 @@ package com.liteworkflow.engine.model;
  * 
  * @version
  */
-public class TransitionModel extends BaseModel
+public class TransitionModel extends FlowElement
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3688123410411321158L;
-
 	/**
 	 * 变迁的源节点引用
 	 */
-	private NodeModel source;
+	private FlowNode source;
 
 	/**
 	 * 变迁的目标节点引用
 	 */
-	private NodeModel target;
+	private FlowNode target;
 
 	/**
 	 * 变迁的目标节点name名称
@@ -52,7 +47,7 @@ public class TransitionModel extends BaseModel
 	 * 
 	 * @return
 	 */
-	public NodeModel getSource()
+	public FlowNode getSource()
 	{
 		return source;
 	}
@@ -62,7 +57,7 @@ public class TransitionModel extends BaseModel
 	 * 
 	 * @param source
 	 */
-	public void setSource(NodeModel source)
+	public void setSource(FlowNode source)
 	{
 		this.source = source;
 	}
@@ -72,7 +67,7 @@ public class TransitionModel extends BaseModel
 	 * 
 	 * @return
 	 */
-	public NodeModel getTarget()
+	public FlowNode getTarget()
 	{
 		return target;
 	}
@@ -82,7 +77,7 @@ public class TransitionModel extends BaseModel
 	 * 
 	 * @param target
 	 */
-	public void setTarget(NodeModel target)
+	public void setTarget(FlowNode target)
 	{
 		this.target = target;
 	}

@@ -2,16 +2,19 @@ package com.liteworkflow.engine.cfg;
 
 import org.springframework.beans.factory.FactoryBean;
 
-import com.liteworkflow.engine.ProcessEngineConfiguration;
 import com.liteworkflow.engine.ProcessEngine;
+import com.liteworkflow.engine.ProcessEngineConfiguration;
 
 /**
- * TODO
+ * 创建ProcessEngine工程类
  *
  * @version
  */
 public class ProcessEngineFactoryBean implements FactoryBean<ProcessEngine>
 {
+	/**
+	 * ProcessEngineConfiguration
+	 */
 	private ProcessEngineConfiguration engineConfiguration;
 
 	/**

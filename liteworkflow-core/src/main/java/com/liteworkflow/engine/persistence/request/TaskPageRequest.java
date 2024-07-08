@@ -16,14 +16,14 @@ public class TaskPageRequest extends PageRequest
 	private static final long serialVersionUID = -5966541011265844908L;
 
 	/**
-	 * 名称
-	 */
-	private String[] names;
-
-	/**
 	 * 流程实例id
 	 */
 	private String instanceId;
+
+	/**
+	 * 任务定义ID
+	 */
+	private String taskDefinitionId;
 
 	/**
 	 * 操作人员id
@@ -49,47 +49,23 @@ public class TaskPageRequest extends PageRequest
 	}
 
 	/**
-	 * 构造函数
-	 *
-	 * @param instanceId
-	 */
-	public TaskPageRequest(String instanceId)
-	{
-		super();
-		this.instanceId = instanceId;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param names
-	 * @param instanceId
-	 */
-	public TaskPageRequest(String[] names, String instanceId)
-	{
-		super();
-		this.names = names;
-		this.instanceId = instanceId;
-	}
-
-	/**
-	 * 获取names
+	 * 获取taskDefinitionId
 	 * 
 	 * @return
 	 */
-	public String[] getNames()
+	public String getTaskDefinitionId()
 	{
-		return names;
+		return taskDefinitionId;
 	}
 
 	/**
-	 * 设置names
+	 * 设置taskDefinitionId
 	 * 
-	 * @param names
+	 * @param taskDefinitionId
 	 */
-	public void setNames(String[] names)
+	public void setTaskDefinitionId(String taskDefinitionId)
 	{
-		this.names = names;
+		this.taskDefinitionId = taskDefinitionId;
 	}
 
 	/**

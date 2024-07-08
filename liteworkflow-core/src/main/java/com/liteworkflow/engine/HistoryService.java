@@ -18,27 +18,26 @@ public interface HistoryService
 	/**
 	 * 根据流程实例ID获取历史流程实例对象
 	 * 
-	 * @param instanceId 历史流程实例id
-	 * @return HistoricProcessInstance 历史流程实例对象
+	 * @param instanceId
+	 * @return
 	 */
 	HistoricProcessInstance getHistoricInstance(String instanceId);
 
 	/**
-	 * 根据filter分页查询历史流程实例
+	 * 分页查询历史流程实例
 	 * 
-	 * @param page 分页对象
-	 * @param filter 查询过滤器
-	 * @return List<HistoricProcessInstance> 历史实例集合
+	 * @param request
+	 * @return
 	 */
 	Page<HistoricProcessInstance> queryPageData(HistoricInstancePageRequest request);
 
 	/**
 	 * 根据任务ID获取历史任务对象
 	 * 
-	 * @param id
+	 * @param taskId
 	 * @return
 	 */
-	HistoricTask getHistTask(String id);
+	HistoricTask getHistoricTask(String taskId);
 
 	/**
 	 * 根据流程实例ID查询历史任务

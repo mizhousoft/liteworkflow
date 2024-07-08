@@ -45,19 +45,19 @@ public interface ProcessDefinitionEntityService
 	/**
 	 * 根据流程名称查询最近的版本号
 	 * 
-	 * @param name 流程名称
+	 * @param processDefinitionKey 流程Key
 	 * @return Integer 流程定义版本号
 	 */
-	Integer getLatestVersion(String name);
+	Integer getLatestVersion(String processDefinitionKey);
 
 	/**
 	 * 根据名称及版本号查询
 	 * 
-	 * @param name
+	 * @param processDefinitionKey
 	 * @param version
 	 * @return
 	 */
-	List<ProcessDefinition> queryByName(String name, Integer version);
+	List<ProcessDefinition> queryByKey(String processDefinitionKey, Integer version);
 
 	/**
 	 * 分页查询

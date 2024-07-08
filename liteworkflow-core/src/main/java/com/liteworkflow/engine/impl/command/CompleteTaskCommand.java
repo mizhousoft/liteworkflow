@@ -18,8 +18,8 @@ import com.liteworkflow.engine.impl.Constants;
 import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.impl.FlowExecutor;
 import com.liteworkflow.engine.impl.executor.FlowExecutorFactory;
-import com.liteworkflow.engine.model.NodeModel;
-import com.liteworkflow.engine.model.ProcessModel;
+import com.liteworkflow.engine.model.FlowNode;
+import com.liteworkflow.engine.model.BpmnModel;
 import com.liteworkflow.engine.persistence.entity.HistoricTask;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
@@ -70,10 +70,10 @@ public class CompleteTaskCommand implements Command<Void>
 		if (execution == null)
 			return null;
 
-		ProcessModel model = execution.getProcessDefinition().getModel();
-		if (model != null)
+		BpmnModel bpmnModel = execution.getProcessDefinition().getBpmnModel();
+		if (bpmnModel != null)
 		{
-			NodeModel nodeModel = model.getNodeModel(execution.getTask().getName());
+			FlowNode nodeModel = bpmnModel.getNodeModel(execution.getTask().getTaskDefinitionId());
 			// 将执行对象交给该任务对应的节点模型执行
 			FlowExecutor executor = FlowExecutorFactory.build(nodeModel);
 			executor.execute(execution, nodeModel);
@@ -114,9 +114,8 @@ public class CompleteTaskCommand implements Command<Void>
 
 		RepositoryService repositoryService = engineConfiguration.getRepositoryService();
 
-		ProcessDefinition process = repositoryService.getById(instance.getProcessDefinitionId());
+		ProcessDefinition process = repositoryService.getProcessDefinition(instance.getProcessDefinitionId());
 		Execution execution = new Execution(engineConfiguration, process, instance, variableMap);
-		execution.setOperator(operator);
 		execution.setTask(task);
 
 		return execution;

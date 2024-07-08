@@ -1,21 +1,17 @@
 package com.liteworkflow.engine.parser;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 import org.w3c.dom.Element;
 
 import com.liteworkflow.WorkFlowException;
-import com.liteworkflow.engine.interceptor.FlowInterceptor;
-import com.liteworkflow.engine.model.NodeModel;
+import com.liteworkflow.engine.model.FlowNode;
 import com.liteworkflow.engine.model.TransitionModel;
 import com.liteworkflow.engine.util.DomUtils;
-import com.mizhousoft.commons.lang.ClassUtils;
 
 /**
  * 抽象dom节点解析类
@@ -28,12 +24,12 @@ public abstract class AbstractNodeParser implements NodeParser
 	/**
 	 * 模型对象
 	 */
-	protected NodeModel model;
+	protected FlowNode model;
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public NodeModel getModel()
+	public FlowNode getModel()
 	{
 		return model;
 	}
@@ -45,17 +41,9 @@ public abstract class AbstractNodeParser implements NodeParser
 	public void parse(Element element)
 	{
 		model = newModel();
-		model.setName(element.getAttribute(ATTR_NAME));
+		model.setId(element.getAttribute(ATTR_ID));
 		model.setDisplayName(element.getAttribute(ATTR_DISPLAYNAME));
 		model.setLayout(element.getAttribute(ATTR_LAYOUT));
-		model.setPreInterceptors(element.getAttribute(ATTR_PREINTERCEPTORS));
-		model.setPostInterceptors(element.getAttribute(ATTR_POSTINTERCEPTORS));
-
-		List<FlowInterceptor> preInterceptorList = instanceInterceptorList(model.getPreInterceptors());
-		model.setPreInterceptorList(preInterceptorList);
-
-		List<FlowInterceptor> postInterceptorList = instanceInterceptorList(model.getPostInterceptors());
-		model.setPostInterceptorList(postInterceptorList);
 
 		List<TransitionModel> outputs = parseTransitionModel(element);
 		model.setOutputs(outputs);
@@ -71,18 +59,18 @@ public abstract class AbstractNodeParser implements NodeParser
 	@Override
 	public void checkModel()
 	{
-		Assert.notNull(model.getName(), "Node name is null.");
+		Assert.notNull(model.getId(), "Node id is null.");
 		Assert.notNull(model.getDisplayName(), "Node display name is null.");
 
 		List<TransitionModel> outputs = model.getOutputs();
-		Set<String> names = new HashSet<>(outputs.size());
+		Set<String> ids = new HashSet<>(outputs.size());
 		Set<String> tos = new HashSet<>(outputs.size());
 
 		for (TransitionModel output : outputs)
 		{
-			if (names.contains(output.getName()))
+			if (ids.contains(output.getId()))
 			{
-				throw new WorkFlowException("Transition name duplication, value is " + output.getName());
+				throw new WorkFlowException("Transition name duplication, value is " + output.getId());
 			}
 
 			if (tos.contains(output.getTo()))
@@ -90,7 +78,7 @@ public abstract class AbstractNodeParser implements NodeParser
 				throw new WorkFlowException("Transition to duplication, value is " + output.getTo());
 			}
 
-			names.add(output.getName());
+			ids.add(output.getId());
 			tos.add(output.getTo());
 		}
 	}
@@ -101,7 +89,7 @@ public abstract class AbstractNodeParser implements NodeParser
 	 * @param nodeModel
 	 * @param element
 	 */
-	protected void doParseNode(NodeModel nodeModel, Element element)
+	protected void doParseNode(FlowNode nodeModel, Element element)
 	{
 
 	}
@@ -120,7 +108,7 @@ public abstract class AbstractNodeParser implements NodeParser
 		for (Element transitionElement : transitionElements)
 		{
 			TransitionModel transition = new TransitionModel();
-			transition.setName(transitionElement.getAttribute(ATTR_NAME));
+			transition.setId(transitionElement.getAttribute(ATTR_ID));
 			transition.setDisplayName(transitionElement.getAttribute(ATTR_DISPLAYNAME));
 			transition.setTo(transitionElement.getAttribute(ATTR_TO));
 			transition.setExpr(transitionElement.getAttribute(ATTR_EXPR));
@@ -134,42 +122,9 @@ public abstract class AbstractNodeParser implements NodeParser
 	}
 
 	/**
-	 * 实例化拦截器
-	 * 
-	 * @param interceptorsStr
-	 * @return
-	 */
-	private List<FlowInterceptor> instanceInterceptorList(String interceptorsStr)
-	{
-		if (StringUtils.isBlank(interceptorsStr))
-		{
-			return Collections.emptyList();
-		}
-
-		String[] interceptors = interceptorsStr.split(",");
-
-		try
-		{
-			List<FlowInterceptor> interceptorList = new ArrayList<>(interceptors.length);
-
-			for (String interceptor : interceptors)
-			{
-				FlowInterceptor instance = (FlowInterceptor) ClassUtils.newInstance(interceptor, this.getClass().getClassLoader());
-				interceptorList.add(instance);
-			}
-
-			return interceptorList;
-		}
-		catch (Exception e)
-		{
-			throw new WorkFlowException(interceptorsStr + " is not implment FlowInterceptor.", e);
-		}
-	}
-
-	/**
 	 * 抽象方法，由子类产生各自的模型对象
 	 * 
 	 * @return
 	 */
-	protected abstract NodeModel newModel();
+	protected abstract FlowNode newModel();
 }

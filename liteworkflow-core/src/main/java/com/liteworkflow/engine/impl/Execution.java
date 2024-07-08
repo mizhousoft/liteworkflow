@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.liteworkflow.WorkFlowException;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
-import com.liteworkflow.engine.model.ProcessModel;
+import com.liteworkflow.engine.model.BpmnModel;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.persistence.entity.Task;
@@ -61,11 +61,6 @@ public class Execution implements Serializable
 	private Map<String, Object> args;
 
 	/**
-	 * 操作人
-	 */
-	private String operator;
-
-	/**
 	 * 任务
 	 */
 	private Task task;
@@ -99,7 +94,6 @@ public class Execution implements Serializable
 		this.args = execution.getArgs();
 		this.parentInstance = execution.getProcessInstance();
 		this.parentNodeName = parentNodeName;
-		this.operator = execution.getOperator();
 	}
 
 	/**
@@ -150,9 +144,9 @@ public class Execution implements Serializable
 	 * 
 	 * @return
 	 */
-	public ProcessModel getProcessModel()
+	public BpmnModel getBpmnModel()
 	{
-		return processDefinition.getModel();
+		return processDefinition.getBpmnModel();
 	}
 
 	/**
@@ -203,26 +197,6 @@ public class Execution implements Serializable
 	public void addTask(Task task)
 	{
 		this.tasks.add(task);
-	}
-
-	/**
-	 * 返回当前操作人ID
-	 * 
-	 * @return
-	 */
-	public String getOperator()
-	{
-		return operator;
-	}
-
-	/**
-	 * 设置当前操作人ID
-	 * 
-	 * @param operator
-	 */
-	public void setOperator(String operator)
-	{
-		this.operator = operator;
 	}
 
 	/**

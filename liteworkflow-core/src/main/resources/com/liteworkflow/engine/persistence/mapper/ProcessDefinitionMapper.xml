@@ -5,8 +5,8 @@
 	
 	<resultMap type="com.liteworkflow.engine.persistence.entity.ProcessDefinition" id="ProcessDefinitionMap">
 		<id property="id" column="id" />
+		<result property="key" column="key_" />
 		<result property="name" column="name" />
-		<result property="displayName" column="display_name" />
 		<result property="category" column="category" />
 		<result property="version" column="version" />
 		<result property="bytes" column="content" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
@@ -15,17 +15,17 @@
 	</resultMap>
 	
 	<sql id="Column_List">
-        id, name, display_name, category, version, content, create_time, creator
+        id, key_, name, category, version, content, create_time, creator
     </sql>
 	
 	<insert id="save">
-		insert into wf_process_definition (id, name, display_name, category, version, content, create_time, creator)
-		values (#{id}, #{name}, #{displayName}, #{category}, #{version}, #{bytes, typeHandler=org.apache.ibatis.type.BlobTypeHandler}, #{createTime}, #{creator})
+		insert into wf_process_definition (id, key_, name, category, version, content, create_time, creator)
+		values (#{id}, #{key}, #{name}, #{category}, #{version}, #{bytes, typeHandler=org.apache.ibatis.type.BlobTypeHandler}, #{createTime}, #{creator})
 	</insert>
 
 	<update id="update">
         update wf_process_definition 
-        set display_name = #{displayName},
+        set name = #{name},
         category = #{category},
         content = #{bytes, typeHandler=org.apache.ibatis.type.BlobTypeHandler}
         where id = #{id} 
@@ -41,10 +41,10 @@
 		where id = #{id}
 	</select>
 	
-	<select id="findByProcessName" parameterType="java.util.Map" resultMap="ProcessDefinitionMap">
+	<select id="processDefinitionKey" parameterType="java.util.Map" resultMap="ProcessDefinitionMap">
 		select <include refid="Column_List"/>
 		from wf_process_definition 
-		where name = #{name}
+		where key_ = #{processDefinitionKey}
 		<if test="version != null">
         	and version = #{version}
        	</if>
@@ -52,21 +52,21 @@
 	
 	<select id="findLatestVersion" parameterType="java.util.Map" resultType="Integer">
 		select max(version) from wf_process_definition 
-		where name = #{name}
+		where key_ = #{processDefinitionKey}
 	</select>
 	
 	<select id="countTotal" resultType="Long">
 		select count(id) from wf_process_definition
 		<where>
-			<if test="request.name != null">
-                name = #{request.name}
+			<if test="request.key != null">
+                key = #{request.key}
        		</if>
             <if test="request.version != null">
                 and version = #{request.version}
        		</if>
-       		<if test="request.displayName != null">
-				<bind name="pattern" value="'%' + request.displayName + '%'" />
-				and display_name like #{pattern} 
+       		<if test="request.name != null">
+				<bind name="pattern" value="'%' + request.name + '%'" />
+				and name like #{pattern} 
 			</if>
             <if test="request.category != null">
                 and category = #{request.category}
@@ -78,15 +78,15 @@
 		select <include refid="Column_List"/>
 		from wf_process_definition 
 		<where>
-			<if test="request.name != null">
-                name = #{request.name}
+			<if test="request.key != null">
+                key = #{request.key}
        		</if>
             <if test="request.version != null">
                 and version = #{request.version}
        		</if>
-       		<if test="request.displayName != null">
-				<bind name="pattern" value="'%' + request.displayName + '%'" />
-				and display_name like #{pattern} 
+       		<if test="request.name != null">
+				<bind name="pattern" value="'%' + request.name + '%'" />
+				and name like #{pattern} 
 			</if>
             <if test="request.category != null">
                 and category = #{request.category}

@@ -7,13 +7,8 @@ import com.liteworkflow.engine.DecisionHandler;
  * 
  * @version
  */
-public class DecisionModel extends NodeModel
+public class ExclusiveGatewayModel extends GatewayModel
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -806621814645169999L;
-
 	/**
 	 * 决策选择表达式串（需要表达式引擎解析）
 	 */

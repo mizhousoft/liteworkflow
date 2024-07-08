@@ -1,8 +1,8 @@
 package com.liteworkflow.engine.parser.impl;
 
 import com.liteworkflow.WorkFlowException;
-import com.liteworkflow.engine.model.EndModel;
-import com.liteworkflow.engine.model.NodeModel;
+import com.liteworkflow.engine.model.EndEventModel;
+import com.liteworkflow.engine.model.FlowNode;
 import com.liteworkflow.engine.parser.AbstractNodeParser;
 
 /**
@@ -10,14 +10,14 @@ import com.liteworkflow.engine.parser.AbstractNodeParser;
  * 
  * @version
  */
-public class EndParser extends AbstractNodeParser
+public class EndEventParser extends AbstractNodeParser
 {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected NodeModel newModel()
+	protected FlowNode newModel()
 	{
-		return new EndModel();
+		return new EndEventModel();
 	}
 
 	/**
@@ -26,7 +26,7 @@ public class EndParser extends AbstractNodeParser
 	@Override
 	public String getNodeName()
 	{
-		return "end";
+		return "endEvent";
 	}
 
 	/**

@@ -12,8 +12,8 @@ import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.impl.FlowExecutor;
 import com.liteworkflow.engine.impl.Expression;
 import com.liteworkflow.engine.impl.el.SpelExpression;
-import com.liteworkflow.engine.model.DecisionModel;
-import com.liteworkflow.engine.model.NodeModel;
+import com.liteworkflow.engine.model.ExclusiveGatewayModel;
+import com.liteworkflow.engine.model.FlowNode;
 import com.liteworkflow.engine.model.TransitionModel;
 
 /**
@@ -21,9 +21,9 @@ import com.liteworkflow.engine.model.TransitionModel;
  *
  * @version
  */
-public class DecisionExecutor extends NodeFlowExecutor
+public class ExclusiveGatewayExecutor extends NodeFlowExecutor
 {
-	private static final Logger log = LoggerFactory.getLogger(DecisionExecutor.class);
+	private static final Logger log = LoggerFactory.getLogger(ExclusiveGatewayExecutor.class);
 
 	/**
 	 * 表达式解析器
@@ -34,11 +34,11 @@ public class DecisionExecutor extends NodeFlowExecutor
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void doExecute(Execution execution, NodeModel nodeModel)
+	protected void doExecute(Execution execution, FlowNode nodeModel)
 	{
 		log.info(execution.getProcessInstance().getId() + "->decision execution.getArgs():" + execution.getArgs());
 
-		DecisionModel decisionModel = (DecisionModel) nodeModel;
+		ExclusiveGatewayModel decisionModel = (ExclusiveGatewayModel) nodeModel;
 		DecisionHandler decideHandler = decisionModel.getDecisionHandler();
 
 		String next = null;
@@ -73,7 +73,7 @@ public class DecisionExecutor extends NodeFlowExecutor
 			}
 			else
 			{
-				if (tm.getName().equals(next))
+				if (tm.getId().equals(next))
 				{
 					tm.setEnabled(true);
 					FlowExecutor executor = FlowExecutorFactory.build(tm);

@@ -1,7 +1,7 @@
 package com.liteworkflow.engine.parser.impl;
 
-import com.liteworkflow.engine.model.NodeModel;
-import com.liteworkflow.engine.model.StartModel;
+import com.liteworkflow.engine.model.FlowNode;
+import com.liteworkflow.engine.model.StartEventModel;
 import com.liteworkflow.engine.parser.AbstractNodeParser;
 
 /**
@@ -9,14 +9,14 @@ import com.liteworkflow.engine.parser.AbstractNodeParser;
  * 
  * @version
  */
-public class StartParser extends AbstractNodeParser
+public class StartEventParser extends AbstractNodeParser
 {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected NodeModel newModel()
+	protected FlowNode newModel()
 	{
-		return new StartModel();
+		return new StartEventModel();
 	}
 
 	/**
@@ -25,6 +25,6 @@ public class StartParser extends AbstractNodeParser
 	@Override
 	public String getNodeName()
 	{
-		return "start";
+		return "startEvent";
 	}
 }

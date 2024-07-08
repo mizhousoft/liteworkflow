@@ -7,7 +7,7 @@
 		<id property="id" column="id" />
 		<result property="processDefinitionId" column="process_def_id" />
 		<result property="instanceId" column="instance_id" />
-		<result property="name" column="name" />
+		<result property="taskDefinitionId" column="task_def_id" />
 		<result property="displayName" column="display_name" />
 		<result property="taskType" column="task_type" />
 		<result property="performType" column="perform_type" />
@@ -20,9 +20,9 @@
 	</resultMap>
 	
 	<insert id="save">
-		insert into wf_historic_task (id, process_def_id, instance_id, name, display_name, task_type, perform_type, state,
+		insert into wf_historic_task (id, process_def_id, instance_id, task_def_id, display_name, task_type, perform_type, state,
 		operator, start_time, end_time, parent_task_id, variable) 
-		values(#{id}, #{processDefinitionId}, #{instanceId}, #{name}, #{displayName}, #{taskType}, #{performType}, #{state}, 
+		values(#{id}, #{processDefinitionId}, #{instanceId}, #{taskDefinitionId}, #{displayName}, #{taskType}, #{performType}, #{state}, 
 		#{operator}, #{startTime}, #{endTime}, #{parentTaskId}, #{variable})
 	</insert>
 		
@@ -31,14 +31,14 @@
 	</delete>
 	
 	<select id="findById" parameterType="java.util.Map" resultMap="HistoricTaskMap">
-		select id, process_def_id, instance_id, name, display_name, task_type, perform_type, state, operator, start_time,
+		select id, process_def_id, instance_id, task_def_id, display_name, task_type, perform_type, state, operator, start_time,
 		end_time, parent_task_id, variable 
 		from wf_historic_task
 		where id = #{id}
 	</select>
 	
 	<select id="findByInstanceId" parameterType="java.util.Map" resultMap="HistoricTaskMap">
-		select id, process_def_id, instance_id, name, display_name, task_type, perform_type, state, operator, start_time,
+		select id, process_def_id, instance_id, task_def_id, display_name, task_type, perform_type, state, operator, start_time,
 		end_time, parent_task_id, variable 
 		from wf_historic_task
 		where instance_id = #{instanceId}
@@ -50,11 +50,8 @@
 			<if test="request.instanceId != null">
                 instance_id = #{request.instanceId}
        		</if>
-            <if test="request.names != null and request.names.length != 0">
-                and name in
-                <foreach collection="request.names" item="name" index="index" open="(" close=")" separator=",">
-                    #{name}
-                </foreach>
+            <if test="request.taskDefinitionId != null">
+                task_def_id = #{request.taskDefinitionId}
             </if>
             <if test="request.startTime != null">
                 and start_time &gt;= #{request.startTime}
@@ -66,18 +63,15 @@
 	</select>
 	
 	<select id="findPageData" parameterType="java.util.Map" resultMap="HistoricTaskMap">
-		select id, process_def_id, instance_id, name, display_name, task_type, perform_type, state, operator, start_time,
+		select id, process_def_id, instance_id, task_def_id, display_name, task_type, perform_type, state, operator, start_time,
 		end_time, parent_task_id, variable 
 		from wf_historic_task
 		<where>
 			<if test="request.instanceId != null">
                 instance_id = #{request.instanceId}
        		</if>
-            <if test="request.names != null and request.names.length != 0">
-                and name in
-                <foreach collection="request.names" item="name" index="index" open="(" close=")" separator=",">
-                    #{name}
-                </foreach>
+            <if test="request.taskDefinitionId != null">
+                task_def_id = #{request.taskDefinitionId}
             </if>
             <if test="request.startTime != null">
                 and start_time &gt;= #{request.startTime}

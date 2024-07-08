@@ -1,10 +1,9 @@
 package com.liteworkflow.engine.persistence.entity;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import com.liteworkflow.engine.model.TaskModel;
+import com.liteworkflow.engine.model.UserTaskModel;
 
 /**
  * 任务实体类
@@ -39,9 +38,9 @@ public class Task implements Serializable, Cloneable
 	private String instanceId;
 
 	/**
-	 * 任务名称
+	 * 任务定义ID
 	 */
-	private String name;
+	private String taskDefinitionId;
 
 	/**
 	 * 任务显示名称
@@ -84,19 +83,9 @@ public class Task implements Serializable, Cloneable
 	private LocalDateTime createTime;
 
 	/**
-	 * 期望的完成时间date类型
-	 */
-	private LocalDate expireDate;
-
-	/**
-	 * 提醒时间date类型
-	 */
-	private LocalDate remindDate;
-
-	/**
 	 * 保持模型对象
 	 */
-	private TaskModel model;
+	private UserTaskModel model;
 
 	/**
 	 * 获取id
@@ -179,23 +168,23 @@ public class Task implements Serializable, Cloneable
 	}
 
 	/**
-	 * 获取name
+	 * 获取taskDefinitionId
 	 * 
 	 * @return
 	 */
-	public String getName()
+	public String getTaskDefinitionId()
 	{
-		return name;
+		return taskDefinitionId;
 	}
 
 	/**
-	 * 设置name
+	 * 设置taskDefinitionId
 	 * 
-	 * @param name
+	 * @param taskDefinitionId
 	 */
-	public void setName(String name)
+	public void setTaskDefinitionId(String taskDefinitionId)
 	{
-		this.name = name;
+		this.taskDefinitionId = taskDefinitionId;
 	}
 
 	/**
@@ -359,51 +348,11 @@ public class Task implements Serializable, Cloneable
 	}
 
 	/**
-	 * 获取expireDate
-	 * 
-	 * @return
-	 */
-	public LocalDate getExpireDate()
-	{
-		return expireDate;
-	}
-
-	/**
-	 * 设置expireDate
-	 * 
-	 * @param expireDate
-	 */
-	public void setExpireDate(LocalDate expireDate)
-	{
-		this.expireDate = expireDate;
-	}
-
-	/**
-	 * 获取remindDate
-	 * 
-	 * @return
-	 */
-	public LocalDate getRemindDate()
-	{
-		return remindDate;
-	}
-
-	/**
-	 * 设置remindDate
-	 * 
-	 * @param remindDate
-	 */
-	public void setRemindDate(LocalDate remindDate)
-	{
-		this.remindDate = remindDate;
-	}
-
-	/**
 	 * 获取model
 	 * 
 	 * @return
 	 */
-	public TaskModel getModel()
+	public UserTaskModel getModel()
 	{
 		return model;
 	}
@@ -413,7 +362,7 @@ public class Task implements Serializable, Cloneable
 	 * 
 	 * @param model
 	 */
-	public void setModel(TaskModel model)
+	public void setModel(UserTaskModel model)
 	{
 		this.model = model;
 	}
@@ -431,8 +380,8 @@ public class Task implements Serializable, Cloneable
 		        .append(processDefinitionId)
 		        .append("\", \"instanceId\":\"")
 		        .append(instanceId)
-		        .append("\", \"name\":\"")
-		        .append(name)
+		        .append("\", \"taskDefinitionId\":\"")
+		        .append(taskDefinitionId)
 		        .append("\", \"displayName\":\"")
 		        .append(displayName)
 		        .append("\"}");

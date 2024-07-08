@@ -64,7 +64,7 @@ public class HistoryServiceImpl implements HistoryService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public HistoricTask getHistTask(String taskId)
+	public HistoricTask getHistoricTask(String taskId)
 	{
 		return historicTaskEntityService.getById(taskId);
 	}

@@ -3,7 +3,7 @@ package com.liteworkflow.engine.persistence.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import com.liteworkflow.engine.model.ProcessModel;
+import com.liteworkflow.engine.model.BpmnModel;
 
 /**
  * 流程定义实体类
@@ -23,14 +23,14 @@ public class ProcessDefinition implements Serializable
 	private String id;
 
 	/**
+	 * 流程定义Key
+	 */
+	private String key;
+
+	/**
 	 * 流程定义名称
 	 */
 	private String name;
-
-	/**
-	 * 流程定义显示名称
-	 */
-	private String displayName;
 
 	/**
 	 * 流程定义分类
@@ -60,7 +60,7 @@ public class ProcessDefinition implements Serializable
 	/**
 	 * 流程定义模型
 	 */
-	private ProcessModel model;
+	private BpmnModel bpmnModel;
 
 	/**
 	 * 获取id
@@ -83,6 +83,26 @@ public class ProcessDefinition implements Serializable
 	}
 
 	/**
+	 * 获取key
+	 * 
+	 * @return
+	 */
+	public String getKey()
+	{
+		return key;
+	}
+
+	/**
+	 * 设置key
+	 * 
+	 * @param key
+	 */
+	public void setKey(String key)
+	{
+		this.key = key;
+	}
+
+	/**
 	 * 获取name
 	 * 
 	 * @return
@@ -100,26 +120,6 @@ public class ProcessDefinition implements Serializable
 	public void setName(String name)
 	{
 		this.name = name;
-	}
-
-	/**
-	 * 获取displayName
-	 * 
-	 * @return
-	 */
-	public String getDisplayName()
-	{
-		return displayName;
-	}
-
-	/**
-	 * 设置displayName
-	 * 
-	 * @param displayName
-	 */
-	public void setDisplayName(String displayName)
-	{
-		this.displayName = displayName;
 	}
 
 	/**
@@ -223,23 +223,23 @@ public class ProcessDefinition implements Serializable
 	}
 
 	/**
-	 * 获取model
+	 * 获取bpmnModel
 	 * 
 	 * @return
 	 */
-	public ProcessModel getModel()
+	public BpmnModel getBpmnModel()
 	{
-		return model;
+		return bpmnModel;
 	}
 
 	/**
-	 * 设置model
+	 * 设置bpmnModel
 	 * 
-	 * @param model
+	 * @param bpmnModel
 	 */
-	public void setModel(ProcessModel model)
+	public void setBpmnModel(BpmnModel bpmnModel)
 	{
-		this.model = model;
+		this.bpmnModel = bpmnModel;
 	}
 
 	/**
@@ -249,10 +249,12 @@ public class ProcessDefinition implements Serializable
 	public String toString()
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append("{\"name\":\"")
+		builder.append("{\"id\":\"")
+		        .append(id)
+		        .append("\", \"key\":\"")
+		        .append(key)
+		        .append("\", \"name\":\"")
 		        .append(name)
-		        .append("\", \"displayName\":\"")
-		        .append(displayName)
 		        .append("\", \"category\":\"")
 		        .append(category)
 		        .append("\", \"version\":\"")

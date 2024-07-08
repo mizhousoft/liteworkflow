@@ -1,23 +1,16 @@
 package com.liteworkflow.engine.model;
 
-import java.io.Serializable;
-
 /**
  * 模型元素基类
  * 
  * @version
  */
-public class BaseModel implements Serializable
+public class FlowElement
 {
 	/**
-	 * 
+	 * 元素ID
 	 */
-	private static final long serialVersionUID = 3082741431225739241L;
-
-	/**
-	 * 元素名称
-	 */
-	private String name;
+	private String id;
 
 	/**
 	 * 显示名称
@@ -25,23 +18,23 @@ public class BaseModel implements Serializable
 	private String displayName;
 
 	/**
-	 * 获取name
+	 * 获取id
 	 * 
 	 * @return
 	 */
-	public String getName()
+	public String getId()
 	{
-		return name;
+		return id;
 	}
 
 	/**
-	 * 设置name
+	 * 设置id
 	 * 
-	 * @param name
+	 * @param id
 	 */
-	public void setName(String name)
+	public void setId(String id)
 	{
-		this.name = name;
+		this.id = id;
 	}
 
 	/**

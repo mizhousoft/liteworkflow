@@ -36,7 +36,7 @@ public class TestSurrogate extends TestSpring
 	{
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("task1.operator", new String[] { "test" });
-		ProcessInstance instance = engine.getRuntimeService().startInstanceByName("surrogate", "2", args);
+		ProcessInstance instance = engine.getRuntimeService().startInstanceByKey("surrogate", "2", args);
 		System.out.println("instance=" + instance);
 	}
 }

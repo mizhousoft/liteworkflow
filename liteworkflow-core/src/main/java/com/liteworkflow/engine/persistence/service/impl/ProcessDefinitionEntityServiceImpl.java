@@ -73,9 +73,9 @@ public class ProcessDefinitionEntityServiceImpl implements ProcessDefinitionEnti
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Integer getLatestVersion(String name)
+	public Integer getLatestVersion(String processDefinitionKey)
 	{
-		Integer ver = processDefinitionMapper.findLatestVersion(name);
+		Integer ver = processDefinitionMapper.findLatestVersion(processDefinitionKey);
 
 		return ver;
 	}
@@ -84,9 +84,9 @@ public class ProcessDefinitionEntityServiceImpl implements ProcessDefinitionEnti
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<ProcessDefinition> queryByName(String name, Integer version)
+	public List<ProcessDefinition> queryByKey(String processDefinitionKey, Integer version)
 	{
-		return processDefinitionMapper.findByProcessName(name, version);
+		return processDefinitionMapper.findByKey(processDefinitionKey, version);
 	}
 
 	/**

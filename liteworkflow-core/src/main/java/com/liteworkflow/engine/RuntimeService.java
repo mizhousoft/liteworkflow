@@ -39,31 +39,31 @@ public interface RuntimeService
 	ProcessInstance startInstanceById(String processDefinitionId, String operator, Map<String, Object> variableMap);
 
 	/**
-	 * 根据流程名称启动流程实例
+	 * 根据流程Key启动流程实例
 	 * 
-	 * @param processDefinitionName
+	 * @param processDefinitionKey
 	 * @return
 	 */
-	ProcessInstance startInstanceByName(String processDefinitionName);
+	ProcessInstance startInstanceByKey(String processDefinitionKey);
 
 	/**
-	 * 根据流程名称、版本号、操作人启动流程实例
+	 * 根据流程Key、操作人启动流程实例
 	 * 
-	 * @param processDefinitionName
+	 * @param processDefinitionKey
 	 * @param operator
 	 * @return
 	 */
-	ProcessInstance startInstanceByName(String processDefinitionName, String operator);
+	ProcessInstance startInstanceByKey(String processDefinitionKey, String operator);
 
 	/**
-	 * 根据流程名称、版本号、操作人、参数列表启动流程实例
+	 * 根据流程Key、操作人、参数列表启动流程实例
 	 * 
-	 * @param processDefinitionName
+	 * @param processDefinitionKey
 	 * @param operator
 	 * @param variableMap
 	 * @return
 	 */
-	ProcessInstance startInstanceByName(String processDefinitionName, String operator, Map<String, Object> variableMap);
+	ProcessInstance startInstanceByKey(String processDefinitionKey, String operator, Map<String, Object> variableMap);
 
 	/**
 	 * 设置流程发起人

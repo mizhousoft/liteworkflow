@@ -1,7 +1,7 @@
 package com.liteworkflow.engine.parser.impl;
 
-import com.liteworkflow.engine.model.ForkModel;
-import com.liteworkflow.engine.model.NodeModel;
+import com.liteworkflow.engine.model.ForkGatewayModel;
+import com.liteworkflow.engine.model.FlowNode;
 import com.liteworkflow.engine.parser.AbstractNodeParser;
 
 /**
@@ -9,14 +9,14 @@ import com.liteworkflow.engine.parser.AbstractNodeParser;
  * 
  * @version
  */
-public class ForkParser extends AbstractNodeParser
+public class ForkGatewayParser extends AbstractNodeParser
 {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected NodeModel newModel()
+	protected FlowNode newModel()
 	{
-		return new ForkModel();
+		return new ForkGatewayModel();
 	}
 
 	/**
@@ -25,6 +25,6 @@ public class ForkParser extends AbstractNodeParser
 	@Override
 	public String getNodeName()
 	{
-		return "fork";
+		return "forkGateway";
 	}
 }

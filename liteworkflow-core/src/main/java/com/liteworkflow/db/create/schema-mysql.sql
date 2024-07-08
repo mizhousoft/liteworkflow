@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS wf_process_definition (
     id                VARCHAR(32) NOT NULL COMMENT '主键ID',
+    key_              VARCHAR(32) NOT NULL COMMENT '流程定义Key',
     name              VARCHAR(32) NOT NULL COMMENT '流程名称',
-    display_name      VARCHAR(64) NOT NULL COMMENT '流程显示名称',
     category          VARCHAR(32) NULL COMMENT '流程分类',
     version           INT NOT NULL DEFAULT 0 COMMENT '版本号',
     content           LONGBLOB NOT NULL COMMENT '流程模型定义',
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS wf_task (
     parent_task_id    VARCHAR(32) NULL COMMENT '父任务ID',
     process_def_id    VARCHAR(32) NOT NULL COMMENT '流程定义ID',
     instance_id       VARCHAR(32) NOT NULL COMMENT '流程实例ID',
-    name         	  VARCHAR(64) NOT NULL COMMENT '任务名称',
+    task_def_id    	  VARCHAR(64) NOT NULL COMMENT '任务定义ID',
     display_name      VARCHAR(64) NOT NULL COMMENT '任务显示名称',
     task_type         INT NOT NULL COMMENT '任务类型',
     perform_type      INT NOT NULL DEFAULT 0 COMMENT '参与类型',
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS wf_historic_task (
     parent_task_id    VARCHAR(32) COMMENT '父任务ID',
     process_def_id    VARCHAR(32) NOT NULL COMMENT '流程定义ID',
     instance_id       VARCHAR(32) NOT NULL COMMENT '流程实例ID',
-    name         	  VARCHAR(64) NOT NULL COMMENT '任务名称',
+    task_def_id    	  VARCHAR(64) NOT NULL COMMENT '任务定义ID',
     display_name      VARCHAR(64) NOT NULL COMMENT '任务显示名称',
     task_type         INT NOT NULL COMMENT '任务类型',
     perform_type      INT COMMENT '参与类型',
@@ -72,12 +72,12 @@ CREATE TABLE IF NOT EXISTS wf_historic_task (
     PRIMARY KEY (`id`)
 )ENGINE = InnoDB COMMENT='历史任务表';
 
-create index process_definition_index_name on wf_process_definition (name);
+create index process_definition_index_key on wf_process_definition (key_);
 create index process_instance_index_process_def_id on wf_process_instance (process_def_id);
 create index task_index_instance_id on wf_task (instance_id);
-create index task_index_task_name on wf_task (name);
+create index task_index_task_task_def_id on wf_task (task_def_id);
 create index task_index_parent_task_id on wf_task (parent_task_id);
 create index historic_instance_index_process_def_id on wf_historic_process_instance (process_def_id);
 create index historic_task_index_instance_id on wf_historic_task (instance_id);
-create index historic_task_index_name on wf_historic_task (name);
+create index historic_task_index_task_def_id on wf_historic_task (task_def_id);
 create index historic_task_index_parent_task_id on wf_historic_task (parent_task_id);

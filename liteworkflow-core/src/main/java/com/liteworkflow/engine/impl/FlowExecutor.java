@@ -1,6 +1,6 @@
 package com.liteworkflow.engine.impl;
 
-import com.liteworkflow.engine.model.BaseModel;
+import com.liteworkflow.engine.model.FlowElement;
 
 /**
  * 流程执行器
@@ -15,5 +15,5 @@ public interface FlowExecutor
 	 * @param execution
 	 * @param model
 	 */
-	public void execute(Execution execution, BaseModel model);
+	public void execute(Execution execution, FlowElement model);
 }

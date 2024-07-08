@@ -44,7 +44,7 @@ public class TestGroup extends TestSpring
 		{
 			Map<String, Object> args = new HashMap<String, Object>();
 			args.put("task1.operator", new String[] { "role1" });
-			ProcessInstance instance = engine.getRuntimeService().startInstanceByName("group", "2", args);
+			ProcessInstance instance = engine.getRuntimeService().startInstanceByKey("group", "2", args);
 			System.out.println("instance=" + instance);
 			List<Task> tasks = engine.getTaskService().queryByInstanceId(instance.getId());
 			for (Task task : tasks)

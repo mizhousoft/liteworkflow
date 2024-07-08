@@ -14,8 +14,8 @@ import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.impl.command.DeleteDeploymentCommand;
 import com.liteworkflow.engine.impl.command.DeployCommand;
 import com.liteworkflow.engine.impl.command.RedeployCommand;
-import com.liteworkflow.engine.model.ProcessModel;
-import com.liteworkflow.engine.parser.ModelParser;
+import com.liteworkflow.engine.model.BpmnModel;
+import com.liteworkflow.engine.parser.BpmnParser;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.request.ProcessDefinitionPageRequest;
 import com.liteworkflow.engine.persistence.service.ProcessDefinitionEntityService;
@@ -31,7 +31,7 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 	private static final Logger LOG = LoggerFactory.getLogger(RepositoryServiceImpl.class);
 
 	/**
-	 * cache manager
+	 * Cache Manager
 	 */
 	private CacheManager cacheManager;
 
@@ -41,14 +41,14 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 	private ProcessDefinitionEntityService processDefinitionEntityService;
 
 	/**
-	 * 实体cache(key=name + - + version, value=entity对象)
+	 * 实体缓存Cache<processDefinitionKey + - + version, entity>
 	 */
 	private Cache<String, ProcessDefinition> entityCache;
 
 	/**
-	 * 名称cache(key=id, value=name对象)
+	 * Key缓存Cache<processDefinitionId, processDefinitionKey + - + version>
 	 */
-	private Cache<String, String> nameCache;
+	private Cache<String, String> keyVersionCache;
 
 	/**
 	 * 构造函数
@@ -65,7 +65,7 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 		this.cacheManager = cacheManager;
 		this.processDefinitionEntityService = processDefinitionEntityService;
 
-		this.nameCache = this.cacheManager.getCache("process-name");
+		this.keyVersionCache = this.cacheManager.getCache("process-key");
 		this.entityCache = this.cacheManager.getCache("process-entity");
 	}
 
@@ -73,18 +73,18 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String deploy(InputStream input)
+	public String deploy(InputStream istream)
 	{
-		return deploy(input, null);
+		return deploy(istream, null);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String deploy(InputStream input, String creator)
+	public String deploy(InputStream istream, String creator)
 	{
-		ProcessDefinition processDefinition = commandExecutor.execute(new DeployCommand(input, creator));
+		ProcessDefinition processDefinition = commandExecutor.execute(new DeployCommand(istream, creator));
 
 		putCache(processDefinition);
 
@@ -95,9 +95,9 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void redeploy(String id, InputStream input)
+	public void redeploy(String processDefinitionId, InputStream istream)
 	{
-		ProcessDefinition processDefinition = commandExecutor.execute(new RedeployCommand(input, id));
+		ProcessDefinition processDefinition = commandExecutor.execute(new RedeployCommand(istream, processDefinitionId));
 
 		putCache(processDefinition);
 	}
@@ -106,9 +106,9 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void deleteDeployment(String id, boolean cascade)
+	public void deleteDeployment(String processDefinitionId, boolean cascade)
 	{
-		ProcessDefinition processDefinition = commandExecutor.execute(new DeleteDeploymentCommand(id, cascade));
+		ProcessDefinition processDefinition = commandExecutor.execute(new DeleteDeploymentCommand(processDefinitionId, cascade));
 
 		removeCache(processDefinition);
 	}
@@ -117,21 +117,21 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessDefinition getById(String id)
+	public ProcessDefinition getProcessDefinition(String processDefinitionId)
 	{
-		Assert.notNull(id, "Process definition id is null.");
+		Assert.notNull(processDefinitionId, "Process definition id is null.");
 
-		String processName = nameCache.get(id);
-		if (null != processName)
+		String cacheKey = keyVersionCache.get(processDefinitionId);
+		if (null != cacheKey)
 		{
-			ProcessDefinition processDefinition = entityCache.get(processName);
+			ProcessDefinition processDefinition = entityCache.get(cacheKey);
 			if (processDefinition != null)
 			{
 				return processDefinition;
 			}
 		}
 
-		ProcessDefinition processDefinition = processDefinitionEntityService.getById(id);
+		ProcessDefinition processDefinition = processDefinitionEntityService.getById(processDefinitionId);
 		if (processDefinition != null)
 		{
 			putCache(processDefinition);
@@ -144,33 +144,33 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessDefinition getLatestByName(String name)
+	public ProcessDefinition getLatestByKey(String processDefinitionKey)
 	{
-		return getByVersion(name, null);
+		return getByVersion(processDefinitionKey, null);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessDefinition getByVersion(String name, Integer version)
+	public ProcessDefinition getByVersion(String processDefinitionKey, Integer version)
 	{
-		Assert.notNull(name, "Process definition name is null.");
+		Assert.notNull(processDefinitionKey, "Process definition key is null.");
 
 		if (null == version)
 		{
-			version = processDefinitionEntityService.getLatestVersion(name);
+			version = processDefinitionEntityService.getLatestVersion(processDefinitionKey);
 		}
 		Assert.notNull(version, "Process definition version is null.");
 
-		String cacheKey = buildEntityCacheKey(name, version);
+		String cacheKey = buildEntityCacheKey(processDefinitionKey, version);
 		ProcessDefinition processDefinition = entityCache.get(cacheKey);
 		if (processDefinition != null)
 		{
 			return processDefinition;
 		}
 
-		List<ProcessDefinition> list = processDefinitionEntityService.queryByName(name, version);
+		List<ProcessDefinition> list = processDefinitionEntityService.queryByKey(processDefinitionKey, version);
 		if (!list.isEmpty())
 		{
 			processDefinition = list.get(0);
@@ -185,9 +185,9 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<ProcessDefinition> queryList(String name)
+	public List<ProcessDefinition> queryList(String processDefinitionKey)
 	{
-		return processDefinitionEntityService.queryByName(name, null);
+		return processDefinitionEntityService.queryByKey(processDefinitionKey, null);
 	}
 
 	/**
@@ -206,18 +206,18 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 	 */
 	private void putCache(ProcessDefinition processDefinition)
 	{
-		if (processDefinition.getModel() == null)
+		if (processDefinition.getBpmnModel() == null)
 		{
-			ProcessModel processModel = ModelParser.parse(processDefinition.getBytes());
-			processDefinition.setModel(processModel);
+			BpmnModel bpmnModel = BpmnParser.parse(processDefinition.getBytes());
+			processDefinition.setBpmnModel(bpmnModel);
 		}
 
-		String cacheKey = buildEntityCacheKey(processDefinition.getName(), processDefinition.getVersion());
+		String cacheKey = buildEntityCacheKey(processDefinition.getKey(), processDefinition.getVersion());
 		entityCache.put(cacheKey, processDefinition);
 
-		nameCache.put(processDefinition.getId(), cacheKey);
+		keyVersionCache.put(processDefinition.getId(), cacheKey);
 
-		LOG.info("Put process definition cache, id is {}, name is {}.", processDefinition.getId(), cacheKey);
+		LOG.info("Put process definition cache, id is {}, cacheKey is {}.", processDefinition.getId(), cacheKey);
 	}
 
 	/**
@@ -227,23 +227,23 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 	 */
 	private void removeCache(ProcessDefinition processDefinition)
 	{
-		String cacheKey = buildEntityCacheKey(processDefinition.getName(), processDefinition.getVersion());
+		String cacheKey = buildEntityCacheKey(processDefinition.getKey(), processDefinition.getVersion());
 		entityCache.remove(cacheKey);
 
-		nameCache.remove(processDefinition.getId());
+		keyVersionCache.remove(processDefinition.getId());
 
-		LOG.info("Remove process definition cache, id is {}, name is {}.", processDefinition.getId(), cacheKey);
+		LOG.info("Remove process definition cache, id is {}, cacheKey is {}.", processDefinition.getId(), cacheKey);
 	}
 
 	/**
 	 * 构建缓存KEY
 	 * 
-	 * @param processName
+	 * @param processDefinitionKey
 	 * @param version
 	 * @return
 	 */
-	private String buildEntityCacheKey(String processName, int version)
+	private String buildEntityCacheKey(String processDefinitionKey, int version)
 	{
-		return processName + "-" + version;
+		return processDefinitionKey + "-" + version;
 	}
 }

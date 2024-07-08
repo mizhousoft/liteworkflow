@@ -15,19 +15,19 @@ import com.mizhousoft.commons.mapper.PageableMapper;
 public interface ProcessDefinitionMapper extends PageableMapper<ProcessDefinition, String>
 {
 	/**
-	 * 根据流程名称查询
+	 * 根据流程Key查询
 	 * 
-	 * @param name
+	 * @param processDefinitionKey
 	 * @param version
 	 * @return
 	 */
-	List<ProcessDefinition> findByProcessName(@Param("name") String name, @Param("version") Integer version);
+	List<ProcessDefinition> findByKey(@Param("processDefinitionKey") String processDefinitionKey, @Param("version") Integer version);
 
 	/**
-	 * 根据流程名称查询最近的版本号
+	 * 根据流程Key查询最新的版本号
 	 * 
-	 * @param name 流程名称
-	 * @return Integer 流程定义版本号
+	 * @param processDefinitionKey
+	 * @return
 	 */
-	Integer findLatestVersion(String name);
+	Integer findLatestVersion(String processDefinitionKey);
 }

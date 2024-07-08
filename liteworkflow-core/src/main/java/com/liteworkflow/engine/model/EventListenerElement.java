@@ -1,11 +1,11 @@
 package com.liteworkflow.engine.model;
 
 /**
- * 监听器模型
+ * 事件监听器元素
  *
  * @version
  */
-public class ListenerModel
+public class EventListenerElement
 {
 	/**
 	 * 实现类型：类

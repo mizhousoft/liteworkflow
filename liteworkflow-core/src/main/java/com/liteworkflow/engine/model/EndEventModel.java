@@ -8,13 +8,8 @@ import java.util.List;
  * 
  * @version
  */
-public class EndModel extends NodeModel
+public class EndEventModel extends EventModel
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7793175180140842894L;
-
 	/**
 	 * 结束节点无输出变迁
 	 */

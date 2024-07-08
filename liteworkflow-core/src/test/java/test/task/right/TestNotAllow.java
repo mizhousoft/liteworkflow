@@ -45,7 +45,7 @@ public class TestNotAllow extends TestSpring
 		List<Task> tasks = engine.getTaskService().queryByInstanceId(instance.getId());
 		for (Task task : tasks)
 		{
-			engine.getTaskService().complete(task.getId(), ProcessEngine.ADMIN, args);
+			engine.getTaskService().complete(task.getId(), "snaker.admin", args);
 		}
 	}
 }

@@ -37,9 +37,29 @@ public class ProcessInstanceEntityServiceImpl implements ProcessInstanceEntitySe
 	 */
 	public static final Integer STATE_TERMINATION = 2;
 
+	/**
+	 * ProcessInstanceMapper
+	 */
 	private ProcessInstanceMapper processInstanceMapper;
 
+	/**
+	 * HistoricProcessInstanceEntityService
+	 */
 	private HistoricProcessInstanceEntityService historicProcessInstanceEntityService;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param processInstanceMapper
+	 * @param historicProcessInstanceEntityService
+	 */
+	public ProcessInstanceEntityServiceImpl(ProcessInstanceMapper processInstanceMapper,
+	        HistoricProcessInstanceEntityService historicProcessInstanceEntityService)
+	{
+		super();
+		this.processInstanceMapper = processInstanceMapper;
+		this.historicProcessInstanceEntityService = historicProcessInstanceEntityService;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -125,25 +145,5 @@ public class ProcessInstanceEntityServiceImpl implements ProcessInstanceEntitySe
 		Page<ProcessInstance> page = PageBuilder.build(list, request, total);
 
 		return page;
-	}
-
-	/**
-	 * 设置processInstanceMapper
-	 * 
-	 * @param processInstanceMapper
-	 */
-	public void setProcessInstanceMapper(ProcessInstanceMapper processInstanceMapper)
-	{
-		this.processInstanceMapper = processInstanceMapper;
-	}
-
-	/**
-	 * 设置historicProcessInstanceEntityService
-	 * 
-	 * @param historicProcessInstanceEntityService
-	 */
-	public void setHistoricProcessInstanceEntityService(HistoricProcessInstanceEntityService historicProcessInstanceEntityService)
-	{
-		this.historicProcessInstanceEntityService = historicProcessInstanceEntityService;
 	}
 }

@@ -34,9 +34,9 @@ public class TestProcess extends TestSpring
 	@Test
 	public void test()
 	{
-		ProcessDefinition process = engine.getRepositoryService().getById(processId);
+		ProcessDefinition process = engine.getRepositoryService().getProcessDefinition(processId);
 		System.out.println("output 1=" + process);
-		process = engine.getRepositoryService().getByVersion(process.getName(), process.getVersion());
+		process = engine.getRepositoryService().getByVersion(process.getKey(), process.getVersion());
 		System.out.println("output 2=" + process);
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("task1.operator", "1");

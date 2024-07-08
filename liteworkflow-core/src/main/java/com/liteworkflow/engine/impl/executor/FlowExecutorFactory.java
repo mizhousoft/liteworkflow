@@ -2,14 +2,13 @@ package com.liteworkflow.engine.impl.executor;
 
 import com.liteworkflow.WorkFlowException;
 import com.liteworkflow.engine.impl.FlowExecutor;
-import com.liteworkflow.engine.model.BaseModel;
-import com.liteworkflow.engine.model.DecisionModel;
-import com.liteworkflow.engine.model.EndModel;
-import com.liteworkflow.engine.model.ForkModel;
-import com.liteworkflow.engine.model.JoinModel;
-import com.liteworkflow.engine.model.StartModel;
-import com.liteworkflow.engine.model.SubProcessModel;
-import com.liteworkflow.engine.model.TaskModel;
+import com.liteworkflow.engine.model.FlowElement;
+import com.liteworkflow.engine.model.ExclusiveGatewayModel;
+import com.liteworkflow.engine.model.EndEventModel;
+import com.liteworkflow.engine.model.ForkGatewayModel;
+import com.liteworkflow.engine.model.JoinGatewayModel;
+import com.liteworkflow.engine.model.StartEventModel;
+import com.liteworkflow.engine.model.UserTaskModel;
 import com.liteworkflow.engine.model.TransitionModel;
 
 /**
@@ -25,35 +24,31 @@ public class FlowExecutorFactory
 	 * @param model
 	 * @return
 	 */
-	public static FlowExecutor build(BaseModel model)
+	public static FlowExecutor build(FlowElement model)
 	{
-		if (model instanceof StartModel)
+		if (model instanceof StartEventModel)
 		{
 			return new StartExecutor();
 		}
-		else if (model instanceof DecisionModel)
+		else if (model instanceof ExclusiveGatewayModel)
 		{
-			return new DecisionExecutor();
+			return new ExclusiveGatewayExecutor();
 		}
-		else if (model instanceof EndModel)
+		else if (model instanceof EndEventModel)
 		{
 			return new EndExecutor();
 		}
-		else if (model instanceof ForkModel)
+		else if (model instanceof ForkGatewayModel)
 		{
-			return new ForkExecutor();
+			return new ForkGatewayExecutor();
 		}
-		else if (model instanceof JoinModel)
+		else if (model instanceof JoinGatewayModel)
 		{
-			return new JoinExecutor();
+			return new JoinGatewayExecutor();
 		}
-		else if (model instanceof SubProcessModel)
+		else if (model instanceof UserTaskModel)
 		{
-			return new SubProcessExecutor();
-		}
-		else if (model instanceof TaskModel)
-		{
-			return new TaskExecutor();
+			return new UserTaskExecutor();
 		}
 		else if (model instanceof TransitionModel)
 		{

@@ -5,11 +5,7 @@ package com.liteworkflow.engine.model;
  * 
  * @version
  */
-public abstract class ActivityModel extends NodeModel
+public abstract class ActivityModel extends FlowNode
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 761102386160546149L;
 
 }

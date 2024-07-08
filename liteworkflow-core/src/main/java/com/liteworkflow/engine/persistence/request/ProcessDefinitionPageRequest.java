@@ -14,6 +14,11 @@ public class ProcessDefinitionPageRequest extends PageRequest
 	private static final long serialVersionUID = -4195498843400032234L;
 
 	/**
+	 * 流程定义Key
+	 */
+	private String key;
+
+	/**
 	 * 名称
 	 */
 	private String name;
@@ -22,11 +27,6 @@ public class ProcessDefinitionPageRequest extends PageRequest
 	 * 流程定义版本号
 	 */
 	private Integer version;
-
-	/**
-	 * 显示名称
-	 */
-	private String displayName;
 
 	/**
 	 * 流程分类
@@ -42,6 +42,26 @@ public class ProcessDefinitionPageRequest extends PageRequest
 		super();
 
 		this.setSort(Sort.create(Direction.ASC, "name"));
+	}
+
+	/**
+	 * 获取key
+	 * 
+	 * @return
+	 */
+	public String getKey()
+	{
+		return key;
+	}
+
+	/**
+	 * 设置key
+	 * 
+	 * @param key
+	 */
+	public void setKey(String key)
+	{
+		this.key = key;
 	}
 
 	/**
@@ -82,26 +102,6 @@ public class ProcessDefinitionPageRequest extends PageRequest
 	public void setVersion(Integer version)
 	{
 		this.version = version;
-	}
-
-	/**
-	 * 获取displayName
-	 * 
-	 * @return
-	 */
-	public String getDisplayName()
-	{
-		return displayName;
-	}
-
-	/**
-	 * 设置displayName
-	 * 
-	 * @param displayName
-	 */
-	public void setDisplayName(String displayName)
-	{
-		this.displayName = displayName;
 	}
 
 	/**

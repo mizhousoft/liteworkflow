@@ -7,10 +7,6 @@ package com.liteworkflow.engine;
  */
 public interface ProcessEngine
 {
-	String ADMIN = "snaker.admin";
-
-	String AUTO = "snaker.auto";
-
 	/**
 	 * 获取RepositoryService服务
 	 * 

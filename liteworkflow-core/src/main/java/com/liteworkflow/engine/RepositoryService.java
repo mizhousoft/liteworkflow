@@ -17,68 +17,68 @@ public interface RepositoryService
 	/**
 	 * 根据InputStream輸入流，部署流程定义
 	 * 
-	 * @param input
+	 * @param istream
 	 * @return
 	 */
-	String deploy(InputStream input);
+	String deploy(InputStream istream);
 
 	/**
 	 * 根据InputStream輸入流，部署流程定义
 	 * 
-	 * @param input
+	 * @param istream
 	 * @param creator
 	 * @return
 	 */
-	String deploy(InputStream input, String creator);
+	String deploy(InputStream istream, String creator);
 
 	/**
 	 * 根据InputStream輸入流，部署流程定义
 	 * 
-	 * @param id
-	 * @param input
+	 * @param processDefinitionId
+	 * @param istream
 	 */
-	void redeploy(String id, InputStream input);
+	void redeploy(String processDefinitionId, InputStream istream);
 
 	/**
 	 * 删除流程定义
 	 * 
-	 * @param id
+	 * @param processDefinitionId
 	 * @param cascade
 	 */
-	void deleteDeployment(String id, boolean cascade);
+	void deleteDeployment(String processDefinitionId, boolean cascade);
 
 	/**
-	 * 根据主键ID获取流程定义对象
+	 * 根据ID获取流程定义对象
 	 * 
-	 * @param id
+	 * @param processDefinitionId
 	 * @return
 	 */
-	ProcessDefinition getById(String id);
+	ProcessDefinition getProcessDefinition(String processDefinitionId);
 
 	/**
-	 * 根据流程name获取流程定义对象
+	 * 根据流程定义Key获取流程定义对象
 	 * 
-	 * @param name
+	 * @param processDefinitionKey
 	 * @return
 	 */
-	ProcessDefinition getLatestByName(String name);
+	ProcessDefinition getLatestByKey(String processDefinitionKey);
 
 	/**
-	 * 根据流程name、version获取流程定义对象
+	 * 根据流程定义processDefinitionKey、version获取流程定义对象
 	 * 
-	 * @param name
+	 * @param processDefinitionKey
 	 * @param version
 	 * @return
 	 */
-	ProcessDefinition getByVersion(String name, Integer version);
+	ProcessDefinition getByVersion(String processDefinitionKey, Integer version);
 
 	/**
-	 * 根据名称查询
+	 * 根据流程定义Key查询
 	 * 
-	 * @param name
+	 * @param processDefinitionKey
 	 * @return
 	 */
-	List<ProcessDefinition> queryList(String name);
+	List<ProcessDefinition> queryList(String processDefinitionKey);
 
 	/**
 	 * 分页查询数据

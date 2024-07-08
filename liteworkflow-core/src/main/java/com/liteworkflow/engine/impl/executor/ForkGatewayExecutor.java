@@ -1,23 +1,22 @@
 package com.liteworkflow.engine.impl.executor;
 
 import com.liteworkflow.engine.impl.Execution;
-import com.liteworkflow.engine.model.NodeModel;
+import com.liteworkflow.engine.model.FlowNode;
 
 /**
- * TODO
+ * Fork执行器
  *
  * @version
  */
-public class SubProcessExecutor extends NodeFlowExecutor
+public class ForkGatewayExecutor extends NodeFlowExecutor
 {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void doExecute(Execution execution, NodeModel nodeModel)
+	protected void doExecute(Execution execution, FlowNode nodeModel)
 	{
 		runOutTransition(execution, nodeModel);
 	}
-
 }
