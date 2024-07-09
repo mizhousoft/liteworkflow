@@ -73,7 +73,7 @@ public class CompleteTaskCommand implements Command<Void>
 		BpmnModel bpmnModel = execution.getProcessDefinition().getBpmnModel();
 		if (bpmnModel != null)
 		{
-			FlowNode nodeModel = bpmnModel.getNodeModel(execution.getTask().getTaskDefinitionId());
+			FlowNode nodeModel = bpmnModel.getFlowNodeModel(execution.getTask().getTaskDefinitionId());
 			// 将执行对象交给该任务对应的节点模型执行
 			FlowExecutor executor = FlowExecutorFactory.build(nodeModel);
 			executor.execute(execution, nodeModel);

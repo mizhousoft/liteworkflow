@@ -68,7 +68,7 @@ public class UserTaskExecutor extends NodeFlowExecutor
 		String[] activeNodes = findActiveNodes(taskModel);
 		boolean isTaskMerged = false;
 
-		if (bpmnModel.containsNodeNames(UserTaskModel.class, activeNodes))
+		if (bpmnModel.containsNodeIds(UserTaskModel.class, activeNodes))
 		{
 			List<Task> tasks = taskService.queryByInstanceId(instance.getId());
 			tasks = tasks.stream()

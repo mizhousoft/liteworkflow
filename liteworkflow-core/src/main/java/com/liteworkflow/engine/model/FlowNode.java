@@ -13,12 +13,12 @@ public abstract class FlowNode extends FlowElement
 	/**
 	 * 输入变迁集合
 	 */
-	private List<TransitionModel> inputs = new ArrayList<TransitionModel>(0);
+	private List<SequenceFlowModel> incomingFlows = new ArrayList<>(0);
 
 	/**
 	 * 输出变迁集合
 	 */
-	private List<TransitionModel> outputs = new ArrayList<TransitionModel>(0);
+	private List<SequenceFlowModel> outgoingFlows = new ArrayList<>(0);
 
 	/**
 	 * layout
@@ -26,99 +26,43 @@ public abstract class FlowNode extends FlowElement
 	private String layout;
 
 	/**
-	 * 根据父节点模型、当前节点模型判断是否可退回。可退回条件：
-	 * 1、满足中间无fork、join模型
-	 * 2、满足父节点模型如果为任务模型时，参与类型为any
-	 * 
-	 * @param parent 父节点模型
-	 * @return 是否可以退回
-	 */
-	public static boolean canRejected(FlowNode current, FlowNode parent)
-	{
-		if (parent instanceof UserTaskModel && !((UserTaskModel) parent).isPerformAny())
-		{
-			return false;
-		}
-		boolean result = false;
-		for (TransitionModel tm : current.getInputs())
-		{
-			FlowNode source = tm.getSource();
-			if (source == parent)
-			{
-				return true;
-			}
-			if (source instanceof ForkGatewayModel || source instanceof JoinGatewayModel || source instanceof StartEventModel)
-			{
-				continue;
-			}
-			result = result || canRejected(source, parent);
-		}
-		return result;
-	}
-
-	public <T> List<T> getNextModels(Class<T> clazz)
-	{
-		List<T> models = new ArrayList<T>();
-		for (TransitionModel tm : this.getOutputs())
-		{
-			addNextModels(models, tm, clazz);
-		}
-		return models;
-	}
-
-	protected <T> void addNextModels(List<T> models, TransitionModel tm, Class<T> clazz)
-	{
-		if (clazz.isInstance(tm.getTarget()))
-		{
-			models.add((T) tm.getTarget());
-		}
-		else
-		{
-			for (TransitionModel tm2 : tm.getTarget().getOutputs())
-			{
-				addNextModels(models, tm2, clazz);
-			}
-		}
-	}
-
-	/**
-	 * 获取inputs
+	 * 获取incomingFlows
 	 * 
 	 * @return
 	 */
-	public List<TransitionModel> getInputs()
+	public List<SequenceFlowModel> getIncomingFlows()
 	{
-		return inputs;
+		return incomingFlows;
 	}
 
 	/**
-	 * 设置inputs
+	 * 设置incomingFlows
 	 * 
-	 * @param inputs
+	 * @param incomingFlows
 	 */
-	public void setInputs(List<TransitionModel> inputs)
+	public void setIncomingFlows(List<SequenceFlowModel> incomingFlows)
 	{
-		this.inputs = inputs;
+		this.incomingFlows = incomingFlows;
 	}
 
 	/**
-	 * 获取outputs
+	 * 获取outgoingFlows
 	 * 
 	 * @return
 	 */
-	public List<TransitionModel> getOutputs()
+	public List<SequenceFlowModel> getOutgoingFlows()
 	{
-		return outputs;
+		return outgoingFlows;
 	}
 
 	/**
-	 * 设置outputs
+	 * 设置outgoingFlows
 	 * 
-	 * @param outputs
+	 * @param outgoingFlows
 	 */
-	public void setOutputs(List<TransitionModel> outputs)
+	public void setOutgoingFlows(List<SequenceFlowModel> outgoingFlows)
 	{
-		this.outputs = outputs;
+		this.outgoingFlows = outgoingFlows;
 	}
 
 	/**

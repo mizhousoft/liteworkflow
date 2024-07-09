@@ -9,12 +9,12 @@ import org.slf4j.LoggerFactory;
 import com.liteworkflow.WorkFlowException;
 import com.liteworkflow.engine.DecisionHandler;
 import com.liteworkflow.engine.impl.Execution;
-import com.liteworkflow.engine.impl.FlowExecutor;
 import com.liteworkflow.engine.impl.Expression;
+import com.liteworkflow.engine.impl.FlowExecutor;
 import com.liteworkflow.engine.impl.el.SpelExpression;
 import com.liteworkflow.engine.model.ExclusiveGatewayModel;
 import com.liteworkflow.engine.model.FlowNode;
-import com.liteworkflow.engine.model.TransitionModel;
+import com.liteworkflow.engine.model.SequenceFlowModel;
 
 /**
  * TODO
@@ -55,12 +55,12 @@ public class ExclusiveGatewayExecutor extends NodeFlowExecutor
 		        + next);
 		boolean isfound = false;
 
-		List<TransitionModel> outputs = nodeModel.getOutputs();
-		for (TransitionModel tm : outputs)
+		List<SequenceFlowModel> outputs = nodeModel.getOutgoingFlows();
+		for (SequenceFlowModel tm : outputs)
 		{
 			if (StringUtils.isBlank(next))
 			{
-				String expr = tm.getExpr();
+				String expr = tm.getConditionExpression();
 				if (!StringUtils.isBlank(expr) && expression.eval(Boolean.class, expr, execution.getArgs()))
 				{
 					tm.setEnabled(true);

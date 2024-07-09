@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<process displayName="测试驳回" id="reject">
-    <startEvent displayName="start1" layout="28,83,-1,-1" id="start1">
-        <transition g="" id="transition1" offset="0,0" to="task1" />
-    </startEvent>
-    <endEvent displayName="end1" layout="661,83,-1,-1" id="end1" />
-    <userTask displayName="task1" layout="122,81,-1,-1" id="task1" performType="ANY">
-        <transition g="" id="transition2" offset="0,0" to="task2" />
-    </userTask>
-    <userTask displayName="task2" layout="255,81,-1,-1" id="task2" performType="ANY">
-        <transition g="" id="transition3" offset="0,0" to="decision1" />
-    </userTask>
-    <exclusiveGateway displayName="decision1" layout="389,83,-1,-1" id="decision1">
-        <transition expr="number == 1" g="" id="transition4" offset="0,0" to="task3" />
-        <transition expr="number == 2" g="" id="transition6" offset="0,0" to="task4" />
-    </exclusiveGateway>
-    <userTask displayName="task3" layout="491,81,-1,-1" id="task3" performType="ANY">
-        <transition g="" id="transition5" offset="0,0" to="end1" />
-    </userTask>
-    <userTask displayName="task4" layout="491,188,-1,-1" id="task4" performType="ANY">
-        <transition g="" id="transition7" offset="0,0" to="end1" />
-    </userTask>
+<process name="测试驳回" id="reject">
+    <startEvent name="start1" layout="28,83,-1,-1" id="start1" />
+    <endEvent name="end1" layout="661,83,-1,-1" id="end1" />
+    <userTask name="task1" layout="122,81,-1,-1" id="task1" performType="ANY" />
+    <userTask name="task2" layout="255,81,-1,-1" id="task2" performType="ANY" />
+    <exclusiveGateway name="decision1" layout="389,83,-1,-1" id="decision1" />
+    <userTask name="task3" layout="491,81,-1,-1" id="task3" performType="ANY" />
+    <userTask name="task4" layout="491,188,-1,-1" id="task4" performType="ANY" />
+    <sequenceFlow sourceRef="start1" targetRef="task1" g="" offset="0,0" />
+    <sequenceFlow sourceRef="task1" targetRef="task2" g="" offset="0,0" />
+    <sequenceFlow sourceRef="task2" targetRef="decision1" g="" offset="0,0" />
+    <sequenceFlow sourceRef="decision1" targetRef="task3" g="" offset="0,0">
+		<conditionExpression><![CDATA[number == 1]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow sourceRef="decision1" targetRef="task4" g="" offset="0,0">
+		<conditionExpression><![CDATA[number == 2]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow sourceRef="task3" targetRef="end1" g="" offset="0,0" />
+    <sequenceFlow sourceRef="task4" targetRef="end1" g="" offset="0,0" />
 </process>

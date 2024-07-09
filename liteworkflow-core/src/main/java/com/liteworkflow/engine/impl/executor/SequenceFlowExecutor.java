@@ -14,8 +14,8 @@ import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.impl.FlowExecutor;
 import com.liteworkflow.engine.model.FlowElement;
 import com.liteworkflow.engine.model.FlowNode;
+import com.liteworkflow.engine.model.SequenceFlowModel;
 import com.liteworkflow.engine.model.StartEventModel;
-import com.liteworkflow.engine.model.TransitionModel;
 import com.liteworkflow.engine.model.UserTaskModel;
 import com.liteworkflow.engine.model.UserTaskModel.PerformType;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
@@ -29,7 +29,7 @@ import com.liteworkflow.engine.util.ProcessInstanceUtils;
  *
  * @version
  */
-public class TransitionExecutor implements FlowExecutor
+public class SequenceFlowExecutor implements FlowExecutor
 {
 	private static final String START = "start";
 
@@ -39,15 +39,15 @@ public class TransitionExecutor implements FlowExecutor
 	@Override
 	public void execute(Execution execution, FlowElement model)
 	{
-		TransitionModel transitionModel = (TransitionModel) model;
+		SequenceFlowModel sequenceFlow = (SequenceFlowModel) model;
 
-		boolean enabled = transitionModel.isEnabled();
+		boolean enabled = sequenceFlow.isEnabled();
 		if (!enabled)
 		{
 			return;
 		}
 
-		FlowNode targetModel = transitionModel.getTarget();
+		FlowNode targetModel = sequenceFlow.getTargetNode();
 		if (targetModel instanceof UserTaskModel taskModel)
 		{
 			createTask(execution, taskModel);
@@ -139,7 +139,7 @@ public class TransitionExecutor implements FlowExecutor
 		task.setProcessDefinitionId(execution.getProcessInstance().getProcessDefinitionId());
 		task.setInstanceId(execution.getProcessInstance().getId());
 		task.setTaskDefinitionId(model.getId());
-		task.setDisplayName(model.getDisplayName());
+		task.setName(model.getName());
 		task.setCreateTime(LocalDateTime.now());
 		task.setTaskType(0);
 		task.setParentTaskId(execution.getTask() == null ? START : execution.getTask().getId());

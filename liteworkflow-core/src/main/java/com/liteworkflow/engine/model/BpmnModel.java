@@ -11,14 +11,9 @@ import java.util.List;
 public class BpmnModel extends FlowElement
 {
 	/**
-	 * 节点元素集合
+	 * 元素集合
 	 */
-	private List<FlowNode> nodeModels = new ArrayList<FlowNode>();
-
-	/**
-	 * 任务元素集合
-	 */
-	private List<UserTaskModel> taskModels = new ArrayList<UserTaskModel>();
+	private List<FlowElement> flowElements = new ArrayList<>(0);
 
 	/**
 	 * 流程分类
@@ -26,55 +21,9 @@ public class BpmnModel extends FlowElement
 	private String category;
 
 	/**
-	 * 期望完成时间
-	 */
-	private String expireTime;
-
-	/**
 	 * 监听器元素
 	 */
 	private List<EventListenerElement> eventListeners;
-
-	/**
-	 * 获取所有的有序任务模型集合
-	 * 
-	 * @return List<TaskModel> 任务模型集合
-	 */
-	public synchronized List<UserTaskModel> getTaskModels()
-	{
-		if (taskModels.isEmpty())
-		{
-			buildModels(taskModels, getStartModel().getNextModels(UserTaskModel.class), UserTaskModel.class);
-		}
-
-		return taskModels;
-	}
-
-	/**
-	 * 根据指定的节点类型返回流程定义中所有模型对象
-	 * 
-	 * @param clazz 节点类型
-	 * @param <T> 泛型
-	 * @return 节点列表
-	 */
-	public <T> List<T> getModels(Class<T> clazz)
-	{
-		List<T> models = new ArrayList<T>();
-		buildModels(models, getStartModel().getNextModels(clazz), clazz);
-		return models;
-	}
-
-	private <T> void buildModels(List<T> models, List<T> nextModels, Class<T> clazz)
-	{
-		for (T nextModel : nextModels)
-		{
-			if (!models.contains(nextModel))
-			{
-				models.add(nextModel);
-				buildModels(models, ((FlowNode) nextModel).getNextModels(clazz), clazz);
-			}
-		}
-	}
 
 	/**
 	 * 获取process定义的start节点模型
@@ -83,9 +32,9 @@ public class BpmnModel extends FlowElement
 	 */
 	public StartEventModel getStartModel()
 	{
-		for (FlowNode nodeModel : nodeModels)
+		for (FlowElement flowElement : flowElements)
 		{
-			if (nodeModel instanceof StartEventModel startModel)
+			if (flowElement instanceof StartEventModel startModel)
 			{
 				return startModel;
 			}
@@ -101,9 +50,9 @@ public class BpmnModel extends FlowElement
 	 */
 	public EndEventModel getEndModel()
 	{
-		for (FlowNode nodeModel : nodeModels)
+		for (FlowElement flowElement : flowElements)
 		{
-			if (nodeModel instanceof EndEventModel endModel)
+			if (flowElement instanceof EndEventModel endModel)
 			{
 				return endModel;
 			}
@@ -118,13 +67,13 @@ public class BpmnModel extends FlowElement
 	 * @param nodeId 节点ID
 	 * @return
 	 */
-	public FlowNode getNodeModel(String nodeId)
+	public FlowNode getFlowNodeModel(String nodeId)
 	{
-		for (FlowNode nodeModel : nodeModels)
+		for (FlowElement flowElement : flowElements)
 		{
-			if (nodeModel.getId().equals(nodeId))
+			if (flowElement.getId().equals(nodeId) && flowElement instanceof FlowNode flowNode)
 			{
-				return nodeModel;
+				return flowNode;
 			}
 		}
 
@@ -137,18 +86,18 @@ public class BpmnModel extends FlowElement
 	 * @param nodeIds 节点Id数组
 	 * @return
 	 */
-	public <T> boolean containsNodeNames(Class<T> T, String... nodeIds)
+	public <T> boolean containsNodeIds(Class<T> T, String... nodeIds)
 	{
-		for (FlowNode node : nodeModels)
+		for (FlowElement flowElement : flowElements)
 		{
-			if (!T.isInstance(node))
+			if (!T.isInstance(flowElement))
 			{
 				continue;
 			}
 
 			for (String nodeId : nodeIds)
 			{
-				if (node.getId().equals(nodeId))
+				if (flowElement.getId().equals(nodeId))
 				{
 					return true;
 				}
@@ -159,23 +108,23 @@ public class BpmnModel extends FlowElement
 	}
 
 	/**
-	 * 获取nodeModels
+	 * 获取flowElements
 	 * 
 	 * @return
 	 */
-	public List<FlowNode> getNodeModels()
+	public List<FlowElement> getFlowElements()
 	{
-		return nodeModels;
+		return flowElements;
 	}
 
 	/**
-	 * 设置nodeModels
+	 * 设置flowElements
 	 * 
-	 * @param nodeModels
+	 * @param flowElements
 	 */
-	public void setNodeModels(List<FlowNode> nodeModels)
+	public void setFlowElements(List<FlowElement> flowElements)
 	{
-		this.nodeModels = nodeModels;
+		this.flowElements = flowElements;
 	}
 
 	/**
@@ -196,36 +145,6 @@ public class BpmnModel extends FlowElement
 	public void setCategory(String category)
 	{
 		this.category = category;
-	}
-
-	/**
-	 * 获取expireTime
-	 * 
-	 * @return
-	 */
-	public String getExpireTime()
-	{
-		return expireTime;
-	}
-
-	/**
-	 * 设置expireTime
-	 * 
-	 * @param expireTime
-	 */
-	public void setExpireTime(String expireTime)
-	{
-		this.expireTime = expireTime;
-	}
-
-	/**
-	 * 设置taskModels
-	 * 
-	 * @param taskModels
-	 */
-	public void setTaskModels(List<UserTaskModel> taskModels)
-	{
-		this.taskModels = taskModels;
 	}
 
 	/**

@@ -1,7 +1,7 @@
 package com.liteworkflow.engine.model;
 
 /**
- * 模型元素基类
+ * 流程元素基类
  * 
  * @version
  */
@@ -13,9 +13,9 @@ public class FlowElement
 	private String id;
 
 	/**
-	 * 显示名称
+	 * 名称
 	 */
-	private String displayName;
+	private String name;
 
 	/**
 	 * 获取id
@@ -38,22 +38,22 @@ public class FlowElement
 	}
 
 	/**
-	 * 获取displayName
+	 * 获取name
 	 * 
 	 * @return
 	 */
-	public String getDisplayName()
+	public String getName()
 	{
-		return displayName;
+		return name;
 	}
 
 	/**
-	 * 设置displayName
+	 * 设置name
 	 * 
-	 * @param displayName
+	 * @param name
 	 */
-	public void setDisplayName(String displayName)
+	public void setName(String name)
 	{
-		this.displayName = displayName;
+		this.name = name;
 	}
 }

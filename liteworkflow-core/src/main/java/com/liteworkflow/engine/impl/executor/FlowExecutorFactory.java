@@ -2,14 +2,14 @@ package com.liteworkflow.engine.impl.executor;
 
 import com.liteworkflow.WorkFlowException;
 import com.liteworkflow.engine.impl.FlowExecutor;
-import com.liteworkflow.engine.model.FlowElement;
-import com.liteworkflow.engine.model.ExclusiveGatewayModel;
 import com.liteworkflow.engine.model.EndEventModel;
+import com.liteworkflow.engine.model.ExclusiveGatewayModel;
+import com.liteworkflow.engine.model.FlowElement;
 import com.liteworkflow.engine.model.ForkGatewayModel;
 import com.liteworkflow.engine.model.JoinGatewayModel;
+import com.liteworkflow.engine.model.SequenceFlowModel;
 import com.liteworkflow.engine.model.StartEventModel;
 import com.liteworkflow.engine.model.UserTaskModel;
-import com.liteworkflow.engine.model.TransitionModel;
 
 /**
  * 流程执行器工厂类
@@ -50,9 +50,9 @@ public class FlowExecutorFactory
 		{
 			return new UserTaskExecutor();
 		}
-		else if (model instanceof TransitionModel)
+		else if (model instanceof SequenceFlowModel)
 		{
-			return new TransitionExecutor();
+			return new SequenceFlowExecutor();
 		}
 
 		throw new WorkFlowException("Model not support to build FlowExecutor.");

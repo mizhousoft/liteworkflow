@@ -1,12 +1,12 @@
-package com.liteworkflow.engine.parser.impl;
+package com.liteworkflow.engine.impl.parser.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Element;
 
 import com.liteworkflow.engine.DecisionHandler;
+import com.liteworkflow.engine.impl.parser.AbstractNodeParser;
 import com.liteworkflow.engine.model.ExclusiveGatewayModel;
 import com.liteworkflow.engine.model.FlowNode;
-import com.liteworkflow.engine.parser.AbstractNodeParser;
 import com.mizhousoft.commons.lang.ClassUtils;
 
 /**
@@ -28,7 +28,7 @@ public class ExclusiveGatewayParser extends AbstractNodeParser
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getNodeName()
+	public String getElementName()
 	{
 		return "exclusiveGateway";
 	}

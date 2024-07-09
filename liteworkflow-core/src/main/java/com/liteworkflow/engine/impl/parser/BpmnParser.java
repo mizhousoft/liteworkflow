@@ -1,4 +1,4 @@
-package com.liteworkflow.engine.parser;
+package com.liteworkflow.engine.impl.parser;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -18,17 +18,18 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.liteworkflow.WorkFlowException;
+import com.liteworkflow.engine.impl.parser.impl.EndEventParser;
+import com.liteworkflow.engine.impl.parser.impl.ExclusiveGatewayParser;
+import com.liteworkflow.engine.impl.parser.impl.ForkGatewayParser;
+import com.liteworkflow.engine.impl.parser.impl.JoinGatewayParser;
+import com.liteworkflow.engine.impl.parser.impl.SequenceFlowParser;
+import com.liteworkflow.engine.impl.parser.impl.StartEventParser;
+import com.liteworkflow.engine.impl.parser.impl.UserTaskParser;
 import com.liteworkflow.engine.model.BpmnModel;
 import com.liteworkflow.engine.model.EventListenerElement;
+import com.liteworkflow.engine.model.FlowElement;
 import com.liteworkflow.engine.model.FlowNode;
-import com.liteworkflow.engine.model.TransitionModel;
-import com.liteworkflow.engine.parser.impl.EndEventParser;
-import com.liteworkflow.engine.parser.impl.ExclusiveGatewayParser;
-import com.liteworkflow.engine.parser.impl.ForkGatewayParser;
-import com.liteworkflow.engine.parser.impl.JoinGatewayParser;
-import com.liteworkflow.engine.parser.impl.SequenceFlowParser;
-import com.liteworkflow.engine.parser.impl.StartEventParser;
-import com.liteworkflow.engine.parser.impl.UserTaskParser;
+import com.liteworkflow.engine.model.SequenceFlowModel;
 import com.liteworkflow.engine.util.DomUtils;
 
 /**
@@ -57,7 +58,6 @@ public class BpmnParser
 			add(new ForkGatewayParser());
 			add(new JoinGatewayParser());
 			add(new EndEventParser());
-			add(new SequenceFlowParser());
 		}
 	};
 
@@ -77,12 +77,11 @@ public class BpmnParser
 
 			BpmnModel bpmnModel = new BpmnModel();
 			bpmnModel.setId(processE.getAttribute(NodeParser.ATTR_ID));
-			bpmnModel.setDisplayName(processE.getAttribute(NodeParser.ATTR_DISPLAYNAME));
+			bpmnModel.setName(processE.getAttribute(NodeParser.ATTR_NAME));
 			bpmnModel.setCategory(StringUtils.trimToNull(processE.getAttribute(NodeParser.ATTR_CATEGORY)));
-			bpmnModel.setExpireTime(processE.getAttribute(NodeParser.ATTR_EXPIRETIME));
 
-			List<FlowNode> nodeModels = parseNodeList(processE.getChildNodes());
-			bpmnModel.setNodeModels(nodeModels);
+			List<FlowElement> nodeModels = parseNodeList(processE.getChildNodes());
+			bpmnModel.setFlowElements(nodeModels);
 
 			List<EventListenerElement> eventListeners = parseEventListenerElements(processE);
 			bpmnModel.setEventListeners(eventListeners);
@@ -103,45 +102,56 @@ public class BpmnParser
 	 * @param nodeElementList
 	 * @return
 	 */
-	private static List<FlowNode> parseNodeList(NodeList nodeElementList)
+	private static List<FlowElement> parseNodeList(NodeList nodeElementList)
 	{
-		List<FlowNode> nodeModels = new ArrayList<FlowNode>(10);
+		List<FlowElement> elementModels = new ArrayList<>(10);
+		List<FlowNode> nodeModels = new ArrayList<>(elementModels.size());
 
 		for (int i = 0; i < nodeElementList.getLength(); i++)
 		{
 			Node node = nodeElementList.item(i);
 			if (node.getNodeType() == Node.ELEMENT_NODE)
 			{
-				FlowNode nodeModel = parseNodeElement((Element) node);
-				if (null != nodeModel)
+				FlowElement elementModel = parseNodeElement((Element) node);
+				if (null != elementModel)
 				{
-					nodeModels.add(nodeModel);
-				}
-			}
-		}
+					elementModels.add(elementModel);
 
-		// 循环节点模型，构造变迁输入、输出的source、target
-		for (FlowNode node : nodeModels)
-		{
-			for (TransitionModel transition : node.getOutputs())
-			{
-				String to = transition.getTo();
-
-				for (FlowNode node2 : nodeModels)
-				{
-					if (to.equalsIgnoreCase(node2.getId()))
+					if (elementModel instanceof FlowNode flowNode)
 					{
-						List<TransitionModel> inputs = new ArrayList<>(node2.getInputs());
-						inputs.add(transition);
-						node2.setInputs(inputs);
-
-						transition.setTarget(node2);
+						nodeModels.add(flowNode);
 					}
 				}
 			}
 		}
 
-		return nodeModels;
+		for (FlowNode node : nodeModels)
+		{
+			List<SequenceFlowModel> incomingFlows = new ArrayList<>();
+			List<SequenceFlowModel> outgoingFlows = new ArrayList<>();
+
+			for (FlowElement elementModel : elementModels)
+			{
+				if (elementModel instanceof SequenceFlowModel sequenceFlow)
+				{
+					if (node.getId().equals(sequenceFlow.getSourceRef()))
+					{
+						sequenceFlow.setSourceNode(node);
+						outgoingFlows.add(sequenceFlow);
+					}
+					else if (node.getId().equals(sequenceFlow.getTargetRef()))
+					{
+						incomingFlows.add(sequenceFlow);
+						sequenceFlow.setTargetNode(node);
+					}
+				}
+			}
+
+			node.setIncomingFlows(incomingFlows);
+			node.setOutgoingFlows(outgoingFlows);
+		}
+
+		return elementModels;
 	}
 
 	/**
@@ -150,12 +160,16 @@ public class BpmnParser
 	 * @param node
 	 * @return
 	 */
-	private static FlowNode parseNodeElement(Element element)
+	private static FlowElement parseNodeElement(Element element)
 	{
 		String nodeName = element.getNodeName();
 		if (NodeParser.NODE_EXTENSION_ELEMENTS.equals(nodeName))
 		{
 			return null;
+		}
+		else if ("sequenceFlow".equals(nodeName))
+		{
+			return SequenceFlowParser.parse(element);
 		}
 
 		NodeParser nodeParser = getNodeParser(nodeName);
@@ -175,7 +189,7 @@ public class BpmnParser
 	{
 		for (NodeParser nodeParser : NODE_PARSER_LIST)
 		{
-			if (nodeParser.getNodeName().equals(nodeName))
+			if (nodeParser.getElementName().equals(nodeName))
 			{
 				return nodeParser;
 			}
@@ -233,21 +247,8 @@ public class BpmnParser
 	private static void checkProcessModel(BpmnModel bpmnModel)
 	{
 		Assert.notNull(bpmnModel.getId(), "Process id is null.");
-		Assert.notNull(bpmnModel.getDisplayName(), "Process display name is null.");
+		Assert.notNull(bpmnModel.getName(), "Process name is null.");
 		Assert.notNull(bpmnModel.getStartModel(), "Process start node not exist.");
 		Assert.notNull(bpmnModel.getEndModel(), "Process end node not exist.");
-
-		List<FlowNode> nodeModels = bpmnModel.getNodeModels();
-		for (FlowNode nodeModel : nodeModels)
-		{
-			List<TransitionModel> outputs = nodeModel.getOutputs();
-			for (TransitionModel output : outputs)
-			{
-				if (!nodeModels.stream().anyMatch(nm -> nm.getId().equals(output.getTo())))
-				{
-					throw new WorkFlowException("Transition to is wrong, can not associate node.");
-				}
-			}
-		}
 	}
 }

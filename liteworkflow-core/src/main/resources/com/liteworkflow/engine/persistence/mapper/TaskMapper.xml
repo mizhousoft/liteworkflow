@@ -8,7 +8,7 @@
 		<result property="processDefinitionId" column="process_def_id" />
 		<result property="instanceId" column="instance_id" />
 		<result property="taskDefinitionId" column="task_def_id" />
-		<result property="displayName" column="display_name" />
+		<result property="name" column="name" />
 		<result property="taskType" column="task_type" />
 		<result property="performType" column="perform_type" />
 		<result property="operator" column="operator" />
@@ -20,9 +20,9 @@
 	</resultMap>
 	
 	<insert id="save">
-		insert into wf_task (id, process_def_id, instance_id, task_def_id, display_name, task_type, perform_type, operator, create_time,
+		insert into wf_task (id, process_def_id, instance_id, task_def_id, name, task_type, perform_type, operator, create_time,
 		expire_time, parent_task_id, variable, revision)
-		values (#{id}, #{processDefinitionId}, #{instanceId}, #{taskDefinitionId}, #{displayName}, #{taskType}, #{performType}, #{operator}, #{createTime}, 
+		values (#{id}, #{processDefinitionId}, #{instanceId}, #{taskDefinitionId}, #{name}, #{taskType}, #{performType}, #{operator}, #{createTime}, 
 		#{expireTime}, #{parentTaskId}, #{variable}, #{revision})
 	</insert>
 	
@@ -40,14 +40,14 @@
 	</delete>
 		
 	<select id="findById" parameterType="java.util.Map" resultMap="TaskMap">
-		select id, process_def_id, instance_id, task_def_id, display_name, task_type, perform_type, operator, create_time,
+		select id, process_def_id, instance_id, task_def_id, name, task_type, perform_type, operator, create_time,
 		expire_time, parent_task_id, variable, revision
 		from wf_task
 		where id = #{id}
 	</select>
 	
 	<select id="findByInstanceId" parameterType="java.util.Map" resultMap="TaskMap">
-		select id, process_def_id, instance_id, task_def_id, display_name, task_type, perform_type, operator, create_time,
+		select id, process_def_id, instance_id, task_def_id, name, task_type, perform_type, operator, create_time,
 		expire_time, parent_task_id, variable, revision
 		from wf_task
 		where instance_id = #{instanceId}
@@ -72,7 +72,7 @@
 	</select>
 	
 	<select id="findPageData" parameterType="java.util.Map" resultMap="TaskMap">
-		select id, process_def_id, instance_id, task_def_id, display_name, task_type, perform_type, operator, create_time,
+		select id, process_def_id, instance_id, task_def_id, name, task_type, perform_type, operator, create_time,
 		expire_time, parent_task_id, variable, revision
 		from wf_task
 		<where>

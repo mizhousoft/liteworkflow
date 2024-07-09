@@ -6,7 +6,7 @@ import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.impl.FlowExecutor;
 import com.liteworkflow.engine.model.FlowElement;
 import com.liteworkflow.engine.model.FlowNode;
-import com.liteworkflow.engine.model.TransitionModel;
+import com.liteworkflow.engine.model.SequenceFlowModel;
 
 /**
  * 节点流程执行器
@@ -34,8 +34,8 @@ public abstract class NodeFlowExecutor implements FlowExecutor
 	 */
 	protected void runOutTransition(Execution execution, FlowNode nodeModel)
 	{
-		List<TransitionModel> outputs = nodeModel.getOutputs();
-		for (TransitionModel transition : outputs)
+		List<SequenceFlowModel> outputs = nodeModel.getOutgoingFlows();
+		for (SequenceFlowModel transition : outputs)
 		{
 			transition.setEnabled(true);
 

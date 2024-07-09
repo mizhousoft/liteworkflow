@@ -11,7 +11,6 @@ import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.impl.Command;
 import com.liteworkflow.engine.impl.CommandContext;
 import com.liteworkflow.engine.model.BpmnModel;
-import com.liteworkflow.engine.parser.BpmnParser;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.service.ProcessDefinitionEntityService;
 
@@ -63,9 +62,9 @@ public class RedeployCommand implements Command<ProcessDefinition>
 		ProcessDefinition processDefinition = processDefinitionEntityService.getById(processDefinitionId);
 		Assert.notNull(processDefinition, "Process definition not found, id is " + processDefinitionId);
 
-		BpmnModel bpmnModel = BpmnParser.parse(bytes);
+		BpmnModel bpmnModel = engineConfiguration.getCommandExecutor().execute(new BpmnParseCommand(bytes));
 
-		processDefinition.setName(bpmnModel.getDisplayName());
+		processDefinition.setName(bpmnModel.getName());
 		processDefinition.setCategory(bpmnModel.getCategory());
 		processDefinition.setBytes(bytes);
 

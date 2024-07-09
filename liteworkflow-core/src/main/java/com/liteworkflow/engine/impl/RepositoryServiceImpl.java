@@ -11,11 +11,11 @@ import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.cache.Cache;
 import com.liteworkflow.engine.cache.CacheManager;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
+import com.liteworkflow.engine.impl.command.BpmnParseCommand;
 import com.liteworkflow.engine.impl.command.DeleteDeploymentCommand;
 import com.liteworkflow.engine.impl.command.DeployCommand;
 import com.liteworkflow.engine.impl.command.RedeployCommand;
 import com.liteworkflow.engine.model.BpmnModel;
-import com.liteworkflow.engine.parser.BpmnParser;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.request.ProcessDefinitionPageRequest;
 import com.liteworkflow.engine.persistence.service.ProcessDefinitionEntityService;
@@ -208,7 +208,9 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 	{
 		if (processDefinition.getBpmnModel() == null)
 		{
-			BpmnModel bpmnModel = BpmnParser.parse(processDefinition.getBytes());
+			byte[] bytes = processDefinition.getBytes();
+
+			BpmnModel bpmnModel = engineConfiguration.getCommandExecutor().execute(new BpmnParseCommand(bytes));
 			processDefinition.setBpmnModel(bpmnModel);
 		}
 

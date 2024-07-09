@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<process displayName="测试实例编号自定义" id="generator">
-    <startEvent displayName="start1" layout="86,143,-1,-1" id="start1">
-        <transition g="" id="transition1" offset="0,0" to="task1" />
-    </startEvent>
-    <endEvent displayName="end1" layout="463,143,-1,-1" id="end1" />
-    <userTask assignee="task1.operator" displayName="task1" layout="253,141,-1,-1" id="task1" performType="ANY">
-        <transition g="" id="transition2" offset="0,0" to="end1" />
-    </userTask>
+<process name="测试实例编号自定义" id="generator">
+    <startEvent name="start1" layout="86,143,-1,-1" id="start1" />
+    <endEvent name="end1" layout="463,143,-1,-1" id="end1" />
+    <userTask assignee="task1.operator" name="task1" layout="253,141,-1,-1" id="task1" performType="ANY" />
+    <sequenceFlow sourceRef="start1" targetRef="task1" g="" offset="0,0" />
+    <sequenceFlow sourceRef="task1" targetRef="end1" g="" offset="0,0" />
 </process>

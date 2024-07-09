@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.util.Assert;
 
 import com.liteworkflow.engine.ProcessEngine;
-import com.liteworkflow.engine.model.FlowNode;
 import com.liteworkflow.engine.model.BpmnModel;
+import com.liteworkflow.engine.model.FlowNode;
 import com.liteworkflow.engine.model.UserTaskModel;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
@@ -56,25 +56,12 @@ public class TestModel extends TestSpring
 		{
 			UserTaskModel model = getTaskModel(task.getTaskDefinitionId(), bpmnModel);
 			System.out.println(model.getId());
-			List<UserTaskModel> models = model.getNextModels(UserTaskModel.class);
-			for (UserTaskModel tm : models)
-			{
-				System.out.println(tm.getId());
-			}
-		}
-		List<UserTaskModel> models = engine.getRepositoryService()
-		        .getProcessDefinition(processId)
-		        .getBpmnModel()
-		        .getModels(UserTaskModel.class);
-		for (UserTaskModel tm : models)
-		{
-			System.out.println(tm.getId());
 		}
 	}
 
 	public UserTaskModel getTaskModel(String taskName, BpmnModel bpmnModel)
 	{
-		FlowNode nodeModel = bpmnModel.getNodeModel(taskName);
+		FlowNode nodeModel = bpmnModel.getFlowNodeModel(taskName);
 		Assert.notNull(nodeModel, "任务id无法找到节点模型.");
 
 		if (nodeModel instanceof UserTaskModel)

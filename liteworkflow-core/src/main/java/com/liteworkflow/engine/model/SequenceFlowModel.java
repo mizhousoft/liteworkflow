@@ -5,7 +5,7 @@ package com.liteworkflow.engine.model;
  *
  * @version
  */
-public class SequenceFlowModel extends FlowNode
+public class SequenceFlowModel extends FlowElement
 {
 	/**
 	 * 变迁的源节点引用

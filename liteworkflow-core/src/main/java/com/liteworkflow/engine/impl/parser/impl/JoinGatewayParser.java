@@ -1,8 +1,8 @@
-package com.liteworkflow.engine.parser.impl;
+package com.liteworkflow.engine.impl.parser.impl;
 
 import com.liteworkflow.engine.model.JoinGatewayModel;
+import com.liteworkflow.engine.impl.parser.AbstractNodeParser;
 import com.liteworkflow.engine.model.FlowNode;
-import com.liteworkflow.engine.parser.AbstractNodeParser;
 
 /**
  * 合并节点解析类
@@ -23,7 +23,7 @@ public class JoinGatewayParser extends AbstractNodeParser
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getNodeName()
+	public String getElementName()
 	{
 		return "joinGateway";
 	}

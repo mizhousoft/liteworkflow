@@ -12,7 +12,6 @@ import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.impl.Command;
 import com.liteworkflow.engine.impl.CommandContext;
 import com.liteworkflow.engine.model.BpmnModel;
-import com.liteworkflow.engine.parser.BpmnParser;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.service.ProcessDefinitionEntityService;
 
@@ -61,14 +60,14 @@ public class DeployCommand implements Command<ProcessDefinition>
 		ProcessEngineConfigurationImpl engineConfiguration = context.getEngineConfiguration();
 		ProcessDefinitionEntityService processDefinitionEntityService = engineConfiguration.getProcessDefinitionEntityService();
 
-		BpmnModel bpmnModel = BpmnParser.parse(bytes);
+		BpmnModel bpmnModel = engineConfiguration.getCommandExecutor().execute(new BpmnParseCommand(bytes));
 
 		Integer version = genProcessModelVersion(bpmnModel, processDefinitionEntityService);
 
 		ProcessDefinition processDefinition = new ProcessDefinition();
 		processDefinition.setId(StringHelper.getPrimaryKey());
 		processDefinition.setKey(bpmnModel.getId());
-		processDefinition.setName(bpmnModel.getDisplayName());
+		processDefinition.setName(bpmnModel.getName());
 		processDefinition.setCategory(bpmnModel.getCategory());
 		processDefinition.setVersion(version);
 		processDefinition.setBytes(bytes);

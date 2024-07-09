@@ -41,9 +41,9 @@ public class HistoricTask implements Serializable
 	private String taskDefinitionId;
 
 	/**
-	 * 任务显示名称
+	 * 任务名称
 	 */
-	private String displayName;
+	private String name;
 
 	/**
 	 * 任务类型
@@ -181,23 +181,23 @@ public class HistoricTask implements Serializable
 	}
 
 	/**
-	 * 获取displayName
+	 * 获取name
 	 * 
 	 * @return
 	 */
-	public String getDisplayName()
+	public String getName()
 	{
-		return displayName;
+		return name;
 	}
 
 	/**
-	 * 设置displayName
+	 * 设置name
 	 * 
-	 * @param displayName
+	 * @param name
 	 */
-	public void setDisplayName(String displayName)
+	public void setName(String name)
 	{
-		this.displayName = displayName;
+		this.name = name;
 	}
 
 	/**
@@ -355,8 +355,8 @@ public class HistoricTask implements Serializable
 		        .append(instanceId)
 		        .append("\", \"taskDefinitionId\":\"")
 		        .append(taskDefinitionId)
-		        .append("\", \"displayName\":\"")
-		        .append(displayName)
+		        .append("\", \"name\":\"")
+		        .append(name)
 		        .append("\"}");
 		return builder.toString();
 	}

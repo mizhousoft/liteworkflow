@@ -9,12 +9,12 @@ import com.liteworkflow.engine.TaskService;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.model.ActivityModel;
+import com.liteworkflow.engine.model.BpmnModel;
+import com.liteworkflow.engine.model.FlowNode;
 import com.liteworkflow.engine.model.ForkGatewayModel;
 import com.liteworkflow.engine.model.JoinGatewayModel;
-import com.liteworkflow.engine.model.FlowNode;
-import com.liteworkflow.engine.model.BpmnModel;
+import com.liteworkflow.engine.model.SequenceFlowModel;
 import com.liteworkflow.engine.model.UserTaskModel;
-import com.liteworkflow.engine.model.TransitionModel;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.persistence.entity.Task;
 
@@ -57,7 +57,7 @@ public class JoinGatewayExecutor extends NodeFlowExecutor
 		String[] activeNodes = findActiveNodes(joinModel);
 		boolean isTaskMerged = false;
 
-		if (bpmnModel.containsNodeNames(UserTaskModel.class, activeNodes))
+		if (bpmnModel.containsNodeIds(UserTaskModel.class, activeNodes))
 		{
 			List<Task> tasks = taskService.queryByInstanceId(instance.getId());
 			tasks = tasks.stream()
@@ -89,14 +89,14 @@ public class JoinGatewayExecutor extends NodeFlowExecutor
 			return;
 		}
 
-		List<TransitionModel> inputs = node.getInputs();
-		for (TransitionModel tm : inputs)
+		List<SequenceFlowModel> inputs = node.getIncomingFlows();
+		for (SequenceFlowModel tm : inputs)
 		{
-			if (tm.getSource() instanceof ActivityModel)
+			if (tm.getSourceNode() instanceof ActivityModel)
 			{
-				buffer.append(tm.getSource().getId()).append(",");
+				buffer.append(tm.getSourceNode().getId()).append(",");
 			}
-			findForkTaskNames(tm.getSource(), buffer);
+			findForkTaskNames(tm.getSourceNode(), buffer);
 		}
 	}
 
