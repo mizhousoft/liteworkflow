@@ -1,22 +1,14 @@
 package com.liteworkflow.engine.persistence.entity;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
-
-import com.liteworkflow.engine.model.UserTaskModel;
 
 /**
  * 任务实体类
  * 
  * @version
  */
-public class Task implements Serializable, Cloneable
+public class Task extends VariableScope
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -189094546633914087L;
-
 	/**
 	 * 主键ID
 	 */
@@ -81,11 +73,6 @@ public class Task implements Serializable, Cloneable
 	 * 任务创建时间
 	 */
 	private LocalDateTime createTime;
-
-	/**
-	 * 保持模型对象
-	 */
-	private UserTaskModel model;
 
 	/**
 	 * 获取id
@@ -345,26 +332,6 @@ public class Task implements Serializable, Cloneable
 	public void setCreateTime(LocalDateTime createTime)
 	{
 		this.createTime = createTime;
-	}
-
-	/**
-	 * 获取model
-	 * 
-	 * @return
-	 */
-	public UserTaskModel getModel()
-	{
-		return model;
-	}
-
-	/**
-	 * 设置model
-	 * 
-	 * @param model
-	 */
-	public void setModel(UserTaskModel model)
-	{
-		this.model = model;
 	}
 
 	/**

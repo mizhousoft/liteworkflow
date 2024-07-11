@@ -1,6 +1,5 @@
 package com.liteworkflow.engine.persistence.entity;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import com.liteworkflow.engine.model.BpmnModel;
@@ -10,13 +9,8 @@ import com.liteworkflow.engine.model.BpmnModel;
  * 
  * @version
  */
-public class ProcessDefinition implements Serializable
+public class ProcessDefinition
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6541688543201014542L;
-
 	/**
 	 * 主键ID
 	 */

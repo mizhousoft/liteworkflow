@@ -2,6 +2,7 @@ package com.liteworkflow.engine.impl.command;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.impl.FlowExecutor;
 import com.liteworkflow.engine.impl.executor.FlowExecutorFactory;
 import com.liteworkflow.engine.model.FlowNode;
+import com.liteworkflow.engine.model.SequenceFlowModel;
 import com.liteworkflow.engine.model.BpmnModel;
 import com.liteworkflow.engine.persistence.entity.HistoricTask;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
@@ -74,9 +76,14 @@ public class CompleteTaskCommand implements Command<Void>
 		if (bpmnModel != null)
 		{
 			FlowNode nodeModel = bpmnModel.getFlowNodeModel(execution.getTask().getTaskDefinitionId());
-			// 将执行对象交给该任务对应的节点模型执行
-			FlowExecutor executor = FlowExecutorFactory.build(nodeModel);
-			executor.execute(execution, nodeModel);
+
+			List<SequenceFlowModel> outgoingFlows = nodeModel.getOutgoingFlows();
+			for (SequenceFlowModel outgoingFlow : outgoingFlows)
+			{
+				// 将执行对象交给该任务对应的节点模型执行
+				FlowExecutor executor = FlowExecutorFactory.build(outgoingFlow);
+				executor.execute(execution, outgoingFlow);
+			}
 		}
 
 		return null;

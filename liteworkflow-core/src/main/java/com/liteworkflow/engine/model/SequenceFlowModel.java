@@ -43,11 +43,6 @@ public class SequenceFlowModel extends FlowElement
 	private String offset;
 
 	/**
-	 * 当前变迁路径是否可用
-	 */
-	private boolean enabled = false;
-
-	/**
 	 * 获取sourceNode
 	 * 
 	 * @return
@@ -185,25 +180,5 @@ public class SequenceFlowModel extends FlowElement
 	public void setOffset(String offset)
 	{
 		this.offset = offset;
-	}
-
-	/**
-	 * 获取enabled
-	 * 
-	 * @return
-	 */
-	public boolean isEnabled()
-	{
-		return enabled;
-	}
-
-	/**
-	 * 设置enabled
-	 * 
-	 * @param enabled
-	 */
-	public void setEnabled(boolean enabled)
-	{
-		this.enabled = enabled;
 	}
 }

@@ -12,17 +12,17 @@ public abstract class ExecutionListener
 	/**
 	 * 开启事件名称
 	 */
-	String EVENTNAME_START = "start";
+	public static final String EVENTNAME_START = "start";
 
 	/**
 	 * 结束事件名称
 	 */
-	String EVENTNAME_END = "end";
+	public static final String EVENTNAME_END = "end";
 
 	/**
 	 * 转移事件名称
 	 */
-	String EVENTNAME_TAKE = "take";
+	public static final String EVENTNAME_TAKE = "take";
 
 	/**
 	 * 流程实例创建触发此事件

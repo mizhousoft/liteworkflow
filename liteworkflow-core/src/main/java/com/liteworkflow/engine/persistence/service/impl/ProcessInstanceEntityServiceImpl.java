@@ -1,10 +1,7 @@
 package com.liteworkflow.engine.persistence.service.impl;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
-import com.liteworkflow.engine.helper.JsonHelper;
 import com.liteworkflow.engine.persistence.entity.HistoricProcessInstance;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.persistence.mapper.ProcessInstanceMapper;
@@ -86,6 +83,7 @@ public class ProcessInstanceEntityServiceImpl implements ProcessInstanceEntitySe
 	public void modifyVariable(ProcessInstance instance)
 	{
 		modifyEntity(instance);
+
 		HistoricProcessInstance historicInstance = historicProcessInstanceEntityService.getByInstanceId(instance.getId());
 		historicInstance.setVariable(instance.getVariable());
 		historicProcessInstanceEntityService.modifyEntity(historicInstance);
@@ -103,21 +101,10 @@ public class ProcessInstanceEntityServiceImpl implements ProcessInstanceEntitySe
 	/**
 	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public ProcessInstance getById(String id)
 	{
 		ProcessInstance processInstance = processInstanceMapper.findById(id);
-		if (null != processInstance)
-		{
-			Map<String, Object> variableMap = JsonHelper.fromJson(processInstance.getVariable(), Map.class);
-			if (null == variableMap)
-			{
-				variableMap = Collections.emptyMap();
-			}
-
-			processInstance.setVariableMap(variableMap);
-		}
 
 		return processInstance;
 	}

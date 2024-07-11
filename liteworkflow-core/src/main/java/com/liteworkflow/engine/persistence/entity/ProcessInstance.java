@@ -1,21 +1,16 @@
 package com.liteworkflow.engine.persistence.entity;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * 流程实例
  * 
  * @version
  */
-public class ProcessInstance implements Serializable
+public class ProcessInstance extends VariableScope
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8335779448165343933L;
-
 	/**
 	 * 主键ID
 	 */
@@ -49,6 +44,7 @@ public class ProcessInstance implements Serializable
 	/**
 	 * 流程实例附属变量
 	 */
+	@JsonIgnore
 	private String variable;
 
 	/**
@@ -65,11 +61,6 @@ public class ProcessInstance implements Serializable
 	 * 流程实例创建时间
 	 */
 	private LocalDateTime createTime;
-
-	/**
-	 * 变量
-	 */
-	private Map<String, Object> variableMap;
 
 	/**
 	 * 获取id
@@ -269,26 +260,6 @@ public class ProcessInstance implements Serializable
 	public void setCreateTime(LocalDateTime createTime)
 	{
 		this.createTime = createTime;
-	}
-
-	/**
-	 * 获取variableMap
-	 * 
-	 * @return
-	 */
-	public Map<String, Object> getVariableMap()
-	{
-		return variableMap;
-	}
-
-	/**
-	 * 设置variableMap
-	 * 
-	 * @param variableMap
-	 */
-	public void setVariableMap(Map<String, Object> variableMap)
-	{
-		this.variableMap = variableMap;
 	}
 
 	/**

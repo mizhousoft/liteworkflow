@@ -1,8 +1,5 @@
 package com.liteworkflow.engine.impl;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import com.liteworkflow.WorkFlowException;
@@ -18,13 +15,8 @@ import com.liteworkflow.engine.persistence.entity.Task;
  * @author
  * @since 1.0
  */
-public class Execution implements Serializable
+public class Execution
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3730741790729624400L;
-
 	/**
 	 * ProcessEngineConfiguration
 	 */
@@ -64,11 +56,6 @@ public class Execution implements Serializable
 	 * 任务
 	 */
 	private Task task;
-
-	/**
-	 * 返回的任务列表
-	 */
-	private List<Task> tasks = new ArrayList<Task>();
 
 	/**
 	 * 是否已合并
@@ -167,36 +154,6 @@ public class Execution implements Serializable
 	public Map<String, Object> getArgs()
 	{
 		return args;
-	}
-
-	/**
-	 * 返回任务结果集
-	 * 
-	 * @return
-	 */
-	public List<Task> getTasks()
-	{
-		return tasks;
-	}
-
-	/**
-	 * 添加任务集合
-	 * 
-	 * @param tasks
-	 */
-	public void addTasks(List<Task> tasks)
-	{
-		this.tasks.addAll(tasks);
-	}
-
-	/**
-	 * 添加任务
-	 * 
-	 * @param task
-	 */
-	public void addTask(Task task)
-	{
-		this.tasks.add(task);
 	}
 
 	/**

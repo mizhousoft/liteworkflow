@@ -13,27 +13,27 @@ public abstract class TaskListener
 	/**
 	 * 创建任务事件
 	 */
-	String EVENTNAME_CREATE = "create";
+	public static final String EVENTNAME_CREATE = "create";
 
 	/**
 	 * 分配参与者任务事件
 	 */
-	String EVENTNAME_ASSIGNMENT = "assignment";
+	public static final String EVENTNAME_ASSIGNMENT = "assignment";
 
 	/**
 	 * 完成任务事件
 	 */
-	String EVENTNAME_COMPLETE = "complete";
+	public static final String EVENTNAME_COMPLETE = "complete";
 
 	/**
 	 * 删除任务事件
 	 */
-	String EVENTNAME_DELETE = "delete";
+	public static final String EVENTNAME_DELETE = "delete";
 
 	/**
 	 * 所有任务事件
 	 */
-	String EVENTNAME_ALL_EVENTS = "all";
+	public static final String EVENTNAME_ALL_EVENTS = "all";
 
 	/**
 	 * 任务创建后触发此事件

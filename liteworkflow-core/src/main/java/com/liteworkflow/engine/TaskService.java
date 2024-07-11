@@ -42,6 +42,23 @@ public interface TaskService
 	List<Task> complete(String taskId, String operator, Map<String, Object> variableMap);
 
 	/**
+	 * 设置任务变量
+	 * 
+	 * @param instanceId
+	 * @param variableName
+	 * @param value
+	 */
+	void setVariable(String taskId, String variableName, Object value);
+
+	/**
+	 * 设置任务变量
+	 * 
+	 * @param instanceId
+	 * @param variableMap
+	 */
+	void setVariables(String taskId, Map<String, Object> variableMap);
+
+	/**
 	 * 根据任务ID获取任务对象
 	 * 
 	 * @param taskId

@@ -1,4 +1,4 @@
-package com.liteworkflow.engine.impl.parser.impl;
+package com.liteworkflow.engine.impl.bpmn.parser.handler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,9 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Element;
 
-import com.liteworkflow.engine.impl.parser.AbstractNodeParser;
+import com.liteworkflow.WorkFlowException;
+import com.liteworkflow.engine.delegate.TaskListener;
+import com.liteworkflow.engine.impl.bpmn.parser.NodeParseHandler;
 import com.liteworkflow.engine.model.EventListenerElement;
 import com.liteworkflow.engine.model.FlowNode;
 import com.liteworkflow.engine.model.UserTaskModel;
@@ -17,12 +19,21 @@ import com.liteworkflow.engine.util.DomUtils;
  * 
  * @version
  */
-public class UserTaskParser extends AbstractNodeParser
+public class UserTaskParseHandler extends NodeParseHandler
 {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected FlowNode newModel()
+	@Override
+	public boolean isSupported(String elementName)
+	{
+		return "userTask".equals(elementName);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected FlowNode newFlowNode()
 	{
 		return new UserTaskModel();
 	}
@@ -30,24 +41,15 @@ public class UserTaskParser extends AbstractNodeParser
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
-	public String getElementName()
-	{
-		return "userTask";
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected void doParseNode(FlowNode node, Element element)
+	protected void doParse(FlowNode node, Element element)
 	{
 		UserTaskModel task = (UserTaskModel) node;
-		task.setAssignee(element.getAttribute(ATTR_ASSIGNEE));
-		task.setExpireTime(element.getAttribute(ATTR_EXPIRETIME));
-		task.setAutoExecute(element.getAttribute(ATTR_AUTOEXECUTE));
-		task.setReminderTime(element.getAttribute(ATTR_REMINDERTIME));
-		task.setReminderRepeat(element.getAttribute(ATTR_REMINDERREPEAT));
-		task.setPerformType(element.getAttribute(ATTR_PERFORMTYPE));
+		task.setAssignee(getAttribute(element, ATTR_ASSIGNEE));
+		task.setExpireTime(getAttribute(element, ATTR_EXPIRETIME));
+		task.setAutoExecute(getAttribute(element, ATTR_AUTOEXECUTE));
+		task.setReminderTime(getAttribute(element, ATTR_REMINDERTIME));
+		task.setReminderRepeat(getAttribute(element, ATTR_REMINDERREPEAT));
+		task.setPerformType(getAttribute(element, ATTR_PERFORMTYPE));
 
 		List<EventListenerElement> eventListeners = parseEventListenerElements(element);
 		task.setEventListeners(eventListeners);
@@ -69,9 +71,9 @@ public class UserTaskParser extends AbstractNodeParser
 			List<Element> listenerElements = DomUtils.listChildElements(extensionElement, NODE_TASK_LISTENER);
 			for (Element listenerElement : listenerElements)
 			{
-				String event = listenerElement.getAttribute(ATTR_EVENT);
-				String clazz = listenerElement.getAttribute(ATTR_CLASS);
-				String delegateExpression = listenerElement.getAttribute(ATTR_DELEGATE_EXPRESSION);
+				String event = getAttribute(listenerElement, ATTR_EVENT);
+				String clazz = getAttribute(listenerElement, ATTR_CLASS);
+				String delegateExpression = getAttribute(listenerElement, ATTR_DELEGATE_EXPRESSION);
 
 				EventListenerElement eventListener = new EventListenerElement();
 				eventListener.setEvent(event);
@@ -85,6 +87,17 @@ public class UserTaskParser extends AbstractNodeParser
 				{
 					eventListener.setImplementationType(EventListenerElement.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION);
 					eventListener.setImplementation(delegateExpression);
+				}
+				else
+				{
+					throw new WorkFlowException("EventListenerElement is wrong.");
+				}
+
+				if (!TaskListener.EVENTNAME_CREATE.equals(event) && !TaskListener.EVENTNAME_ASSIGNMENT.equals(event)
+				        && !TaskListener.EVENTNAME_COMPLETE.equals(event) && !TaskListener.EVENTNAME_DELETE.equals(event)
+				        && !TaskListener.EVENTNAME_ALL_EVENTS.equals(event))
+				{
+					throw new WorkFlowException("EventListenerElement event is wrong.");
 				}
 
 				eventListeners.add(eventListener);

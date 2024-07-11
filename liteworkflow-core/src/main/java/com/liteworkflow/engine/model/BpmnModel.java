@@ -1,6 +1,5 @@
 package com.liteworkflow.engine.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,15 +9,16 @@ import java.util.List;
  */
 public class BpmnModel extends FlowElement
 {
-	/**
-	 * 元素集合
-	 */
-	private List<FlowElement> flowElements = new ArrayList<>(0);
 
 	/**
 	 * 流程分类
 	 */
 	private String category;
+
+	/**
+	 * 元素集合
+	 */
+	private List<FlowElement> flowElements;
 
 	/**
 	 * 监听器元素

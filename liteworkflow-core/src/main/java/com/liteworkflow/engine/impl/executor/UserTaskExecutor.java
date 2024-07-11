@@ -1,18 +1,21 @@
 package com.liteworkflow.engine.impl.executor;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.beans.BeanUtils;
 
-import com.liteworkflow.engine.TaskService;
-import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
+import com.liteworkflow.engine.helper.JsonHelper;
+import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.model.FlowNode;
-import com.liteworkflow.engine.model.BpmnModel;
 import com.liteworkflow.engine.model.UserTaskModel;
-import com.liteworkflow.engine.persistence.entity.ProcessInstance;
+import com.liteworkflow.engine.model.UserTaskModel.PerformType;
 import com.liteworkflow.engine.persistence.entity.Task;
+import com.liteworkflow.engine.persistence.service.TaskEntityService;
 
 /**
  * TODO
@@ -28,72 +31,70 @@ public class UserTaskExecutor extends NodeFlowExecutor
 	protected void doExecute(Execution execution, FlowNode nodeModel)
 	{
 		UserTaskModel taskModel = (UserTaskModel) nodeModel;
-		String performType = taskModel.getPerformType();
 
-		if (performType == null || performType.equalsIgnoreCase(UserTaskModel.PERFORMTYPE_ANY))
-		{
-			/**
-			 * any方式，直接执行输出变迁
-			 */
-			runOutTransition(execution, taskModel);
-		}
-		else
-		{
-			/**
-			 * all方式，需要判断是否已全部合并
-			 * 由于all方式分配任务，是每人一个任务
-			 * 那么此时需要判断之前分配的所有任务都执行完成后，才可执行下一步，否则不处理
-			 */
-			boolean isMerged = isMerged(execution, taskModel);
-			execution.setMerged(isMerged);
-
-			if (execution.isMerged())
-			{
-				runOutTransition(execution, taskModel);
-			}
-		}
+		createTask(taskModel, execution);
 	}
 
-	/**
-	 * 查询当前流程实例的无法参与合并的node列表
-	 * 若所有中间node都完成，则设置为已合并状态，告诉model可继续执行join的输出变迁
-	 */
-	public boolean isMerged(Execution execution, UserTaskModel taskModel)
+	public List<Task> createTask(UserTaskModel taskModel, Execution execution)
 	{
-		ProcessEngineConfigurationImpl engineConfiguration = execution.getEngineConfiguration();
-		TaskService taskService = engineConfiguration.getTaskService();
+		List<Task> tasks = new ArrayList<Task>();
 
-		ProcessInstance instance = execution.getProcessInstance();
-		BpmnModel bpmnModel = execution.getBpmnModel();
-		String[] activeNodes = findActiveNodes(taskModel);
-		boolean isTaskMerged = false;
+		Map<String, Object> args = execution.getArgs();
+		if (args == null)
+			args = new HashMap<String, Object>();
 
-		if (bpmnModel.containsNodeIds(UserTaskModel.class, activeNodes))
+		Task task = createTaskBase(taskModel, execution);
+
+		task.setVariable(JsonHelper.toJson(args));
+
+		if (taskModel.isPerformAny())
 		{
-			List<Task> tasks = taskService.queryByInstanceId(instance.getId());
-			tasks = tasks.stream()
-			        .filter(task -> !task.getId().equals(execution.getTask().getId()))
-			        .filter(task -> ArrayUtils.contains(activeNodes, task.getTaskDefinitionId()))
-			        .collect(Collectors.toList());
-
-			if (tasks == null || tasks.isEmpty())
-			{
-				// 如果所有task都已完成，则表示可合并
-				isTaskMerged = true;
-			}
+			// 任务执行方式为参与者中任何一个执行即可驱动流程继续流转，该方法只产生一个task
+			task = saveTask(execution, task);
+			tasks.add(task);
 		}
+		else if (taskModel.isPerformAll())
+		{
+			// 任务执行方式为参与者中每个都要执行完才可驱动流程继续流转，该方法根据参与者个数产生对应的task数量
+			Task singleTask = new Task();
+			BeanUtils.copyProperties(task, singleTask);
 
-		boolean merged = isTaskMerged;
-
-		return merged;
+			singleTask = saveTask(execution, singleTask);
+			tasks.add(singleTask);
+		}
+		return tasks;
 	}
 
 	/**
-	 * actor all方式，查询参数为：taskName
+	 * 由DBAccess实现类持久化task对象
+	 */
+	private Task saveTask(Execution execution, Task task)
+	{
+		TaskEntityService taskEntityService = execution.getEngineConfiguration().getTaskEntityService();
+
+		task.setId(StringHelper.getPrimaryKey());
+		task.setPerformType(PerformType.ANY.ordinal());
+		taskEntityService.addEntity(task);
+		return task;
+	}
+
+	/**
+	 * 根据模型、执行对象、任务类型构建基本的task对象
 	 * 
+	 * @param model 模型
+	 * @param execution 执行对象
+	 * @return Task任务对象
 	 */
-	protected String[] findActiveNodes(UserTaskModel taskModel)
+	private Task createTaskBase(UserTaskModel model, Execution execution)
 	{
-		return new String[] { taskModel.getId() };
+		Task task = new Task();
+		task.setProcessDefinitionId(execution.getProcessInstance().getProcessDefinitionId());
+		task.setInstanceId(execution.getProcessInstance().getId());
+		task.setTaskDefinitionId(model.getId());
+		task.setName(model.getName());
+		task.setCreateTime(LocalDateTime.now());
+		task.setTaskType(0);
+		task.setParentTaskId(execution.getTask() == null ? null : execution.getTask().getId());
+		return task;
 	}
 }

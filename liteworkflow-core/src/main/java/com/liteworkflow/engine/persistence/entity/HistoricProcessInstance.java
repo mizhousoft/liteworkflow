@@ -1,6 +1,5 @@
 package com.liteworkflow.engine.persistence.entity;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -8,13 +7,8 @@ import java.time.LocalDateTime;
  * 
  * @version
  */
-public class HistoricProcessInstance implements Serializable
+public class HistoricProcessInstance extends VariableScope
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5853727929104539328L;
-
 	/**
 	 * 主键ID
 	 */
