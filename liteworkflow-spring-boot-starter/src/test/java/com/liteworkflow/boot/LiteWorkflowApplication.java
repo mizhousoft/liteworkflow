@@ -6,10 +6,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableTransactionManagement
 @SpringBootApplication
-public class WorkflowApplication
+public class LiteWorkflowApplication
 {
 	public static void main(String[] args)
 	{
-		SpringApplication.run(WorkflowApplication.class, args);
+		SpringApplication.run(LiteWorkflowApplication.class, args);
 	}
 }

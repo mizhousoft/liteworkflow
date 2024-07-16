@@ -9,8 +9,9 @@ import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.impl.command.CompleteTaskCommand;
 import com.liteworkflow.engine.impl.command.SetTaskVariablesCommand;
 import com.liteworkflow.engine.persistence.entity.Task;
+import com.liteworkflow.engine.persistence.request.TaskPageRequest;
 import com.liteworkflow.engine.persistence.service.TaskEntityService;
-import com.liteworkflow.engine.query.TaskQuery;
+import com.mizhousoft.commons.data.domain.Page;
 
 /**
  * 任务执行业务类
@@ -82,8 +83,26 @@ public class TaskServiceImpl extends CommonServiceImpl implements TaskService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public TaskQuery createTaskQuery()
+	public Task getTask(int taskId)
 	{
-		return new TaskQueryImpl(taskEntityService);
+		return taskEntityService.getById(taskId);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<Task> queryByInstanceId(int instanceId)
+	{
+		return taskEntityService.queryByInstanceId(instanceId);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Page<Task> queryPageData(TaskPageRequest request)
+	{
+		return taskEntityService.queryPageData(request);
 	}
 }

@@ -40,7 +40,7 @@ public class TestSimple extends TestSpring
 		args.put("task1.operator", new String[] { "1" });
 		ProcessInstance instance = engine.getRuntimeService().startInstanceByKey("simple", null, "2", args);
 		System.out.println("instance=" + instance);
-		List<Task> tasks = engine.getTaskService().createTaskQuery().queryByInstanceId(instance.getId());
+		List<Task> tasks = engine.getTaskService().queryByInstanceId(instance.getId());
 		for (Task task : tasks)
 		{
 			engine.getTaskService().complete(task.getId(), args);

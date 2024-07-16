@@ -1,4 +1,4 @@
-package com.liteworkflow.bmpn.sequence;
+package com.liteworkflow.sequence;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,11 +7,10 @@ import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 
+import com.liteworkflow.boot.LiteWorkflowApplication;
 import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.RuntimeService;
@@ -24,8 +23,7 @@ import com.liteworkflow.engine.persistence.entity.Task;
  *
  * @version
  */
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = { "classpath:applicationContext.xml" })
+@SpringBootTest(classes = LiteWorkflowApplication.class)
 public class FixedAssigneeSequenceTest
 {
 	@Autowired
@@ -67,10 +65,10 @@ public class FixedAssigneeSequenceTest
 		variables.put("start", "start");
 		variableMap.put("day", 4);
 
-		Task task = taskService.createTaskQuery().queryByInstanceId(instance.getId()).get(0);
+		Task task = taskService.queryByInstanceId(instance.getId()).get(0);
 		taskService.complete(task.getId(), variables);
 
-		task = taskService.createTaskQuery().queryByInstanceId(instance.getId()).get(0);
+		task = taskService.queryByInstanceId(instance.getId()).get(0);
 
 		variables.put("outcome", "pass");
 		taskService.complete(task.getId(), variables);

@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.liteworkflow.engine.persistence.entity.Task;
-import com.liteworkflow.engine.query.TaskQuery;
+import com.liteworkflow.engine.persistence.request.TaskPageRequest;
+import com.mizhousoft.commons.data.domain.Page;
 
 /**
  * 任务服务
@@ -48,9 +49,26 @@ public interface TaskService
 	void setVariables(int taskId, Map<String, Object> variableMap);
 
 	/**
-	 * 创建任务查询
+	 * 根据任务ID获取任务对象
 	 * 
+	 * @param taskId
 	 * @return
 	 */
-	TaskQuery createTaskQuery();
+	Task getTask(int taskId);
+
+	/**
+	 * 根据流程实例ID查询
+	 * 
+	 * @param instanceId
+	 * @return
+	 */
+	List<Task> queryByInstanceId(int instanceId);
+
+	/**
+	 * 分页查询
+	 * 
+	 * @param request
+	 * @return
+	 */
+	Page<Task> queryPageData(TaskPageRequest request);
 }

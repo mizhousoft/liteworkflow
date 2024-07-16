@@ -61,7 +61,7 @@ public class JoinGatewayExecutor extends NodeFlowExecutor
 
 		if (bpmnModel.containsNodeIds(UserTaskModel.class, activeNodes))
 		{
-			List<Task> tasks = taskService.createTaskQuery().queryByInstanceId(instance.getId());
+			List<Task> tasks = taskService.queryByInstanceId(instance.getId());
 			tasks = tasks.stream()
 			        .filter(task -> task.getId() != execution.getTask().getId())
 			        .filter(task -> ArrayUtils.contains(activeNodes, task.getTaskDefinitionId()))

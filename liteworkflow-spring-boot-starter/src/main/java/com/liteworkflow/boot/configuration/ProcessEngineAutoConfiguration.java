@@ -9,7 +9,7 @@ import com.liteworkflow.engine.ProcessEngine;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 
 /**
- * WorkflowConfiguration
+ * ProcessEngineAutoConfiguration
  *
  * @version
  */
@@ -19,10 +19,10 @@ public class ProcessEngineAutoConfiguration
 	@Bean
 	public ProcessEngine getProcessEngine(SqlSessionFactory sqlSessionFactory, ApplicationContext applicationContext) throws Exception
 	{
-		ProcessEngineConfigurationImpl cfg = new ProcessEngineConfigurationImpl();
-		cfg.setSqlSessionFactory(sqlSessionFactory);
-		cfg.setApplicationContext(applicationContext);
+		ProcessEngineConfigurationImpl engineConfiguration = new ProcessEngineConfigurationImpl();
+		engineConfiguration.setSqlSessionFactory(sqlSessionFactory);
+		engineConfiguration.setApplicationContext(applicationContext);
 
-		return cfg.buildProcessEngine();
+		return engineConfiguration.buildProcessEngine();
 	}
 }

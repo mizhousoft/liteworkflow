@@ -42,7 +42,7 @@ public class TestNotAllow extends TestSpring
 		args.put("task1.operator", new String[] { "2" });
 		ProcessInstance instance = engine.getRuntimeService().startInstanceById(processId, null, "2", args);
 		System.out.println(instance);
-		List<Task> tasks = engine.getTaskService().createTaskQuery().queryByInstanceId(instance.getId());
+		List<Task> tasks = engine.getTaskService().queryByInstanceId(instance.getId());
 		for (Task task : tasks)
 		{
 			engine.getTaskService().complete(task.getId(), args);

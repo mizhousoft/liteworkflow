@@ -8,28 +8,6 @@ package com.liteworkflow.engine.scheduling;
  */
 public interface IScheduler
 {
-	public static final String CONFIG_REPEAT = "scheduler.repeat";
-
-	public static final String CONFIG_USECALENDAR = "scheduler.useCalendar";
-
-	public static final String CONFIG_HOLIDAYS = "scheduler.holidays";
-
-	public static final String CONFIG_WEEKS = "scheduler.weeks";
-
-	public static final String CONFIG_WORKTIME = "scheduler.workTime";
-
-	public static final String CALENDAR_NAME = "snakerCalendar";
-
-	public static final String KEY = "id";
-
-	public static final String MODEL = "model";
-
-	public static final String GROUP = "snaker";
-
-	public static final String TYPE_EXECUTOR = "executor.";
-
-	public static final String TYPE_REMINDER = "reminder.";
-
 	/**
 	 * 调度执行方法
 	 * 

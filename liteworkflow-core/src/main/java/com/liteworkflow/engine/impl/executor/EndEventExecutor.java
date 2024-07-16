@@ -32,7 +32,7 @@ public class EndEventExecutor extends NodeFlowExecutor
 		TaskService taskService = engineConfiguration.getTaskService();
 		ProcessInstance processInstance = execution.getProcessInstance();
 
-		List<Task> tasks = taskService.createTaskQuery().queryByInstanceId(processInstance.getId());
+		List<Task> tasks = taskService.queryByInstanceId(processInstance.getId());
 		if (!tasks.isEmpty())
 		{
 			throw new WorkFlowException("存在未完成的主办任务,请确认.");

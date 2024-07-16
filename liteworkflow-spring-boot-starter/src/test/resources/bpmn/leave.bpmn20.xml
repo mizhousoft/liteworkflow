@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process id="leave" name="学生请假">
+	<startEvent id="start" name="开始" layout="64,83,-1,-1" />
+	<userTask id="studentApply" name="请假申请" assignee="${studentName}" layout="213,80,-1,-1" />
+	<userTask id="teacherAudit" name="老师审批" assignee="wanglaoshi" />
+	<userTask id="deanAudit" name="院长审批" assignee="liyuanzhang" />
+	<endEvent id="end" name="结束" layout="454,82,-1,-1" />
+	<exclusiveGateway id="judgeTask" name="判断天数" />
+	<sequenceFlow sourceRef="start" targetRef="studentApply" g="" offset="0,0" />
+	<sequenceFlow sourceRef="studentApply" targetRef="judgeTask" g="" offset="0,0" />
+	<sequenceFlow sourceRef="judgeTask" targetRef="teacherAudit" g="" offset="0,0">
+		<conditionExpression><![CDATA[${day<=2}]]></conditionExpression>
+	</sequenceFlow>
+	<sequenceFlow sourceRef="judgeTask" targetRef="deanAudit" g="" offset="0,0">
+		<conditionExpression><![CDATA[${day>2}]]></conditionExpression>
+	</sequenceFlow>
+	<sequenceFlow sourceRef="teacherAudit" targetRef="end">
+		<conditionExpression><![CDATA[${outcome=='pass'}]]></conditionExpression>
+	</sequenceFlow>
+	<sequenceFlow sourceRef="teacherAudit" targetRef="studentApply">
+		<conditionExpression><![CDATA[${outcome!='pass'}]]></conditionExpression>
+	</sequenceFlow>
+	<sequenceFlow sourceRef="deanAudit" targetRef="end">
+		<conditionExpression><![CDATA[${outcome=='pass'}]]></conditionExpression>
+	</sequenceFlow>
+	<sequenceFlow sourceRef="deanAudit" targetRef="studentApply">
+		<conditionExpression><![CDATA[${outcome!='pass'}]]></conditionExpression>
+	</sequenceFlow>
+</process>

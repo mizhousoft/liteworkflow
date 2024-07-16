@@ -58,7 +58,7 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	/**
 	 * CacheManager
 	 */
-	private CacheManager cacheManager = new MemoryCacheManager();
+	private CacheManager cacheManager;
 
 	/**
 	 * SqlSessionFactory
@@ -132,6 +132,11 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	public ProcessEngine buildProcessEngine() throws Exception
 	{
 		LOG.info("Start to build ProcessEngine.");
+
+		if (null == cacheManager)
+		{
+			cacheManager = new MemoryCacheManager();
+		}
 
 		initPersistenceServices();
 
@@ -418,6 +423,16 @@ public class ProcessEngineConfigurationImpl implements ProcessEngineConfiguratio
 	public CommandExecutor getCommandExecutor()
 	{
 		return commandExecutor;
+	}
+
+	/**
+	 * 设置cacheManager
+	 * 
+	 * @param cacheManager
+	 */
+	public void setCacheManager(CacheManager cacheManager)
+	{
+		this.cacheManager = cacheManager;
 	}
 
 	/**

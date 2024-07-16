@@ -46,7 +46,7 @@ public class TestGroup extends TestSpring
 			args.put("task1.operator", new String[] { "role1" });
 			ProcessInstance instance = engine.getRuntimeService().startInstanceByKey("group", null, "2", args);
 			System.out.println("instance=" + instance);
-			List<Task> tasks = engine.getTaskService().createTaskQuery().queryByInstanceId(instance.getId());
+			List<Task> tasks = engine.getTaskService().queryByInstanceId(instance.getId());
 			for (Task task : tasks)
 			{
 				// 操作人改为test时，角色对应test，会无权处理

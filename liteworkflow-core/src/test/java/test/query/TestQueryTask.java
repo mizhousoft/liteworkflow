@@ -25,6 +25,6 @@ public class TestQueryTask extends TestSpring
 	public void test()
 	{
 		TaskPageRequest request = new TaskPageRequest();
-		System.out.println(engine.getTaskService().createTaskQuery().queryPageData(request));
+		System.out.println(engine.getTaskService().queryPageData(request));
 	}
 }
