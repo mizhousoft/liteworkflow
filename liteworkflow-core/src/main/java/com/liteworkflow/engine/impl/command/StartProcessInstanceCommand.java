@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.util.Assert;
 
+import com.liteworkflow.WorkFlowException;
 import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.impl.Command;
@@ -32,7 +33,7 @@ public class StartProcessInstanceCommand implements Command<ProcessInstance>
 	/**
 	 * 流程定义ID
 	 */
-	private String processDefinitionId;
+	private Integer processDefinitionId;
 
 	/**
 	 * 业务标识
@@ -40,9 +41,9 @@ public class StartProcessInstanceCommand implements Command<ProcessInstance>
 	private String businessKey;
 
 	/**
-	 * 操作人
+	 * 发起人
 	 */
-	private String operator;
+	private String initiator;
 
 	/**
 	 * 流程变量
@@ -55,17 +56,17 @@ public class StartProcessInstanceCommand implements Command<ProcessInstance>
 	 * @param processDefinitionKey
 	 * @param processDefinitionId
 	 * @param businessKey
-	 * @param operator
+	 * @param initiator
 	 * @param variableMap
 	 */
-	public StartProcessInstanceCommand(String processDefinitionKey, String processDefinitionId, String businessKey, String operator,
+	public StartProcessInstanceCommand(String processDefinitionKey, Integer processDefinitionId, String businessKey, String initiator,
 	        Map<String, Object> variableMap)
 	{
 		this.processDefinitionKey = processDefinitionKey;
 		this.processDefinitionId = processDefinitionId;
 		this.businessKey = businessKey;
-		this.operator = operator;
-		this.variableMap = null == variableMap ? new HashMap<>(10) : variableMap;
+		this.initiator = initiator;
+		this.variableMap = null == variableMap ? new HashMap<>(0) : variableMap;
 	}
 
 	/**
@@ -78,8 +79,8 @@ public class StartProcessInstanceCommand implements Command<ProcessInstance>
 
 		ProcessDefinition processDefinition = getProcessDefinition(engineConfiguration);
 
-		ProcessInstance processInstance = ProcessInstanceUtils.createProcessInstance(processDefinition, businessKey, operator, variableMap,
-		        null, null, engineConfiguration);
+		ProcessInstance processInstance = ProcessInstanceUtils.createProcessInstance(processDefinition, businessKey, initiator, variableMap,
+		        0, null, engineConfiguration);
 
 		Execution execution = new Execution(engineConfiguration, processDefinition, processInstance, variableMap);
 
@@ -105,12 +106,16 @@ public class StartProcessInstanceCommand implements Command<ProcessInstance>
 		if (null != processDefinitionId)
 		{
 			processDefinition = repositoryService.getProcessDefinition(processDefinitionId);
-			Assert.notNull(processDefinition, "Process definition not found, id is " + processDefinitionId);
+			Assert.notNull(processDefinition, "ProcessDefinition not found, id is " + processDefinitionId);
 		}
 		else if (null != processDefinitionKey)
 		{
 			processDefinition = repositoryService.getLatestByKey(processDefinitionKey);
-			Assert.notNull(processDefinition, "Process definition not found, key is " + processDefinitionKey);
+			Assert.notNull(processDefinition, "ProcessDefinition not found, key is " + processDefinitionKey);
+		}
+		else
+		{
+			throw new WorkFlowException("processDefinitionId or processDefinitionKey cannot be null at the same time.");
 		}
 
 		return processDefinition;

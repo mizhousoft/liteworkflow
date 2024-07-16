@@ -18,7 +18,7 @@ public class ForkGatewayExecutor extends NodeFlowExecutor
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void doExecute(Execution execution, FlowNode nodeModel)
+	protected boolean doExecute(Execution execution, FlowNode nodeModel)
 	{
 		List<SequenceFlowModel> outgoingFlows = nodeModel.getOutgoingFlows();
 		for (SequenceFlowModel outgoingFlow : outgoingFlows)
@@ -29,5 +29,7 @@ public class ForkGatewayExecutor extends NodeFlowExecutor
 				executor.execute(execution, outgoingFlow);
 			}
 		}
+
+		return true;
 	}
 }

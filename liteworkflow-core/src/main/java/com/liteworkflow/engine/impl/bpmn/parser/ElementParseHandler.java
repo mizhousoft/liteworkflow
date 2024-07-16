@@ -50,27 +50,12 @@ public abstract class ElementParseHandler
 	/**
 	 * 
 	 */
-	public static final String ATTR_PERFORMTYPE = "performType";
-
-	/**
-	 * 
-	 */
-	public static final String ATTR_TO = "to";
-
-	/**
-	 * 
-	 */
 	public static final String ATTR_VERSION = "version";
 
 	/**
 	 * 
 	 */
 	public static final String ATTR_EXPIRETIME = "expireTime";
-
-	/**
-	 * 
-	 */
-	public static final String ATTR_AUTOEXECUTE = "autoExecute";
 
 	/**
 	 * 

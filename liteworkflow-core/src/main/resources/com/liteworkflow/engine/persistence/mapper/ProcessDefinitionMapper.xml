@@ -18,9 +18,9 @@
         id, key_, name, category, version, content, create_time, creator
     </sql>
 	
-	<insert id="save">
-		insert into wf_process_definition (id, key_, name, category, version, content, create_time, creator)
-		values (#{id}, #{key}, #{name}, #{category}, #{version}, #{bytes, typeHandler=org.apache.ibatis.type.BlobTypeHandler}, #{createTime}, #{creator})
+	<insert id="save" useGeneratedKeys="true" keyProperty="id">
+		insert into wf_process_definition (key_, name, category, version, content, create_time, creator)
+		values (#{key}, #{name}, #{category}, #{version}, #{bytes, typeHandler=org.apache.ibatis.type.BlobTypeHandler}, #{createTime}, #{creator})
 	</insert>
 
 	<update id="update">
@@ -41,7 +41,7 @@
 		where id = #{id}
 	</select>
 	
-	<select id="processDefinitionKey" parameterType="java.util.Map" resultMap="ProcessDefinitionMap">
+	<select id="findByKey" parameterType="java.util.Map" resultMap="ProcessDefinitionMap">
 		select <include refid="Column_List"/>
 		from wf_process_definition 
 		where key_ = #{processDefinitionKey}

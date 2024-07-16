@@ -30,11 +30,11 @@ public class TestQueryInstance extends TestSpring
 	{
 		ProcessInstancePageRequest request = new ProcessInstancePageRequest();
 		request.setStartTime(LocalDateTime.of(2014, 1, 1, 0, 0));
-		request.setProcessDefinitionId("860e5edae536495a9f51937f435a1c01");
+		request.setProcessDefinitionId(1);
 
 		System.out.println(engine.getProcessInstanceService().queryPageData(request));
 
 		System.out.println(engine.getProcessInstanceService().queryPageData(new ProcessInstancePageRequest()));
-		System.out.println(engine.getProcessInstanceService().getInstance("b2802224d75d4847ae5bfb0f7e621b8f"));
+		System.out.println(engine.getProcessInstanceService().getInstance(1));
 	}
 }

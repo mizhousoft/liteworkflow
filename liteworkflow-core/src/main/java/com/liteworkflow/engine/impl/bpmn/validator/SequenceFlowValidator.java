@@ -22,11 +22,17 @@ public class SequenceFlowValidator implements FlowElementValidator
 
 		if (null == sequenceFlow.getSourceNode())
 		{
-			throw new WorkFlowException("Source node does not exist, id is " + flowElement.getId());
+			String message = "Source node not found, id is " + flowElement.getId() + ", sourceRef is " + sequenceFlow.getSourceRef()
+			        + ", targetRef is " + sequenceFlow.getTargetRef();
+
+			throw new WorkFlowException(message);
 		}
 		else if (null == sequenceFlow.getTargetNode())
 		{
-			throw new WorkFlowException("Target node does not exist, id is " + flowElement.getId());
+			String message = "Target node not found, id is " + flowElement.getId() + ", sourceRef is " + sequenceFlow.getSourceRef()
+			        + ", targetRef is " + sequenceFlow.getTargetRef();
+
+			throw new WorkFlowException(message);
 		}
 	}
 }

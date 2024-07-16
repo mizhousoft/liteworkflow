@@ -40,7 +40,7 @@ public interface TaskEntityService
 	 * @param id
 	 * @return
 	 */
-	Task getById(String id);
+	Task getById(int id);
 
 	/**
 	 * 根据实例ID查询任务
@@ -48,7 +48,7 @@ public interface TaskEntityService
 	 * @param instanceId
 	 * @return
 	 */
-	List<Task> queryByInstanceId(String instanceId);
+	List<Task> queryByInstanceId(int instanceId);
 
 	/**
 	 * 分页查询

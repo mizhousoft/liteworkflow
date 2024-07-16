@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <process name="测试组参与者" id="group">
     <startEvent name="start1" layout="64,83,-1,-1" id="start1" />
-    <userTask assignee="task1.operator" name="task1" layout="213,80,-1,-1" id="task1" performType="ANY" />
+    <userTask assignee="task1.operator" name="task1" layout="213,80,-1,-1" id="task1" />
     <endEvent name="end1" layout="454,82,-1,-1" id="end1" />
     <sequenceFlow sourceRef="start1" targetRef="task1" g="" offset="0,0" />
     <sequenceFlow sourceRef="task1" targetRef="end1" g="" offset="0,0" />

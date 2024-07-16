@@ -25,7 +25,6 @@ public class TestQueryHistTask extends TestSpring
 	public void test()
 	{
 		TaskPageRequest request = new TaskPageRequest();
-		request.setOperators(new String[] { "admin" });
 		System.out.println(engine.getHistoryService().queryPageData(request));
 	}
 }

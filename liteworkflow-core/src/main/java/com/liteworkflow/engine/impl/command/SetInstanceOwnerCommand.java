@@ -11,7 +11,7 @@ import com.liteworkflow.engine.persistence.entity.ProcessInstance;
  */
 public class SetInstanceOwnerCommand implements Command<ProcessInstance>
 {
-	private String instanceId;
+	private int instanceId;
 
 	private String owner;
 
@@ -21,7 +21,7 @@ public class SetInstanceOwnerCommand implements Command<ProcessInstance>
 	 * @param instanceId
 	 * @param owner
 	 */
-	public SetInstanceOwnerCommand(String instanceId, String owner)
+	public SetInstanceOwnerCommand(int instanceId, String owner)
 	{
 		super();
 		this.instanceId = instanceId;

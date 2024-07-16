@@ -30,7 +30,7 @@ public class JoinGatewayExecutor extends NodeFlowExecutor
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void doExecute(Execution execution, FlowNode nodeModel)
+	protected boolean doExecute(Execution execution, FlowNode nodeModel)
 	{
 		JoinGatewayModel joinModel = (JoinGatewayModel) nodeModel;
 
@@ -41,6 +41,8 @@ public class JoinGatewayExecutor extends NodeFlowExecutor
 		{
 			runOutTransition(execution, nodeModel);
 		}
+
+		return true;
 	}
 
 	/**
@@ -59,9 +61,9 @@ public class JoinGatewayExecutor extends NodeFlowExecutor
 
 		if (bpmnModel.containsNodeIds(UserTaskModel.class, activeNodes))
 		{
-			List<Task> tasks = taskService.queryByInstanceId(instance.getId());
+			List<Task> tasks = taskService.createTaskQuery().queryByInstanceId(instance.getId());
 			tasks = tasks.stream()
-			        .filter(task -> !task.getId().equals(execution.getTask().getId()))
+			        .filter(task -> task.getId() != execution.getTask().getId())
 			        .filter(task -> ArrayUtils.contains(activeNodes, task.getTaskDefinitionId()))
 			        .collect(Collectors.toList());
 			if (tasks == null || tasks.isEmpty())

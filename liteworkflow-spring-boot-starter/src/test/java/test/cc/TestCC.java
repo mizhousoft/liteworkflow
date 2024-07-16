@@ -19,7 +19,7 @@ import com.liteworkflow.engine.RepositoryService;
 @SpringBootTest(classes = WorkflowApplication.class)
 public class TestCC
 {
-	protected String processId;
+	protected int processId;
 
 	@Autowired
 	protected ProcessEngine engine;

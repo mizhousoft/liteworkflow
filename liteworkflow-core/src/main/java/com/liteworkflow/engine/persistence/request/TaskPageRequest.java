@@ -18,17 +18,12 @@ public class TaskPageRequest extends PageRequest
 	/**
 	 * 流程实例id
 	 */
-	private String instanceId;
+	private int instanceId;
 
 	/**
 	 * 任务定义ID
 	 */
 	private String taskDefinitionId;
-
-	/**
-	 * 操作人员id
-	 */
-	private String[] operators;
 
 	/**
 	 * 创建时间范围
@@ -73,7 +68,7 @@ public class TaskPageRequest extends PageRequest
 	 * 
 	 * @return
 	 */
-	public String getInstanceId()
+	public int getInstanceId()
 	{
 		return instanceId;
 	}
@@ -83,29 +78,9 @@ public class TaskPageRequest extends PageRequest
 	 * 
 	 * @param instanceId
 	 */
-	public void setInstanceId(String instanceId)
+	public void setInstanceId(int instanceId)
 	{
 		this.instanceId = instanceId;
-	}
-
-	/**
-	 * 获取operators
-	 * 
-	 * @return
-	 */
-	public String[] getOperators()
-	{
-		return operators;
-	}
-
-	/**
-	 * 设置operators
-	 * 
-	 * @param operators
-	 */
-	public void setOperators(String[] operators)
-	{
-		this.operators = operators;
 	}
 
 	/**

@@ -18,12 +18,7 @@ public class HistoricInstancePageRequest extends PageRequest
 	/**
 	 * 流程定义id
 	 */
-	private String processDefinitionId;
-
-	/**
-	 * 操作人员id
-	 */
-	private String[] operators;
+	private int processDefinitionId;
 
 	/**
 	 * 名称
@@ -71,7 +66,7 @@ public class HistoricInstancePageRequest extends PageRequest
 	 * 
 	 * @return
 	 */
-	public String getProcessDefinitionId()
+	public int getProcessDefinitionId()
 	{
 		return processDefinitionId;
 	}
@@ -81,29 +76,9 @@ public class HistoricInstancePageRequest extends PageRequest
 	 * 
 	 * @param processDefinitionId
 	 */
-	public void setProcessDefinitionId(String processDefinitionId)
+	public void setProcessDefinitionId(int processDefinitionId)
 	{
 		this.processDefinitionId = processDefinitionId;
-	}
-
-	/**
-	 * 获取operators
-	 * 
-	 * @return
-	 */
-	public String[] getOperators()
-	{
-		return operators;
-	}
-
-	/**
-	 * 设置operators
-	 * 
-	 * @param operators
-	 */
-	public void setOperators(String[] operators)
-	{
-		this.operators = operators;
 	}
 
 	/**

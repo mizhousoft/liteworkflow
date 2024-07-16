@@ -18,12 +18,12 @@ public class ProcessInstancePageRequest extends PageRequest
 	/**
 	 * 流程定义id
 	 */
-	private String processDefinitionId;
+	private int processDefinitionId;
 
 	/**
-	 * 操作人员id
+	 * 流程实例发起人
 	 */
-	private String[] operators;
+	private String initiator;
 
 	/**
 	 * 创建开始时间
@@ -43,7 +43,7 @@ public class ProcessInstancePageRequest extends PageRequest
 	{
 		super();
 
-		this.setSort(Sort.create(Direction.DESC, "o.create_Time"));
+		this.setSort(Sort.create(Direction.DESC, "create_Time"));
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class ProcessInstancePageRequest extends PageRequest
 	 * 
 	 * @return
 	 */
-	public String getProcessDefinitionId()
+	public int getProcessDefinitionId()
 	{
 		return processDefinitionId;
 	}
@@ -61,29 +61,29 @@ public class ProcessInstancePageRequest extends PageRequest
 	 * 
 	 * @param processDefinitionId
 	 */
-	public void setProcessDefinitionId(String processDefinitionId)
+	public void setProcessDefinitionId(int processDefinitionId)
 	{
 		this.processDefinitionId = processDefinitionId;
 	}
 
 	/**
-	 * 获取operators
+	 * 获取initiator
 	 * 
 	 * @return
 	 */
-	public String[] getOperators()
+	public String getInitiator()
 	{
-		return operators;
+		return initiator;
 	}
 
 	/**
-	 * 设置operators
+	 * 设置initiator
 	 * 
-	 * @param operators
+	 * @param initiator
 	 */
-	public void setOperators(String[] operators)
+	public void setInitiator(String initiator)
 	{
-		this.operators = operators;
+		this.initiator = initiator;
 	}
 
 	/**

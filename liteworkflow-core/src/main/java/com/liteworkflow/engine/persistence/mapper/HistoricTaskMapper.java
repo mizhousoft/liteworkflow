@@ -10,7 +10,7 @@ import com.mizhousoft.commons.mapper.PageableMapper;
  *
  * @version
  */
-public interface HistoricTaskMapper extends PageableMapper<HistoricTask, String>
+public interface HistoricTaskMapper extends PageableMapper<HistoricTask, Integer>
 {
 	/**
 	 * 根据流程实例ID查询
@@ -18,5 +18,5 @@ public interface HistoricTaskMapper extends PageableMapper<HistoricTask, String>
 	 * @param instanceId
 	 * @return
 	 */
-	List<HistoricTask> findByInstanceId(String instanceId);
+	List<HistoricTask> findByInstanceId(int instanceId);
 }

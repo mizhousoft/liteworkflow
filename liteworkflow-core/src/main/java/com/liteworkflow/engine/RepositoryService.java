@@ -20,7 +20,7 @@ public interface RepositoryService
 	 * @param istream
 	 * @return
 	 */
-	String deploy(InputStream istream);
+	int deploy(InputStream istream);
 
 	/**
 	 * 根据InputStream輸入流，部署流程定义
@@ -29,7 +29,7 @@ public interface RepositoryService
 	 * @param creator
 	 * @return
 	 */
-	String deploy(InputStream istream, String creator);
+	int deploy(InputStream istream, String creator);
 
 	/**
 	 * 根据InputStream輸入流，部署流程定义
@@ -37,7 +37,7 @@ public interface RepositoryService
 	 * @param processDefinitionId
 	 * @param istream
 	 */
-	void redeploy(String processDefinitionId, InputStream istream);
+	void redeploy(int processDefinitionId, InputStream istream);
 
 	/**
 	 * 删除流程定义
@@ -45,7 +45,7 @@ public interface RepositoryService
 	 * @param processDefinitionId
 	 * @param cascade
 	 */
-	void deleteDeployment(String processDefinitionId, boolean cascade);
+	void deleteDeployment(int processDefinitionId, boolean cascade);
 
 	/**
 	 * 根据ID获取流程定义对象
@@ -53,7 +53,7 @@ public interface RepositoryService
 	 * @param processDefinitionId
 	 * @return
 	 */
-	ProcessDefinition getProcessDefinition(String processDefinitionId);
+	ProcessDefinition getProcessDefinition(int processDefinitionId);
 
 	/**
 	 * 根据流程定义Key获取流程定义对象

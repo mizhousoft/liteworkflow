@@ -1,5 +1,7 @@
 package com.liteworkflow.engine.impl.executor;
 
+import java.util.List;
+
 import com.liteworkflow.WorkFlowException;
 import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.impl.FlowExecutor;
@@ -17,15 +19,32 @@ public class ExclusiveGatewayExecutor extends NodeFlowExecutor
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void doExecute(Execution execution, FlowNode nodeModel)
+	protected boolean doExecute(Execution execution, FlowNode nodeModel)
 	{
-		SequenceFlowModel sequenceFlow = getExecutableSequenceFlow(execution, nodeModel);
-		if (null == sequenceFlow)
+		List<SequenceFlowModel> outgoingFlows = nodeModel.getOutgoingFlows();
+
+		List<SequenceFlowModel> conditionFlows = outgoingFlows.stream().filter(of -> null != of.getConditionExpression()).toList();
+		for (SequenceFlowModel conditionFlow : conditionFlows)
 		{
-			throw new WorkFlowException("The SequenceFlow cannot be matched.");
+			FlowExecutor flowExecutor = FlowExecutorFactory.build(conditionFlow);
+			boolean succeed = flowExecutor.execute(execution, conditionFlow);
+			if (succeed)
+			{
+				return true;
+			}
 		}
 
-		FlowExecutor executor = FlowExecutorFactory.build(sequenceFlow);
-		executor.execute(execution, sequenceFlow);
+		SequenceFlowModel defaultFlow = outgoingFlows.stream().filter(of -> null == of.getConditionExpression()).findFirst().orElse(null);
+		if (null != defaultFlow)
+		{
+			FlowExecutor flowExecutor = FlowExecutorFactory.build(defaultFlow);
+			boolean succeed = flowExecutor.execute(execution, defaultFlow);
+			if (succeed)
+			{
+				return true;
+			}
+		}
+
+		throw new WorkFlowException("No matching sequential flow is executed.");
 	}
 }

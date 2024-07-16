@@ -2,7 +2,6 @@ package com.liteworkflow.engine.impl;
 
 import com.liteworkflow.engine.ProcessInstanceService;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
-import com.liteworkflow.engine.impl.command.DeleteProcessInstanceCommand;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.persistence.request.ProcessInstancePageRequest;
 import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
@@ -38,16 +37,7 @@ public class ProcessInstanceServiceImpl extends CommonServiceImpl implements Pro
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void deleteInstance(String instanceId)
-	{
-		commandExecutor.execute(new DeleteProcessInstanceCommand(instanceId));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ProcessInstance getInstance(String instanceId)
+	public ProcessInstance getInstance(int instanceId)
 	{
 		return processInstanceEntityService.getById(instanceId);
 	}

@@ -8,7 +8,6 @@ import org.apache.commons.io.IOUtils;
 
 import com.liteworkflow.WorkFlowException;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
-import com.liteworkflow.engine.helper.StringHelper;
 import com.liteworkflow.engine.impl.Command;
 import com.liteworkflow.engine.impl.CommandContext;
 import com.liteworkflow.engine.model.BpmnModel;
@@ -65,7 +64,6 @@ public class DeployCommand implements Command<ProcessDefinition>
 		Integer version = genProcessModelVersion(bpmnModel, processDefinitionEntityService);
 
 		ProcessDefinition processDefinition = new ProcessDefinition();
-		processDefinition.setId(StringHelper.getPrimaryKey());
 		processDefinition.setKey(bpmnModel.getId());
 		processDefinition.setName(bpmnModel.getName());
 		processDefinition.setCategory(bpmnModel.getCategory());

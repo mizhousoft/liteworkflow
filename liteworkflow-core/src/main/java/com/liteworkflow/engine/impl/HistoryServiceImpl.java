@@ -46,7 +46,7 @@ public class HistoryServiceImpl implements HistoryService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public HistoricProcessInstance getHistoricInstance(String instanceId)
+	public HistoricProcessInstance getHistoricInstance(int instanceId)
 	{
 		return historicProcessInstanceEntityService.getByInstanceId(instanceId);
 	}
@@ -64,7 +64,7 @@ public class HistoryServiceImpl implements HistoryService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public HistoricTask getHistoricTask(String taskId)
+	public HistoricTask getHistoricTask(int taskId)
 	{
 		return historicTaskEntityService.getById(taskId);
 	}
@@ -73,7 +73,7 @@ public class HistoryServiceImpl implements HistoryService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<HistoricTask> queryHistoricTasks(String instanceId)
+	public List<HistoricTask> queryHistoricTasks(int instanceId)
 	{
 		return historicTaskEntityService.queryByInstanceId(instanceId);
 	}

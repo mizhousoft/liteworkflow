@@ -12,15 +12,20 @@
 		<result property="parentNodeName" column="parent_node_name" />
 		<result property="variable" column="variable" />
 		<result property="revision" column="revision" />
-		<result property="creator" column="creator" />
+		<result property="initiator" column="initiator" />
 		<result property="createTime" column="create_time" />
 	</resultMap>
 	
-	<insert id="save">
-		insert into wf_process_instance (id, parent_id, process_def_id, business_key, priority, parent_node_name, 
-		variable, revision, creator, create_time)
-		values (#{id}, #{parentId}, #{processDefinitionId}, #{businessKey}, #{priority}, #{parentNodeName}, 
-		#{variable}, #{revision}, #{creator}, #{createTime})
+	<sql id="Column_List">
+        id, parent_id, process_def_id, business_key, priority, parent_node_name, variable, revision, initiator,
+        create_time
+    </sql>
+    
+	<insert id="save" useGeneratedKeys="true" keyProperty="id">
+		insert into wf_process_instance (parent_id, process_def_id, business_key, priority, parent_node_name, 
+		variable, revision, initiator, create_time)
+		values (#{parentId}, #{processDefinitionId}, #{businessKey}, #{priority}, #{parentNodeName}, 
+		#{variable}, #{revision}, #{initiator}, #{createTime})
 	</insert>
 	
 	<update id="update">
@@ -35,15 +40,13 @@
 	</delete>
 		
 	<select id="findById" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
-		select id, parent_id, process_def_id, business_key, priority, parent_node_name, variable, revision, creator, 
-		create_time
+		select <include refid="Column_List"/>
 		from wf_process_instance
 		where id = #{id}
 	</select>
 		
 	<select id="findByParentId" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
-		select id, parent_id, process_def_id, business_key, priority, parent_node_name, variable, revision, creator, 
-		create_time
+		select <include refid="Column_List"/>
 		from wf_process_instance
 		where parent_id = #{parentId}
 	</select>
@@ -54,12 +57,9 @@
             <if test="request.processDefinitionId != null">
                 process_def_id = #{request.processDefinitionId}
        		</if>
-       		<if test="request.operators != null and request.operators.length != 0">
-                and creator in
-                <foreach collection="request.operators" item="operator" index="index" open="(" close=")" separator=",">
-                    #{operator}
-                </foreach>
-            </if>
+       		<if test="request.initiator != null">
+                initiator = #{request.initiator}
+       		</if>
             <if test="request.startTime != null">
                 and create_time &gt;= #{request.startTime}
        		</if>
@@ -70,19 +70,15 @@
 	</select>
 	
 	<select id="findPageData" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
-		select id, parent_id, process_def_id, business_key, priority, parent_node_name, variable, revision, creator, 
-		create_time
+		select <include refid="Column_List"/>
 		from wf_process_instance
 		<where>
             <if test="request.processDefinitionId != null">
                 process_def_id = #{request.processDefinitionId}
        		</if>
-       		<if test="request.operators != null and request.operators.length != 0">
-                and creator in
-                <foreach collection="request.operators" item="operator" index="index" open="(" close=")" separator=",">
-                    #{operator}
-                </foreach>
-            </if>
+            <if test="request.initiator != null">
+                initiator = #{request.initiator}
+       		</if>
             <if test="request.startTime != null">
                 and create_time &gt;= #{request.startTime}
        		</if>

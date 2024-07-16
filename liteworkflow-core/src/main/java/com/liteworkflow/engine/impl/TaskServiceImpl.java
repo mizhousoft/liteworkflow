@@ -9,9 +9,8 @@ import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.impl.command.CompleteTaskCommand;
 import com.liteworkflow.engine.impl.command.SetTaskVariablesCommand;
 import com.liteworkflow.engine.persistence.entity.Task;
-import com.liteworkflow.engine.persistence.request.TaskPageRequest;
 import com.liteworkflow.engine.persistence.service.TaskEntityService;
-import com.mizhousoft.commons.data.domain.Page;
+import com.liteworkflow.engine.query.TaskQuery;
 
 /**
  * 任务执行业务类
@@ -42,7 +41,7 @@ public class TaskServiceImpl extends CommonServiceImpl implements TaskService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<Task> complete(String taskId)
+	public List<Task> complete(int taskId)
 	{
 		return complete(taskId, null);
 	}
@@ -51,18 +50,9 @@ public class TaskServiceImpl extends CommonServiceImpl implements TaskService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<Task> complete(String taskId, String operator)
+	public List<Task> complete(int taskId, Map<String, Object> variableMap)
 	{
-		return complete(taskId, operator, null);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<Task> complete(String taskId, String operator, Map<String, Object> variableMap)
-	{
-		commandExecutor.execute(new CompleteTaskCommand(taskId, operator, variableMap));
+		commandExecutor.execute(new CompleteTaskCommand(taskId, variableMap));
 
 		return null;
 	}
@@ -71,7 +61,7 @@ public class TaskServiceImpl extends CommonServiceImpl implements TaskService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setVariable(String taskId, String variableName, Object value)
+	public void setVariable(int taskId, String variableName, Object value)
 	{
 		Map<String, Object> variableMap = new HashMap<>(1);
 		variableMap.put(variableName, value);
@@ -83,7 +73,7 @@ public class TaskServiceImpl extends CommonServiceImpl implements TaskService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setVariables(String taskId, Map<String, Object> variableMap)
+	public void setVariables(int taskId, Map<String, Object> variableMap)
 	{
 		commandExecutor.execute(new SetTaskVariablesCommand(taskId, variableMap));
 	}
@@ -92,26 +82,8 @@ public class TaskServiceImpl extends CommonServiceImpl implements TaskService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Task getTask(String taskId)
+	public TaskQuery createTaskQuery()
 	{
-		return taskEntityService.getById(taskId);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<Task> queryByInstanceId(String instanceId)
-	{
-		return taskEntityService.queryByInstanceId(instanceId);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Page<Task> queryPageData(TaskPageRequest request)
-	{
-		return taskEntityService.queryPageData(request);
+		return new TaskQueryImpl(taskEntityService);
 	}
 }

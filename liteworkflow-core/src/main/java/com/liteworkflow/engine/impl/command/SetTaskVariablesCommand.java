@@ -5,13 +5,13 @@ import java.util.Map;
 import org.springframework.util.Assert;
 
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
-import com.liteworkflow.engine.helper.JsonHelper;
 import com.liteworkflow.engine.impl.Command;
 import com.liteworkflow.engine.impl.CommandContext;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 import com.liteworkflow.engine.persistence.entity.Task;
 import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.TaskEntityService;
+import com.mizhousoft.commons.json.JSONUtils;
 
 /**
  * 设置任务变量命令
@@ -23,7 +23,7 @@ public class SetTaskVariablesCommand implements Command<ProcessInstance>
 	/**
 	 * 任务ID
 	 */
-	private String taskId;
+	private int taskId;
 
 	/**
 	 * 变量
@@ -36,7 +36,7 @@ public class SetTaskVariablesCommand implements Command<ProcessInstance>
 	 * @param taskId
 	 * @param variableMap
 	 */
-	public SetTaskVariablesCommand(String taskId, Map<String, Object> variableMap)
+	public SetTaskVariablesCommand(int taskId, Map<String, Object> variableMap)
 	{
 		super();
 		this.taskId = taskId;
@@ -61,7 +61,7 @@ public class SetTaskVariablesCommand implements Command<ProcessInstance>
 
 		Map<String, Object> dataMap = instance.getVariableMap();
 		dataMap.putAll(variableMap);
-		instance.setVariable(JsonHelper.toJson(dataMap));
+		instance.setVariable(JSONUtils.toJSONStringQuietly(dataMap));
 
 		processInstanceEntityService.modifyVariable(instance);
 

@@ -10,7 +10,7 @@ import com.mizhousoft.commons.mapper.PageableMapper;
  *
  * @version
  */
-public interface HistoricProcessInstanceMapper extends PageableMapper<HistoricProcessInstance, String>
+public interface HistoricProcessInstanceMapper extends PageableMapper<HistoricProcessInstance, Integer>
 {
 	/**
 	 * 根据流程定义ID查询历史流程实例ID
@@ -18,5 +18,5 @@ public interface HistoricProcessInstanceMapper extends PageableMapper<HistoricPr
 	 * @param processDefinitionId
 	 * @return
 	 */
-	Set<String> findIdsByProcessDefinitionId(String processDefinitionId);
+	Set<Integer> findIdsByProcessDefinitionId(int processDefinitionId);
 }

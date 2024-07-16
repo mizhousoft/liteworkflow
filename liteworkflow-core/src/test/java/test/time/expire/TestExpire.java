@@ -42,7 +42,7 @@ public class TestExpire extends TestSpring
 		args.put("task1.operator", new String[] { "1" });
 		args.put("task1.expireTime", LocalDateTimeUtils.toDate(LocalDateTime.of(2014, 4, 15, 9, 0)));
 		args.put("task1.reminderTime", LocalDateTimeUtils.toDate(LocalDateTime.of(2014, 4, 15, 8, 57)));
-		ProcessInstance instance = engine.getRuntimeService().startInstanceByKey(PROCESSNAME, "2", args);
+		ProcessInstance instance = engine.getRuntimeService().startInstanceByKey(PROCESSNAME, null, "2", args);
 		System.out.println("instance=" + instance);
 		try
 		{

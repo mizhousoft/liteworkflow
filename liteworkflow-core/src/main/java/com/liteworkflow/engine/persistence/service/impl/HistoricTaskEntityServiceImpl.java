@@ -55,7 +55,7 @@ public class HistoricTaskEntityServiceImpl implements HistoricTaskEntityService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public HistoricTask getById(String taskId)
+	public HistoricTask getById(int taskId)
 	{
 		return historicTaskMapper.findById(taskId);
 	}
@@ -64,7 +64,7 @@ public class HistoricTaskEntityServiceImpl implements HistoricTaskEntityService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<HistoricTask> queryByInstanceId(String instanceId)
+	public List<HistoricTask> queryByInstanceId(int instanceId)
 	{
 		return historicTaskMapper.findByInstanceId(instanceId);
 	}

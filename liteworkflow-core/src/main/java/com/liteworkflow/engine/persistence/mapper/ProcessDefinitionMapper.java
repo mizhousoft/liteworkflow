@@ -12,7 +12,7 @@ import com.mizhousoft.commons.mapper.PageableMapper;
  *
  * @version
  */
-public interface ProcessDefinitionMapper extends PageableMapper<ProcessDefinition, String>
+public interface ProcessDefinitionMapper extends PageableMapper<ProcessDefinition, Integer>
 {
 	/**
 	 * 根据流程Key查询

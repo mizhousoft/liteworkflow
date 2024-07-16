@@ -29,7 +29,7 @@ public class RedeployCommand implements Command<ProcessDefinition>
 	/**
 	 * 流程定义ID
 	 */
-	private String processDefinitionId;
+	private int processDefinitionId;
 
 	/**
 	 * 构造函数
@@ -37,7 +37,7 @@ public class RedeployCommand implements Command<ProcessDefinition>
 	 * @param istream
 	 * @param processDefinitionId
 	 */
-	public RedeployCommand(InputStream istream, String processDefinitionId)
+	public RedeployCommand(InputStream istream, int processDefinitionId)
 	{
 		try
 		{

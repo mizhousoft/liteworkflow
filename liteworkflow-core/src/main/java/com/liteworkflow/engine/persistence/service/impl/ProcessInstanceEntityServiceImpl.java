@@ -102,7 +102,7 @@ public class ProcessInstanceEntityServiceImpl implements ProcessInstanceEntitySe
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessInstance getById(String id)
+	public ProcessInstance getById(int id)
 	{
 		ProcessInstance processInstance = processInstanceMapper.findById(id);
 
@@ -113,7 +113,7 @@ public class ProcessInstanceEntityServiceImpl implements ProcessInstanceEntitySe
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<ProcessInstance> queryByParentId(String parentId)
+	public List<ProcessInstance> queryByParentId(int parentId)
 	{
 		return processInstanceMapper.findByParentId(parentId);
 	}

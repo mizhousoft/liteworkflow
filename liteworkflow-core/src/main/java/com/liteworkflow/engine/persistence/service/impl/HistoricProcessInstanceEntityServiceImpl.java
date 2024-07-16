@@ -65,7 +65,7 @@ public class HistoricProcessInstanceEntityServiceImpl implements HistoricProcess
 	 * {@inheritDoc}
 	 */
 	@Override
-	public HistoricProcessInstance getByInstanceId(String instanceId)
+	public HistoricProcessInstance getByInstanceId(int instanceId)
 	{
 		return historicProcessInstanceMapper.findById(instanceId);
 	}
@@ -74,7 +74,7 @@ public class HistoricProcessInstanceEntityServiceImpl implements HistoricProcess
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> queryIdsByProcessDefinitionId(String processDefinitionId)
+	public Set<Integer> queryIdsByProcessDefinitionId(int processDefinitionId)
 	{
 		return historicProcessInstanceMapper.findIdsByProcessDefinitionId(processDefinitionId);
 	}

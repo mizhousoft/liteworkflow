@@ -5,9 +5,9 @@
 	</extensionElements>
 	<startEvent name="start1" layout="76,146,-1,-1" id="start1" />
 	<exclusiveGateway name="decision1" layout="179,146,-1,-1" id="decision1" />
-	<userTask assignee="task1.operator" name="task1" layout="300,60,-1,-1" id="task1" performType="ANY" />
-	<userTask assignee="task2.operator" name="task2" layout="300,144,-1,-1" id="task2" performType="ANY" />
-	<userTask assignee="task3.operator" name="task3" layout="300,228,-1,-1" id="task3" performType="ANY">
+	<userTask assignee="task1.operator" name="task1" layout="300,60,-1,-1" id="task1" />
+	<userTask assignee="task2.operator" name="task2" layout="300,144,-1,-1" id="task2" />
+	<userTask assignee="task3.operator" name="task3" layout="300,228,-1,-1" id="task3">
 		<extensionElements>
 			<taskListener delegateExpression="${smartSelectHandlerListener}" event="create" />
 		</extensionElements>

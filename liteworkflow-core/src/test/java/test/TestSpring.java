@@ -16,7 +16,7 @@ import com.liteworkflow.engine.RepositoryService;
 @ContextConfiguration(locations = { "classpath:applicationContext.xml" })
 public class TestSpring extends AbstractJUnit4SpringContextTests
 {
-	protected String processId;
+	protected int processId;
 
 	protected ProcessEngine engine;
 

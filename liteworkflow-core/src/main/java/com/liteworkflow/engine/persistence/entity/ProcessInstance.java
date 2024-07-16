@@ -14,17 +14,17 @@ public class ProcessInstance extends VariableScope
 	/**
 	 * 主键ID
 	 */
-	private String id;
+	private int id;
 
 	/**
 	 * 流程实例为子流程时，该字段标识父流程实例ID
 	 */
-	private String parentId;
+	private int parentId;
 
 	/**
 	 * 流程定义ID
 	 */
-	private String processDefinitionId;
+	private int processDefinitionId;
 
 	/**
 	 * 业务标识
@@ -53,9 +53,9 @@ public class ProcessInstance extends VariableScope
 	private int revision = 0;
 
 	/**
-	 * 流程实例创建者ID
+	 * 流程实例发起人
 	 */
-	private String creator;
+	private String initiator;
 
 	/**
 	 * 流程实例创建时间
@@ -67,7 +67,7 @@ public class ProcessInstance extends VariableScope
 	 * 
 	 * @return
 	 */
-	public String getId()
+	public int getId()
 	{
 		return id;
 	}
@@ -77,7 +77,7 @@ public class ProcessInstance extends VariableScope
 	 * 
 	 * @param id
 	 */
-	public void setId(String id)
+	public void setId(int id)
 	{
 		this.id = id;
 	}
@@ -87,7 +87,7 @@ public class ProcessInstance extends VariableScope
 	 * 
 	 * @return
 	 */
-	public String getParentId()
+	public int getParentId()
 	{
 		return parentId;
 	}
@@ -97,7 +97,7 @@ public class ProcessInstance extends VariableScope
 	 * 
 	 * @param parentId
 	 */
-	public void setParentId(String parentId)
+	public void setParentId(int parentId)
 	{
 		this.parentId = parentId;
 	}
@@ -107,7 +107,7 @@ public class ProcessInstance extends VariableScope
 	 * 
 	 * @return
 	 */
-	public String getProcessDefinitionId()
+	public int getProcessDefinitionId()
 	{
 		return processDefinitionId;
 	}
@@ -117,7 +117,7 @@ public class ProcessInstance extends VariableScope
 	 * 
 	 * @param processDefinitionId
 	 */
-	public void setProcessDefinitionId(String processDefinitionId)
+	public void setProcessDefinitionId(int processDefinitionId)
 	{
 		this.processDefinitionId = processDefinitionId;
 	}
@@ -223,23 +223,23 @@ public class ProcessInstance extends VariableScope
 	}
 
 	/**
-	 * 获取creator
+	 * 获取initiator
 	 * 
 	 * @return
 	 */
-	public String getCreator()
+	public String getInitiator()
 	{
-		return creator;
+		return initiator;
 	}
 
 	/**
-	 * 设置creator
+	 * 设置initiator
 	 * 
-	 * @param creator
+	 * @param initiator
 	 */
-	public void setCreator(String creator)
+	public void setInitiator(String initiator)
 	{
-		this.creator = creator;
+		this.initiator = initiator;
 	}
 
 	/**

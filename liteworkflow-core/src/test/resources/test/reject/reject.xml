@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <process name="测试驳回" id="reject">
-    <startEvent name="start1" layout="28,83,-1,-1" id="start1" />
-    <endEvent name="end1" layout="661,83,-1,-1" id="end1" />
-    <userTask name="task1" layout="122,81,-1,-1" id="task1" performType="ANY" />
-    <userTask name="task2" layout="255,81,-1,-1" id="task2" performType="ANY" />
-    <exclusiveGateway name="decision1" layout="389,83,-1,-1" id="decision1" />
-    <userTask name="task3" layout="491,81,-1,-1" id="task3" performType="ANY" />
-    <userTask name="task4" layout="491,188,-1,-1" id="task4" performType="ANY" />
-    <sequenceFlow sourceRef="start1" targetRef="task1" g="" offset="0,0" />
-    <sequenceFlow sourceRef="task1" targetRef="task2" g="" offset="0,0" />
-    <sequenceFlow sourceRef="task2" targetRef="decision1" g="" offset="0,0" />
-    <sequenceFlow sourceRef="decision1" targetRef="task3" g="" offset="0,0">
+	<startEvent name="start1" layout="28,83,-1,-1" id="start1" />
+	<endEvent name="end1" layout="661,83,-1,-1" id="end1" />
+	<userTask name="task1" layout="122,81,-1,-1" id="task1" />
+	<userTask name="task2" layout="255,81,-1,-1" id="task2" />
+	<exclusiveGateway name="decision1" layout="389,83,-1,-1" id="decision1" />
+	<userTask name="task3" layout="491,81,-1,-1" id="task3" />
+	<userTask name="task4" layout="491,188,-1,-1" id="task4" />
+	<sequenceFlow sourceRef="start1" targetRef="task1" g="" offset="0,0" />
+	<sequenceFlow sourceRef="task1" targetRef="task2" g="" offset="0,0" />
+	<sequenceFlow sourceRef="task2" targetRef="decision1" g="" offset="0,0" />
+	<sequenceFlow sourceRef="decision1" targetRef="task3" g="" offset="0,0">
 		<conditionExpression><![CDATA[number == 1]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow sourceRef="decision1" targetRef="task4" g="" offset="0,0">
+	</sequenceFlow>
+	<sequenceFlow sourceRef="decision1" targetRef="task4" g="" offset="0,0">
 		<conditionExpression><![CDATA[number == 2]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow sourceRef="task3" targetRef="end1" g="" offset="0,0" />
-    <sequenceFlow sourceRef="task4" targetRef="end1" g="" offset="0,0" />
+	</sequenceFlow>
+	<sequenceFlow sourceRef="task3" targetRef="end1" g="" offset="0,0" />
+	<sequenceFlow sourceRef="task4" targetRef="end1" g="" offset="0,0" />
 </process>

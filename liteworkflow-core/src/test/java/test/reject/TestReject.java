@@ -29,7 +29,7 @@ public class TestReject extends TestSpring
 			processId = engine.getRepositoryService().deploy(istream);
 		}
 
-		engine.getRuntimeService().startInstanceById(processId);
+		engine.getRuntimeService().startInstanceById(processId, null);
 	}
 
 	@Test

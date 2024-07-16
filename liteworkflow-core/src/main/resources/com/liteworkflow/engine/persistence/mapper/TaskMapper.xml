@@ -9,9 +9,8 @@
 		<result property="instanceId" column="instance_id" />
 		<result property="taskDefinitionId" column="task_def_id" />
 		<result property="name" column="name" />
+		<result property="assignee" column="assignee" />
 		<result property="taskType" column="task_type" />
-		<result property="performType" column="perform_type" />
-		<result property="operator" column="operator" />
 		<result property="createTime" column="create_time" />
 		<result property="expireTime" column="expire_time" />
 		<result property="parentTaskId" column="parent_task_id" />
@@ -19,17 +18,21 @@
 		<result property="revision" column="revision" />
 	</resultMap>
 	
-	<insert id="save">
-		insert into wf_task (id, process_def_id, instance_id, task_def_id, name, task_type, perform_type, operator, create_time,
+	<sql id="Column_List">
+        id, parent_task_id, process_def_id, instance_id, task_def_id, name, assignee, task_type, expire_time,
+        variable, revision, create_time
+    </sql>
+    
+	<insert id="save" useGeneratedKeys="true" keyProperty="id">
+		insert into wf_task (process_def_id, instance_id, task_def_id, name, assignee, task_type, create_time,
 		expire_time, parent_task_id, variable, revision)
-		values (#{id}, #{processDefinitionId}, #{instanceId}, #{taskDefinitionId}, #{name}, #{taskType}, #{performType}, #{operator}, #{createTime}, 
+		values (#{processDefinitionId}, #{instanceId}, #{taskDefinitionId}, #{name}, #{assignee}, #{taskType}, #{createTime}, 
 		#{expireTime}, #{parentTaskId}, #{variable}, #{revision})
 	</insert>
 	
 	<update id="update">
         update wf_task 
-        set operator= #{operator}, 
-        variable= #{variable}, 
+        set variable= #{variable}, 
         expire_time= #{expireTime}, 
         revision = revision + 1 
         where id = #{id} and revision = #{revision}
@@ -40,15 +43,13 @@
 	</delete>
 		
 	<select id="findById" parameterType="java.util.Map" resultMap="TaskMap">
-		select id, process_def_id, instance_id, task_def_id, name, task_type, perform_type, operator, create_time,
-		expire_time, parent_task_id, variable, revision
+		select <include refid="Column_List"/>
 		from wf_task
 		where id = #{id}
 	</select>
 	
 	<select id="findByInstanceId" parameterType="java.util.Map" resultMap="TaskMap">
-		select id, process_def_id, instance_id, task_def_id, name, task_type, perform_type, operator, create_time,
-		expire_time, parent_task_id, variable, revision
+		select <include refid="Column_List"/>
 		from wf_task
 		where instance_id = #{instanceId}
 	</select>
@@ -72,8 +73,7 @@
 	</select>
 	
 	<select id="findPageData" parameterType="java.util.Map" resultMap="TaskMap">
-		select id, process_def_id, instance_id, task_def_id, name, task_type, perform_type, operator, create_time,
-		expire_time, parent_task_id, variable, revision
+		select <include refid="Column_List"/>
 		from wf_task
 		<where>
 			<if test="request.instanceId != null">

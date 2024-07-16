@@ -24,14 +24,14 @@ public class DeleteProcessInstanceCommand implements Command<ProcessInstance>
 	/**
 	 * 流程实例ID
 	 */
-	private String instanceId;
+	private int instanceId;
 
 	/**
 	 * 构造函数
 	 *
 	 * @param instanceId
 	 */
-	public DeleteProcessInstanceCommand(String instanceId)
+	public DeleteProcessInstanceCommand(int instanceId)
 	{
 		super();
 		this.instanceId = instanceId;

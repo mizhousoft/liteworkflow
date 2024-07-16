@@ -3,7 +3,7 @@ package com.liteworkflow.engine.persistence.entity;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.liteworkflow.engine.helper.JsonHelper;
+import com.mizhousoft.commons.json.JSONUtils;
 
 /**
  * 变量作用域
@@ -27,7 +27,7 @@ public abstract class VariableScope
 	{
 		if (null == variableMap)
 		{
-			Map<String, Object> dataMap = JsonHelper.fromJson(getVariable(), Map.class);
+			Map<String, Object> dataMap = JSONUtils.parseQuietly(getVariable(), Map.class);
 			if (null == dataMap)
 			{
 				dataMap = new HashMap<>(0);

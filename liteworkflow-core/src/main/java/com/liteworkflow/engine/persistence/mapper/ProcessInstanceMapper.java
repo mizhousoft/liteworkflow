@@ -10,7 +10,7 @@ import com.mizhousoft.commons.mapper.PageableMapper;
  *
  * @version
  */
-public interface ProcessInstanceMapper extends PageableMapper<ProcessInstance, String>
+public interface ProcessInstanceMapper extends PageableMapper<ProcessInstance, Integer>
 {
 	/**
 	 * 根据父ID查询
@@ -18,5 +18,5 @@ public interface ProcessInstanceMapper extends PageableMapper<ProcessInstance, S
 	 * @param parentId
 	 * @return
 	 */
-	List<ProcessInstance> findByParentId(String parentId);
+	List<ProcessInstance> findByParentId(int parentId);
 }

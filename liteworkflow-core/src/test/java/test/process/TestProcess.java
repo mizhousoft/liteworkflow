@@ -40,7 +40,7 @@ public class TestProcess extends TestSpring
 		System.out.println("output 2=" + process);
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("task1.operator", "1");
-		engine.getRuntimeService().startInstanceById(processId, "1", args);
+		engine.getRuntimeService().startInstanceById(processId, null, "1", args);
 		// engine.startInstanceById(processId, "1", args);
 	}
 }

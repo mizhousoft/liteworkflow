@@ -20,28 +20,30 @@ import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
  *
  * @version
  */
-public class EndExecutor extends NodeFlowExecutor
+public class EndEventExecutor extends NodeFlowExecutor
 {
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void doExecute(Execution execution, FlowNode nodeModel)
+	protected boolean doExecute(Execution execution, FlowNode nodeModel)
 	{
 		ProcessEngineConfigurationImpl engineConfiguration = execution.getEngineConfiguration();
 		TaskService taskService = engineConfiguration.getTaskService();
 		ProcessInstance processInstance = execution.getProcessInstance();
 
-		List<Task> tasks = taskService.queryByInstanceId(processInstance.getId());
+		List<Task> tasks = taskService.createTaskQuery().queryByInstanceId(processInstance.getId());
 		if (!tasks.isEmpty())
 		{
 			throw new WorkFlowException("存在未完成的主办任务,请确认.");
 		}
 
 		complete(processInstance.getId(), execution);
+
+		return true;
 	}
 
-	private void complete(String instanceId, Execution execution)
+	private void complete(int instanceId, Execution execution)
 	{
 		ProcessEngineConfigurationImpl engineConfiguration = execution.getEngineConfiguration();
 		ProcessInstanceEntityService processInstanceEntityService = engineConfiguration.getProcessInstanceEntityService();

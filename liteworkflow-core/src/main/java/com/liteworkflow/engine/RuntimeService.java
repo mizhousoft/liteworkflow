@@ -12,58 +12,64 @@ import com.liteworkflow.engine.persistence.entity.ProcessInstance;
 public interface RuntimeService
 {
 	/**
-	 * 根据流程定义ID启动流程实例
+	 * 根据流程定义ID，发起人启动流程实例
 	 * 
 	 * @param processDefinitionId
+	 * @param initiator
 	 * @return
 	 */
-	ProcessInstance startInstanceById(String processDefinitionId);
+	ProcessInstance startInstanceById(int processDefinitionId, String initiator);
 
 	/**
-	 * 根据流程定义ID，操作人ID启动流程实例
+	 * 根据流程定义ID，业务KEY，发起人启动流程实例
 	 * 
 	 * @param processDefinitionId
-	 * @param operator
+	 * @param businessKey
+	 * @param initiator
 	 * @return
 	 */
-	ProcessInstance startInstanceById(String processDefinitionId, String operator);
+	ProcessInstance startInstanceById(int processDefinitionId, String businessKey, String initiator);
 
 	/**
-	 * 根据流程定义ID，操作人ID，参数列表启动流程实例
+	 * 根据流程定义ID，业务KEY，发起人，参数列表启动流程实例
 	 * 
 	 * @param processDefinitionId
-	 * @param operator
+	 * @param businessKey
+	 * @param initiator
 	 * @param variableMap
 	 * @return
 	 */
-	ProcessInstance startInstanceById(String processDefinitionId, String operator, Map<String, Object> variableMap);
+	ProcessInstance startInstanceById(int processDefinitionId, String businessKey, String initiator, Map<String, Object> variableMap);
 
 	/**
-	 * 根据流程Key启动流程实例
+	 * 根据流程Key、发起人启动流程实例
 	 * 
 	 * @param processDefinitionKey
+	 * @param initiator
 	 * @return
 	 */
-	ProcessInstance startInstanceByKey(String processDefinitionKey);
+	ProcessInstance startInstanceByKey(String processDefinitionKey, String initiator);
 
 	/**
-	 * 根据流程Key、操作人启动流程实例
+	 * 根据流程Key、业务KEY，发起人启动流程实例
 	 * 
 	 * @param processDefinitionKey
-	 * @param operator
+	 * @param businessKey
+	 * @param initiator
 	 * @return
 	 */
-	ProcessInstance startInstanceByKey(String processDefinitionKey, String operator);
+	ProcessInstance startInstanceByKey(String processDefinitionKey, String businessKey, String initiator);
 
 	/**
-	 * 根据流程Key、操作人、参数列表启动流程实例
+	 * 根据流程Key、业务KEY，发起人、参数列表启动流程实例
 	 * 
 	 * @param processDefinitionKey
-	 * @param operator
+	 * @param businessKey
+	 * @param initiator
 	 * @param variableMap
 	 * @return
 	 */
-	ProcessInstance startInstanceByKey(String processDefinitionKey, String operator, Map<String, Object> variableMap);
+	ProcessInstance startInstanceByKey(String processDefinitionKey, String businessKey, String initiator, Map<String, Object> variableMap);
 
 	/**
 	 * 设置流程发起人
@@ -71,7 +77,7 @@ public interface RuntimeService
 	 * @param instanceId
 	 * @param owner
 	 */
-	void setOwner(String instanceId, String owner);
+	void setOwner(int instanceId, String owner);
 
 	/**
 	 * 设置流程变量
@@ -80,7 +86,7 @@ public interface RuntimeService
 	 * @param variableName
 	 * @param value
 	 */
-	void setVariable(String instanceId, String variableName, Object value);
+	void setVariable(int instanceId, String variableName, Object value);
 
 	/**
 	 * 设置流程变量
@@ -88,5 +94,12 @@ public interface RuntimeService
 	 * @param instanceId
 	 * @param variableMap
 	 */
-	void setVariables(String instanceId, Map<String, Object> variableMap);
+	void setVariables(int instanceId, Map<String, Object> variableMap);
+
+	/**
+	 * 删除流程实例
+	 * 
+	 * @param instanceId
+	 */
+	void deleteInstance(int instanceId);
 }

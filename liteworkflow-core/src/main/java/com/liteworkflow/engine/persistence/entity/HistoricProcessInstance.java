@@ -12,17 +12,17 @@ public class HistoricProcessInstance extends VariableScope
 	/**
 	 * 主键ID
 	 */
-	private String id;
+	private int id;
 
 	/**
 	 * 流程实例为子流程时，该字段标识父流程实例ID
 	 */
-	private String parentId;
+	private int parentId;
 
 	/**
 	 * 流程定义ID
 	 */
-	private String processDefinitionId;
+	private int processDefinitionId;
 
 	/**
 	 * 业务标识
@@ -45,26 +45,26 @@ public class HistoricProcessInstance extends VariableScope
 	private String variable;
 
 	/**
+	 * 流程实例发起人
+	 */
+	private String initiator;
+
+	/**
+	 * 流程实例开始时间
+	 */
+	private LocalDateTime startTime;
+
+	/**
 	 * 流程实例结束时间
 	 */
 	private LocalDateTime endTime;
-
-	/**
-	 * 流程实例创建者ID
-	 */
-	private String creator;
-
-	/**
-	 * 流程实例创建时间
-	 */
-	private LocalDateTime createTime;
 
 	/**
 	 * 获取id
 	 * 
 	 * @return
 	 */
-	public String getId()
+	public int getId()
 	{
 		return id;
 	}
@@ -74,7 +74,7 @@ public class HistoricProcessInstance extends VariableScope
 	 * 
 	 * @param id
 	 */
-	public void setId(String id)
+	public void setId(int id)
 	{
 		this.id = id;
 	}
@@ -84,7 +84,7 @@ public class HistoricProcessInstance extends VariableScope
 	 * 
 	 * @return
 	 */
-	public String getParentId()
+	public int getParentId()
 	{
 		return parentId;
 	}
@@ -94,7 +94,7 @@ public class HistoricProcessInstance extends VariableScope
 	 * 
 	 * @param parentId
 	 */
-	public void setParentId(String parentId)
+	public void setParentId(int parentId)
 	{
 		this.parentId = parentId;
 	}
@@ -104,7 +104,7 @@ public class HistoricProcessInstance extends VariableScope
 	 * 
 	 * @return
 	 */
-	public String getProcessDefinitionId()
+	public int getProcessDefinitionId()
 	{
 		return processDefinitionId;
 	}
@@ -114,7 +114,7 @@ public class HistoricProcessInstance extends VariableScope
 	 * 
 	 * @param processDefinitionId
 	 */
-	public void setProcessDefinitionId(String processDefinitionId)
+	public void setProcessDefinitionId(int processDefinitionId)
 	{
 		this.processDefinitionId = processDefinitionId;
 	}
@@ -200,6 +200,46 @@ public class HistoricProcessInstance extends VariableScope
 	}
 
 	/**
+	 * 获取initiator
+	 * 
+	 * @return
+	 */
+	public String getInitiator()
+	{
+		return initiator;
+	}
+
+	/**
+	 * 设置initiator
+	 * 
+	 * @param initiator
+	 */
+	public void setInitiator(String initiator)
+	{
+		this.initiator = initiator;
+	}
+
+	/**
+	 * 获取startTime
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getStartTime()
+	{
+		return startTime;
+	}
+
+	/**
+	 * 设置startTime
+	 * 
+	 * @param startTime
+	 */
+	public void setStartTime(LocalDateTime startTime)
+	{
+		this.startTime = startTime;
+	}
+
+	/**
 	 * 获取endTime
 	 * 
 	 * @return
@@ -217,46 +257,6 @@ public class HistoricProcessInstance extends VariableScope
 	public void setEndTime(LocalDateTime endTime)
 	{
 		this.endTime = endTime;
-	}
-
-	/**
-	 * 获取creator
-	 * 
-	 * @return
-	 */
-	public String getCreator()
-	{
-		return creator;
-	}
-
-	/**
-	 * 设置creator
-	 * 
-	 * @param creator
-	 */
-	public void setCreator(String creator)
-	{
-		this.creator = creator;
-	}
-
-	/**
-	 * 获取createTime
-	 * 
-	 * @return
-	 */
-	public LocalDateTime getCreateTime()
-	{
-		return createTime;
-	}
-
-	/**
-	 * 设置createTime
-	 * 
-	 * @param createTime
-	 */
-	public void setCreateTime(LocalDateTime createTime)
-	{
-		this.createTime = createTime;
 	}
 
 	/**

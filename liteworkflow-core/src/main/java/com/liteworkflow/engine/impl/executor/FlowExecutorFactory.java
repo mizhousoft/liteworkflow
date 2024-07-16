@@ -28,7 +28,7 @@ public class FlowExecutorFactory
 	{
 		if (model instanceof StartEventModel)
 		{
-			return new StartExecutor();
+			return new StartEventExecutor();
 		}
 		else if (model instanceof ExclusiveGatewayModel)
 		{
@@ -36,7 +36,7 @@ public class FlowExecutorFactory
 		}
 		else if (model instanceof EndEventModel)
 		{
-			return new EndExecutor();
+			return new EndEventExecutor();
 		}
 		else if (model instanceof ForkGatewayModel)
 		{

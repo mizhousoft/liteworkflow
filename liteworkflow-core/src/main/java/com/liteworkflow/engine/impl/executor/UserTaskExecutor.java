@@ -1,100 +1,107 @@
 package com.liteworkflow.engine.impl.executor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.BeanUtils;
-
-import com.liteworkflow.engine.helper.JsonHelper;
-import com.liteworkflow.engine.helper.StringHelper;
+import com.liteworkflow.WorkFlowException;
+import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.impl.Execution;
+import com.liteworkflow.engine.impl.Expression;
+import com.liteworkflow.engine.impl.el.SpelExpression;
 import com.liteworkflow.engine.model.FlowNode;
 import com.liteworkflow.engine.model.UserTaskModel;
-import com.liteworkflow.engine.model.UserTaskModel.PerformType;
 import com.liteworkflow.engine.persistence.entity.Task;
 import com.liteworkflow.engine.persistence.service.TaskEntityService;
+import com.mizhousoft.commons.json.JSONUtils;
 
 /**
- * TODO
+ * 用户任务流程执行器
  *
  * @version
  */
 public class UserTaskExecutor extends NodeFlowExecutor
 {
 	/**
+	 * 表达式解析器
+	 */
+	private Expression expression = new SpelExpression();
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void doExecute(Execution execution, FlowNode nodeModel)
+	protected boolean doExecute(Execution execution, FlowNode nodeModel)
 	{
 		UserTaskModel taskModel = (UserTaskModel) nodeModel;
 
-		createTask(taskModel, execution);
-	}
+		ProcessEngineConfigurationImpl engineConfiguration = execution.getEngineConfiguration();
+		TaskEntityService taskEntityService = engineConfiguration.getTaskEntityService();
 
-	public List<Task> createTask(UserTaskModel taskModel, Execution execution)
-	{
-		List<Task> tasks = new ArrayList<Task>();
+		String assignee = obtainTaskAssignee(taskModel, execution);
 
-		Map<String, Object> args = execution.getArgs();
-		if (args == null)
-			args = new HashMap<String, Object>();
-
-		Task task = createTaskBase(taskModel, execution);
-
-		task.setVariable(JsonHelper.toJson(args));
-
-		if (taskModel.isPerformAny())
-		{
-			// 任务执行方式为参与者中任何一个执行即可驱动流程继续流转，该方法只产生一个task
-			task = saveTask(execution, task);
-			tasks.add(task);
-		}
-		else if (taskModel.isPerformAll())
-		{
-			// 任务执行方式为参与者中每个都要执行完才可驱动流程继续流转，该方法根据参与者个数产生对应的task数量
-			Task singleTask = new Task();
-			BeanUtils.copyProperties(task, singleTask);
-
-			singleTask = saveTask(execution, singleTask);
-			tasks.add(singleTask);
-		}
-		return tasks;
-	}
-
-	/**
-	 * 由DBAccess实现类持久化task对象
-	 */
-	private Task saveTask(Execution execution, Task task)
-	{
-		TaskEntityService taskEntityService = execution.getEngineConfiguration().getTaskEntityService();
-
-		task.setId(StringHelper.getPrimaryKey());
-		task.setPerformType(PerformType.ANY.ordinal());
+		Task task = createTask(taskModel, execution, assignee);
 		taskEntityService.addEntity(task);
-		return task;
+
+		return true;
 	}
 
 	/**
-	 * 根据模型、执行对象、任务类型构建基本的task对象
+	 * 获取任务执行人
 	 * 
-	 * @param model 模型
-	 * @param execution 执行对象
-	 * @return Task任务对象
+	 * @param taskModel
+	 * @param execution
+	 * @return
 	 */
-	private Task createTaskBase(UserTaskModel model, Execution execution)
+	private String obtainTaskAssignee(UserTaskModel taskModel, Execution execution)
+	{
+		String assignee = taskModel.getAssignee();
+		if (null == assignee)
+		{
+			return null;
+		}
+
+		if (assignee.startsWith("${"))
+		{
+			String expr = "#" + assignee.substring(2, assignee.length() - 1);
+
+			String value = expression.eval(String.class, expr, execution.getArgs());
+			if (null == value)
+			{
+				String message = "Unknown property used in expression: %s with ProcessInstance(%s).";
+				throw new WorkFlowException(String.format(message, assignee, execution.getProcessInstance().getId()));
+			}
+
+			return value;
+		}
+		else
+		{
+			return assignee;
+		}
+	}
+
+	/**
+	 * 创建任务
+	 * 
+	 * @param userTask
+	 * @param execution
+	 * @param assignee
+	 * @return
+	 */
+	private Task createTask(UserTaskModel userTask, Execution execution, String assignee)
 	{
 		Task task = new Task();
+		task.setParentTaskId(execution.getTask() == null ? 0 : execution.getTask().getId());
 		task.setProcessDefinitionId(execution.getProcessInstance().getProcessDefinitionId());
 		task.setInstanceId(execution.getProcessInstance().getId());
-		task.setTaskDefinitionId(model.getId());
-		task.setName(model.getName());
-		task.setCreateTime(LocalDateTime.now());
+		task.setTaskDefinitionId(userTask.getId());
+		task.setName(userTask.getName());
+		task.setAssignee(assignee);
 		task.setTaskType(0);
-		task.setParentTaskId(execution.getTask() == null ? null : execution.getTask().getId());
+		task.setCreateTime(LocalDateTime.now());
+
+		Map<String, Object> args = execution.getArgs();
+		task.setVariable(JSONUtils.toJSONStringQuietly(args));
+
 		return task;
 	}
 }

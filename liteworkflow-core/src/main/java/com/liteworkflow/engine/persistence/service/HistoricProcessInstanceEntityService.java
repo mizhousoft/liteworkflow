@@ -40,7 +40,7 @@ public interface HistoricProcessInstanceEntityService
 	 * @param instanceId
 	 * @return
 	 */
-	HistoricProcessInstance getByInstanceId(String instanceId);
+	HistoricProcessInstance getByInstanceId(int instanceId);
 
 	/**
 	 * 根据流程定义ID查询流程实例ID
@@ -48,7 +48,7 @@ public interface HistoricProcessInstanceEntityService
 	 * @param processDefinitionId
 	 * @return
 	 */
-	Set<String> queryIdsByProcessDefinitionId(String processDefinitionId);
+	Set<Integer> queryIdsByProcessDefinitionId(int processDefinitionId);
 
 	/**
 	 * 分页查询

@@ -10,7 +10,7 @@ import com.mizhousoft.commons.mapper.PageableMapper;
  *
  * @version
  */
-public interface TaskMapper extends PageableMapper<Task, String>
+public interface TaskMapper extends PageableMapper<Task, Integer>
 {
 	/**
 	 * 根据实例ID查询
@@ -18,5 +18,5 @@ public interface TaskMapper extends PageableMapper<Task, String>
 	 * @param instanceId
 	 * @return
 	 */
-	List<Task> findByInstanceId(String instanceId);
+	List<Task> findByInstanceId(int instanceId);
 }

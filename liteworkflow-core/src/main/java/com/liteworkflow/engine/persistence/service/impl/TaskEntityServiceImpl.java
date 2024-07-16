@@ -64,7 +64,7 @@ public class TaskEntityServiceImpl implements TaskEntityService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Task getById(String taskId)
+	public Task getById(int taskId)
 	{
 		return taskMapper.findById(taskId);
 	}
@@ -73,7 +73,7 @@ public class TaskEntityServiceImpl implements TaskEntityService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<Task> queryByInstanceId(String instanceId)
+	public List<Task> queryByInstanceId(int instanceId)
 	{
 		return taskMapper.findByInstanceId(instanceId);
 	}

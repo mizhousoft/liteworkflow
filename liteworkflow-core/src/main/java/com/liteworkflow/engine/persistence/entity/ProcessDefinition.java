@@ -14,7 +14,7 @@ public class ProcessDefinition
 	/**
 	 * 主键ID
 	 */
-	private String id;
+	private int id;
 
 	/**
 	 * 流程定义Key
@@ -61,7 +61,7 @@ public class ProcessDefinition
 	 * 
 	 * @return
 	 */
-	public String getId()
+	public int getId()
 	{
 		return id;
 	}
@@ -71,7 +71,7 @@ public class ProcessDefinition
 	 * 
 	 * @param id
 	 */
-	public void setId(String id)
+	public void setId(int id)
 	{
 		this.id = id;
 	}

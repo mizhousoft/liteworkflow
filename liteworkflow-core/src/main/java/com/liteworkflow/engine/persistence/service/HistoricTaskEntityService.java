@@ -33,7 +33,7 @@ public interface HistoricTaskEntityService
 	 * @param id
 	 * @return
 	 */
-	HistoricTask getById(String id);
+	HistoricTask getById(int id);
 
 	/**
 	 * 根据流程实例ID查询历史任务
@@ -41,7 +41,7 @@ public interface HistoricTaskEntityService
 	 * @param instanceId
 	 * @return
 	 */
-	List<HistoricTask> queryByInstanceId(String instanceId);
+	List<HistoricTask> queryByInstanceId(int instanceId);
 
 	/**
 	 * 分页查询历史任务

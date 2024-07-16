@@ -64,7 +64,7 @@ public class ProcessDefinitionEntityServiceImpl implements ProcessDefinitionEnti
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessDefinition getById(String id)
+	public ProcessDefinition getById(int id)
 	{
 		return processDefinitionMapper.findById(id);
 	}

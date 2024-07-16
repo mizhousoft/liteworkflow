@@ -26,11 +26,11 @@ public abstract class NodeFlowExecutor implements FlowExecutor
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void execute(Execution execution, FlowElement model)
+	public boolean execute(Execution execution, FlowElement model)
 	{
 		FlowNode nodeModel = (FlowNode) model;
 
-		doExecute(execution, nodeModel);
+		return doExecute(execution, nodeModel);
 	}
 
 	/**
@@ -39,7 +39,7 @@ public abstract class NodeFlowExecutor implements FlowExecutor
 	 * @param execution
 	 * @param nodeModel
 	 */
-	protected abstract void doExecute(Execution execution, FlowNode nodeModel);
+	protected abstract boolean doExecute(Execution execution, FlowNode nodeModel);
 
 	/**
 	 * 执行节点迁移

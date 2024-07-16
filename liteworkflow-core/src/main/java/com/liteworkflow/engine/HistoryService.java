@@ -21,7 +21,7 @@ public interface HistoryService
 	 * @param instanceId
 	 * @return
 	 */
-	HistoricProcessInstance getHistoricInstance(String instanceId);
+	HistoricProcessInstance getHistoricInstance(int instanceId);
 
 	/**
 	 * 分页查询历史流程实例
@@ -37,7 +37,7 @@ public interface HistoryService
 	 * @param taskId
 	 * @return
 	 */
-	HistoricTask getHistoricTask(String taskId);
+	HistoricTask getHistoricTask(int taskId);
 
 	/**
 	 * 根据流程实例ID查询历史任务
@@ -45,7 +45,7 @@ public interface HistoryService
 	 * @param instanceId
 	 * @return
 	 */
-	List<HistoricTask> queryHistoricTasks(String instanceId);
+	List<HistoricTask> queryHistoricTasks(int instanceId);
 
 	/**
 	 * 分页查询历史任务

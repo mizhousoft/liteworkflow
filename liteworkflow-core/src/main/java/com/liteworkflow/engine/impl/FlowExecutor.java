@@ -14,6 +14,7 @@ public interface FlowExecutor
 	 * 
 	 * @param execution
 	 * @param model
+	 * @return
 	 */
-	public void execute(Execution execution, FlowElement model);
+	boolean execute(Execution execution, FlowElement model);
 }

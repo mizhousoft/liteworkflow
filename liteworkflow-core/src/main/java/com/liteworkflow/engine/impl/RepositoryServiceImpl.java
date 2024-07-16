@@ -48,7 +48,7 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 	/**
 	 * Key缓存Cache<processDefinitionId, processDefinitionKey + - + version>
 	 */
-	private Cache<String, String> keyVersionCache;
+	private Cache<Integer, String> keyVersionCache;
 
 	/**
 	 * 构造函数
@@ -73,7 +73,7 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String deploy(InputStream istream)
+	public int deploy(InputStream istream)
 	{
 		return deploy(istream, null);
 	}
@@ -82,7 +82,7 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String deploy(InputStream istream, String creator)
+	public int deploy(InputStream istream, String creator)
 	{
 		ProcessDefinition processDefinition = commandExecutor.execute(new DeployCommand(istream, creator));
 
@@ -95,7 +95,7 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void redeploy(String processDefinitionId, InputStream istream)
+	public void redeploy(int processDefinitionId, InputStream istream)
 	{
 		ProcessDefinition processDefinition = commandExecutor.execute(new RedeployCommand(istream, processDefinitionId));
 
@@ -106,7 +106,7 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void deleteDeployment(String processDefinitionId, boolean cascade)
+	public void deleteDeployment(int processDefinitionId, boolean cascade)
 	{
 		ProcessDefinition processDefinition = commandExecutor.execute(new DeleteDeploymentCommand(processDefinitionId, cascade));
 
@@ -117,10 +117,8 @@ public class RepositoryServiceImpl extends CommonServiceImpl implements Reposito
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ProcessDefinition getProcessDefinition(String processDefinitionId)
+	public ProcessDefinition getProcessDefinition(int processDefinitionId)
 	{
-		Assert.notNull(processDefinitionId, "Process definition id is null.");
-
 		String cacheKey = keyVersionCache.get(processDefinitionId);
 		if (null != cacheKey)
 		{

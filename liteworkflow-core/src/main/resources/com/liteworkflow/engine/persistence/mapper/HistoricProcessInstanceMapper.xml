@@ -11,20 +11,20 @@
 		<result property="state" column="state" />
 		<result property="priority" column="priority" />
 		<result property="variable" column="variable" />
+		<result property="initiator" column="initiator" />
+		<result property="startTime" column="start_time" />
 		<result property="endTime" column="end_time" />
-		<result property="creator" column="creator" />
-		<result property="createTime" column="create_time" />
 	</resultMap>
 	
 	<sql id="Column_List">
-        id, parent_id, process_def_id, business_key, state, priority, variable, end_time, creator, create_time
+        id, parent_id, process_def_id, business_key, state, priority, variable, end_time, initiator, start_time
     </sql>
 
     <insert id="save">
         insert into wf_historic_process_instance (id, parent_id, process_def_id, business_key, state, priority, variable,
-        end_time, creator, create_time)
+        initiator, start_time, end_time)
         values (#{id}, #{parentId}, #{processDefinitionId}, #{businessKey}, #{state}, #{priority}, #{variable},
-        #{endTime}, #{creator}, #{createTime})
+        #{initiator}, #{startTime}, #{endTime})
     </insert>
 	
 	<update id="update">
@@ -54,14 +54,8 @@
 	<select id="countTotal" resultType="Long">
 		select count(o.id) from wf_historic_process_instance o left join wf_process_definition p on p.id = o.process_def_id
 		<where>
-       		<if test="request.operators != null and request.operators.length != 0">
-                o.creator in
-                <foreach collection="request.operators" item="operator" index="index" open="(" close=")" separator=",">
-                    #{operator}
-                </foreach>
-            </if>
             <if test="request.names != null and request.names.length != 0">
-                and p.name in
+                p.name in
                 <foreach collection="request.names" item="name" index="index" open="(" close=")" separator=",">
                     #{name}
                 </foreach>
@@ -80,27 +74,21 @@
                 and o.state = #{request.state}
        		</if>
             <if test="request.startTime != null">
-                and o.create_time &gt;= #{request.startTime}
+                and o.start_time &gt;= #{request.startTime}
        		</if>
             <if test="request.endTime != null">
-                and o.create_time &lt;= #{request.endTime}
+                and o.start_time &lt;= #{request.endTime}
        		</if>
 		</where>
 	</select>
 	
 	<select id="findPageData" parameterType="java.util.Map" resultMap="HistoricProcessInstanceMap">
 		select o.id, o.parent_id, o.process_def_id, o.business_key, o.state, o.priority, o.variable, 
-		o.end_time, o.creator, o.create_time
+		o.end_time, o.initiator, o.start_time
 		from wf_historic_process_instance o left join wf_process_definition p on p.id = o.process_def_id
 		<where>
-       		<if test="request.operators != null and request.operators.length != 0">
-                o.creator in
-                <foreach collection="request.operators" item="operator" index="index" open="(" close=")" separator=",">
-                    #{operator}
-                </foreach>
-            </if>
             <if test="request.names != null and request.names.length != 0">
-                and p.name in
+                p.name in
                 <foreach collection="request.names" item="name" index="index" open="(" close=")" separator=",">
                     #{name}
                 </foreach>
@@ -119,10 +107,10 @@
                 and o.state = #{request.state}
        		</if>
             <if test="request.startTime != null">
-                and o.create_time &gt;= #{request.startTime}
+                and o.start_time &gt;= #{request.startTime}
        		</if>
             <if test="request.endTime != null">
-                and o.create_time &lt;= #{request.endTime}
+                and o.start_time &lt;= #{request.endTime}
        		</if>
 		</where>
 		<if test="request.sortString != null">

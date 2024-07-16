@@ -12,16 +12,15 @@ import org.springframework.util.Assert;
 import com.liteworkflow.engine.ProcessInstanceService;
 import com.liteworkflow.engine.RepositoryService;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
-import com.liteworkflow.engine.helper.JsonHelper;
 import com.liteworkflow.engine.impl.Command;
 import com.liteworkflow.engine.impl.CommandContext;
 import com.liteworkflow.engine.impl.Constants;
 import com.liteworkflow.engine.impl.Execution;
 import com.liteworkflow.engine.impl.FlowExecutor;
 import com.liteworkflow.engine.impl.executor.FlowExecutorFactory;
+import com.liteworkflow.engine.model.BpmnModel;
 import com.liteworkflow.engine.model.FlowNode;
 import com.liteworkflow.engine.model.SequenceFlowModel;
-import com.liteworkflow.engine.model.BpmnModel;
 import com.liteworkflow.engine.persistence.entity.HistoricTask;
 import com.liteworkflow.engine.persistence.entity.ProcessDefinition;
 import com.liteworkflow.engine.persistence.entity.ProcessInstance;
@@ -30,6 +29,7 @@ import com.liteworkflow.engine.persistence.service.HistoricTaskEntityService;
 import com.liteworkflow.engine.persistence.service.ProcessInstanceEntityService;
 import com.liteworkflow.engine.persistence.service.TaskEntityService;
 import com.liteworkflow.engine.util.HistoricTaskUtils;
+import com.mizhousoft.commons.json.JSONUtils;
 
 /**
  * 完成任务指令
@@ -40,9 +40,7 @@ public class CompleteTaskCommand implements Command<Void>
 {
 	private static final Logger LOG = LoggerFactory.getLogger(CompleteTaskCommand.class);
 
-	private String taskId;
-
-	private String operator;
+	private int taskId;
 
 	private Map<String, Object> variableMap;
 
@@ -50,14 +48,12 @@ public class CompleteTaskCommand implements Command<Void>
 	 * 构造函数
 	 *
 	 * @param taskId
-	 * @param operator
 	 * @param variableMap
 	 */
-	public CompleteTaskCommand(String taskId, String operator, Map<String, Object> variableMap)
+	public CompleteTaskCommand(int taskId, Map<String, Object> variableMap)
 	{
 		super();
 		this.taskId = taskId;
-		this.operator = operator;
 		this.variableMap = variableMap;
 	}
 
@@ -68,7 +64,7 @@ public class CompleteTaskCommand implements Command<Void>
 	public Void execute(CommandContext commandContext)
 	{
 		// 完成任务，并且构造执行对象
-		Execution execution = execute(taskId, operator, variableMap, commandContext);
+		Execution execution = execute(taskId, variableMap, commandContext);
 		if (execution == null)
 			return null;
 
@@ -89,11 +85,11 @@ public class CompleteTaskCommand implements Command<Void>
 		return null;
 	}
 
-	private Execution execute(String taskId, String operator, Map<String, Object> variableMap, CommandContext commandContext)
+	private Execution execute(int taskId, Map<String, Object> variableMap, CommandContext commandContext)
 	{
 		if (variableMap == null)
 			variableMap = new HashMap<String, Object>();
-		Task task = complete(taskId, operator, variableMap, commandContext);
+		Task task = complete(taskId, variableMap, commandContext);
 
 		LOG.debug("任务[taskId=" + taskId + "]已完成");
 
@@ -128,7 +124,7 @@ public class CompleteTaskCommand implements Command<Void>
 		return execution;
 	}
 
-	public Task complete(String taskId, String operator, Map<String, Object> variableMap, CommandContext commandContext)
+	public Task complete(int taskId, Map<String, Object> variableMap, CommandContext commandContext)
 	{
 		ProcessEngineConfigurationImpl engineConfiguration = commandContext.getEngineConfiguration();
 		TaskEntityService taskEntityService = engineConfiguration.getTaskEntityService();
@@ -136,12 +132,11 @@ public class CompleteTaskCommand implements Command<Void>
 
 		Task task = taskEntityService.getById(taskId);
 		Assert.notNull(task, "指定的任务[id=" + taskId + "]不存在");
-		task.setVariable(JsonHelper.toJson(variableMap));
+		task.setVariable(JSONUtils.toJSONStringQuietly(variableMap));
 
 		HistoricTask historicTask = HistoricTaskUtils.createHistoricTask(task);
 		historicTask.setEndTime(LocalDateTime.now());
 		historicTask.setState(Constants.STATE_FINISH);
-		historicTask.setOperator(operator);
 		historicTaskEntityService.addEntity(historicTask);
 
 		taskEntityService.deleteEntity(task);

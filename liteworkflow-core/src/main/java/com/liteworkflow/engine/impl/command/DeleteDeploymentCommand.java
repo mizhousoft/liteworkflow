@@ -4,7 +4,7 @@ import java.util.Set;
 
 import org.springframework.util.Assert;
 
-import com.liteworkflow.engine.ProcessInstanceService;
+import com.liteworkflow.engine.RuntimeService;
 import com.liteworkflow.engine.cfg.ProcessEngineConfigurationImpl;
 import com.liteworkflow.engine.impl.Command;
 import com.liteworkflow.engine.impl.CommandContext;
@@ -22,7 +22,7 @@ public class DeleteDeploymentCommand implements Command<ProcessDefinition>
 	/**
 	 * 流程定义ID
 	 */
-	private String processDefinitionId;
+	private int processDefinitionId;
 
 	/**
 	 * 是否级联删除流程、任务、历史等数据
@@ -35,7 +35,7 @@ public class DeleteDeploymentCommand implements Command<ProcessDefinition>
 	 * @param processDefinitionId
 	 * @param cascade
 	 */
-	public DeleteDeploymentCommand(String processDefinitionId, boolean cascade)
+	public DeleteDeploymentCommand(int processDefinitionId, boolean cascade)
 	{
 		super();
 		this.processDefinitionId = processDefinitionId;
@@ -50,7 +50,7 @@ public class DeleteDeploymentCommand implements Command<ProcessDefinition>
 	{
 		ProcessEngineConfigurationImpl engineConfiguration = context.getEngineConfiguration();
 		ProcessDefinitionEntityService processDefinitionEntityService = engineConfiguration.getProcessDefinitionEntityService();
-		ProcessInstanceService processInstanceService = engineConfiguration.getProcessInstanceService();
+		RuntimeService runtimeService = engineConfiguration.getRuntimeService();
 		HistoricProcessInstanceEntityService historicProcessInstanceEntityService = engineConfiguration
 		        .getHistoricProcessInstanceEntityService();
 
@@ -59,10 +59,10 @@ public class DeleteDeploymentCommand implements Command<ProcessDefinition>
 
 		if (cascade)
 		{
-			Set<String> instanceIds = historicProcessInstanceEntityService.queryIdsByProcessDefinitionId(processDefinitionId);
-			for (String instanceId : instanceIds)
+			Set<Integer> instanceIds = historicProcessInstanceEntityService.queryIdsByProcessDefinitionId(processDefinitionId);
+			for (Integer instanceId : instanceIds)
 			{
-				processInstanceService.deleteInstance(instanceId);
+				runtimeService.deleteInstance(instanceId);
 			}
 		}
 

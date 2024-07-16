@@ -40,7 +40,7 @@ public interface ProcessDefinitionEntityService
 	 * @param id 流程定义id
 	 * @return Process 流程定义对象
 	 */
-	ProcessDefinition getById(String id);
+	ProcessDefinition getById(int id);
 
 	/**
 	 * 根据流程名称查询最近的版本号

@@ -26,10 +26,10 @@ public abstract class HistoricTaskUtils
 		historicTask.setInstanceId(task.getInstanceId());
 		historicTask.setName(task.getName());
 		historicTask.setTaskDefinitionId(task.getTaskDefinitionId());
+		historicTask.setAssignee(task.getAssignee());
 		historicTask.setTaskType(task.getTaskType());
 		historicTask.setParentTaskId(task.getParentTaskId());
 		historicTask.setVariable(task.getVariable());
-		historicTask.setPerformType(task.getPerformType());
 		historicTask.setStartTime(task.getCreateTime());
 		historicTask.setEndTime(LocalDateTime.now());
 

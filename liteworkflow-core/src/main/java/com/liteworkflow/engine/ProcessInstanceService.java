@@ -12,19 +12,12 @@ import com.mizhousoft.commons.data.domain.Page;
 public interface ProcessInstanceService
 {
 	/**
-	 * 删除流程实例
-	 * 
-	 * @param instanceId
-	 */
-	void deleteInstance(String instanceId);
-
-	/**
 	 * 根据流程实例ID获取流程实例对象
 	 * 
 	 * @param instanceId
 	 * @return
 	 */
-	ProcessInstance getInstance(String instanceId);
+	ProcessInstance getInstance(int instanceId);
 
 	/**
 	 * 分页查询

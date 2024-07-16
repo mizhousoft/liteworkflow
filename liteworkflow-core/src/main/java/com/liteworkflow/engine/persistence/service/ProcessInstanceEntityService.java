@@ -47,7 +47,7 @@ public interface ProcessInstanceEntityService
 	 * @param id 活动流程实例id
 	 * @return ProcessInstance 活动流程实例对象
 	 */
-	ProcessInstance getById(String id);
+	ProcessInstance getById(int id);
 
 	/**
 	 * 根据父ID查询
@@ -55,7 +55,7 @@ public interface ProcessInstanceEntityService
 	 * @param parentId
 	 * @return
 	 */
-	List<ProcessInstance> queryByParentId(String parentId);
+	List<ProcessInstance> queryByParentId(int parentId);
 
 	/**
 	 * 分页查询

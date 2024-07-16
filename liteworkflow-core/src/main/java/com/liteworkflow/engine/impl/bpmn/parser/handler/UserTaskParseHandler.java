@@ -46,10 +46,8 @@ public class UserTaskParseHandler extends NodeParseHandler
 		UserTaskModel task = (UserTaskModel) node;
 		task.setAssignee(getAttribute(element, ATTR_ASSIGNEE));
 		task.setExpireTime(getAttribute(element, ATTR_EXPIRETIME));
-		task.setAutoExecute(getAttribute(element, ATTR_AUTOEXECUTE));
 		task.setReminderTime(getAttribute(element, ATTR_REMINDERTIME));
 		task.setReminderRepeat(getAttribute(element, ATTR_REMINDERREPEAT));
-		task.setPerformType(getAttribute(element, ATTR_PERFORMTYPE));
 
 		List<EventListenerElement> eventListeners = parseEventListenerElements(element);
 		task.setEventListeners(eventListeners);

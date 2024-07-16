@@ -12,22 +12,22 @@ public class Task extends VariableScope
 	/**
 	 * 主键ID
 	 */
-	private String id;
+	private int id;
 
 	/**
 	 * 父任务Id
 	 */
-	private String parentTaskId;
+	private int parentTaskId;
 
 	/**
 	 * 流程定义ID
 	 */
-	private String processDefinitionId;
+	private int processDefinitionId;
 
 	/**
 	 * 流程实例ID
 	 */
-	private String instanceId;
+	private int instanceId;
 
 	/**
 	 * 任务定义ID
@@ -40,14 +40,14 @@ public class Task extends VariableScope
 	private String name;
 
 	/**
+	 * 执行人
+	 */
+	private String assignee;
+
+	/**
 	 * 任务类型（0：主办任务；1：协办任务）
 	 */
 	private Integer taskType;
-
-	/**
-	 * 参与方式（0：普通任务；1：参与者会签任务）
-	 */
-	private Integer performType;
 
 	/**
 	 * 期望任务完成时间
@@ -65,11 +65,6 @@ public class Task extends VariableScope
 	private int revision = 0;
 
 	/**
-	 * 任务处理者ID
-	 */
-	private String operator;
-
-	/**
 	 * 任务创建时间
 	 */
 	private LocalDateTime createTime;
@@ -79,7 +74,7 @@ public class Task extends VariableScope
 	 * 
 	 * @return
 	 */
-	public String getId()
+	public int getId()
 	{
 		return id;
 	}
@@ -89,7 +84,7 @@ public class Task extends VariableScope
 	 * 
 	 * @param id
 	 */
-	public void setId(String id)
+	public void setId(int id)
 	{
 		this.id = id;
 	}
@@ -99,7 +94,7 @@ public class Task extends VariableScope
 	 * 
 	 * @return
 	 */
-	public String getParentTaskId()
+	public int getParentTaskId()
 	{
 		return parentTaskId;
 	}
@@ -109,7 +104,7 @@ public class Task extends VariableScope
 	 * 
 	 * @param parentTaskId
 	 */
-	public void setParentTaskId(String parentTaskId)
+	public void setParentTaskId(int parentTaskId)
 	{
 		this.parentTaskId = parentTaskId;
 	}
@@ -119,7 +114,7 @@ public class Task extends VariableScope
 	 * 
 	 * @return
 	 */
-	public String getProcessDefinitionId()
+	public int getProcessDefinitionId()
 	{
 		return processDefinitionId;
 	}
@@ -129,7 +124,7 @@ public class Task extends VariableScope
 	 * 
 	 * @param processDefinitionId
 	 */
-	public void setProcessDefinitionId(String processDefinitionId)
+	public void setProcessDefinitionId(int processDefinitionId)
 	{
 		this.processDefinitionId = processDefinitionId;
 	}
@@ -139,7 +134,7 @@ public class Task extends VariableScope
 	 * 
 	 * @return
 	 */
-	public String getInstanceId()
+	public int getInstanceId()
 	{
 		return instanceId;
 	}
@@ -149,7 +144,7 @@ public class Task extends VariableScope
 	 * 
 	 * @param instanceId
 	 */
-	public void setInstanceId(String instanceId)
+	public void setInstanceId(int instanceId)
 	{
 		this.instanceId = instanceId;
 	}
@@ -195,6 +190,26 @@ public class Task extends VariableScope
 	}
 
 	/**
+	 * 获取assignee
+	 * 
+	 * @return
+	 */
+	public String getAssignee()
+	{
+		return assignee;
+	}
+
+	/**
+	 * 设置assignee
+	 * 
+	 * @param assignee
+	 */
+	public void setAssignee(String assignee)
+	{
+		this.assignee = assignee;
+	}
+
+	/**
 	 * 获取taskType
 	 * 
 	 * @return
@@ -212,26 +227,6 @@ public class Task extends VariableScope
 	public void setTaskType(Integer taskType)
 	{
 		this.taskType = taskType;
-	}
-
-	/**
-	 * 获取performType
-	 * 
-	 * @return
-	 */
-	public Integer getPerformType()
-	{
-		return performType;
-	}
-
-	/**
-	 * 设置performType
-	 * 
-	 * @param performType
-	 */
-	public void setPerformType(Integer performType)
-	{
-		this.performType = performType;
 	}
 
 	/**
@@ -292,26 +287,6 @@ public class Task extends VariableScope
 	public void setRevision(int revision)
 	{
 		this.revision = revision;
-	}
-
-	/**
-	 * 获取operator
-	 * 
-	 * @return
-	 */
-	public String getOperator()
-	{
-		return operator;
-	}
-
-	/**
-	 * 设置operator
-	 * 
-	 * @param operator
-	 */
-	public void setOperator(String operator)
-	{
-		this.operator = operator;
 	}
 
 	/**

@@ -34,8 +34,8 @@ public abstract class HistoricProcessInstanceUtils
 		historicInstance.setState(ProcessInstanceEntityServiceImpl.STATE_ACTIVE);
 		historicInstance.setPriority(instance.getPriority());
 		historicInstance.setVariable(instance.getVariable());
-		historicInstance.setCreator(instance.getCreator());
-		historicInstance.setCreateTime(instance.getCreateTime());
+		historicInstance.setInitiator(instance.getInitiator());
+		historicInstance.setStartTime(instance.getCreateTime());
 
 		historicProcessInstanceEntityService.addEntity(historicInstance);
 
