@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mizhousoft.liteworkflow.engine.impl.persistence.mapper.ProcessInstanceMapper">
+	
+	<resultMap type="com.mizhousoft.liteworkflow.engine.impl.persistence.entity.ProcessInstanceEntity" id="ProcessInstanceMap">
+		<id property="id" column="id" />
+		<result property="parentId" column="parent_id" />
+		<result property="processDefinitionId" column="process_def_id" />
+		<result property="businessKey" column="business_key" />
+		<result property="priority" column="priority" />
+		<result property="revision" column="revision" />
+		<result property="startUserId" column="start_user_id" />
+		<result property="createTime" column="create_time" />
+	</resultMap>
+	
+	<sql id="Column_List">
+        id, parent_id, process_def_id, business_key, priority, revision, start_user_id, create_time
+    </sql>
+    
+	<insert id="save" useGeneratedKeys="true" keyProperty="id">
+        insert into wf_process_instance (parent_id, process_def_id, business_key, priority, revision, start_user_id,
+        create_time)
+        values (#{parentId}, #{processDefinitionId}, #{businessKey}, #{priority}, #{revision}, #{startUserId},
+        #{createTime})
+    </insert>
+	
+	<update id="update">
+        update wf_process_instance 
+        set revision = #{revision}
+        where id = #{id}
+	</update>
+		
+	<delete id="delete">
+		delete from wf_process_instance where id = #{id}
+	</delete>
+		
+	<select id="findById" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
+		select <include refid="Column_List"/>
+		from wf_process_instance
+		where id = #{id}
+	</select>
+	
+	<select id="findByIds" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
+        select <include refid="Column_List"/>
+        from wf_process_instance
+        where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+    
+	<select id="findByParentId" parameterType="java.util.Map" resultMap="ProcessInstanceMap">
+		select <include refid="Column_List"/>
+		from wf_process_instance
+		where parent_id = #{parentId}
+	</select>
+	
+</mapper>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mizhousoft.liteworkflow.engine.impl.persistence.mapper.ProcessDefinitionMapper">
+	
+	<resultMap type="com.mizhousoft.liteworkflow.engine.impl.persistence.entity.ProcessDefEntity" id="ProcessDefinitionMap">
+		<id property="id" column="id" />
+		<result property="key" column="key_" />
+		<result property="name" column="name" />
+		<result property="category" column="category" />
+		<result property="version" column="version" />
+		<result property="bytes" column="content" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+		<result property="description" column="description" />
+		<result property="createTime" column="create_time" />
+		<result property="updateTime" column="update_time" />
+		<result property="creator" column="creator" />
+	</resultMap>
+	
+	<sql id="Column_List">
+        id, key_, name, category, version, content, description, create_time, update_time, creator
+    </sql>
+	
+	<sql id="Column_List_Page">
+        id, key_, name, category, version, description, create_time, update_time, creator
+    </sql>
+	
+	<insert id="save" useGeneratedKeys="true" keyProperty="id">
+		insert into wf_process_definition (key_, name, category, version, content, description, create_time, update_time, creator)
+		values (#{key}, #{name}, #{category}, #{version}, #{bytes, typeHandler=org.apache.ibatis.type.BlobTypeHandler}, #{description}, #{createTime}, #{updateTime}, #{creator})
+	</insert>
+
+	<update id="update">
+        update wf_process_definition 
+        set name = #{name},
+        category = #{category},
+        content = #{bytes, typeHandler=org.apache.ibatis.type.BlobTypeHandler},
+        description = #{description},
+        update_time = #{updateTime}
+        where id = #{id} 
+	</update>
+
+	<delete id="delete">
+		delete from wf_process_definition where id = #{id}
+	</delete>
+	
+	<select id="findById" parameterType="java.util.Map" resultMap="ProcessDefinitionMap">
+		select <include refid="Column_List"/>
+		from wf_process_definition 
+		where id = #{id}
+	</select>
+	
+	<select id="findByKey" parameterType="java.util.Map" resultMap="ProcessDefinitionMap">
+		select <include refid="Column_List"/>
+		from wf_process_definition 
+		where key_ = #{processDefinitionKey}
+		<if test="version != null">
+        	and version = #{version}
+       	</if>
+	</select>
+	
+	<select id="findLatestVersion" parameterType="java.util.Map" resultType="Integer">
+		select max(version) from wf_process_definition 
+		where key_ = #{processDefinitionKey}
+	</select>
+	
+	<select id="countTotal" resultType="Long">
+		select count(id) from wf_process_definition
+		where version = (select max(version) from wf_process_definition where key_ = pd.key_)
+        <if test="request.category != null">
+            and category = #{request.category}
+   		</if>
+	</select>
+	
+	<select id="findPageData" parameterType="java.util.Map" resultMap="ProcessDefinitionMap">
+		select <include refid="Column_List_Page"/>
+		from wf_process_definition pd
+		where version = (select max(version) from wf_process_definition where key_ = pd.key_)
+        <if test="request.category != null">
+            and category = #{request.category}
+   		</if>
+		<if test="request.sortString != null">
+            order by ${request.sortString}
+   		</if>
+		limit #{rowOffset}, #{request.pageSize}
+	</select>
+	
+</mapper>

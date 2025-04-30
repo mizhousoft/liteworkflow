@@ -1,0 +1,19 @@
+drop table if exists wf_process_definition;
+drop table if exists wf_process_instance;
+drop table if exists wf_task;
+drop table if exists wf_variable;
+drop table if exists wf_historic_process_instance;
+drop table if exists wf_historic_task;
+drop table if exists wf_historic_variable;
+
+drop index if exists process_definition_index_key;
+drop index if exists process_instance_index_process_def_id;
+drop index if exists task_index_instance_id;
+drop index if exists task_index_process_def_id;
+drop index if exists task_index_parent_task_id;
+drop index if exists variable_index;
+drop index if exists historic_instance_index_process_def_id;
+drop index if exists historic_task_index_instance_id;
+drop index if exists historic_task_index_task_def_key;
+drop index if exists historic_task_index_parent_task_id;
+drop index if exists historic_variable_index;

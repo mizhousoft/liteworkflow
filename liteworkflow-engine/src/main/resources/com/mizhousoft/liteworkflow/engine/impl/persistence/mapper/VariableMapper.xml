@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mizhousoft.liteworkflow.engine.impl.persistence.mapper.VariableMapper">
+
+    <resultMap type="com.mizhousoft.liteworkflow.engine.impl.persistence.entity.Variable" id="VariableMap">
+        <id property="id" column="id" />
+        <result property="instanceId" column="instance_id" />
+        <result property="taskId" column="task_id" />
+        <result property="name" column="name" />
+        <result property="type" column="type" />
+        <result property="value" column="value_" />
+        <result property="revision" column="revision" />
+    </resultMap>
+
+    <sql id="Column_List">
+        id, instance_id, task_id, name, type, value_, revision
+    </sql>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        insert into wf_variable (instance_id, task_id, name, type, value_, revision)
+        values (#{instanceId}, #{taskId}, #{name}, #{type}, #{value}, #{revision})
+    </insert>
+
+    <update id="update">
+        update wf_variable set
+        type = #{type},
+        value_ = #{value},
+        revision = revision + 1
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from wf_variable where id = #{id}
+    </delete>
+
+    <delete id="deleteByInstanceId">
+        delete from wf_variable where instance_id = #{instanceId}
+    </delete>
+
+    <delete id="deleteByTaskId">
+        delete from wf_variable where instance_id = #{instanceId} and task_id = #{taskId}
+    </delete>
+    
+    <select id="findByTaskId" parameterType="java.util.Map" resultMap="VariableMap">
+        select <include refid="Column_List"/>
+        from wf_variable
+        where instance_id = #{instanceId} and task_id = #{taskId}
+    </select>
+    
+    <select id="findByInstanceIds" parameterType="java.util.Map" resultMap="VariableMap">
+        select <include refid="Column_List"/>
+        from wf_variable
+        where instance_id in
+        <foreach collection="instanceIds" item="instanceId" open="(" close=")" separator=",">
+            #{instanceId}
+        </foreach>
+    </select>
+
+</mapper>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mizhousoft.liteworkflow.engine.impl.persistence.mapper.HistoricTaskMapper">
+	
+	<resultMap type="com.mizhousoft.liteworkflow.engine.impl.persistence.entity.HistoricTaskEntity" id="HistoricTaskMap">
+		<id property="id" column="id" />
+        <result property="parentTaskId" column="parent_task_id" />
+        <result property="processDefinitionId" column="process_def_id" />
+        <result property="instanceId" column="instance_id" />
+        <result property="taskDefinitionKey" column="task_def_key" />
+        <result property="name" column="name" />
+        <result property="owner" column="owner" />
+        <result property="assignee" column="assignee" />
+        <result property="status" column="status" />
+        <result property="revision" column="revision" />
+        <result property="duration" column="duration" />
+        <result property="startTime" column="start_time" />
+        <result property="endTime" column="end_time" />
+	</resultMap>
+	
+	<sql id="Column_List">
+        id, parent_task_id, process_def_id, instance_id, task_def_key, name, owner, assignee, status, revision,
+        duration, start_time, end_time
+    </sql>
+    
+    <insert id="save">
+        insert into wf_historic_task (id, parent_task_id, process_def_id, instance_id, task_def_key, name, owner, assignee,
+        status, revision, start_time, end_time)
+        values (#{id}, #{parentTaskId}, #{processDefinitionId}, #{instanceId}, #{taskDefinitionKey}, #{name}, #{owner}, #{assignee},
+        #{status}, #{revision}, #{startTime}, #{endTime})
+    </insert>
+
+	<update id="update">
+        update wf_historic_task 
+        set status = #{status},
+        revision = #{revision},
+        duration = #{duration},
+        end_time = #{endTime}
+        where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from wf_historic_task where id = #{id}
+	</delete>
+	
+	<delete id="deleteByInstanceId">
+		delete from wf_historic_task where instance_id = #{instanceId}
+	</delete>
+	
+	<select id="findById" parameterType="java.util.Map" resultMap="HistoricTaskMap">
+		select <include refid="Column_List"/>
+		from wf_historic_task
+		where id = #{id}
+	</select>
+	
+	<select id="findByInstanceId" parameterType="java.util.Map" resultMap="HistoricTaskMap">
+		select <include refid="Column_List"/>
+		from wf_historic_task
+		where instance_id = #{instanceId}
+	</select>
+	
+	<select id="countTotal" resultType="Long">
+		select count(distinct instance_id) from wf_historic_task 
+		<where>
+            <if test="request.assignee != null">
+                assignee = #{request.assignee}
+            </if>
+            <if test="request.startTime != null">
+                and start_time &gt;= #{request.startTime}
+       		</if>
+            <if test="request.endTime != null">
+                and start_time &lt;= #{request.endTime}
+       		</if>
+			<if test="request.processDefinitionId != 0">
+                and process_def_id = #{request.processDefinitionId}
+       		</if>
+			<if test="request.status != null">
+                and status = #{request.status}
+       		</if>
+		</where>
+	</select>
+	
+	<select id="findPageData" parameterType="java.util.Map" resultMap="HistoricTaskMap">
+		select distinct instance_id
+		from wf_historic_task
+		<where>
+            <if test="request.assignee != null">
+                assignee = #{request.assignee}
+            </if>
+            <if test="request.startTime != null">
+                and start_time &gt;= #{request.startTime}
+       		</if>
+            <if test="request.endTime != null">
+                and start_time &lt;= #{request.endTime}
+       		</if>
+			<if test="request.processDefinitionId != 0">
+                and process_def_id = #{request.processDefinitionId}
+       		</if>
+			<if test="request.status != null">
+                and status = #{request.status}
+       		</if>
+		</where>
+        order by instance_id desc
+   		limit #{rowOffset}, #{request.pageSize}
+	</select>
+	
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process id="new-customer-sign" name="新客户签约" category="招商流程">
+    <startEvent id="start" name="开始" initiator="initiator"/>
+    <userTask id="request" name="创建申请" assignee="#initiator" targetType="target_initiator"/>
+    <userTask id="leader-audit" name="主管审批" assignee="#leader-audit_user" targetType="target_supervisor"/>
+    <userTask id="finance-audit" name="财务审批" assignee="#finance-audit_user" targetType="target_user" optionalUsers="34,98,162,163">
+        <multiInstanceLoopCharacteristics isSequential="false" collection="finance-audit_list" elementVariable="finance-audit_user">
+            <completionCondition>
+                <![CDATA[#nrOfCompletedInstances == #nrOfInstances]]>
+            </completionCondition>
+        </multiInstanceLoopCharacteristics>
+    </userTask>
+    <endEvent id="end" name="结束"/>
+    <sequenceFlow sourceRef="start" targetRef="request"/>
+    <sequenceFlow sourceRef="request" targetRef="leader-audit">
+		<conditionExpression>
+			<![CDATA[#day<=2]]>
+		</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow sourceRef="leader-audit" targetRef="finance-audit"/>
+    <sequenceFlow sourceRef="finance-audit" targetRef="end"/>
+</process>

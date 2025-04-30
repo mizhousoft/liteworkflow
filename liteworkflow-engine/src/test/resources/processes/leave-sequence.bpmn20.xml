@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process id="leave" name="学生请假">
+	<documentation>test</documentation>
+	<startEvent id="start" name="开始" />
+	<userTask id="studentApply" name="请假申请" assignee="lilin" />
+	<userTask id="teacherAudit" name="老师审批" assignee="wanglaoshi" />
+	<userTask id="deanAudit" name="院长审批" assignee="liyuanzhang" />
+	<endEvent id="end" name="结束" />
+	<sequenceFlow sourceRef="start" targetRef="studentApply" />
+	<sequenceFlow sourceRef="studentApply" targetRef="teacherAudit" />
+	<sequenceFlow sourceRef="teacherAudit" targetRef="deanAudit">
+		<conditionExpression><![CDATA[#outcome=='pass']]></conditionExpression>
+	</sequenceFlow>
+	<sequenceFlow sourceRef="deanAudit" targetRef="end">
+		<conditionExpression><![CDATA[#outcome=='pass']]></conditionExpression>
+	</sequenceFlow>
+</process>

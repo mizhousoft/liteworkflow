@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mizhousoft.liteworkflow.engine.impl.persistence.mapper.HistoricVariableMapper">
+
+    <resultMap type="com.mizhousoft.liteworkflow.engine.impl.persistence.entity.HistoricVariable" id="HistoricVariableMap">
+        <id property="id" column="id" />
+        <result property="instanceId" column="instance_id" />
+        <result property="taskId" column="task_id" />
+        <result property="name" column="name" />
+        <result property="type" column="type" />
+        <result property="value" column="value_" />
+        <result property="revision" column="revision" />
+        <result property="createTime" column="create_time" />
+        <result property="lastUpdateTime" column="last_update_time" />
+    </resultMap>
+
+    <sql id="Column_List">
+        id, instance_id, task_id, name, type, value_, revision, create_time, last_update_time
+    </sql>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        insert into wf_historic_variable (instance_id, task_id, name, type, value_, revision, create_time, last_update_time)
+        values (#{instanceId}, #{taskId}, #{name}, #{type}, #{value}, #{revision}, #{createTime}, #{lastUpdateTime})
+    </insert>
+
+    <update id="update">
+        update wf_historic_variable set
+        type = #{type},
+        value_ = #{value},
+        revision = revision + 1,
+        last_update_time = #{lastUpdateTime}
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from wf_historic_variable where id = #{id}
+    </delete>
+
+    <delete id="deleteByInstanceId">
+        delete from wf_historic_variable where instance_id = #{instanceId}
+    </delete>
+
+    <delete id="deleteByTaskId">
+        delete from wf_historic_variable where instance_id = #{instanceId} and task_id = #{taskId}
+    </delete>
+    
+    <select id="findByTaskId" parameterType="java.util.Map" resultMap="HistoricVariableMap">
+        select <include refid="Column_List"/>
+        from wf_historic_variable
+        where instance_id = #{instanceId} and task_id = #{taskId}
+    </select>
+
+    <select id="findByInstanceIds" parameterType="java.util.Map" resultMap="HistoricVariableMap">
+        select <include refid="Column_List"/>
+        from wf_historic_variable
+        where instance_id in
+        <foreach collection="instanceIds" item="instanceId" open="(" close=")" separator=",">
+            #{instanceId}
+        </foreach>
+    </select>
+
+</mapper>

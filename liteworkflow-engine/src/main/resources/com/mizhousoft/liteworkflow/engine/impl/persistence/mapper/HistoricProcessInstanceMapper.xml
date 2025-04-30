@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mizhousoft.liteworkflow.engine.impl.persistence.mapper.HistoricProcessInstanceMapper">
+	
+	<resultMap type="com.mizhousoft.liteworkflow.engine.impl.persistence.entity.HistoricInstanceEntity" id="HistoricProcessInstanceMap">
+		<id property="id" column="id" />
+        <result property="parentId" column="parent_id" />
+        <result property="processDefinitionId" column="process_def_id" />
+        <result property="businessKey" column="business_key" />
+        <result property="priority" column="priority" />
+        <result property="startUserId" column="start_user_id" />
+        <result property="revision" column="revision" />
+        <result property="duration" column="duration" />
+        <result property="startTime" column="start_time" />
+        <result property="endTime" column="end_time" />
+        <result property="status" column="status" />
+	</resultMap>
+	
+	<sql id="Column_List">
+        id, parent_id, process_def_id, business_key, priority, start_user_id, revision, duration, start_time, end_time, status
+    </sql>
+
+	<insert id="save">
+        insert into wf_historic_process_instance (id, parent_id, process_def_id, business_key, priority, start_user_id,
+        revision, start_time, end_time, status)
+        values (#{id}, #{parentId}, #{processDefinitionId}, #{businessKey}, #{priority}, #{startUserId},
+        #{revision}, #{startTime}, #{endTime}, #{status})
+    </insert>
+	
+	<update id="update">
+        update wf_historic_process_instance 
+        set revision = #{revision},
+        duration = #{duration},
+        end_time = #{endTime},
+        status = #{status}
+        where id = #{id} 
+	</update>
+		
+	<delete id="delete">
+		delete from wf_historic_process_instance where id = #{id}
+	</delete>
+	
+	<select id="findById" parameterType="java.util.Map" resultMap="HistoricProcessInstanceMap">
+		select <include refid="Column_List"/>
+        from wf_historic_process_instance
+		where id = #{id}
+	</select>
+	
+	<select id="findByIds" parameterType="java.util.Map" resultMap="HistoricProcessInstanceMap">
+        select <include refid="Column_List"/>
+        from wf_historic_process_instance
+        where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+	
+	<select id="findIdsByProcessDefinitionId" parameterType="java.util.Map" resultMap="HistoricProcessInstanceMap">
+		select id
+        from wf_historic_process_instance
+		where process_def_id = #{processDefinitionId}
+	</select>
+	
+	<select id="countTotal" resultType="Long">
+		select count(id) 
+		from wf_historic_process_instance
+		<where>
+       		<if test="request.startUserId != null">
+                start_user_id = #{request.startUserId}
+       		</if>
+            <if test="request.startTime != null">
+                and create_time &gt;= #{request.startTime}
+       		</if>
+            <if test="request.endTime != null">
+                and create_time &lt;= #{request.endTime}
+       		</if>
+            <if test="request.status != null">
+                and status = #{request.status}
+       		</if>
+            <if test="request.processDefinitionId != 0">
+                and process_def_id = #{request.processDefinitionId}
+       		</if>
+		</where>
+	</select>
+	
+	<select id="findPageData" parameterType="java.util.Map" resultMap="HistoricProcessInstanceMap">
+		select <include refid="Column_List"/>
+		from wf_historic_process_instance
+		<where>
+       		<if test="request.startUserId != null">
+                start_user_id = #{request.startUserId}
+       		</if>
+            <if test="request.startTime != null">
+                and create_time &gt;= #{request.startTime}
+       		</if>
+            <if test="request.endTime != null">
+                and create_time &lt;= #{request.endTime}
+       		</if>
+            <if test="request.status != null">
+                and status = #{request.status}
+       		</if>
+            <if test="request.processDefinitionId != 0">
+                and process_def_id = #{request.processDefinitionId}
+       		</if>
+		</where>
+		<if test="request.sortString != null">
+            order by ${request.sortString}
+   		</if>
+		limit #{rowOffset}, #{request.pageSize}
+	</select>
+	
+</mapper>
