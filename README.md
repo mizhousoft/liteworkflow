@@ -11,11 +11,3 @@ liteworkflow是一个基于Java的轻量级工作流引擎，适用于企业应�
 
 **灵巧:**
 
-
-目前项目依赖的版本还未发布，需要手动下载
-
-https://github.com/mizhousoft/mizhousoft-bom
-
-https://github.com/mizhousoft/mizhousoft-commons
-
-安装到本地
