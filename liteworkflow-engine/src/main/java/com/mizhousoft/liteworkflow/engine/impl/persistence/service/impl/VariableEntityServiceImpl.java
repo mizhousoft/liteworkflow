@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mizhousoft.commons.lang.CollectionUtils;
@@ -119,7 +119,7 @@ public class VariableEntityServiceImpl implements VariableEntityService
 				HistoricVariable historicVariable = HistoricVariableUtils.build(entity);
 				historicVariableEntityService.addEntity(historicVariable);
 			}
-			else if (!variable.getType().equals(pair.getLeft()) || StringUtils.equals(variable.getValue(), pair.getValue()))
+			else if (!variable.getType().equals(pair.getLeft()) || Strings.CS.equals(variable.getValue(), pair.getValue()))
 			{
 				variable.setType(pair.getLeft());
 				variable.setValue(pair.getValue());

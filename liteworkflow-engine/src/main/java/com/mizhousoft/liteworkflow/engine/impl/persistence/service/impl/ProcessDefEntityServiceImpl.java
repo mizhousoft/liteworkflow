@@ -3,6 +3,7 @@ package com.mizhousoft.liteworkflow.engine.impl.persistence.service.impl;
 import java.util.List;
 
 import com.mizhousoft.commons.data.domain.Page;
+import com.mizhousoft.commons.data.domain.Sort;
 import com.mizhousoft.commons.data.util.PageBuilder;
 import com.mizhousoft.commons.data.util.PageUtils;
 import com.mizhousoft.liteworkflow.engine.impl.persistence.entity.ProcessDefEntity;
@@ -127,6 +128,7 @@ public class ProcessDefEntityServiceImpl implements ProcessDefEntityService
 	public List<ProcessDefEntity> queryLatestList()
 	{
 		ProcessDefPageRequest request = new ProcessDefPageRequest();
+		request.setSort(new Sort("category"));
 		request.setPageSize(200);
 
 		List<ProcessDefEntity> list = processDefinitionMapper.findPageData(0, request);

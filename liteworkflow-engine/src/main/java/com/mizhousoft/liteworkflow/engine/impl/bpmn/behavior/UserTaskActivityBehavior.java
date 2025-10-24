@@ -1,6 +1,6 @@
 package com.mizhousoft.liteworkflow.engine.impl.bpmn.behavior;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.springframework.context.ApplicationContext;
 
 import com.mizhousoft.liteworkflow.bpmn.model.UserTaskModel;
@@ -61,7 +61,7 @@ public class UserTaskActivityBehavior extends NodeActivityBehavior
 		ListenerInvocation listenerInvocation = engineConfiguration.getListenerInvocation();
 		listenerInvocation.executeTaskListeners(taskModel, task, TaskListener.EVENTNAME_CREATE);
 
-		if (!StringUtils.equals(oldAssignee, task.getAssignee()))
+		if (!Strings.CS.equals(oldAssignee, task.getAssignee()))
 		{
 			taskEntityService.modifyEntity(task);
 		}
